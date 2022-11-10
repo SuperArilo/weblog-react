@@ -1,0 +1,20 @@
+.asuka_button
+{
+    display: inline-block;
+    overflow: hidden;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.1rem;
+    border-radius: 0.3rem;
+    transition: color 0.25s, background-color 0.25s;
+}
+.normal
+{
+    background-color: rgb(25, 118, 210);
+    color: #ffffff;
+}
+.read
+{
+    color: #ec558c;
+    background-color: #ffffff;
+}

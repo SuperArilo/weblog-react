@@ -1,0 +1,163 @@
+.index_content
+{
+    width: 1080px;
+    margin: 0 auto;
+    .index_sider
+    {
+        width: 100%;
+        padding: 3rem 0;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        .sider_header_tips
+        {
+            width: 100%;
+            height: 3rem;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            .auto_play_span
+            {
+                color: rgba(0, 0, 0, 0.6);
+                font-size: 1.05rem;
+                letter-spacing: 0.15rem;
+            }
+        }
+        .sider_carousel
+        {
+            width: 100%;
+            flex: 1;
+            border-radius: 1rem;
+            background-color: beige;
+            overflow: hidden;
+        }
+    }
+    .index_section
+    {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: nowrap;
+        .public_sub_content
+        {
+            .public_sub_content_header
+            {
+                width: 100%;
+                height: 4rem;
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                font-size: 1rem;
+                letter-spacing: 0.15rem;
+            }
+            .article_list
+            {
+                width: 100%;
+                li
+                {
+                    width: 100%;
+                    border-radius: 0.5rem;
+                    margin-bottom: 1rem;
+                    overflow: hidden;
+                    background-color: #ffffff;
+                    img
+                    {
+                        width: 100%;
+                        height: 21rem;
+                        object-fit: cover;
+                        transition: transform 0.5s;
+                    }
+                    img:hover
+                    {
+                        transform: scale(1.05);
+                    }
+                    .article_info_item
+                    {
+                        width: 100%;
+                        margin-top: 1rem;
+                        display: flex;
+                        flex-direction: column;
+                        padding: 0 0.8rem;
+                        .article_title , .article_time, .article_introduce
+                        {
+                            width: 100%;
+                            text-align: left;
+                            overflow: hidden;
+                        }
+                        .article_title
+                        {
+                            font-weight: 600;
+                            font-size: 1.2rem;
+                            margin-bottom: 0.8rem;
+                        }
+                        .article_time
+                        {
+                            color: rgba(0, 0, 0, 0.6);
+                            font-size: 1rem;
+                            letter-spacing: 0.1rem;
+                        }
+                        .article_introduce
+                        {
+                            color: rgba(0, 0, 0, 0.87);
+                            margin-top: 1rem;
+                            font-size: 0.9rem;
+                            letter-spacing: 0.04rem;
+                            display: -webkit-box;
+                            -webkit-line-clamp: 2;
+                            -webkit-box-orient: vertical;
+                            text-overflow: ellipsis;
+                        }
+                    }
+                    .article_bottom_function
+                    {
+                        width: 100%;
+                        height: 4rem;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        .right_article_data div , .right_article_data
+                        {
+                            display: flex;
+                            align-items: center;
+                        }
+                        .right_article_data div
+                        {
+                            color: rgb(115, 115, 115);
+                            margin: 0 0.2rem;
+                            padding: 0.2rem 0.5rem;
+                            border-radius: 0.3rem;
+                            overflow: hidden;
+                            cursor: pointer;
+                            svg
+                            {
+                                transition: transform 0.25s;
+                            }
+                            svg:hover
+                            {
+                                transform: scale(1.1);
+                            }
+                            span
+                            {
+                                font-size: 0.8rem;
+                                margin-left: 0.3rem;
+                            }
+                        }
+                    }
+                }
+                li:last-child
+                {
+                    margin-bottom: 0;
+                }
+            }
+        }
+        .public_sub_content:nth-child(1)
+        {
+            flex: 1.8;
+        }
+        .public_sub_content:nth-child(2)
+        {
+            flex: 1;
+            margin-left: 3rem;
+        }
+    }
+}
