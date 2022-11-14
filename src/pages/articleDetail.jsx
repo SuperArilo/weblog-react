@@ -5,7 +5,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite'
 import WaterWave from 'water-wave'
 import style from '../assets/scss/articleDetail.module.scss'
 import { useSearchParams } from 'react-router-dom'
-import Editor from '../components/editor'
+import Tinymce from '../components/editor'
 const ArticleDetail = (props) => {
     const [params] = useSearchParams()
     return (
@@ -36,7 +36,7 @@ const ArticleDetail = (props) => {
                             </div>
                         </div>
                     </div>
-                    <Editor />
+                    <Tinymce />
                 </div>
             </div>
         </div>
