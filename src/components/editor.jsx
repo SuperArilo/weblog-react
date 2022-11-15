@@ -1,8 +1,9 @@
 import React from 'react'
 import { Editor } from '@tinymce/tinymce-react'
-export default class Tiinymce extends React.Component {
+export default class Tinymce extends React.Component {
     state = {
-        editorRef: null,
+        modelValue: null,
+        initialValue: null,
         config: {
             height: 200,
             skin: 'oxide',
@@ -16,11 +17,11 @@ export default class Tiinymce extends React.Component {
                 'insertdatetime', 'media', 'table', 'preview', 'help', 'wordcount'
             ],
             toolbar: [
-                { name: 'history', items: [ 'undo', 'redo', 'blocks' ] },
                 { name: 'styles', items: [ 'styles' ] },
                 { name: 'formatting', items: [ 'bold', 'italic', 'forecolor', 'image'] },
                 { name: 'alignment', items: [ 'alignleft', 'aligncenter', 'alignright', 'alignjustify' ] },
-                { name: 'indentation', items: [ 'bullist', 'numlist', 'outdent', 'indent' ] }
+                { name: 'indentation', items: [ 'bullist', 'numlist', 'outdent', 'indent', 'table' ] },
+                { name: 'history', items: [ 'undo', 'redo' ] }
             ],
             toolbar_mode: 'sliding',
             content_style: 'body { font-size:14px }',
@@ -31,20 +32,12 @@ export default class Tiinymce extends React.Component {
             }
         }
     }
-    log = () => {
-        console.log(this.state.editorRef)
-    }
     render(){
         return (
-            <div>
-                <Editor
-                    tinymceScriptSrc={process.env.PUBLIC_URL + '/tinymce/tinymce.min.js'}
-                    onInit={(evt, editor) => this.setState({editorRef: editor})}
-                    initialValue='<p>This is the initial content of the editor.</p>'
-                    init={this.state.config}
-                />
-                <button onClick={this.log}>Log editor content</button>
-            </div>
+            <Editor tinymceScriptSrc={ process.env.PUBLIC_URL + '/tinymce/tinymce.min.js' } 
+            initialValue={this.state.initialValue} 
+            init={this.state.config}
+            onChange={(event, editor) => { this.setState({ modelValue: editor.getContent() }) }} />
         )
     }
 }

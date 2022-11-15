@@ -25,7 +25,7 @@ const App = () => {
 			<div className='router-render'>
 			<Routes location={location}>
 				<Route path='/' element={<IndexPage />} />
-				<Route path='/detail' element={<ArticleDetail />} />
+				<Route path='/detail/:articleId' element={<ArticleDetail />} />
 			</Routes>
 			</div>
 		</div>

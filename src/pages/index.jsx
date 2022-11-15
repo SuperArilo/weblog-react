@@ -8,8 +8,8 @@ import WaterWave from 'water-wave'
 import 'water-wave/style.css'
 import AsukaButton from '../components/asukaButton'
 import { articleListGet } from '../util/article'
-import { withSnackbar } from 'notistack'
 import { useNavigate } from "react-router-dom"
+import customTips from '../util/notostack/customTips'
 class IndexPage extends React.Component {
     state = {
         articleList: [],
@@ -25,11 +25,10 @@ class IndexPage extends React.Component {
                     articleList: resq.data.list
                 })
             } else {
-                this.props.enqueueSnackbar(resq.message, { variant: 'error', autoHideDuration: 3000, anchorOrigin: { vertical: 'top', horizontal: 'center'} })
+                customTips.error(resq.message)
             }
-            
         }).catch(err => {
-            this.props.enqueueSnackbar(err.message, { variant: 'error', autoHideDuration: 3000, anchorOrigin: { vertical: 'top', horizontal: 'center'} })
+            customTips.error(err.message)
         })
     }
     render() {
@@ -64,9 +63,6 @@ class IndexPage extends React.Component {
 }
 const Article = (props) => {
     const navigate = useNavigate()
-    const hadnleClick = (id) => {
-        navigate(`detail?id=${id}`)
-    }
     return (
         <li>
             <img src={props.item.articlePicture} title={props.item.articleTitle} alt={props.item.articleTitle} />
@@ -75,7 +71,7 @@ const Article = (props) => {
                 <span className={style.article_time}>{props.item.createTime}</span>
                 <p className={style.article_introduce}>{props.item.articleIntroduction}</p>
                 <div className={style.article_bottom_function}>
-                    <AsukaButton text='开始阅读' class='read' onClick={() => {hadnleClick(props.item.id)}}/>
+                    <AsukaButton text='开始阅读' class='read' onClick={() => { navigate(`detail/${props.item.id}`) }}/>
                     <div className={style.right_article_data}>
                         <div>
                             <VisibilityIcon />
@@ -98,4 +94,4 @@ const Article = (props) => {
         </li>
     )
 }
-export default withSnackbar(IndexPage)
+export default IndexPage

@@ -14,10 +14,7 @@ export const articleContentGet = (params) => {
     return request({
         url: '/article/content',
         method: 'get',
-        params: params,
-        paramsSerializer: params => {
-            return Qs.stringify(params, {arrayFormat: 'repeat'})
-        }
+        params: params
     })
 }
 //文章喜欢
