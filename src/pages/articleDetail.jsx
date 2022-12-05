@@ -31,7 +31,7 @@ class ArticleInfoTop extends React.Component {
                 setTimeout(() => {
                     this.setState({ articleInstance: resq.data })
                     this.props.getArticleData(resq.data)
-                }, 3000)
+                }, 1000)
             } else {
                 customTips.error(resq.message)
             }

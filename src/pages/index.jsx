@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import style from '../assets/scss/indexPage.module.scss'
 import Switch from '@mui/material/Switch'
 import VisibilityIcon from '@mui/icons-material/Visibility'
@@ -33,7 +33,7 @@ class IndexPage extends React.Component {
     }
     render() {
         return (
-            <div className={style.index_content}>
+            <div className={ this.props.isMobile ? style.index_content_mobile:style.index_content }>
                 <div className={style.index_sider}>
                     <header className={style.sider_header_tips}>
                         <Switch defaultChecked />
@@ -63,6 +63,7 @@ class IndexPage extends React.Component {
 }
 const Article = (props) => {
     const navigate = useNavigate()
+    const [index, setIndex] = useState(0)
     return (
         <li>
             <img src={props.item.articlePicture} title={props.item.articleTitle} alt={props.item.articleTitle} />
