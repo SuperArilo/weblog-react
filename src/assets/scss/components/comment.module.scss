@@ -1,0 +1,119 @@
+.comment_box
+{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: border 0.3s;
+    position: relative;
+    .comment_top
+    {
+        width: 100%;
+        height: 3.2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .comment_top_left
+        {
+            height: inherit;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            img
+            {
+                width: 2.6rem;
+                height: 2.6rem;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+            .vistor_info
+            {
+                height: inherit;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-around;
+                margin-left: 0.5rem;
+                div
+                {
+                    display: flex;
+                    justify-content: flex-start;
+                    align-items: center;
+                    span
+                    {
+                        min-width: 4rem;
+                        font-size: 0.65rem;
+                        color: #4c4e4d;
+                        transition: color 0.3s;
+                    }
+                    button
+                    {
+                        color: #ffffff;
+                        font-size: 0.6rem;
+                        padding: 0.1rem 0.3rem;
+                        cursor: pointer;
+                        border-radius: 0.25rem;
+                        margin-left: 0.5rem;
+                    }
+                    .relply_button
+                    {
+                        background-color: #0478be;
+                    }
+                    .delete_button
+                    {
+                        background-color: rgb(255, 85, 85);
+                    }
+                }
+                .vistor_info_time
+                {
+                    font-size: 0.6rem;
+                    transition: color 0.3s;
+                    color: #4c4e4d;
+                    font-weight: 400;
+                    letter-spacing: 0.05rem;
+                }
+            }
+        }
+        .comment_top_right
+        {
+            height: inherit;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            i
+            {
+                color: darkgray;
+                cursor: pointer;
+                transition: transform 0.3s, color 0.3s;
+            }
+            i:hover
+            {
+                
+                transform: scale(1.2);
+            }
+            .had_liked
+            {
+                color: red;
+            }
+            span
+            {
+                font-size: 0.6rem;
+                color: rgb(204, 204, 204);
+                margin-top: 0.25rem;
+                transition: color 0.3s;
+            }
+        }
+    }
+    .comment_conten_render
+    {
+        width: 100%;
+        padding: 0.5rem 1rem;
+        min-height: 3rem;
+        border-radius: 0.2rem;
+        margin-bottom: 1rem;
+        background-color: #fcfcfc;
+    }
+    .comment_editor
+    {
+        width: 100%;
+    }
+}

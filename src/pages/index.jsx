@@ -1,9 +1,6 @@
 import React, { useState } from 'react'
 import style from '../assets/scss/indexPage.module.scss'
 import Switch from '@mui/material/Switch'
-import VisibilityIcon from '@mui/icons-material/Visibility'
-import FavoriteIcon from '@mui/icons-material/Favorite'
-import CommentIcon from '@mui/icons-material/Comment'
 import WaterWave from 'water-wave'
 import 'water-wave/style.css'
 import AsukaButton from '../components/asukaButton'
@@ -75,17 +72,17 @@ const Article = (props) => {
                     <AsukaButton text='开始阅读' class='read' onClick={() => { navigate(`detail/${props.item.id}`) }}/>
                     <div className={style.right_article_data}>
                         <div>
-                            <VisibilityIcon />
+                            <i className="fas fa-eye"/>
                             <span>{props.item.articleViews}</span>
                             <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
                         </div>
                         <div>
-                            <FavoriteIcon color={props.item.isLike ? 'error':''} />
+                            <i className="fas fa-heart" color={props.item.isLike ? 'error':''} />
                             <span>{props.item.articleLikes}</span>
                             <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
                         </div>
                         <div>
-                            <CommentIcon />
+                            <i className="fas fa-comment-alt"/>
                             <span>{props.item.commentTotal}</span>
                             <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
                         </div>

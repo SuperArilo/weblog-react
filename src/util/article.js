@@ -30,10 +30,7 @@ export const articleCommentGet = (params) => {
     return request({
         url: '/article/comment/list',
         method: 'get',
-        params: params,
-        paramsSerializer: params => {
-            return Qs.stringify(params, {arrayFormat: 'repeat'})
-        }
+        params: params
     })
 }
 

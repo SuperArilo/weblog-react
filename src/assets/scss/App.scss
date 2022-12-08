@@ -72,11 +72,12 @@ ul , li
             z-index: 1;
             .left-webside-icon
             {
-                font-size: 1.3rem;
+                font-size: 1.2rem;
                 letter-spacing: 0.1rem;
-                transition: color 0.3s;
                 cursor: pointer;
                 color: rgb(97, 97, 97);
+                border-radius: 0.3rem;
+                overflow: hidden;
             }
         }
         .header-nav
@@ -99,7 +100,7 @@ ul , li
                     display: flex;
                     justify-content: center;
                     align-items: center;
-                    font-size: 0.9rem;
+                    font-size: 0.85rem;
                     font-weight: 400;
                     cursor: pointer;
                     letter-spacing: 0.08rem;
@@ -166,4 +167,64 @@ ul , li
 .fade-enter-active, .fade-exit-active
 {
     transition: opacity 300ms;
+}
+.box-fade-enter
+{
+    opacity: 0;
+}
+.box-fade-enter-active
+{
+    transition: all 300ms;
+    opacity: 1;
+}
+.box-fade-exit
+{
+    opacity: 1;
+}
+.box-fade-exit-active
+{
+    transition: all 300ms;
+    opacity: 0;
+}
+@media screen and (min-width:1400px)
+{
+    html
+    {
+        font-size: 18px;
+    }
+}
+@media screen and (max-width:1400px) and (min-width:1200px)
+{
+    html
+    {
+        font-size: 18px;
+    }
+}
+@media screen and (max-width:1200px) and (min-width:936px)
+{
+    html
+    {
+        font-size: 16px;
+    }
+}
+@media screen and (max-width:936px) and (min-width:767px)
+{
+    html
+    {
+        font-size: 16px;
+    }
+}
+@media screen and (max-width:767px) and (min-width:676px)
+{
+    html
+    {
+        font-size: 15px;
+    }
+}
+@media screen and (max-width:676px)
+{
+    html
+    {
+        font-size: 14px;
+    }
 }

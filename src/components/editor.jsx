@@ -27,7 +27,7 @@ export default class Tinymce extends React.Component {
             content_style: 'body { font-size:14px }',
             images_upload_handler: (blobInfo, success) => {
                 return new Promise((resolve, reject) => {
-                    
+                    return
                 })
             }
         }

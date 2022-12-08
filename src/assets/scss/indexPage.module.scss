@@ -36,7 +36,7 @@
             .auto_play_span
             {
                 color: rgba(0, 0, 0, 0.6);
-                font-size: 1.05rem;
+                font-size: 1rem;
                 letter-spacing: 0.15rem;
             }
         }
@@ -102,20 +102,20 @@
                         .article_title
                         {
                             font-weight: 600;
-                            font-size: 1.2rem;
+                            font-size: 1.1rem;
                             margin-bottom: 0.8rem;
                         }
                         .article_time
                         {
                             color: rgba(0, 0, 0, 0.6);
-                            font-size: 1rem;
+                            font-size: 0.9rem;
                             letter-spacing: 0.1rem;
                         }
                         .article_introduce
                         {
                             color: rgba(0, 0, 0, 0.87);
                             margin-top: 1rem;
-                            font-size: 0.9rem;
+                            font-size: 0.85rem;
                             letter-spacing: 0.04rem;
                             display: -webkit-box;
                             -webkit-line-clamp: 2;
@@ -143,18 +143,19 @@
                             border-radius: 0.3rem;
                             overflow: hidden;
                             cursor: pointer;
-                            svg
+                            i
                             {
                                 transition: transform 0.25s;
+                                font-size: 1rem;
                             }
-                            svg:hover
+                            i:hover
                             {
                                 transform: scale(1.1);
                             }
                             span
                             {
                                 font-size: 0.8rem;
-                                margin-left: 0.3rem;
+                                margin-left: 0.4rem;
                             }
                         }
                     }
