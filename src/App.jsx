@@ -127,7 +127,9 @@ const MobileHeaderNav = () => {
 }
 class LoginBox extends React.Component {
 	state = {
-		isShowPassword: false
+		isShowPassword: false,
+		emailAndUID: null,
+		password: null,
 	}
 	render() {
 		return(
@@ -153,7 +155,7 @@ class LoginBox extends React.Component {
 								<span>邮箱 / UID</span>
 								<span>*</span>
 							</div>
-							<input type="text" placeholder="请输入邮箱或者UID" />
+							<input type="text" placeholder="请输入邮箱或者UID" onChange={(e) => { console.log() }} />
 							<div className={signStyle.input_tips_div}>
 								<span></span>
 							</div>
