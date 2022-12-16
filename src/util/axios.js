@@ -1,7 +1,7 @@
 import axios from 'axios'
 axios.defaults.withCredentials = false
 const service = axios.create({
-    baseURL: 'http://localhost:3090/api',
+    baseURL: 'http://172.24.1.69:3090/api',
     timeout: 15000
 })
 service.interceptors.request.use( config => {

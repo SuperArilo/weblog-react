@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from 'react'
+//样式
 import style from '../assets/scss/components/comment.module.scss'
-import customTips from '../util/notostack/customTips'
 import renderHtml from '../assets/scss/renderHtml.module.scss'
+//组件
+
+//方法
+import customTips from '../util/notostack/customTips'
+
 export default class Comment extends React.Component {
     state = {
 
@@ -17,8 +22,8 @@ export default class Comment extends React.Component {
                         <div className={style.vistor_info}>
                             <div>
                                 <span>{this.props.data.replyUser.replyNickName}</span>
-                                <button className={style.relply_button} type="button">回复</button>
-                                <button className={style.delete_button} type="button">删除</button>
+                                { this.props.userInfo ? <button className={style.relply_button} type="button">回复</button>:'' }
+                                { this.props.userInfo && this.props.data.replyUser.replyUserId === this.props.userInfo.uid ? <button className={style.delete_button} type="button">删除</button>:'' }
                             </div>
                             <span className={style.vistor_info_time}>{this.props.data.createTime}</span>
                         </div>

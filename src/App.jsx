@@ -9,12 +9,16 @@ import signStyle from './assets/scss/sign.module.scss'
 import $ from 'jquery'
 import WaterWave from 'water-wave'
 import Slide from '@mui/material/Slide'
+//axios login register
+import { blogLoginUser } from './util/user'
+import customTips from './util/notostack/customTips'
 const App = () => {
 	const [loginBoxStatus, setLoginBoxStatus] = useState(false)
 	const [registerBoxStatus, setRegisterBoxStatus] = useState(false)
 	const location = useLocation()
 	const isMobileStatus = useSelector((state) => state.isMobile.status)
 	const dispatch = useDispatch()
+
 	const checkIsMobile = useCallback((value) => {
 		dispatch({ type: 'isMobile/setStatus', payload: value < 1080 })
 	}, [dispatch])
@@ -24,6 +28,21 @@ const App = () => {
 			checkIsMobile(e.target.innerWidth)
 		})
 	}, [checkIsMobile])
+	const loginSetUserInfo = useCallback((value) => {
+		dispatch({ type: 'userInfo/setInfo', payload: value })
+	}, [dispatch])
+	useEffect(() => {
+		let token = localStorage.getItem('token')
+		if(token) {
+			blogLoginUser().then(resq => {
+				if(resq.code === 200) {
+					loginSetUserInfo(resq.data.user)
+				} else {
+					localStorage.removeItem('token')
+				}
+			})
+		}
+	}, [loginSetUserInfo])
 	return (
 		<div className='render-content'>
 			{ isMobileStatus ? <MobileHeaderNav />:<PCheaderNav openLoginBox={e => { setLoginBoxStatus(e) }}/> }
@@ -39,7 +58,7 @@ const App = () => {
 			</div>
 			<CSSTransition in={loginBoxStatus} timeout={300} classNames="box-fade" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
 				<div className={signStyle.funtion_mask}>
-					<LoginBox status={loginBoxStatus} isMobile={isMobileStatus} openRegisterBox={(e) => {setRegisterBoxStatus(e)}} closeBox={(e) => {setLoginBoxStatus(e)}} />
+					<LoginBox status={loginBoxStatus} openRegisterBox={(e) => {setRegisterBoxStatus(e)}} closeBox={(e) => {setLoginBoxStatus(e)}} />
 				</div>
 			</CSSTransition>
 			<CSSTransition in={registerBoxStatus} timeout={300} classNames="box-fade" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
@@ -51,6 +70,10 @@ const App = () => {
 	)
 }
 const PCheaderNav = (props) => {
+	//hook
+	const dispatch = useDispatch()
+	const userInfo = useSelector((state) => state.userInfo.info)
+
 	const [menuIndex, setMenuIndex] = useState(0)
 	const [menuList] = useState([
 		{
@@ -108,7 +131,10 @@ const PCheaderNav = (props) => {
 				}
 			</ul>
 			<div className='right-some-function'>
-				<AsukaButton text='登录' onClick={() => { props.openLoginBox(true) }}/>
+				{ userInfo === null ? <AsukaButton text='登录' onClick={() => { props.openLoginBox(true) }}/>:
+					<img className='user-head' src={userInfo.avatar} title={userInfo.nickName} alt={userInfo.nickName} /> 
+				}
+				
 			</div>
 		</nav>
 	)
@@ -125,25 +151,62 @@ const MobileHeaderNav = () => {
 		</nav>
 	)
 }
-class LoginBox extends React.Component {
-	state = {
-		isShowPassword: false,
-		emailAndUID: null,
-		password: null,
+const LoginBox = (props) => {
+	//hook
+	const isMobileStatus = useSelector((state) => state.isMobile.status)
+	const dispatch = useDispatch()
+	//用户信息
+	const userInfo = useSelector((state) => state.userInfo.info)
+
+	const [isShowPassword, setIsShowPassword] = useState(false)
+	const [emailAndUID, setEmailAndUID] = useState(null)
+	const [password, setPassword] = useState(null)
+	const [emailMatchRule] = useState(/^(\w+([-.][A-Za-z0-9]+)*){3,18}@\w+([-.][A-Za-z0-9]+)*\.\w+([-.][A-Za-z0-9]+)*$/)
+	const [loginStatus, setLoginStatus] = useState(false)
+	const loginFunction = () => {
+		if(userInfo !== null) {
+			customTips.warning('你已经登陆过了！')
+			return
+		}
+		if(!loginStatus) {
+			setLoginStatus(true)
+			let data = new FormData()
+			if(emailMatchRule.test(emailAndUID)) {
+				data.append('email', emailAndUID)
+			} else {
+				data.append('uid', emailAndUID)
+			}
+			data.append('password', password)
+			setTimeout(() => {
+				blogLoginUser(data).then(resq => {
+					if(resq.code === 200) {
+						localStorage.setItem('token', resq.data.token)
+						dispatch({ type: 'userInfo/setInfo', payload: resq.data.user })
+						customTips.success(resq.message)
+						setTimeout(() => { props.closeBox(false) }, 1000)
+					} else {
+						customTips.error(resq.message)
+					}
+					setLoginStatus(false)
+				}).catch(err => {
+					customTips.error(err.message)
+					setLoginStatus(false)
+				})
+			}, 2000)
+		}
 	}
-	render() {
-		return(
-			<Slide direction="up" in={this.props.status} mountOnEnter unmountOnExit>
-				<div className={signStyle.login_box + ' ' + (this.props.isMobile ? signStyle.box_mobile:signStyle.box_pc)}>
+	return (
+		<Slide direction="up" in={props.status} mountOnEnter unmountOnExit>
+				<div className={signStyle.login_box + ' ' + (isMobileStatus? signStyle.box_mobile:signStyle.box_pc)}>
 					<header className={signStyle.public_title}>
 						<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
-						<i className="far fa-arrow-alt-circle-left" onClick={() => { setTimeout(() => {this.props.closeBox(false)}, 300) }}/>
+						<i className="far fa-arrow-alt-circle-left" onClick={() => { setTimeout(() => {props.closeBox(false)}, 300) }}/>
 					</header>
 					<div className={signStyle.top_tips}>
 						<span className={signStyle.left_span}>欢迎回来,</span>
 						<button type="button" className={signStyle.right_register} onClick={() => {
-							this.props.openRegisterBox(true)
-							this.props.closeBox(false)
+							props.openRegisterBox(true)
+							props.closeBox(false)
 						}}>
 							注册
 						</button>
@@ -155,7 +218,7 @@ class LoginBox extends React.Component {
 								<span>邮箱 / UID</span>
 								<span>*</span>
 							</div>
-							<input type="text" placeholder="请输入邮箱或者UID" onChange={(e) => { console.log() }} />
+							<input type="text" placeholder="请输入邮箱或者UID" onChange={(e) => { setEmailAndUID(e.target.value) }} />
 							<div className={signStyle.input_tips_div}>
 								<span></span>
 							</div>
@@ -166,16 +229,18 @@ class LoginBox extends React.Component {
 								<span>*</span>
 							</div>
 							<div className={signStyle.input_password_label}>
-								<input type={true ? 'text':'password'} maxLength="16" placeholder="请输入密码" autoComplete="off" />
-								<i className={'far ' + signStyle.input_show_password + ' ' + (this.state.isShowPassword? 'fa-eye-slash':'fa-eye')} onClick={() => { this.setState({ isShowPassword: !this.state.isShowPassword }) }} />
+								<input type={isShowPassword ? 'text':'password'} maxLength="16" placeholder="请输入密码" autoComplete="off" onChange={(e) => { setPassword(e.target.value) }} />
+								<i className={'far ' + signStyle.input_show_password + ' ' + (isShowPassword ? 'fa-eye-slash':'fa-eye')} onClick={() => { setIsShowPassword(!isShowPassword) }} />
 							</div>
 							<div className={signStyle.input_tips_div}>
 								<span></span>
 							</div>
 						</form>
 					</div>
-					<button type="button" title="登录" className={signStyle.confirm_button + ' ' + (this.props.isMobile ? signStyle.confirm_button_mobile:signStyle.confirm_button_pc)} >
-						登陆
+					<button type="button" title="登录" className={signStyle.confirm_button + ' ' + (isMobileStatus ? signStyle.confirm_button_mobile:signStyle.confirm_button_pc)} onClick={() => { loginFunction() }}>
+						{ !loginStatus && userInfo === null ? '登陆':'' }
+						{ loginStatus ? <i className='fas fa-circle-notch fa-spin' />:'' }
+						{ userInfo !== null && !loginStatus ? <i className='fas fa-check' style={{ 'color': '#80e298' }} />:''}
 						<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
 					</button>
 					<span className={signStyle.other_login_tips}>其他登录方式</span>
@@ -187,8 +252,7 @@ class LoginBox extends React.Component {
 					</div>
 				</div>
 			</Slide>
-		)
-	}
+	)
 }
 class RegisterBox extends React.Component {
 	state = {

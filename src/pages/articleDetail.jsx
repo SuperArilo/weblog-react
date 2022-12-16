@@ -1,23 +1,60 @@
+import { TransitionGroup } from 'react-transition-group'
+//hook
 import React, { useEffect, useState } from 'react'
-import WaterWave from 'water-wave'
-import style from '../assets/scss/articleDetail.module.scss'
+import { useSelector, useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import Tinymce from '../components/editor'
-import { articleContentGet } from '../util/article'
-import customTips from '../util/notostack/customTips'
+//样式
+import style from '../assets/scss/articleDetail.module.scss'
 import renderHtml from '../assets/scss/renderHtml.module.scss'
+//组件
+import Tinymce from '../components/editor'
+import customTips from '../util/notostack/customTips'
 import Skeleton from '@mui/material/Skeleton'
 import Comment from '../components/comment'
-import { articleCommentGet } from '../util/article'
+import WaterWave from 'water-wave'
+import Collapse from '@mui/material/Collapse'
+//方法
+import { articleContentGet, articleCommentGet, replyComment } from '../util/article'
+
 const ArticleDetail = (props) => {
+    //hook
     const { articleId } = useParams()
+    const userInfo = useSelector((state) => state.userInfo.info)
+    //Params
+    const [addCommentStatus, setAddCommentStatus] = useState(false)
+    const [articleListRef, setArticleListRef] = useState(null)
+    //function
+    const sendCommentToServer = (content) => {
+        if(content === null || content === '' || content === '<p></p>') {
+            customTips.warning('不能提交空白哦 ⊙﹏⊙∥')
+            return
+        }
+        if(!addCommentStatus) {
+            setAddCommentStatus(true)
+            let data = new FormData()
+            data.append('articleId', articleId)
+            data.append('content', content)
+            replyComment(data).then(resq => {
+                if(resq.code === 200) {
+                    customTips.success(resq.message)
+                    articleListRef.commentListGet()
+                } else {
+                    customTips.error(resq.message)
+                }
+                setAddCommentStatus(false)
+            }).catch(err => {
+                customTips.error(err.message)
+                setAddCommentStatus(false)
+            })
+        }
+    }
     return (
         <div className={style.article_detail}>
             <div className={style.article_detail_content}>
                 <ArticleInfoTop articleId={articleId}/>
-                {/* { articleInstance === null ? <Tinymce />:'' } */}
+                { userInfo !== null ? <Tinymce placeholder='发表一条友善的评论吧...' status={addCommentStatus} getContent={(value) => { sendCommentToServer(value) }}/>:'' }
                 <span className={style.article_vistor_title}>评论</span>
-                <ArticleVistorList articleId={articleId}/>
+                <ArticleVistorList childrenRef={(ref) => { setArticleListRef(ref) }} articleId={articleId} userInfo={userInfo} />
             </div>
         </div>
     )
@@ -76,6 +113,10 @@ class ArticleVistorList extends React.Component {
         commentList: []
     }
     componentDidMount() {
+        this.props.childrenRef(this)
+        this.commentListGet()
+    }
+    commentListGet() {
         articleCommentGet(this.state.requestInstance).then(resq => {
             if(resq.code === 200) {
                 this.setState({
@@ -91,11 +132,17 @@ class ArticleVistorList extends React.Component {
     render() {
         return(
             <ul className={style.article_vistor_list}>
-                { 
-                    this.state.commentList.map(item => {
-                        return <Comment key={item.commentId} data={item}/>
-                    })
-                }
+                <TransitionGroup>
+                    { 
+                        this.state.commentList.map(item => {
+                            return (
+                                <Collapse key={item.commentId}>
+                                    <Comment userInfo={this.props.userInfo} key={item.commentId} data={item}/>
+                                </Collapse>
+                            )
+                        })
+                    }
+                </TransitionGroup>
             </ul>
         )
     }

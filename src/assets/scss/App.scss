@@ -7,8 +7,7 @@ body, html
 {
     width: 100%;
     height: 100%;
-    overflow-x: hidden;
-    overflow-y: overlay;
+    overflow: hidden;
     -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
     font-family: "Roboto","Helvetica","Arial",sans-serif;
     background-color: rgb(244, 244, 244);
@@ -52,10 +51,12 @@ ul , li
 {
     width: 100%;
     height: 100%;
+    overflow: hidden;
     .render-content
     {
         width: 100%;
         height: 100%;
+        overflow: hidden;
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
@@ -118,7 +119,15 @@ ul , li
             }
             .right-some-function
             {
-                
+                .user-head
+                {
+                    width: 2.5rem;
+                    height: 2.5rem;
+                    overflow: hidden;
+                    object-fit: cover;
+                    border-radius: 50%;
+                    border: solid 1px rgba(0, 0, 0, 0.7);
+                }
             }
         }
         .mobile-header-nav
