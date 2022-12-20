@@ -7,6 +7,7 @@ import AsukaButton from '../components/asukaButton'
 import { articleListGet } from '../util/article'
 import { useNavigate } from "react-router-dom"
 import customTips from '../util/notostack/customTips'
+import $ from 'jquery'
 class IndexPage extends React.Component {
     state = {
         articleList: [],
@@ -61,6 +62,10 @@ class IndexPage extends React.Component {
 const Article = (props) => {
     const navigate = useNavigate()
     const [index, setIndex] = useState(0)
+    const routerToArticle = () => {
+        navigate(`detail/${props.item.id}`)
+        $('#react-by-asukamis').children().stop().animate({'scrollTop': 0})
+    }
     return (
         <li>
             <img src={props.item.articlePicture} title={props.item.articleTitle} alt={props.item.articleTitle} />
@@ -69,7 +74,7 @@ const Article = (props) => {
                 <span className={style.article_time}>{props.item.createTime}</span>
                 <p className={style.article_introduce}>{props.item.articleIntroduction}</p>
                 <div className={style.article_bottom_function}>
-                    <AsukaButton text='开始阅读' class='read' onClick={() => { navigate(`detail/${props.item.id}`) }}/>
+                    <AsukaButton text='开始阅读' class='read' onClick={() => { routerToArticle() }}/>
                     <div className={style.right_article_data}>
                         <div>
                             <i className="fas fa-eye"/>

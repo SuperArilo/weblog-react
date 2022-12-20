@@ -1,24 +1,33 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import AsukaButton from './components/asukaButton'
-import { Route, Routes, useLocation, useNavigate  } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
-import IndexPage from './pages/index'
-import ArticleDetail from './pages/articleDetail'
 import { SwitchTransition, CSSTransition } from 'react-transition-group'
 import signStyle from './assets/scss/sign.module.scss'
-import $ from 'jquery'
-import WaterWave from 'water-wave'
-import Slide from '@mui/material/Slide'
-//axios login register
+//hook
+import { Route, Routes, useLocation, useNavigate  } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+//axios
 import { blogLoginUser } from './util/user'
 import customTips from './util/notostack/customTips'
+//组件
+import WaterWave from 'water-wave'
+import Slide from '@mui/material/Slide'
+import ArticleDetail from './pages/articleDetail'
+import IndexPage from './pages/index'
+import $ from 'jquery'
+import Avatar from './components/Avatar'
+import About from './components/About'
+import AsukaPopper from './components/popper'
+
 const App = () => {
-	const [loginBoxStatus, setLoginBoxStatus] = useState(false)
-	const [registerBoxStatus, setRegisterBoxStatus] = useState(false)
+	//hook
 	const location = useLocation()
 	const isMobileStatus = useSelector((state) => state.isMobile.status)
 	const dispatch = useDispatch()
-
+	const userInfo = useSelector((state) => state.userInfo.info)
+	//param
+	const [loginBoxStatus, setLoginBoxStatus] = useState(false)
+	const [registerBoxStatus, setRegisterBoxStatus] = useState(false)
+	//function
 	const checkIsMobile = useCallback((value) => {
 		dispatch({ type: 'isMobile/setStatus', payload: value < 1080 })
 	}, [dispatch])
@@ -45,7 +54,7 @@ const App = () => {
 	}, [loginSetUserInfo])
 	return (
 		<div className='render-content'>
-			{ isMobileStatus ? <MobileHeaderNav />:<PCheaderNav openLoginBox={e => { setLoginBoxStatus(e) }}/> }
+			{ isMobileStatus ? <MobileHeaderNav />:<PCheaderNav userInfo={userInfo} openLoginBox={e => { setLoginBoxStatus(e) }}/> }
 			<div className='router-render'>
 				<SwitchTransition mode="out-in">
 					<CSSTransition key={location.pathname} timeout={300} classNames="fade" nodeRef={null}>
@@ -56,6 +65,7 @@ const App = () => {
 					</CSSTransition>
 				</SwitchTransition>
 			</div>
+			<About />
 			<CSSTransition in={loginBoxStatus} timeout={300} classNames="box-fade" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
 				<div className={signStyle.funtion_mask}>
 					<LoginBox status={loginBoxStatus} openRegisterBox={(e) => {setRegisterBoxStatus(e)}} closeBox={(e) => {setLoginBoxStatus(e)}} />
@@ -72,8 +82,8 @@ const App = () => {
 const PCheaderNav = (props) => {
 	//hook
 	const dispatch = useDispatch()
-	const userInfo = useSelector((state) => state.userInfo.info)
-
+	const navigate = useNavigate()
+	//param
 	const [menuIndex, setMenuIndex] = useState(0)
 	const [menuList] = useState([
 		{
@@ -107,12 +117,14 @@ const PCheaderNav = (props) => {
 			iconClass: 'fa-paw'
 		}
 	])
-	const navigate = useNavigate()
+	const [popperStatus, setPopperStatus] = useState(false)
+	const [popperTarget, setPopperTarget] =useState(null)
+	//function
 	const menuNavFunction = (object) => {
 		if(menuIndex === object.id) return
 		setMenuIndex(object.id)
 		navigate(object.path)
-		$('#react-by-asukamis').stop().animate({'scrollTop': 0})
+		$('#react-by-asukamis').children().stop().animate({'scrollTop': 0})
 	}
 	const goToMainPage = () => {
 		navigate('/')
@@ -131,24 +143,41 @@ const PCheaderNav = (props) => {
 				}
 			</ul>
 			<div className='right-some-function'>
-				{ userInfo === null ? <AsukaButton text='登录' onClick={() => { props.openLoginBox(true) }}/>:
-					<img className='user-head' src={userInfo.avatar} title={userInfo.nickName} alt={userInfo.nickName} /> 
-				}
 				
+				{ props.userInfo === null ? <AsukaButton text='登录' onClick={() => { props.openLoginBox(true) }}/>:
+					<div className='logged-box'>
+						<Avatar src={props.userInfo.avatar} title={props.userInfo.nickName} alt={props.userInfo.nickName}/>
+						<i className='fas fa-sign-out-alt' onClick={(e) => { setPopperStatus(true);setPopperTarget(e.target) }}/>
+						<AsukaPopper open={popperStatus} title='确定要退出登陆吗？' target={popperTarget} placement='bottom' onConfirm={() => { dispatch({ type: 'userInfo/setInfo', payload: null });localStorage.removeItem('token') }} onCancel={() => { setPopperStatus(false) }} />
+					</div>
+				}
 			</div>
 		</nav>
 	)
 }
 const MobileHeaderNav = () => {
+	const [drawerStatus, setDrawerStatus] = useState(false)
 	return (
-		<nav className='mobile-header-nav'>
-			<div className='left-empty-div' />
-			<span className='left-webside-icon'>Asukamis</span>
-			<div className='right-mobile-bar'>
-				<i className="fas fa-bars"/>
-				<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
-			</div>
-		</nav>
+		<>
+			<nav className='mobile-header-nav'>
+				<div className='left-empty-div' />
+				<span className='left-webside-icon'>Asukamis</span>
+				<div className='right-mobile-bar' onClick={() => { setDrawerStatus(true) }}>
+					<i className="fas fa-bars"/>
+					<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
+				</div>
+			</nav>
+			<CSSTransition in={drawerStatus} timeout={300} classNames="box-fade" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
+				<div className={signStyle.funtion_mask}>
+					<Slide direction="right" in={drawerStatus} mountOnEnter unmountOnExit>
+						<div>
+							awdawwadadw
+						</div>
+					</Slide>
+				</div>
+			</CSSTransition>
+		</>
+		
 	)
 }
 const LoginBox = (props) => {
@@ -197,61 +226,61 @@ const LoginBox = (props) => {
 	}
 	return (
 		<Slide direction="up" in={props.status} mountOnEnter unmountOnExit>
-				<div className={signStyle.login_box + ' ' + (isMobileStatus? signStyle.box_mobile:signStyle.box_pc)}>
-					<header className={signStyle.public_title}>
-						<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
-						<i className="far fa-arrow-alt-circle-left" onClick={() => { setTimeout(() => {props.closeBox(false)}, 300) }}/>
-					</header>
-					<div className={signStyle.top_tips}>
-						<span className={signStyle.left_span}>欢迎回来,</span>
-						<button type="button" className={signStyle.right_register} onClick={() => {
-							props.openRegisterBox(true)
-							props.closeBox(false)
-						}}>
-							注册
-						</button>
-					</div>
-					<p className={signStyle.top_tips_line}>请填写以下信息进行登录</p>
-					<div className={signStyle.input_list}>
-						<label className={signStyle.input_item}>
-							<div className={signStyle.input_top_div}>
-								<span>邮箱 / UID</span>
-								<span>*</span>
-							</div>
-							<input type="text" placeholder="请输入邮箱或者UID" onChange={(e) => { setEmailAndUID(e.target.value) }} />
-							<div className={signStyle.input_tips_div}>
-								<span></span>
-							</div>
-						</label>
-						<form className={signStyle.input_password}>
-							<div className={signStyle.input_top_div}>
-								<span>密码</span>
-								<span>*</span>
-							</div>
-							<div className={signStyle.input_password_label}>
-								<input type={isShowPassword ? 'text':'password'} maxLength="16" placeholder="请输入密码" autoComplete="off" onChange={(e) => { setPassword(e.target.value) }} />
-								<i className={'far ' + signStyle.input_show_password + ' ' + (isShowPassword ? 'fa-eye-slash':'fa-eye')} onClick={() => { setIsShowPassword(!isShowPassword) }} />
-							</div>
-							<div className={signStyle.input_tips_div}>
-								<span></span>
-							</div>
-						</form>
-					</div>
-					<button type="button" title="登录" className={signStyle.confirm_button + ' ' + (isMobileStatus ? signStyle.confirm_button_mobile:signStyle.confirm_button_pc)} onClick={() => { loginFunction() }}>
-						{ !loginStatus && userInfo === null ? '登陆':'' }
-						{ loginStatus ? <i className='fas fa-circle-notch fa-spin' />:'' }
-						{ userInfo !== null && !loginStatus ? <i className='fas fa-check' style={{ 'color': '#80e298' }} />:''}
-						<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
+			<div className={signStyle.login_box + ' ' + (isMobileStatus? signStyle.box_mobile:signStyle.box_pc)}>
+				<header className={signStyle.public_title}>
+					<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
+					<i className="far fa-arrow-alt-circle-left" onClick={() => { setTimeout(() => {props.closeBox(false)}, 300) }}/>
+				</header>
+				<div className={signStyle.top_tips}>
+					<span className={signStyle.left_span}>欢迎回来,</span>
+					<button type="button" className={signStyle.right_register} onClick={() => {
+						props.openRegisterBox(true)
+						props.closeBox(false)
+					}}>
+						注册
 					</button>
-					<span className={signStyle.other_login_tips}>其他登录方式</span>
-					<div className={signStyle.other_login_list}>
-						<i className="fab fa-qq"/>
-						<i className="fab fa-github"/>
-						<i className="fab fa-google"/>
-						<i className="fab fa-xbox"/>
-					</div>
 				</div>
-			</Slide>
+				<p className={signStyle.top_tips_line}>请填写以下信息进行登录</p>
+				<div className={signStyle.input_list}>
+					<label className={signStyle.input_item}>
+						<div className={signStyle.input_top_div}>
+							<span>邮箱 / UID</span>
+							<span>*</span>
+						</div>
+						<input type="text" placeholder="请输入邮箱或者UID" onChange={(e) => { setEmailAndUID(e.target.value) }} />
+						<div className={signStyle.input_tips_div}>
+							<span></span>
+						</div>
+					</label>
+					<form className={signStyle.input_password}>
+						<div className={signStyle.input_top_div}>
+							<span>密码</span>
+							<span>*</span>
+						</div>
+						<div className={signStyle.input_password_label}>
+							<input type={isShowPassword ? 'text':'password'} maxLength="16" placeholder="请输入密码" autoComplete="off" onChange={(e) => { setPassword(e.target.value) }} />
+							<i className={'far ' + signStyle.input_show_password + ' ' + (isShowPassword ? 'fa-eye-slash':'fa-eye')} onClick={() => { setIsShowPassword(!isShowPassword) }} />
+						</div>
+						<div className={signStyle.input_tips_div}>
+							<span></span>
+						</div>
+					</form>
+				</div>
+				<button type="button" title="登录" className={signStyle.confirm_button + ' ' + (isMobileStatus ? signStyle.confirm_button_mobile:signStyle.confirm_button_pc)} onClick={() => { loginFunction() }}>
+					{ !loginStatus && userInfo === null ? '登陆':'' }
+					{ loginStatus ? <i className='fas fa-circle-notch fa-spin' />:'' }
+					{ userInfo !== null && !loginStatus ? <i className='fas fa-check' style={{ 'color': '#80e298' }} />:''}
+					<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
+				</button>
+				<span className={signStyle.other_login_tips}>其他登录方式</span>
+				<div className={signStyle.other_login_list}>
+					<i className="fab fa-qq"/>
+					<i className="fab fa-github"/>
+					<i className="fab fa-google"/>
+					<i className="fab fa-xbox"/>
+				</div>
+			</div>
+		</Slide>
 	)
 }
 class RegisterBox extends React.Component {

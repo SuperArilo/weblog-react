@@ -1,9 +1,5 @@
 .comment_box
 {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    transition: border 0.3s;
     position: relative;
     .comment_top
     {
@@ -20,8 +16,9 @@
             align-items: center;
             img
             {
-                width: 2.6rem;
-                height: 2.6rem;
+                width: 2.5rem;
+                height: 2.5rem;
+                border: solid 1px rgba(0, 0, 0, 0.5);
                 border-radius: 50%;
                 object-fit: cover;
             }
@@ -39,7 +36,7 @@
                     align-items: center;
                     span
                     {
-                        min-width: 4rem;
+                        min-width: 3.5rem;
                         font-size: 0.7rem;
                         color: #4c4e4d;
                         transition: color 0.3s;
@@ -47,7 +44,7 @@
                     button
                     {
                         color: #ffffff;
-                        font-size: 0.6rem;
+                        font-size: 0.5rem;
                         padding: 0.1rem 0.3rem;
                         cursor: pointer;
                         border-radius: 0.25rem;
@@ -105,7 +102,6 @@
     }
     .comment_conten_render
     {
-        width: 100%;
         padding: 0.5rem 1rem;
         min-height: 3rem;
         border-radius: 0.2rem;
@@ -115,5 +111,21 @@
     .comment_editor
     {
         width: 100%;
+    }
+}
+.popper_box
+{
+    padding: 0.6rem;
+    border-radius: 0.2rem;
+    background-color: #ffffff;
+    box-shadow: 0 0 0.2rem rgba(0, 0, 0, 0.4);
+    p
+    {
+        font-size: 0.8rem;
+        margin-bottom: 1rem;
+    }
+    div button
+    {
+        margin-right: 0.5rem;
     }
 }

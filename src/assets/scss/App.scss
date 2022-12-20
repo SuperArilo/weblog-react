@@ -49,17 +49,14 @@ ul , li
 }
 #react-by-asukamis
 {
-    width: 100%;
     height: 100%;
     overflow: hidden;
     .render-content
     {
-        width: 100%;
         height: 100%;
-        overflow: hidden;
+        overflow-y: overlay;
         display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
+        flex-direction: column;
         .header-nav , .mobile-header-nav
         {
             width: 100%;
@@ -70,7 +67,7 @@ ul , li
             position: fixed;
             top: 0;
             left: 0;
-            z-index: 1;
+            z-index: 10;
             .left-webside-icon
             {
                 font-size: 1.2rem;
@@ -117,23 +114,23 @@ ul , li
                     background-color: rgb(231, 231, 231);
                 }
             }
-            .right-some-function
+            .right-some-function .logged-box
             {
-                .user-head
+                height: inherit;
+                display: flex;
+                align-items: center;
+                i
                 {
-                    width: 2.5rem;
-                    height: 2.5rem;
-                    overflow: hidden;
-                    object-fit: cover;
-                    border-radius: 50%;
-                    border: solid 1px rgba(0, 0, 0, 0.7);
+                    margin-left: 1rem;
+                    color: #7e7e7e;
+                    cursor: pointer;
                 }
             }
         }
         .mobile-header-nav
         {
             justify-content: space-between;
-            padding: 0 1rem;
+            padding: 0 0.8rem;
             .left-empty-div , .right-mobile-bar
             {
                 width: 2.5rem;
@@ -151,9 +148,7 @@ ul , li
         }
         .router-render
         {
-            width: 100%;
-            height: 100%;
-            overflow-y: overlay;
+            display: block;
         }
     }
 }

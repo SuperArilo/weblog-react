@@ -1,12 +1,25 @@
 .editor_tinymce
 {
     width: 100%;
-    .editor_button
+    .editor_bottom
     {
         width: 100%;
         margin-top: 1rem;
         padding: 0 1rem;
         display: flex;
-        justify-content: flex-end;
+        justify-content: space-between;
+        align-items: center;
+        .left_user_info
+        {
+            display: flex;
+            align-items: center;
+            i
+            {
+                font-size: 0.7rem;
+                margin-left: 0.5rem;
+                cursor: pointer;
+                color: rgba(0, 0, 0, 0.2);
+            }
+        }
     }
 }

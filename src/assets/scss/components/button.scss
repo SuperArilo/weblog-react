@@ -1,0 +1,38 @@
+.asuka-button
+{
+    overflow: hidden;
+    letter-spacing: 0.1rem;
+    border-radius: 0.3rem;
+    transition: color 0.25s, background-color 0.25s;
+}
+.asuka-button-normal
+{
+    background-color: rgb(25, 118, 210);
+    color: #ffffff;
+}
+.asuka-button-read
+{
+    color: #ec558c;
+    background-color: #ffffff;
+}
+.asuka-button-danger
+{
+    color: #ffffff;
+    background-color: rgb(241, 86, 86);
+}
+.button-size-big
+{
+
+}
+.button-size-normal
+{
+    min-width: 3rem;
+    min-height: 1.7rem;
+    padding: 0 0.6rem;
+    font-size: 0.75rem;
+}
+.button-size-small
+{
+    font-size: 0.7rem;
+    padding: 0.25rem 0.4rem;
+}

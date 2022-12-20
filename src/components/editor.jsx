@@ -4,8 +4,14 @@ import { Editor } from '@tinymce/tinymce-react'
 import style from '../assets/scss/components/editor.module.scss'
 //组件
 import AsukaButton from './asukaButton'
+import Avatar from './Avatar'
+//方法
+import { customUploadImage } from '../util/upload'
+import customTips from '../util/notostack/customTips'
+
 export default class Tinymce extends React.Component {
     state = {
+        tinymce: null,
         modelValue: null,
         initialValue: null,
         config: {
@@ -30,21 +36,39 @@ export default class Tinymce extends React.Component {
             ],
             toolbar_mode: 'sliding',
             content_style: 'body { font-size:14px }',
-            images_upload_handler: (blobInfo, success) => {
-                return new Promise((resolve, reject) => {
-                    return
+            setup: (editor) => {
+                this.setState({ tinymce: editor })
+            },
+            images_upload_handler: (blobInfo, success) => new Promise((resolve, reject) => {
+                let data = new FormData()
+                data.append('file', blobInfo.blob())
+                customUploadImage(data).then(resq => {
+                    if(resq.code === 200) {
+                        resolve(resq.data)
+                    } else {
+                        reject(resq.message)
+                    }
+                }).catch(err => {
+                    reject(err.message)
                 })
-            }
+            })
         }
     }
     startInit() {
         this.props.getContent(this.state.modelValue)
     }
+    clear() {
+        this.state.tinymce.setContent('')
+    }
     render() {
         return (
             <div className={style.editor_tinymce}>
                 <Editor tinymceScriptSrc={ process.env.PUBLIC_URL + '/tinymce/tinymce.min.js' } initialValue={this.state.initialValue} init={this.state.config} onChange={(event, editor) => { this.setState({ modelValue: editor.getContent() }) }} />
-                <div className={style.editor_button}>
+                <div className={style.editor_bottom}>
+                    <div className={style.left_user_info}>
+                        <Avatar src={this.props.userInfo.avatar} title={this.props.userInfo.nickName} alt={this.props.userInfo.nickName}/>
+                        <i className='fas fa-exclamation-circle'/>
+                    </div>
                     <AsukaButton text='提交' status={this.props.status} onClick={() => { this.startInit() }}/>
                 </div>
             </div>

@@ -13,7 +13,7 @@ const root = ReactDOM.createRoot(document.getElementById('react-by-asukamis'))
 root.render(
     <Provider store={store}>
         <BrowserRouter>
-            <SnackbarProvider maxSnack={ 4 } anchorOrigin={{ vertical: 'top', horizontal: 'center'}}>
+            <SnackbarProvider maxSnack={ 1 } anchorOrigin={{ vertical: 'top', horizontal: 'center'}}>
                 <App />
                 <SnackbarUtilsConfigurator />
             </SnackbarProvider>
