@@ -1,7 +1,6 @@
 import { TransitionGroup } from 'react-transition-group'
 //hook
 import React, { useEffect, useState, useRef } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 //样式
 import style from '../assets/scss/articleDetail.module.scss'
@@ -19,7 +18,6 @@ import { articleContentGet, articleCommentGet, replyComment } from '../util/arti
 const ArticleDetail = (props) => {
     //hook
     const { articleId } = useParams()
-    const userInfo = useSelector((state) => state.userInfo.info)
     //Params
     const [addCommentStatus, setAddCommentStatus] = useState(false)
     const [articleListRef, setArticleListRef] = useState(null)
@@ -55,9 +53,9 @@ const ArticleDetail = (props) => {
         <div className={style.article_detail}>
             <div className={style.article_detail_content}>
                 <ArticleInfoTop articleId={articleId} artContent={(value) => { setArtContentStatus(value) }} />
-                { userInfo !== null && artContentStatus ? <Tinymce ref={tinymce} placeholder='发表一条友善的评论吧...' status={addCommentStatus} userInfo={userInfo} getContent={(value) => { sendCommentToServer(value) }}/>:'' }
+                { props.userInfo !== null && artContentStatus ? <Tinymce ref={tinymce} placeholder='发表一条友善的评论吧...' status={addCommentStatus} userInfo={props.userInfo} getContent={(value) => { sendCommentToServer(value) }}/>:'' }
                 <span className={style.article_vistor_title}>评论</span>
-                <ArticleVistorList childrenRef={(ref) => { setArticleListRef(ref) }} articleId={articleId} userInfo={userInfo} />
+                <ArticleVistorList childrenRef={(ref) => { setArticleListRef(ref) }} articleId={articleId} userInfo={props.userInfo} />
             </div>
         </div>
     )

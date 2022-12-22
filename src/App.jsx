@@ -7,11 +7,12 @@ import { Route, Routes, useLocation, useNavigate  } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 //axios
 import { blogLoginUser } from './util/user'
-import customTips from './util/notostack/customTips'
 //组件
+import customTips from './util/notostack/customTips'
 import WaterWave from 'water-wave'
 import Slide from '@mui/material/Slide'
 import ArticleDetail from './pages/articleDetail'
+import Gossip from './pages/gossip'
 import IndexPage from './pages/index'
 import $ from 'jquery'
 import Avatar from './components/Avatar'
@@ -60,7 +61,8 @@ const App = () => {
 					<CSSTransition key={location.pathname} timeout={300} classNames="fade" nodeRef={null}>
 						<Routes location={location}>
 							<Route path='/' element={<IndexPage isMobile={ isMobileStatus }/>} />
-							<Route path='/detail/:articleId' element={<ArticleDetail />} />
+							<Route path='/detail/:articleId' element={<ArticleDetail userInfo={userInfo}/>} />
+							<Route path='/gossip' element={<Gossip userInfo={userInfo}/>} />
 						</Routes>
 					</CSSTransition>
 				</SwitchTransition>
@@ -95,7 +97,7 @@ const PCheaderNav = (props) => {
 		{
 			id: 1,
 			title: '碎语',
-			path: '/say',
+			path: '/gossip',
 			iconClass: 'fa-feather-alt'
 		},
 		{
@@ -143,12 +145,11 @@ const PCheaderNav = (props) => {
 				}
 			</ul>
 			<div className='right-some-function'>
-				
 				{ props.userInfo === null ? <AsukaButton text='登录' onClick={() => { props.openLoginBox(true) }}/>:
 					<div className='logged-box'>
 						<Avatar src={props.userInfo.avatar} title={props.userInfo.nickName} alt={props.userInfo.nickName}/>
 						<i className='fas fa-sign-out-alt' onClick={(e) => { setPopperStatus(true);setPopperTarget(e.target) }}/>
-						<AsukaPopper open={popperStatus} title='确定要退出登陆吗？' target={popperTarget} placement='bottom' onConfirm={() => { dispatch({ type: 'userInfo/setInfo', payload: null });localStorage.removeItem('token') }} onCancel={() => { setPopperStatus(false) }} />
+						<AsukaPopper open={popperStatus} title='确定要退出登陆吗？' target={popperTarget} placement='bottom' onConfirm={() => { setPopperStatus(false);dispatch({ type: 'userInfo/setInfo', payload: null });localStorage.removeItem('token') }} onCancel={() => { setPopperStatus(false) }} />
 					</div>
 				}
 			</div>

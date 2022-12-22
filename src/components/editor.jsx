@@ -7,7 +7,6 @@ import AsukaButton from './asukaButton'
 import Avatar from './Avatar'
 //方法
 import { customUploadImage } from '../util/upload'
-import customTips from '../util/notostack/customTips'
 
 export default class Tinymce extends React.Component {
     state = {
@@ -55,10 +54,11 @@ export default class Tinymce extends React.Component {
         }
     }
     startInit() {
-        this.props.getContent(this.state.modelValue)
+        
     }
     clear() {
         this.state.tinymce.setContent('')
+        this.setState({ modelValue: '' })
     }
     render() {
         return (
@@ -69,7 +69,7 @@ export default class Tinymce extends React.Component {
                         <Avatar src={this.props.userInfo.avatar} title={this.props.userInfo.nickName} alt={this.props.userInfo.nickName}/>
                         <i className='fas fa-exclamation-circle'/>
                     </div>
-                    <AsukaButton text='提交' status={this.props.status} onClick={() => { this.startInit() }}/>
+                    <AsukaButton text='提交' status={this.props.status} onClick={() => { this.props.getContent(this.state.modelValue) }}/>
                 </div>
             </div>
         )
