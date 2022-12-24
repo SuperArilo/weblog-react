@@ -18,7 +18,13 @@ service.interceptors.request.use( config => {
 service.interceptors.response.use( response => {
         return Promise.resolve(response.data)
     }, error => {
-        return Promise.reject(error.response.data)
+        if(error.response) {
+            return Promise.reject(error.response.data)
+        } else {
+            error.message = '无法完成请求！'
+            return Promise.reject(error)
+        }
+        
     }
 )
 export default service

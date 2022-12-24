@@ -1,27 +1,47 @@
 import React, { useState } from 'react'
+//样式
 import style from '../assets/scss/indexPage.module.scss'
-import Switch from '@mui/material/Switch'
-import WaterWave from 'water-wave'
 import 'water-wave/style.css'
+//组件
+import Switch from '@mui/material/Switch'
 import AsukaButton from '../components/asukaButton'
+import WaterWave from 'water-wave'
+import GossipContent from '../components/gossipContent'
+//hook
 import { articleListGet } from '../util/article'
 import { useNavigate } from "react-router-dom"
-import customTips from '../util/notostack/customTips'
 import $ from 'jquery'
+//方法
+import { gossipList } from '../util/gossip'
+import customTips from '../util/notostack/customTips'
 class IndexPage extends React.Component {
     state = {
         articleList: [],
-        requestInstance: {
+        gossipList: [],
+        articleRequestInstance: {
+            pageNum: 1,
+            pageSize: 10
+        },
+        gossipRequestInstance: {
             pageNum: 1,
             pageSize: 10
         }
     }
     componentDidMount(){
-        articleListGet(this.state.requestInstance).then(resq => {
+        articleListGet(this.state.articleRequestInstance).then(resq => {
             if(resq.code === 200) {
                 this.setState({
                     articleList: resq.data.list
                 })
+            } else {
+                customTips.error(resq.message)
+            }
+        }).catch(err => {
+            customTips.error(err.message)
+        })
+        gossipList(this.state.gossipRequestInstance).then(resq => {
+            if(resq.code === 200) {
+                this.setState({ gossipList: resq.data.list })
             } else {
                 customTips.error(resq.message)
             }
@@ -53,6 +73,13 @@ class IndexPage extends React.Component {
                     </div>
                     <div className={style.public_sub_content}>
                         <span className={style.public_sub_content_header}>最近碎语</span>
+                        <div className={style.gossip_list}>
+                            {
+                                this.state.gossipList.map(item => {
+                                    return <GossipContent key={item.id} data={item} />
+                                })
+                            }
+                        </div>
                     </div>
                 </section>
             </div>

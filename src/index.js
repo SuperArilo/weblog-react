@@ -8,6 +8,7 @@ import { SnackbarProvider } from 'notistack'
 import { BrowserRouter } from 'react-router-dom'
 import { SnackbarUtilsConfigurator } from './util/notostack/customTips'
 import store from './store'
+import 'default-passive-events'
 import { Provider } from 'react-redux'
 const root = ReactDOM.createRoot(document.getElementById('react-by-asukamis'))
 root.render(
