@@ -2,7 +2,7 @@
 {
     max-width: 795px;
     min-height: 100vh;
-    padding-top: 3rem;
+    padding-top: 1rem;
     margin: 0 auto;
     .article_detail_content
     {
@@ -75,10 +75,17 @@
                         overflow: hidden;
                         display: flex;
                         align-items: center;
-                        color: rgb(115, 115, 115);
+                        .article_liked
+                        {
+                            color: red;
+                        }
                         i
                         {
                             font-size: 1rem;
+                        }
+                        i, span
+                        {
+                            color: rgb(115, 115, 115);
                         }
                         span
                         {
@@ -173,4 +180,8 @@
             }
         }
     }
+}
+.article_detail_mobile
+{
+    padding: 0 1rem;
 }

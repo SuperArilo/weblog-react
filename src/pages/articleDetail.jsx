@@ -1,11 +1,13 @@
 import { TransitionGroup } from 'react-transition-group'
 //hook
 import React, { useEffect, useState, useRef } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router-dom'
 //样式
 import style from '../assets/scss/articleDetail.module.scss'
 import renderHtml from '../assets/scss/renderHtml.module.scss'
+import '../assets/scss/currencyTransition.scss'
 //组件
+import { SwitchTransition, CSSTransition } from 'react-transition-group'
 import Tinymce from '../components/editor'
 import customTips from '../util/notostack/customTips'
 import Skeleton from '@mui/material/Skeleton'
@@ -14,10 +16,11 @@ import WaterWave from 'water-wave'
 import Collapse from '@mui/material/Collapse'
 import Avatar from '../components/Avatar'
 //方法
-import { articleContentGet, articleCommentGet, replyComment } from '../util/article'
+import { articleContentGet, articleCommentGet, replyComment, increaseArticleLike } from '../util/article'
 const ArticleDetail = (props) => {
     //hook
-    const { articleId } = useParams()
+    const [ searchParams, setSearchParams] = useSearchParams()
+    const articleId = searchParams.get('threadId')
     //Params
     const [addCommentStatus, setAddCommentStatus] = useState(false)
     const [articleListRef, setArticleListRef] = useState(null)
@@ -53,7 +56,7 @@ const ArticleDetail = (props) => {
         <div className={style.article_detail}>
             <div className={style.article_detail_content}>
                 <ArticleInfoTop articleId={articleId} artContent={(value) => { setArtContentStatus(value) }} />
-                { props.userInfo !== null && artContentStatus ? <Tinymce ref={tinymce} placeholder='发表一条友善的评论吧...' status={addCommentStatus} userInfo={props.userInfo} getContent={(value) => { sendCommentToServer(value) }}/>:'' }
+                <Tinymce ref={tinymce} placeholder='发表一条友善的评论吧...' status={addCommentStatus} getContent={(value) => { sendCommentToServer(value) }}/>
                 <span className={style.article_vistor_title}>评论</span>
                 <ArticleVistorList childrenRef={(ref) => { setArticleListRef(ref) }} articleId={articleId} userInfo={props.userInfo} />
             </div>
@@ -63,6 +66,16 @@ const ArticleDetail = (props) => {
 class ArticleInfoTop extends React.Component {
     state = {
         articleInstance: ''
+    }
+    articleLikeReChange(value) {
+        let {...temp} = this.state.articleInstance
+        temp.hasLike = value.status
+        if(value.status) {
+            temp.articleLikes++
+        } else {
+            temp.articleLikes--
+        }
+        this.setState({ articleInstance: temp })
     }
     componentDidMount(){
         articleContentGet({ 'articleId': this.props.articleId }).then(resq => {
@@ -81,7 +94,7 @@ class ArticleInfoTop extends React.Component {
     }
     render() {
         return (
-            this.state.articleInstance  === '' ? <ArticleSkeleton />:<ArticleContent articleInstance={this.state.articleInstance}/>
+            this.state.articleInstance  === '' ? <ArticleSkeleton />:<ArticleContent articleInstance={this.state.articleInstance} likeStatusChange={(value) => { this.articleLikeReChange(value) }} />
         )
     }
 }
@@ -136,18 +149,33 @@ class ArticleVistorList extends React.Component {
                     { this.state.commentList.map(item => {
                             return (
                                 <Collapse key={item.commentId}>
-                                    <Comment articleId={this.props.articleId} userInfo={this.props.userInfo} key={item.commentId} data={item} likeStatusChange={(value) => { this.commentReLike(value) }} deleteComment={(value) => { this.deleteComment(value) }} />
+                                    <Comment parentRef={this} articleId={this.props.articleId} userInfo={this.props.userInfo} key={item.commentId} data={item} likeStatusChange={(value) => { this.commentReLike(value) }} deleteComment={(value) => { this.deleteComment(value) }} />
                                 </Collapse>
                             )
                         })
                     }
                 </TransitionGroup> }
-                
             </div>
         )
     }
 }
 class ArticleContent extends React.Component {
+    componentDidMount(){
+    }
+    likeArticle() {
+        let data = new FormData()
+        data.append('articleId', this.props.articleInstance.id)
+        increaseArticleLike(data).then(resq => {
+            if(resq.code === 200) {
+                customTips.success(resq.message)
+                this.props.likeStatusChange({ articleId: this.props.articleInstance.id, status: resq.data.status })
+            } else {
+                customTips.error(resq.message)
+            }
+        }).catch(err => {
+            customTips.error(err.message)
+        })
+    }
     render() {
         return(
             <div className={style.article_detail_info}>
@@ -162,9 +190,9 @@ class ArticleContent extends React.Component {
                                 <span>{this.props.articleInstance.createTime}</span>
                             </div>
                         </div>
-                        <div className={style.article_data_info}>
+                        <div className={style.article_data_info} onClick={() => { this.likeArticle() }} >
                             <div><i className="fas fa-eye"/><span>{this.props.articleInstance.articleViews}</span></div>
-                            <div><i className="fas fa-heart" /><span>{this.props.articleInstance.articleLikes}</span><WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } /></div>
+                            <div><i className={`${'fas fa-heart'} ${this.props.articleInstance.hasLike ? style.article_liked:''}`} /><span>{this.props.articleInstance.articleLikes}</span><WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } /></div>
                         </div>
                     </div>
                 </div>
@@ -207,6 +235,23 @@ class CommentSkeleton extends React.Component {
                     </div>
                 </div>
                 <Skeleton variant="rounded" height='3rem' />
+            </div>
+        )
+    }
+}
+class EditorSkeleton extends React.Component {
+    render() {
+        return (
+            <div className={style.editor_skeleton}>
+                <div className={style.editor_top}>
+                    <div>
+                        <Skeleton variant="text" sx={{ fontSize: '1rem' }} width='100%' height='3rem' />
+                    </div>
+                    <div>
+                        <Skeleton variant="text" sx={{ fontSize: '1rem' }} width='100%' height='3rem' />
+                    </div>
+                </div>
+                <Skeleton variant="rounded" width='100%' height='8rem' />
             </div>
         )
     }

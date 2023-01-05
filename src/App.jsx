@@ -18,6 +18,8 @@ import $ from 'jquery'
 import Avatar from './components/Avatar'
 import About from './components/About'
 import AsukaPopper from './components/popper'
+//样式
+import './assets/scss/currencyTransition.scss'
 
 const App = () => {
 	//hook
@@ -55,25 +57,25 @@ const App = () => {
 	}, [loginSetUserInfo])
 	return (
 		<div className='render-content'>
-			{ isMobileStatus ? <MobileHeaderNav />:<PCheaderNav userInfo={userInfo} openLoginBox={e => { setLoginBoxStatus(e) }}/> }
-			<div className='router-render'>
+			{ isMobileStatus ? <MobileHeaderNav userInfo={userInfo} />:<PCheaderNav userInfo={userInfo} openLoginBox={e => { setLoginBoxStatus(e) }}/> }
+			<div className={`${'router-render'} ${isMobileStatus ? 'router-render-mobile':''}`}>
 				<SwitchTransition mode="out-in">
-					<CSSTransition key={location.pathname} timeout={300} classNames="fade" nodeRef={null}>
+					<CSSTransition key={location.pathname} timeout={300} classNames="change" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
 						<Routes location={location}>
 							<Route path='/' element={<IndexPage isMobile={ isMobileStatus }/>} />
-							<Route path='/detail/:articleId' element={<ArticleDetail userInfo={userInfo}/>} />
+							<Route path='/detail' element={<ArticleDetail userInfo={userInfo} isMobile={ isMobileStatus } />} />
 							<Route path='/gossip' element={<Gossip userInfo={userInfo}/>} />
 						</Routes>
 					</CSSTransition>
 				</SwitchTransition>
 			</div>
 			<About />
-			<CSSTransition in={loginBoxStatus} timeout={300} classNames="box-fade" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
+			<CSSTransition in={loginBoxStatus} timeout={300} classNames="mask-fade" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
 				<div className={signStyle.funtion_mask}>
 					<LoginBox status={loginBoxStatus} openRegisterBox={(e) => {setRegisterBoxStatus(e)}} closeBox={(e) => {setLoginBoxStatus(e)}} />
 				</div>
 			</CSSTransition>
-			<CSSTransition in={registerBoxStatus} timeout={300} classNames="box-fade" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
+			<CSSTransition in={registerBoxStatus} timeout={300} classNames="mask-fade" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
 				<div className={signStyle.funtion_mask}>
 					<RegisterBox status={registerBoxStatus} isMobile={isMobileStatus} openLoginBox={(e) => { setLoginBoxStatus(e) }} closeBox={(e) => {setRegisterBoxStatus(e)}} />
 				</div>
@@ -85,6 +87,7 @@ const PCheaderNav = (props) => {
 	//hook
 	const dispatch = useDispatch()
 	const navigate = useNavigate()
+	const location = useLocation()
 	//param
 	const [menuIndex, setMenuIndex] = useState(0)
 	const [menuList] = useState([
@@ -122,18 +125,23 @@ const PCheaderNav = (props) => {
 	const [popperStatus, setPopperStatus] = useState(false)
 	const [popperTarget, setPopperTarget] =useState(null)
 	//function
+	//路由变化匹配
+	useEffect(() => {
+		let index = menuList.findIndex(item => item.path === location.pathname)
+		if(index === -1) {
+			index = 0
+		}
+		setMenuIndex(menuList[index].id)
+	}, [location.pathname, menuList])
+
 	const menuNavFunction = (object) => {
 		if(menuIndex === object.id) return
-		setMenuIndex(object.id)
-		navigate(object.path)
+		navigate(object.path, { replace: true, state: { id : '666' } })
 		$('#react-by-asukamis').children().stop().animate({'scrollTop': 0})
-	}
-	const goToMainPage = () => {
-		navigate('/')
 	}
 	return (
 		<nav className='header-nav'>
-			<span className='left-webside-icon' onClick={goToMainPage}>
+			<span className='left-webside-icon' onClick={() => { navigate('/') }}>
 				Asukamis
 				<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
 			</span>
@@ -156,8 +164,44 @@ const PCheaderNav = (props) => {
 		</nav>
 	)
 }
-const MobileHeaderNav = () => {
+const MobileHeaderNav = (props) => {
+	//hook
+	const navigate = useNavigate()
+	const location = useLocation()
+	//param
 	const [drawerStatus, setDrawerStatus] = useState(false)
+	const [menuList] = useState([
+		{
+			id: 0,
+			title: '首页',
+			path: '/',
+			iconClass: 'fa-home'
+		},
+		{
+			id: 1,
+			title: '碎语',
+			path: '/gossip',
+			iconClass: 'fa-feather-alt'
+		},
+		{
+			id: 2,
+			title: '留言',
+			path: '/guestbook',
+			iconClass: 'fa-comment-alt'
+		},
+		{
+			id: 3,
+			title: '友邻',
+			path: '/links',
+			iconClass: 'fa-user-friends'
+		},
+		{
+			id: 4,
+			title: '圈子',
+			path: '/friends',
+			iconClass: 'fa-paw'
+		}
+	])
 	return (
 		<>
 			<nav className='mobile-header-nav'>
@@ -168,17 +212,50 @@ const MobileHeaderNav = () => {
 					<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
 				</div>
 			</nav>
-			<CSSTransition in={drawerStatus} timeout={300} classNames="box-fade" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
-				<div className={signStyle.funtion_mask}>
+			<CSSTransition in={drawerStatus} timeout={300} classNames="mask-fade" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
+				<div className={signStyle.funtion_mask} functionkey='mask' onClick={(e) => { 
+					if(e.target.attributes.functionkey) {
+						setDrawerStatus(false)
+					} else {
+						e.stopPropagation()
+					}
+				 }}>
 					<Slide direction="right" in={drawerStatus} mountOnEnter unmountOnExit>
-						<div>
-							awdawwadadw
+						<div className={signStyle.slide_box}>
+							<header className={signStyle.header_function}>
+								<i className='fas fa-bell' />
+								<i className='fas fa-sign-out-alt' />
+							</header>
+							<div className={signStyle.user_info_box}>
+								<img src={props.userInfo ? props.userInfo.avatar:''} alt={props.userInfo ? props.userInfo.nickName:''} title={props.userInfo ? props.userInfo.nickName:''} />
+								<p>{props.userInfo ? props.userInfo.nickName:'未登录'}</p>
+							</div>
+							<ul className={signStyle.slide_center_menu}>
+								{
+									menuList.map(item => {
+										return (
+											<li key={item.id} onClick={() => { 
+												navigate(item.path)
+												setTimeout(() => {
+													setDrawerStatus(false)
+												}, 500)
+											 }}>
+												<i className={`${'fas'} ${item.iconClass}`} />
+												<span>{item.title}</span>
+												<WaterWave color='rgba(255, 255, 255, 0.7)' duration={ 500 } />
+											</li>
+										)
+									})
+								}
+							</ul>
+							<div className={signStyle.slide_bottom_function}>
+								<AsukaButton text='登录' size='big' />
+							</div>
 						</div>
 					</Slide>
 				</div>
 			</CSSTransition>
 		</>
-		
 	)
 }
 const LoginBox = (props) => {
@@ -207,27 +284,25 @@ const LoginBox = (props) => {
 				data.append('uid', emailAndUID)
 			}
 			data.append('password', password)
-			setTimeout(() => {
-				blogLoginUser(data).then(resq => {
-					if(resq.code === 200) {
-						localStorage.setItem('token', resq.data.token)
-						dispatch({ type: 'userInfo/setInfo', payload: resq.data.user })
-						customTips.success(resq.message)
-						setTimeout(() => { props.closeBox(false) }, 1000)
-					} else {
-						customTips.error(resq.message)
-					}
-					setLoginStatus(false)
-				}).catch(err => {
-					customTips.error(err.message)
-					setLoginStatus(false)
-				})
-			}, 2000)
+			blogLoginUser(data).then(resq => {
+				if(resq.code === 200) {
+					localStorage.setItem('token', resq.data.token)
+					dispatch({ type: 'userInfo/setInfo', payload: resq.data.user })
+					customTips.success(resq.message)
+					setTimeout(() => { props.closeBox(false) }, 1000)
+				} else {
+					customTips.error(resq.message)
+				}
+				setLoginStatus(false)
+			}).catch(err => {
+				customTips.error(err.message)
+				setLoginStatus(false)
+			})
 		}
 	}
 	return (
 		<Slide direction="up" in={props.status} mountOnEnter unmountOnExit>
-			<div className={signStyle.login_box + ' ' + (isMobileStatus? signStyle.box_mobile:signStyle.box_pc)}>
+			<div className={`${signStyle.login_box} ${isMobileStatus? signStyle.box_mobile:signStyle.box_pc}`}>
 				<header className={signStyle.public_title}>
 					<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
 					<i className="far fa-arrow-alt-circle-left" onClick={() => { setTimeout(() => {props.closeBox(false)}, 300) }}/>
@@ -291,7 +366,7 @@ class RegisterBox extends React.Component {
 	render(){
 		return(
 			<Slide direction="up" in={this.props.status} mountOnEnter unmountOnExit>
-				<div className={signStyle.register_box + ' ' + (this.props.isMobile ? signStyle.box_mobile:signStyle.box_pc)}>
+				<div className={`${signStyle.register_box} ${this.props.isMobile ? signStyle.box_mobile:signStyle.box_pc}`}>
 					<header className={signStyle.public_title}>
 						<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
 						<i className="far fa-arrow-alt-circle-left" onClick={() => { setTimeout(() => {this.props.closeBox(false)}, 300) }}/>

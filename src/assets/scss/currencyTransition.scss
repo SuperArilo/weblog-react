@@ -1,0 +1,39 @@
+.change-enter
+{
+    opacity: 0;
+}
+.change-exit
+{
+    opacity: 1;
+}
+.change-enter-active
+{
+    opacity: 1;
+}
+.change-exit-active
+{
+    opacity: 0;
+}
+.change-enter-active, .change-exit-active
+{
+    transition: opacity 300ms;
+}
+
+.mask-fade-enter
+{
+    opacity: 0;
+}
+.mask-fade-exit
+{
+    opacity: 1;
+}
+.mask-fade-exit-active
+{
+    transition: all 300ms;
+    opacity: 0;
+}
+.mask-fade-enter-active
+{
+    transition: all 300ms;
+    opacity: 1;
+}

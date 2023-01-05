@@ -5,6 +5,7 @@ import style from '../assets/scss/components/editor.module.scss'
 //组件
 import AsukaButton from './asukaButton'
 import Avatar from './Avatar'
+import Skeleton from '@mui/material/Skeleton'
 //方法
 import { customUploadImage } from '../util/upload'
 
@@ -19,12 +20,12 @@ export default class Tinymce extends React.Component {
             placeholder: this.props.placeholder,
             content_css: 'fabric',
             menubar: false,
+            branding: false,
             language_url: "/tinymce/langs/zh-Hans.js",
             language: "zh-Hans",
             plugins: [
                 'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
-                'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-                'insertdatetime', 'media', 'table', 'preview', 'help', 'wordcount'
+                'anchor', 'searchreplace', 'visualblocks', 'code', 'insertdatetime', 'media', 'table', 'help'
             ],
             toolbar: [
                 { name: 'styles', items: [ 'styles' ] },
@@ -36,7 +37,9 @@ export default class Tinymce extends React.Component {
             toolbar_mode: 'sliding',
             content_style: 'body { font-size:14px }',
             setup: (editor) => {
-                this.setState({ tinymce: editor })
+                setTimeout(() => {
+                    this.setState({ tinymce: editor })
+                }, 1000)
             },
             images_upload_handler: (blobInfo, success) => new Promise((resolve, reject) => {
                 let data = new FormData()
@@ -53,23 +56,41 @@ export default class Tinymce extends React.Component {
             })
         }
     }
-    startInit() {
-        
-    }
     clear() {
         this.state.tinymce.setContent('')
         this.setState({ modelValue: '' })
-    }
+    }s
     render() {
         return (
-            <div className={style.editor_tinymce}>
-                <Editor tinymceScriptSrc={ process.env.PUBLIC_URL + '/tinymce/tinymce.min.js' } initialValue={this.state.initialValue} init={this.state.config} onChange={(event, editor) => { this.setState({ modelValue: editor.getContent() }) }} />
-                <div className={style.editor_bottom}>
-                    <div className={style.left_user_info}>
-                        <Avatar src={this.props.userInfo.avatar} title={this.props.userInfo.nickName} alt={this.props.userInfo.nickName}/>
-                        <i className='fas fa-exclamation-circle'/>
+            <>
+                { this.state.tinymce ? '':<EditorSkeleton /> }
+                <div className={style.editor_tinymce} style={{ display: this.state.tinymce ? 'block':'none' }}>
+                    <Editor tinymceScriptSrc={ process.env.PUBLIC_URL + '/tinymce/tinymce.min.js' } initialValue={this.state.initialValue} init={this.state.config} onChange={(event, editor) => { this.setState({ modelValue: editor.getContent() }) }} />
+                    <div className={style.editor_bottom}>
+                        <div className={style.left_user_info}>
+                        </div>
+                        <AsukaButton text='提交' status={this.props.status} onClick={() => { this.props.getContent(this.state.modelValue) }}/>
                     </div>
-                    <AsukaButton text='提交' status={this.props.status} onClick={() => { this.props.getContent(this.state.modelValue) }}/>
+                </div>
+            </>   
+        )
+    }
+}
+class EditorSkeleton extends React.Component {
+    render() {
+        return (
+            <div className={style.editor_skeleton}>
+                <div className={style.editor_top}>
+                    <div>
+                        <Skeleton variant="text" sx={{ fontSize: '1rem' }} width='100%' height='3rem' />
+                    </div>
+                    <div>
+                        <Skeleton variant="text" sx={{ fontSize: '1rem' }} width='100%' height='3rem' />
+                    </div>
+                </div>
+                <Skeleton variant="rounded" width='100%' height='8.1rem' />
+                <div className={style.editor_bottom}>
+                    <Skeleton variant="rounded" width='4rem' height='1.8rem' />
                 </div>
             </div>
         )
