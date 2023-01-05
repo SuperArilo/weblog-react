@@ -7,6 +7,7 @@ import Avatar from './Avatar'
 import AsukaPoppor from './popper'
 import Collapse from '@mui/material/Collapse';
 import Tinymce from './editor'
+import KeepAlive from 'react-activation'
 //方法
 import customTips from '../util/notostack/customTips'
 import { replyComment, likeComment, deleteComment } from '../util/article'
@@ -123,9 +124,11 @@ export default class Comment extends React.Component {
                 </div>
                 <div className={`${style.comment_conten_render} ${renderHtml.render_html}`} dangerouslySetInnerHTML={{ __html: this.props.data.content}} />
                 <AsukaPoppor open={this.state.popperStatus} title='确定要删除评论吗？ (/▽＼)' target={this.state.target} placement='bottom-start' onConfirm={() => { this.userDeleteComment() }} onCancel={() => { this.popperChange(null) }}/>
-                <Collapse in={this.state.commentRebackBoxStatus} mountOnEnter unmountOnExit>
-                    <Tinymce ref={this.state.tinymce} editorSetupStatus={(status) => { console.log(status) }} placeholder={`${'回复'}${' @' + this.props.data.replyUser.replyNickName}`} status={this.state.commentRebackStatus} getContent={(value) => { this.userReBackComment(value) }}/>
-                </Collapse>
+                <KeepAlive>
+                    <Collapse in={this.state.commentRebackBoxStatus} mountOnEnter unmountOnExit>
+                        <Tinymce ref={this.state.tinymce} editorSetupStatus={(status) => { console.log(status) }} placeholder={`${'回复'}${' @' + this.props.data.replyUser.replyNickName}`} status={this.state.commentRebackStatus} getContent={(value) => { this.userReBackComment(value) }}/>
+                    </Collapse>
+                </KeepAlive>
             </div>
         )
     }
