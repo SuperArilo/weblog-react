@@ -89,6 +89,10 @@ ul , li
         .header-nav
         {
             justify-content: space-around;
+            .left-webside-icon
+            {
+                padding: 0 0.5rem;
+            }
             .left-webside-icon , .nav-menu-list , .right-some-function
             {
                 height: inherit;
