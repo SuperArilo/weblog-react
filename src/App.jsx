@@ -57,7 +57,7 @@ const App = () => {
 	}, [loginSetUserInfo])
 	return (
 		<div className='render-content'>
-			{ isMobileStatus ? <MobileHeaderNav userInfo={userInfo} />:<PCheaderNav userInfo={userInfo} openLoginBox={e => { setLoginBoxStatus(e) }}/> }
+			{ isMobileStatus ? <MobileHeaderNav userInfo={userInfo} openLoginBox={(status) => { setLoginBoxStatus(status) }} />:<PCheaderNav userInfo={userInfo} openLoginBox={e => { setLoginBoxStatus(e) }}/> }
 			<div className={`${'router-render'} ${isMobileStatus ? 'router-render-mobile':''}`}>
 				<SwitchTransition mode="out-in">
 					<CSSTransition key={location.pathname} timeout={300} classNames="change" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
@@ -249,7 +249,7 @@ const MobileHeaderNav = (props) => {
 								}
 							</ul>
 							<div className={signStyle.slide_bottom_function}>
-								<AsukaButton text='登录' size='big' />
+								<AsukaButton text='登录' size='big' onClick={() => { props.openLoginBox(true) }} />
 							</div>
 						</div>
 					</Slide>
@@ -276,6 +276,10 @@ const LoginBox = (props) => {
 			return
 		}
 		if(!loginStatus) {
+			if(emailAndUID === null || emailAndUID === '' || password === null || password === '') {
+				customTips.info('输入的内容不能为空哦')
+				return
+			}
 			setLoginStatus(true)
 			let data = new FormData()
 			if(emailMatchRule.test(emailAndUID)) {
