@@ -2,7 +2,7 @@ import axios from 'axios'
 axios.defaults.withCredentials = false
 const service = axios.create({
     baseURL: 'http://localhost:3090/api',
-    timeout: 120000
+    timeout: 10000
 })
 service.interceptors.request.use( config => {
     if(localStorage.getItem('token') === null){
