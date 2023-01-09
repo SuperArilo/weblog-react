@@ -36,7 +36,7 @@ export default class Gossip extends React.Component {
                             this.state.gossipList.map(item => {
                                 return (
                                     <Collapse key={item.id}>
-                                        <GossipContent data={item}/>
+                                        <GossipContent userInfo={this.props.userInfo} data={item}/>
                                     </Collapse>
                                 )
                             })

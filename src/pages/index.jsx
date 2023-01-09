@@ -11,6 +11,7 @@ import AsukaButton from '../components/asukaButton'
 import WaterWave from 'water-wave'
 import GossipContent from '../components/gossipContent'
 import Slider from "react-slick"
+import GossipSkeleton from '../components/GossipSkeleton'
 import Skeleton from '@mui/material/Skeleton'
 import { SwitchTransition, CSSTransition } from 'react-transition-group'
 //hook
@@ -155,13 +156,20 @@ class IndexPage extends React.Component {
                     </div>
                     <div className={style.public_sub_content}>
                         <span className={style.public_sub_content_header}>最近碎语</span>
-                        <div className={style.gossip_list}>
-                            {
-                                this.state.gossipList.map(item => {
-                                    return <GossipContent key={item.id} data={item} />
-                                })
-                            }
-                        </div>
+                        <SwitchTransition mode='out-in'>
+                            <CSSTransition key={this.state.gossipList.length === 0 ? true:false} classNames='change' timeout={300} nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
+                                {
+                                    this.state.gossipList.length === 0 ? <GossipSkeleton />:
+                                    <div className={style.gossip_list}>
+                                        {
+                                            this.state.gossipList.map(item => {
+                                                return <GossipContent key={item.id} data={item} />
+                                            })
+                                        }
+                                    </div>
+                                }
+                            </CSSTransition>
+                        </SwitchTransition>
                     </div>
                 </section>
             </div>

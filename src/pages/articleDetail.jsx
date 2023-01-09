@@ -7,7 +7,6 @@ import style from '../assets/scss/articleDetail.module.scss'
 import renderHtml from '../assets/scss/renderHtml.module.scss'
 import '../assets/scss/currencyTransition.scss'
 //组件
-import { SwitchTransition, CSSTransition } from 'react-transition-group'
 import Tinymce from '../components/editor'
 import customTips from '../util/notostack/customTips'
 import Skeleton from '@mui/material/Skeleton'
@@ -15,8 +14,11 @@ import Comment from '../components/comment'
 import WaterWave from 'water-wave'
 import Collapse from '@mui/material/Collapse'
 import Avatar from '../components/Avatar'
+import CommentSkeleton from '../components/CommentSkeleton'
 //方法
-import { articleContentGet, articleCommentGet, replyComment, increaseArticleLike } from '../util/article'
+import { articleContentGet, articleCommentGet, replyComment, increaseArticleLike, likeComment, deleteComment } from '../util/article'
+import ImageViewer from 'awesome-image-viewer'
+import $ from 'jquery'
 const ArticleDetail = (props) => {
     //hook
     const [ searchParams, setSearchParams] = useSearchParams()
@@ -124,24 +126,6 @@ class ArticleVistorList extends React.Component {
             customTips.error(err.message)
         })
     }
-    commentReLike(value) {
-        let [...temp] = this.state.commentList
-        let index = temp.findIndex(item => item.commentId === value.commentId)
-        temp[index].isLike = value.status
-        if(value.status) {
-            temp[index].likes = temp[index].likes + 1
-        } else {
-            temp[index].likes = temp[index].likes - 1
-        }
-        this.setState({ commentList: temp })
-    }
-    deleteComment(value) {
-        let temp = [...this.state.commentList]
-        temp.splice(temp.findIndex(item => item.commentId === value), 1)
-        this.setState({
-            commentList: temp
-        })
-    }
     render() {
         return(
             <div className={style.article_vistor_list}>
@@ -149,7 +133,75 @@ class ArticleVistorList extends React.Component {
                     { this.state.commentList.map(item => {
                             return (
                                 <Collapse key={item.commentId}>
-                                    <Comment parentRef={this} articleId={this.props.articleId} userInfo={this.props.userInfo} key={item.commentId} data={item} likeStatusChange={(value) => { this.commentReLike(value) }} deleteComment={(value) => { this.deleteComment(value) }} />
+                                    <Comment
+                                        userInfo={this.props.userInfo} 
+                                        key={item.commentId} 
+                                        data={item}
+                                        handleLike={() => { 
+                                            if(this.props.userInfo === null) {
+                                                customTips.info('你需要登陆才能继续哦 ⊙﹏⊙∥')
+                                                return
+                                            }
+                                            let data = new FormData()
+                                            data.append('articleId', this.props.articleId)
+                                            data.append('commentId', item.commentId)
+                                            likeComment(data).then(resq => {
+                                                if(resq.code === 200) {
+                                                    customTips.success(resq.message)
+                                                    let [...temp] = this.state.commentList
+                                                    let index = temp.findIndex(key => key.commentId === item.commentId)
+                                                    temp[index].isLike = resq.data.status
+                                                    if(resq.data.status) {
+                                                        temp[index].likes = temp[index].likes + 1
+                                                    } else {
+                                                        temp[index].likes = temp[index].likes - 1
+                                                    }
+                                                    this.setState({ commentList: temp })
+                                                } else {
+                                                    customTips.error(resq.message)
+                                                }
+                                            }).catch(err => {
+                                                customTips.error(err.message)
+                                            })
+                                        }}
+                                        handleReply={(content, ref) => {
+                                            let data = new FormData()
+                                            data.append('articleId', this.props.articleId)
+                                            data.append('content', content)
+                                            data.append('replyCommentId', item.commentId)
+                                            data.append('replyUserId', item.replyUser.replyUserId)
+                                            replyComment(data).then(resq => {
+                                                if(resq.code === 200) {
+                                                    customTips.success(resq.message)
+                                                    this.commentListGet()
+                                                    ref.closeBox()
+                                                } else {
+                                                    customTips.error(resq.message)
+                                                }
+                                            }).catch(err => {
+                                                ref.setStatus(false)
+                                                customTips.error(err.message)
+                                            })
+                                        }}
+                                        handleDelete={() => {
+                                            let data = new FormData()
+                                            data.append('articleId', this.props.articleId)
+                                            data.append('commentId', item.commentId)
+                                            deleteComment(data).then(resq => {
+                                                if(resq.code === 200) {
+                                                    customTips.success(resq.message)
+                                                    setTimeout(() => {
+                                                        let temp = [...this.state.commentList]
+                                                        temp.splice(temp.findIndex(key => key.commentId === item.commentId), 1)
+                                                        this.setState({ commentList: temp })
+                                                    }, 500)
+                                                } else {
+                                                    customTips.error(resq.message)
+                                                }
+                                            }).catch(err => {
+                                                customTips.error(err.message)
+                                            })
+                                        }}/>
                                 </Collapse>
                             )
                         })
@@ -160,7 +212,22 @@ class ArticleVistorList extends React.Component {
     }
 }
 class ArticleContent extends React.Component {
+    state = { 
+        renderContentRef: React.createRef(),
+    }
     componentDidMount(){
+        $(this.state.renderContentRef.current).find('img').on('click', (element) => {
+            let list = []
+            $(this.state.renderContentRef.current).find('img').each((index, e) => {
+                list.push({ mainUrl: $(e).attr('src') })
+            })
+            new ImageViewer({
+                images: list,
+                showThumbnails: false,
+                isZoomable: false,
+                currentSelected: $(element.target).index()
+            })
+        })
     }
     likeArticle() {
         let data = new FormData()
@@ -178,26 +245,28 @@ class ArticleContent extends React.Component {
     }
     render() {
         return(
-            <div className={style.article_detail_info}>
-                <div className={style.article_detail_top}>
-                    <img className={style.article_background_image} src={this.props.articleInstance.articlePicture} alt={this.props.articleInstance.nickName}/>
-                    <p className={style.article_detail_title}>{this.props.articleInstance.articleTitle}</p>
-                    <div className={style.article_data}>
-                        <div className={style.data_author}>
-                            <Avatar width='3.4rem' height='3.4rem' src={this.props.articleInstance.avatar} title={this.props.articleInstance.nickName} alt={this.props.articleInstance.nickName}/>
-                            <div className={style.author_info}>
-                                <span>{this.props.articleInstance.nickName}</span>
-                                <span>{this.props.articleInstance.createTime}</span>
+            <>
+                <div className={style.article_detail_info}>
+                    <div className={style.article_detail_top}>
+                        <img className={style.article_background_image} src={this.props.articleInstance.articlePicture} alt={this.props.articleInstance.nickName}/>
+                        <p className={style.article_detail_title}>{this.props.articleInstance.articleTitle}</p>
+                        <div className={style.article_data}>
+                            <div className={style.data_author}>
+                                <Avatar width='3.4rem' height='3.4rem' src={this.props.articleInstance.avatar} title={this.props.articleInstance.nickName} alt={this.props.articleInstance.nickName}/>
+                                <div className={style.author_info}>
+                                    <span>{this.props.articleInstance.nickName}</span>
+                                    <span>{this.props.articleInstance.createTime}</span>
+                                </div>
+                            </div>
+                            <div className={style.article_data_info} onClick={() => { this.likeArticle() }} >
+                                <div><i className="fas fa-eye"/><span>{this.props.articleInstance.articleViews}</span></div>
+                                <div><i className={`${'fas fa-heart'} ${this.props.articleInstance.hasLike ? style.article_liked:''}`} /><span>{this.props.articleInstance.articleLikes}</span><WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } /></div>
                             </div>
                         </div>
-                        <div className={style.article_data_info} onClick={() => { this.likeArticle() }} >
-                            <div><i className="fas fa-eye"/><span>{this.props.articleInstance.articleViews}</span></div>
-                            <div><i className={`${'fas fa-heart'} ${this.props.articleInstance.hasLike ? style.article_liked:''}`} /><span>{this.props.articleInstance.articleLikes}</span><WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } /></div>
-                        </div>
                     </div>
+                    <div className={`${style.article_render_content} ${renderHtml.render_html}`} ref={this.state.renderContentRef} dangerouslySetInnerHTML={{ __html: this.props.articleInstance.articleContent}}></div>
                 </div>
-                <div className={`${style.article_render_content} ${renderHtml.render_html}`} dangerouslySetInnerHTML={{ __html: this.props.articleInstance.articleContent}}></div>
-            </div>
+            </>
         )
     }
 }
@@ -219,39 +288,6 @@ class ArticleSkeleton extends React.Component {
                     </div>
                 </div>
                 <Skeleton variant="rounded" height='20rem' />
-            </div>
-        )
-    }
-}
-class CommentSkeleton extends React.Component {
-    render() {
-        return(
-            <div className={style.empty_skeleton}>
-                <div className={style.skeleton_top}>
-                    <Skeleton variant="circular" width='2.5rem' height='2.5rem' />
-                    <div className={style.skeleton_info}>
-                        <Skeleton variant="text" width='5rem' sx={{ fontSize: '1.2rem' }} />
-                        <Skeleton variant="text" width='3rem' sx={{ fontSize: '1.2rem' }} />
-                    </div>
-                </div>
-                <Skeleton variant="rounded" height='3rem' />
-            </div>
-        )
-    }
-}
-class EditorSkeleton extends React.Component {
-    render() {
-        return (
-            <div className={style.editor_skeleton}>
-                <div className={style.editor_top}>
-                    <div>
-                        <Skeleton variant="text" sx={{ fontSize: '1rem' }} width='100%' height='3rem' />
-                    </div>
-                    <div>
-                        <Skeleton variant="text" sx={{ fontSize: '1rem' }} width='100%' height='3rem' />
-                    </div>
-                </div>
-                <Skeleton variant="rounded" width='100%' height='8rem' />
             </div>
         )
     }

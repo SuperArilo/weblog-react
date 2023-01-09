@@ -4,7 +4,6 @@ import { Editor } from '@tinymce/tinymce-react'
 import style from '../assets/scss/components/editor.module.scss'
 //组件
 import AsukaButton from './asukaButton'
-import Avatar from './Avatar'
 import Skeleton from '@mui/material/Skeleton'
 //方法
 import { customUploadImage } from '../util/upload'
@@ -56,10 +55,6 @@ export default class Tinymce extends React.Component {
             })
         }
     }
-    clear() {
-        this.state.tinymce.setContent('')
-        this.setState({ modelValue: '' })
-    }s
     render() {
         return (
             <>
@@ -82,15 +77,15 @@ class EditorSkeleton extends React.Component {
             <div className={style.editor_skeleton}>
                 <div className={style.editor_top}>
                     <div>
-                        <Skeleton variant="text" sx={{ fontSize: '1rem' }} width='100%' height='3rem' />
+                        <Skeleton variant="text" sx={{ fontSize: '1rem' }} width='100%' height='3.2rem' />
                     </div>
                     <div>
-                        <Skeleton variant="text" sx={{ fontSize: '1rem' }} width='100%' height='3rem' />
+                        <Skeleton variant="text" sx={{ fontSize: '1rem' }} width='100%' height='3.2rem' />
                     </div>
                 </div>
-                <Skeleton variant="rounded" width='100%' height='8.1rem' />
+                <Skeleton variant="rounded" width='100%' height='8rem' />
                 <div className={style.editor_bottom}>
-                    <Skeleton variant="rounded" width='4rem' height='1.8rem' />
+                    <Skeleton variant="rounded" width='3.4rem' height='1.8rem' />
                 </div>
             </div>
         )

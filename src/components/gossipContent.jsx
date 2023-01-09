@@ -5,8 +5,28 @@ import renderHtml from '../assets/scss/renderHtml.module.scss'
 //组件
 import Avatar from '../components/Avatar'
 import WaterWave from 'water-wave'
+import Tinymce from './editor'
+import Collapse from '@mui/material/Collapse'
+import Comment from './comment'
+import CommentSkeleton from './CommentSkeleton'
+import { SwitchTransition, CSSTransition } from 'react-transition-group'
+import customTips from '../util/notostack/customTips'
 //方法
+import { gossipCommentList } from '../util/gossip.js'
+
 export default class GossipContent extends React.Component {
+    state = {
+        editorStatus: false,
+        requestInstance: {
+            pageNum: 1,
+            pageSize: 10,
+            gossipId: this.props.data.id
+        },
+        commentList: null
+    }
+    componentDidMount() {
+        
+    }
     render() {
         return (
             <div className={style.gossip_box}>
@@ -38,7 +58,21 @@ export default class GossipContent extends React.Component {
                         喜欢
                         <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
                     </button>
-                    <button type='button'>
+                    <button type='button' 
+                        onClick={() => { 
+                            this.setState({ editorStatus: !this.state.editorStatus })
+                            gossipCommentList(this.state.requestInstance).then(resq => {
+                                if(resq.code === 200) {
+                                    setTimeout(() => {
+                                        this.setState({ commentList: resq.data.list })
+                                    }, 1000)
+                                } else {
+                                    customTips.error(resq.message)
+                                }
+                            }).catch(err => {
+                                customTips.error(err.message)
+                            })
+                        }}>
                         <i className='fas fa-comment-dots' />
                         评论
                         <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
@@ -49,6 +83,35 @@ export default class GossipContent extends React.Component {
                         <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
                     </button>
                 </div>
+                <Collapse in={this.state.editorStatus} mountOnEnter unmountOnExit>
+                    <Tinymce />
+                    {
+                        this.state.commentList === null ? <CommentSkeleton />:this.state.commentList.length === 0 ? <span>none</span>:
+                        <div className={style.gossip_comment_list}>
+                            {
+                                this.state.commentList.map(item => {
+                                    return (
+                                        <Collapse in={true} key={item.commentId}>
+                                            <Comment
+                                                userInfo={this.props.userInfo} 
+                                                key={item.commentId} 
+                                                data={item}
+                                                handleLike={() => { 
+                                                    
+                                                }}
+                                                handleReply={(content, ref) => {
+                                                    
+                                                }}
+                                                handleDelete={() => {
+                                                    
+                                                }}/>
+                                        </Collapse>
+                                    )
+                                })
+                            }
+                        </div>
+                    }
+                </Collapse>
             </div>
         )
     }

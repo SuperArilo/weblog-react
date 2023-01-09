@@ -1,0 +1,19 @@
+.empty_skeleton
+{
+    display: block;
+    .skeleton_top
+    {
+        height: 3.2rem;
+        display: flex;
+        align-items: center;
+        .skeleton_info
+        {
+            height: inherit;
+            margin-left: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+        
+    }
+}
