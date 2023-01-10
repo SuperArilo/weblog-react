@@ -62,7 +62,7 @@ const App = () => {
 				<SwitchTransition mode="out-in">
 					<CSSTransition key={location.pathname} timeout={300} classNames="change" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
 						<Routes location={location}>
-							<Route path='/' element={<IndexPage isMobile={ isMobileStatus }/>} />
+							<Route path='/' element={<IndexPage isMobile={ isMobileStatus } userInfo={userInfo} />} />
 							<Route path='/detail' element={<ArticleDetail userInfo={userInfo} isMobile={ isMobileStatus } />} />
 							<Route path='/gossip' element={<Gossip userInfo={userInfo}/>} />
 						</Routes>
