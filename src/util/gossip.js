@@ -17,7 +17,7 @@ export const gossipCommentList = (params) => {
     })
 }
 //碎语评论新增或者回复某人
-export const gossipCommentCreate = (query) => {
+export const replyGossipComment = (query) => {
     return request({
         url: '/gossip/comment/add',
         method: 'post',
