@@ -24,3 +24,19 @@ export const replyGossipComment = (query) => {
         data: query
     })
 }
+//喜欢某条评论
+export const likeGossipComment = (query) => {
+    return request({
+        url: '/gossip/comment/like',
+        method: 'put',
+        data: query,
+    })
+}
+//删除某条评论
+export const deleteGossipComment = (query) => {
+    return request({
+        url: '/gossip/comment/delete',
+        method: 'Delete',
+        data: query,
+    })
+}
