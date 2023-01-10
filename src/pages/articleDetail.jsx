@@ -58,7 +58,11 @@ const ArticleDetail = (props) => {
         <div className={style.article_detail}>
             <div className={style.article_detail_content}>
                 <ArticleInfoTop articleId={articleId} artContent={(value) => { setArtContentStatus(value) }} />
-                <Tinymce ref={tinymce} placeholder='发表一条友善的评论吧...' status={addCommentStatus} getContent={(value) => { sendCommentToServer(value) }}/>
+                <Tinymce 
+                    ref={tinymce} 
+                    placeholder='发表一条友善的评论吧...' 
+                    status={addCommentStatus} 
+                    getContent={(value) => { sendCommentToServer(value) }}/>
                 <span className={style.article_vistor_title}>评论</span>
                 <ArticleVistorList childrenRef={(ref) => { setArticleListRef(ref) }} articleId={articleId} userInfo={props.userInfo} />
             </div>
@@ -107,7 +111,8 @@ class ArticleVistorList extends React.Component {
             pageSize: 15,
             articleId: this.props.articleId
         },
-        commentList: null
+        commentList: null,
+        selectCommentItem: null
     }
     componentDidMount() {
         this.props.childrenRef(this)
@@ -129,84 +134,96 @@ class ArticleVistorList extends React.Component {
     render() {
         return(
             <div className={style.article_vistor_list}>
-                { this.state.commentList ===  null ? <CommentSkeleton />:this.state.commentList.length === 0 ? <div className={style.empty_box}>当前没有评论，赶快来评论吧 ψ(｀∇´)ψ</div>:<TransitionGroup>
-                    { this.state.commentList.map(item => {
-                            return (
-                                <Collapse key={item.commentId}>
-                                    <Comment
-                                        userInfo={this.props.userInfo} 
-                                        key={item.commentId} 
-                                        data={item}
-                                        handleLike={() => { 
-                                            if(this.props.userInfo === null) {
-                                                customTips.info('你需要登陆才能继续哦 ⊙﹏⊙∥')
-                                                return
-                                            }
-                                            let data = new FormData()
-                                            data.append('articleId', this.props.articleId)
-                                            data.append('commentId', item.commentId)
-                                            likeComment(data).then(resq => {
-                                                if(resq.code === 200) {
-                                                    customTips.success(resq.message)
-                                                    let [...temp] = this.state.commentList
-                                                    let index = temp.findIndex(key => key.commentId === item.commentId)
-                                                    temp[index].isLike = resq.data.status
-                                                    if(resq.data.status) {
-                                                        temp[index].likes = temp[index].likes + 1
-                                                    } else {
-                                                        temp[index].likes = temp[index].likes - 1
-                                                    }
-                                                    this.setState({ commentList: temp })
+                { this.state.commentList ===  null ? <CommentSkeleton />:this.state.commentList.length === 0 ? <div className={style.empty_box}>当前没有评论，赶快来评论吧 ψ(｀∇´)ψ</div>:
+                    <TransitionGroup>
+                        { 
+                            this.state.commentList.map(item => {
+                                return (
+                                    <Collapse key={item.commentId}>
+                                        <Comment
+                                            userInfo={this.props.userInfo} 
+                                            key={item.commentId}
+                                            foldStatus={this.state.selectCommentItem === item.commentId}
+                                            data={item}
+                                            handleFold={(id) => {
+                                                if(this.state.selectCommentItem === id) {
+                                                    this.setState({ selectCommentItem: null })
                                                 } else {
-                                                    customTips.error(resq.message)
+                                                    this.setState({ selectCommentItem: id })
                                                 }
-                                            }).catch(err => {
-                                                customTips.error(err.message)
-                                            })
-                                        }}
-                                        handleReply={(content, ref) => {
-                                            let data = new FormData()
-                                            data.append('articleId', this.props.articleId)
-                                            data.append('content', content)
-                                            data.append('replyCommentId', item.commentId)
-                                            data.append('replyUserId', item.replyUser.replyUserId)
-                                            replyComment(data).then(resq => {
-                                                if(resq.code === 200) {
-                                                    customTips.success(resq.message)
-                                                    this.commentListGet()
-                                                    ref.closeBox()
-                                                } else {
-                                                    customTips.error(resq.message)
+                                            }}
+                                            handleLike={() => { 
+                                                if(this.props.userInfo === null) {
+                                                    customTips.info('你需要登陆才能继续哦 ⊙﹏⊙∥')
+                                                    return
                                                 }
-                                            }).catch(err => {
-                                                ref.setStatus(false)
-                                                customTips.error(err.message)
-                                            })
-                                        }}
-                                        handleDelete={() => {
-                                            let data = new FormData()
-                                            data.append('articleId', this.props.articleId)
-                                            data.append('commentId', item.commentId)
-                                            deleteComment(data).then(resq => {
-                                                if(resq.code === 200) {
-                                                    customTips.success(resq.message)
-                                                    setTimeout(() => {
-                                                        let temp = [...this.state.commentList]
-                                                        temp.splice(temp.findIndex(key => key.commentId === item.commentId), 1)
+                                                let data = new FormData()
+                                                data.append('articleId', this.props.articleId)
+                                                data.append('commentId', item.commentId)
+                                                likeComment(data).then(resq => {
+                                                    if(resq.code === 200) {
+                                                        customTips.success(resq.message)
+                                                        let [...temp] = this.state.commentList
+                                                        let index = temp.findIndex(key => key.commentId === item.commentId)
+                                                        temp[index].isLike = resq.data.status
+                                                        if(resq.data.status) {
+                                                            temp[index].likes = temp[index].likes + 1
+                                                        } else {
+                                                            temp[index].likes = temp[index].likes - 1
+                                                        }
                                                         this.setState({ commentList: temp })
-                                                    }, 500)
-                                                } else {
-                                                    customTips.error(resq.message)
-                                                }
-                                            }).catch(err => {
-                                                customTips.error(err.message)
-                                            })
-                                        }}/>
-                                </Collapse>
-                            )
-                        })
-                    }
-                </TransitionGroup> }
+                                                    } else {
+                                                        customTips.error(resq.message)
+                                                    }
+                                                }).catch(err => {
+                                                    customTips.error(err.message)
+                                                })
+                                            }}
+                                            handleReply={(content, ref) => {
+                                                let data = new FormData()
+                                                data.append('articleId', this.props.articleId)
+                                                data.append('content', content)
+                                                data.append('replyCommentId', item.commentId)
+                                                data.append('replyUserId', item.replyUser.replyUserId)
+                                                replyComment(data).then(resq => {
+                                                    if(resq.code === 200) {
+                                                        customTips.success(resq.message)
+                                                        this.commentListGet()
+                                                        ref.closeBox()
+                                                        this.setState({ selectCommentItem: null })
+                                                    } else {
+                                                        customTips.error(resq.message)
+                                                    }
+                                                }).catch(err => {
+                                                    ref.setStatus(false)
+                                                    customTips.error(err.message)
+                                                })
+                                            }}
+                                            handleDelete={() => {
+                                                let data = new FormData()
+                                                data.append('articleId', this.props.articleId)
+                                                data.append('commentId', item.commentId)
+                                                deleteComment(data).then(resq => {
+                                                    if(resq.code === 200) {
+                                                        customTips.success(resq.message)
+                                                        setTimeout(() => {
+                                                            let temp = [...this.state.commentList]
+                                                            temp.splice(temp.findIndex(key => key.commentId === item.commentId), 1)
+                                                            this.setState({ commentList: temp })
+                                                        }, 500)
+                                                    } else {
+                                                        customTips.error(resq.message)
+                                                    }
+                                                }).catch(err => {
+                                                    customTips.error(err.message)
+                                                })
+                                            }}/>
+                                    </Collapse>
+                                )
+                            })
+                        }
+                    </TransitionGroup>
+                }
             </div>
         )
     }
