@@ -29,31 +29,6 @@ const ArticleDetail = (props) => {
     const tinymce = useRef(null)
     const [artContentStatus, setArtContentStatus] = useState(false)
     //function
-    const sendCommentToServer = (content) => {
-        if(content === null || content === '' || content === '<p></p>') {
-            customTips.warning('不能提交空白哦 ⊙﹏⊙∥')
-            return
-        }
-        if(!addCommentStatus) {
-            setAddCommentStatus(true)
-            let data = new FormData()
-            data.append('articleId', articleId)
-            data.append('content', content)
-            replyComment(data).then(resq => {
-                if(resq.code === 200) {
-                    tinymce.current.clear()
-                    customTips.success(resq.message)
-                    articleListRef.commentListGet()
-                } else {
-                    customTips.error(resq.message)
-                }
-                setAddCommentStatus(false)
-            }).catch(err => {
-                customTips.error(err.message)
-                setAddCommentStatus(false)
-            })
-        }
-    }
     return (
         <div className={style.article_detail}>
             <div className={style.article_detail_content}>
@@ -62,7 +37,31 @@ const ArticleDetail = (props) => {
                     ref={tinymce} 
                     placeholder='发表一条友善的评论吧...' 
                     status={addCommentStatus} 
-                    getContent={(value) => { sendCommentToServer(value) }}/>
+                    getContent={(value) => { 
+                        if(value === null || value === '' || value === '<p></p>') {
+                            customTips.warning('不能提交空白哦 ⊙﹏⊙∥')
+                            return
+                        }
+                        if(!addCommentStatus) {
+                            setAddCommentStatus(true)
+                            let data = new FormData()
+                            data.append('articleId', articleId)
+                            data.append('content', value)
+                            replyComment(data).then(resq => {
+                                if(resq.code === 200) {
+                                    tinymce.current.clear()
+                                    customTips.success(resq.message)
+                                    articleListRef.commentListGet()
+                                } else {
+                                    customTips.error(resq.message)
+                                }
+                                setAddCommentStatus(false)
+                            }).catch(err => {
+                                customTips.error(err.message)
+                                setAddCommentStatus(false)
+                            })
+                        }
+                    }}/>
                 <span className={style.article_vistor_title}>评论</span>
                 <ArticleVistorList childrenRef={(ref) => { setArticleListRef(ref) }} articleId={articleId} userInfo={props.userInfo} />
             </div>
