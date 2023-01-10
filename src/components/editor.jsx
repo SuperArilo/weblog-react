@@ -38,7 +38,7 @@ export default class Tinymce extends React.Component {
             setup: (editor) => {
                 setTimeout(() => {
                     this.setState({ tinymce: editor })
-                }, 1000)
+                }, 600)
             },
             images_upload_handler: (blobInfo, success) => new Promise((resolve, reject) => {
                 let data = new FormData()
@@ -54,6 +54,9 @@ export default class Tinymce extends React.Component {
                 })
             })
         }
+    }
+    clear() {
+        this.state.tinymce.setContent('')
     }
     render() {
         return (
