@@ -163,7 +163,7 @@ class IndexPage extends React.Component {
                                     <div className={style.gossip_list}>
                                         {
                                             this.state.gossipList.map(item => {
-                                                return <GossipContent key={item.id} data={item} />
+                                                return <GossipContent key={item.id} data={item} userInfo={this.props.userInfo} />
                                             })
                                         }
                                     </div>
