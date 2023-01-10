@@ -14,9 +14,11 @@ import ImageViewer from 'awesome-image-viewer'
 import $ from 'jquery'
 
 export default class Comment extends React.Component {
+    static defaultProps = {
+        foldStatus: false
+    }
     state = {
         popperStatus: false,
-        commentRebackBoxStatus: false,
         editorLoadingStatus: false,
         renderContentRef: React.createRef(),
         target: null
@@ -51,10 +53,7 @@ export default class Comment extends React.Component {
         this.setState({ editorLoadingStatus: status })
     }
     closeBox() {
-        this.setState({ 
-            editorLoadingStatus: false,
-            commentRebackBoxStatus: false 
-        })
+        this.setState({ editorLoadingStatus: false })
     }
     render() {
         return (
@@ -67,8 +66,8 @@ export default class Comment extends React.Component {
                                 <span>{this.props.data.replyUser.replyNickName}</span>
                                 { this.props.userInfo ? <button 
                                                             className={style.relply_button} 
-                                                            onClick={() => { 
-                                                                this.setState({ commentRebackBoxStatus: !this.state.commentRebackBoxStatus }) 
+                                                            onClick={() => {
+                                                                this.props.handleFold(this.props.data.commentId)
                                                             }} type="button">回复</button>:'' }
                                 { this.props.userInfo && this.props.data.replyUser.replyUserId === this.props.userInfo.uid ? <button className={style.delete_button} type="button" onClick={(event) => { this.popperChange(event) }}>删除</button>:'' }
                             </div>
@@ -92,7 +91,7 @@ export default class Comment extends React.Component {
                     }} 
                     onCancel={() => { this.popperChange(null) }}/>
                 <KeepAlive>
-                    <Collapse in={this.state.commentRebackBoxStatus} mountOnEnter unmountOnExit>
+                    <Collapse in={this.props.foldStatus} mountOnEnter unmountOnExit>
                         <Tinymce 
                             placeholder={`${'回复'}${' @' + this.props.data.replyUser.replyNickName}`} 
                             status={this.state.editorLoadingStatus} 
