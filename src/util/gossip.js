@@ -8,6 +8,14 @@ export const gossipList = (params) => {
         params: params
     })
 }
+//喜欢某条碎语
+export const likeGossip = (query) => {
+    return request({
+        url: '/gossip/like',
+        method: 'put',
+        data: query,
+    })
+}
 //碎语评论列表获取
 export const gossipCommentList = (params) => {
     return request({
