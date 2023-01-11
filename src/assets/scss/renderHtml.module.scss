@@ -39,11 +39,17 @@
         border-width: 1px 0 0 0;
     }
 }
-.render-html:not([dir=rtl]) blockquote
+.render_html:not([dir=rtl]) blockquote
 {
     border-left: 2px solid #ccc;
     margin-left: 1.5rem;
     padding-left: 1rem;
+    margin: 0.5rem 0;
+    a
+    {
+        color: rgb(60, 129, 194);
+    }
+
 }
 .render_html[dir=rtl] blockquote
 {
