@@ -18,6 +18,7 @@ import $ from 'jquery'
 import Avatar from './components/Avatar'
 import About from './components/About'
 import AsukaPopper from './components/popper'
+import Guestbook from './pages/Guestbook'
 //样式
 import './assets/scss/currencyTransition.scss'
 
@@ -65,6 +66,7 @@ const App = () => {
 							<Route path='/' element={<IndexPage isMobile={ isMobileStatus } userInfo={userInfo} />} />
 							<Route path='/detail' element={<ArticleDetail userInfo={userInfo} isMobile={ isMobileStatus } />} />
 							<Route path='/gossip' element={<Gossip userInfo={userInfo}/>} />
+							<Route path='/guestbook' element={<Guestbook />} />
 						</Routes>
 					</CSSTransition>
 				</SwitchTransition>
