@@ -8,6 +8,7 @@ import GossipContent from '../components/gossipContent'
 //方法
 import { gossipList } from '../util/gossip'
 import customTips from '../util/notostack/customTips'
+import { likeGossip } from '../util/gossip.js'
 export default class Gossip extends React.Component {
     state = {
         requestInstance: {
@@ -27,24 +28,6 @@ export default class Gossip extends React.Component {
             customTips.error(err.message)
         })
     }
-    reChangeLikeNum(gossipId, status) {
-        if(this.state.gossipList === null || this.state.gossipList.length === 0) return
-        let temp = [...this.state.gossipList]
-        let index = temp.findIndex(item => item.id === gossipId)
-        if(index === -1) {
-            customTips.warning('检测到LikeNum方法中索引异常')
-            return
-        }
-        if(status) {
-            temp[index].likes++
-        } else {
-            if(temp[index].likes >= 0) {
-                temp[index].likes--
-            }
-        }
-        temp[index].isLike = status
-        this.setState({ gossipList: temp })
-    }
     render() {
         return (
             <div className={style.gossip_page}>
@@ -54,7 +37,33 @@ export default class Gossip extends React.Component {
                             this.state.gossipList.map(item => {
                                 return (
                                     <Collapse key={item.id}>
-                                        <GossipContent parentRef={this} userInfo={this.props.userInfo} data={item}/>
+                                        <GossipContent
+                                            userInfo={this.props.userInfo} 
+                                            data={item}
+                                            handleLike={(gossipId) => {
+                                                let data = new FormData()
+                                                data.append('gossipId', gossipId)
+                                                likeGossip(data).then(resq => {
+                                                    if(resq.code === 200) {
+                                                        customTips.success(resq.message)
+                                                        let temp = [...this.state.gossipList]
+                                                        let index = temp.findIndex(item => item.id === gossipId)
+                                                        if(resq.data.status) {
+                                                            temp[index].likes++
+                                                        } else {
+                                                            if(temp[index].likes >= 0) {
+                                                                temp[index].likes--
+                                                            }
+                                                        }
+                                                        temp[index].isLike = resq.data.status
+                                                        this.setState({ gossipList: temp })
+                                                    } else {
+                                                        customTips.error(reqs.message)
+                                                    }
+                                                }).catch(err => {
+                                                    customTips.error(err.message)
+                                                })
+                                            }}/>
                                     </Collapse>
                                 )
                             })

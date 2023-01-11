@@ -72,16 +72,6 @@ class ArticleInfoTop extends React.Component {
     state = {
         articleInstance: ''
     }
-    articleLikeReChange(value) {
-        let {...temp} = this.state.articleInstance
-        temp.hasLike = value.status
-        if(value.status) {
-            temp.articleLikes++
-        } else {
-            temp.articleLikes--
-        }
-        this.setState({ articleInstance: temp })
-    }
     componentDidMount(){
         articleContentGet({ 'articleId': this.props.articleId }).then(resq => {
             if(resq.code === 200) {
@@ -99,7 +89,29 @@ class ArticleInfoTop extends React.Component {
     }
     render() {
         return (
-            this.state.articleInstance  === '' ? <ArticleSkeleton />:<ArticleContent articleInstance={this.state.articleInstance} likeStatusChange={(value) => { this.articleLikeReChange(value) }} />
+            this.state.articleInstance  === '' ? <ArticleSkeleton />:<ArticleContent 
+                                                                        articleInstance={this.state.articleInstance} 
+                                                                        handleLike={(articleId) => { 
+                                                                            let data = new FormData()
+                                                                            data.append('articleId', articleId)
+                                                                            increaseArticleLike(data).then(resq => {
+                                                                                if(resq.code === 200) {
+                                                                                    customTips.success(resq.message)
+                                                                                    let {...temp} = this.state.articleInstance
+                                                                                    temp.hasLike = resq.data.status
+                                                                                    if(resq.data.status) {
+                                                                                        temp.articleLikes++
+                                                                                    } else {
+                                                                                        temp.articleLikes--
+                                                                                    }
+                                                                                    this.setState({ articleInstance: temp })
+                                                                                } else {
+                                                                                    customTips.error(resq.message)
+                                                                                }
+                                                                            }).catch(err => {
+                                                                                customTips.error(err.message)
+                                                                            })
+                                                                        }} />
         )
     }
 }
@@ -243,20 +255,6 @@ class ArticleContent extends React.Component {
             })
         })
     }
-    likeArticle() {
-        let data = new FormData()
-        data.append('articleId', this.props.articleInstance.id)
-        increaseArticleLike(data).then(resq => {
-            if(resq.code === 200) {
-                customTips.success(resq.message)
-                this.props.likeStatusChange({ articleId: this.props.articleInstance.id, status: resq.data.status })
-            } else {
-                customTips.error(resq.message)
-            }
-        }).catch(err => {
-            customTips.error(err.message)
-        })
-    }
     render() {
         return(
             <>
@@ -272,7 +270,7 @@ class ArticleContent extends React.Component {
                                     <span>{this.props.articleInstance.createTime}</span>
                                 </div>
                             </div>
-                            <div className={style.article_data_info} onClick={() => { this.likeArticle() }} >
+                            <div className={style.article_data_info} onClick={() => { this.props.handleLike(this.props.articleInstance.id) }} >
                                 <div><i className="fas fa-eye"/><span>{this.props.articleInstance.articleViews}</span></div>
                                 <div><i className={`${'fas fa-heart'} ${this.props.articleInstance.hasLike ? style.article_liked:''}`} /><span>{this.props.articleInstance.articleLikes}</span><WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } /></div>
                             </div>

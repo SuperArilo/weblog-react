@@ -19,7 +19,7 @@ import { articleListGet } from '../util/article'
 import { useNavigate } from "react-router-dom"
 import $ from 'jquery'
 //方法
-import { gossipList } from '../util/gossip'
+import { gossipList, likeGossip } from '../util/gossip'
 import { increaseArticleLike } from '../util/article'
 import customTips from '../util/notostack/customTips'
 class IndexPage extends React.Component {
@@ -85,17 +85,6 @@ class IndexPage extends React.Component {
             customTips.error(err.message)
         })
     }
-    articleLikeReChange(value) {
-        let [...temp] = this.state.articleList
-        let index = temp.findIndex(item => item.id === value.articleId)
-        temp[index].isLike = value.status
-        if(value.status) {
-            temp[index].articleLikes = temp[index].articleLikes + 1
-        } else {
-            temp[index].articleLikes = temp[index].articleLikes - 1
-        }
-        this.setState({ articleList: temp })
-    }
     render() {
         return (
             <div className={ this.props.isMobile ? style.index_content_mobile:style.index_content }>
@@ -146,7 +135,31 @@ class IndexPage extends React.Component {
                                     <ul className={style.article_list}>
                                         {
                                             this.state.articleList.map(item => {
-                                                return (<Article key={item.id} item={item} likeStatusChange={(value) => { this.articleLikeReChange(value) }} />)
+                                                return (<Article 
+                                                            key={item.id}
+                                                            item={item}
+                                                            handleLike={(articleId) => { 
+                                                                let data = new FormData()
+                                                                data.append('articleId', articleId)
+                                                                increaseArticleLike(data).then(resq => {
+                                                                    if(resq.code === 200) {
+                                                                        customTips.success(resq.message)
+                                                                        let [...temp] = this.state.articleList
+                                                                        let index = temp.findIndex(item => item.id === articleId)
+                                                                        temp[index].isLike = resq.data.status
+                                                                        if(resq.data.status) {
+                                                                            temp[index].articleLikes++
+                                                                        } else {
+                                                                            temp[index].articleLikes--
+                                                                        }
+                                                                        this.setState({ articleList: temp })
+                                                                    } else {
+                                                                        customTips.error(resq.message)
+                                                                    }            
+                                                                }).catch(err => {
+                                                                    customTips.error(err.message)
+                                                                })
+                                                            }} />)
                                             })
                                         }
                                     </ul>
@@ -163,7 +176,34 @@ class IndexPage extends React.Component {
                                     <div className={style.gossip_list}>
                                         {
                                             this.state.gossipList.map(item => {
-                                                return <GossipContent key={item.id} data={item} userInfo={this.props.userInfo} />
+                                                return <GossipContent
+                                                            key={item.id} 
+                                                            data={item} 
+                                                            userInfo={this.props.userInfo}
+                                                            handleLike={(gossipId) => {
+                                                                let data = new FormData()
+                                                                data.append('gossipId', gossipId)
+                                                                likeGossip(data).then(resq => {
+                                                                    if(resq.code === 200) {
+                                                                        customTips.success(resq.message)
+                                                                        let temp = [...this.state.gossipList]
+                                                                        let index = temp.findIndex(item => item.id === gossipId)
+                                                                        if(resq.data.status) {
+                                                                            temp[index].likes++
+                                                                        } else {
+                                                                            if(temp[index].likes >= 0) {
+                                                                                temp[index].likes--
+                                                                            }
+                                                                        }
+                                                                        temp[index].isLike = resq.data.status
+                                                                        this.setState({ gossipList: temp })
+                                                                    } else {
+                                                                        customTips.error(reqs.message)
+                                                                    }
+                                                                }).catch(err => {
+                                                                    customTips.error(err.message)
+                                                                })
+                                                            }}/>
                                             })
                                         }
                                     </div>
@@ -196,21 +236,6 @@ const Article = (props) => {
     //hook
     const navigate = useNavigate()
     //params
-
-    const likeArticle = (object) => {
-        let data = new FormData()
-        data.append('articleId', object.id)
-        increaseArticleLike(data).then(resq => {
-            if(resq.code === 200) {
-                customTips.success(resq.message)
-                props.likeStatusChange({ articleId: object.id, status: resq.data.status })
-            } else {
-                customTips.error(resq.message)
-            }            
-        }).catch(err => {
-            customTips.error(err.message)
-        })
-    }
     return (
         <li>
             <img src={props.item.articlePicture} title={props.item.articleTitle} alt={props.item.articleTitle} />
@@ -229,7 +254,7 @@ const Article = (props) => {
                             <span>{props.item.articleViews}</span>
                             <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
                         </div>
-                        <div onClick={() => { likeArticle(props.item) }}>
+                        <div onClick={() => { props.handleLike(props.item.id) }}>
                             <i className={`${'fas fa-heart'} ${props.item.isLike ? style.article_is_liked:''}`} />
                             <span>{props.item.articleLikes}</span>
                             <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />

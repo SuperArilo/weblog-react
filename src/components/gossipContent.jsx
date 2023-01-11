@@ -67,20 +67,10 @@ export default class GossipContent extends React.Component {
                     <span>{this.state.commentList ? this.state.commentList.length:this.props.data.comments} 条评论</span>
                 </div>
                 <div className={style.gossip_button}>
-                    <button type='button' className={`${this.props.data.isLike ? style.gossip_liked:''}`} onClick={() => {
-                        let data = new FormData()
-                        data.append('gossipId', this.props.data.id)
-                        likeGossip(data).then(resq => {
-                            if(resq.code === 200) {
-                                customTips.success(resq.message)
-                                this.props.parentRef.reChangeLikeNum(this.props.data.id, resq.data.status)
-                            } else {
-                                customTips.error(reqs.message)
-                            }
-                        }).catch(err => {
-                            customTips.error(err.message)
-                        })
-                    }}>
+                    <button 
+                        type='button' 
+                        className={`${this.props.data.isLike ? style.gossip_liked:''}`} 
+                        onClick={() => { this.props.handleLike(this.props.data.id) }}>
                         <i className='fas fa-heart' />
                         喜欢
                         <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
@@ -141,7 +131,7 @@ export default class GossipContent extends React.Component {
                             }
                         }}/>
                     {
-                        this.state.commentList === null ? <CommentSkeleton />:this.state.commentList.length === 0 ? <span>none</span>:
+                        this.state.commentList === null ? <CommentSkeleton />:this.state.commentList.length === 0 ? <div className={style.empty_box}>当前没有评论，赶快来评论吧 ψ(｀∇´)ψ</div>:
                         <div className={style.gossip_comment_list}>
                             <TransitionGroup>
                                 {
