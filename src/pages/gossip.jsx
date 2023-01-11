@@ -27,23 +27,6 @@ export default class Gossip extends React.Component {
             customTips.error(err.message)
         })
     }
-    reChangeCommentNum(gossipId, status) {
-        if(this.state.gossipList === null || this.state.gossipList.length === 0) return
-        let temp = [...this.state.gossipList]
-        let index = temp.findIndex(item => item.id === gossipId)
-        if(index === -1) {
-            customTips.warning('检测到LikeNum方法中索引异常')
-            return
-        }
-        if(status) {
-            temp[index].comments++
-        } else {
-            if(temp[index].comments >= 0) {
-                temp[index].comments--
-            }
-        }
-        this.setState({ gossipList: temp })
-    }
     reChangeLikeNum(gossipId, status) {
         if(this.state.gossipList === null || this.state.gossipList.length === 0) return
         let temp = [...this.state.gossipList]
