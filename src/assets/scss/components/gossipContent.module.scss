@@ -99,10 +99,13 @@
         {
             margin: 0 0.4rem;
         }
+        .gossip_liked i
+        {
+            color: red !important;
+        }
     }
     .gossip_comment_list
     {
-        display: flex;
-        flex-direction: column;
+        margin-top: 1rem;
     }
 }

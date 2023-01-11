@@ -27,6 +27,41 @@ export default class Gossip extends React.Component {
             customTips.error(err.message)
         })
     }
+    reChangeCommentNum(gossipId, status) {
+        if(this.state.gossipList === null || this.state.gossipList.length === 0) return
+        let temp = [...this.state.gossipList]
+        let index = temp.findIndex(item => item.id === gossipId)
+        if(index === -1) {
+            customTips.warning('检测到LikeNum方法中索引异常')
+            return
+        }
+        if(status) {
+            temp[index].comments++
+        } else {
+            if(temp[index].comments >= 0) {
+                temp[index].comments--
+            }
+        }
+        this.setState({ gossipList: temp })
+    }
+    reChangeLikeNum(gossipId, status) {
+        if(this.state.gossipList === null || this.state.gossipList.length === 0) return
+        let temp = [...this.state.gossipList]
+        let index = temp.findIndex(item => item.id === gossipId)
+        if(index === -1) {
+            customTips.warning('检测到LikeNum方法中索引异常')
+            return
+        }
+        if(status) {
+            temp[index].likes++
+        } else {
+            if(temp[index].likes >= 0) {
+                temp[index].likes--
+            }
+        }
+        temp[index].isLike = status
+        this.setState({ gossipList: temp })
+    }
     render() {
         return (
             <div className={style.gossip_page}>
@@ -36,7 +71,7 @@ export default class Gossip extends React.Component {
                             this.state.gossipList.map(item => {
                                 return (
                                     <Collapse key={item.id}>
-                                        <GossipContent userInfo={this.props.userInfo} data={item}/>
+                                        <GossipContent parentRef={this} userInfo={this.props.userInfo} data={item}/>
                                     </Collapse>
                                 )
                             })
