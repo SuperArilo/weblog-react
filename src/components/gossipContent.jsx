@@ -64,7 +64,7 @@ export default class GossipContent extends React.Component {
                 <div className={style.gossip_state}>
                     <span>{this.props.data.likes} 个喜欢</span>
                     <span>|</span>
-                    <span>{this.props.data.comments} 条评论</span>
+                    <span>{this.state.commentList ? this.state.commentList.length:this.props.data.comments} 条评论</span>
                 </div>
                 <div className={style.gossip_button}>
                     <button type='button' className={`${this.props.data.isLike ? style.gossip_liked:''}`} onClick={() => {
@@ -130,7 +130,6 @@ export default class GossipContent extends React.Component {
                                         this.state.tinymce.current.clear()
                                         customTips.success(resq.message)
                                         this.commentListGet()
-                                        this.props.parentRef.reChangeCommentNum(this.props.data.id, true)
                                     } else {
                                         customTips.error(resq.message)
                                     }
@@ -200,7 +199,6 @@ export default class GossipContent extends React.Component {
                                                                 this.commentListGet()
                                                                 ref.closeBox()
                                                                 this.setState({ selectCommentItem: null })
-                                                                this.props.parentRef.reChangeCommentNum(this.props.data.id, true)
                                                             } else {
                                                                 customTips.error(resq.message)
                                                             }
@@ -216,12 +214,7 @@ export default class GossipContent extends React.Component {
                                                         deleteGossipComment(data).then(resq => {
                                                             if(resq.code === 200) {
                                                                 customTips.success(resq.message)
-                                                                setTimeout(() => {
-                                                                    let temp = [...this.state.commentList]
-                                                                    temp.splice(temp.findIndex(key => key.commentId === item.commentId), 1)
-                                                                    this.setState({ commentList: temp })
-                                                                    this.props.parentRef.reChangeCommentNum(this.props.data.id, false)
-                                                                }, 500)
+                                                                this.commentListGet()
                                                             } else {
                                                                 customTips.error(resq.message)
                                                             }
