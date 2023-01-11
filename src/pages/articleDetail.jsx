@@ -85,16 +85,16 @@ class ArticleInfoTop extends React.Component {
     componentDidMount(){
         articleContentGet({ 'articleId': this.props.articleId }).then(resq => {
             if(resq.code === 200) {
-                setTimeout(() => {
-                    this.setState({ articleInstance: resq.data })
+                this.setState({ articleInstance: resq.data }, () => {
                     this.props.artContent(true)
-                }, 1000)
+                })
             } else {
                 customTips.error(resq.message)
-                this.props.artContent(true)
+                this.props.artContent(false)
             }
         }).catch(err => {
             customTips.error(err.message)
+            this.props.artContent(false)
         })
     }
     render() {
@@ -120,9 +120,7 @@ class ArticleVistorList extends React.Component {
     commentListGet() {
         articleCommentGet(this.state.requestInstance).then(resq => {
             if(resq.code === 200) {
-                setTimeout(() => {
-                    this.setState({ commentList: resq.data.list })
-                }, 1000)
+                this.setState({ commentList: resq.data.list })
             } else {
                 customTips.error(resq.message)
             }
