@@ -57,7 +57,7 @@ export default class Comment extends React.Component {
     }
     render() {
         return (
-            <div className={style.comment_box}>
+            <div className={style.comment_box} id={`${this.props.data.replyUser.replyUserId.toString() + this.props.data.commentId.toString()}`}>
                 <div className={style.comment_top}>
                     <div className={style.comment_top_left}>
                         <Avatar src={this.props.data.replyUser.replyAvatar} title={this.props.data.replyUser.replyNickName} alt={this.props.data.replyUser.replyNickName} />
@@ -79,7 +79,16 @@ export default class Comment extends React.Component {
                         <span>{this.props.data.likes}</span>
                     </div>
                 </div>
-                <div className={`${style.comment_conten_render} ${renderHtml.render_html}`} ref={this.state.renderContentRef} dangerouslySetInnerHTML={{ __html: this.props.data.content}} />
+                <div 
+                    ref={this.state.renderContentRef}
+                    className={`${style.comment_conten_render} ${renderHtml.render_html}`}
+                    dangerouslySetInnerHTML={
+                        { 
+                            __html: this.props.data.byReplyUser ? 
+                                '<blockquote><a title="' + this.props.data.byReplyUser.byReplyName + '" href="#' + this.props.data.byReplyUser.byReplyUserId + this.props.data.byReplyUser.byReplyCommentId + '" target="_self">@ ' + this.props.data.byReplyUser.byReplyName + '</a></blockquote>' + this.props.data.content
+                                :this.props.data.content
+                        }
+                    } />
                 <AsukaPoppor 
                     open={this.state.popperStatus} 
                     title='确定要删除评论吗？ (/▽＼)' 
