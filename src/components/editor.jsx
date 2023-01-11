@@ -56,14 +56,21 @@ export default class Tinymce extends React.Component {
         }
     }
     clear() {
-        this.state.tinymce.setContent('')
+        this.setState({ modelValue: '' }, () => {
+            this.state.tinymce.setContent('')
+        })
     }
     render() {
         return (
             <>
                 { this.state.tinymce ? '':<EditorSkeleton /> }
                 <div className={style.editor_tinymce} style={{ display: this.state.tinymce ? 'block':'none' }}>
-                    <Editor tinymceScriptSrc={ process.env.PUBLIC_URL + '/tinymce/tinymce.min.js' } initialValue={this.state.initialValue} init={this.state.config} onChange={(event, editor) => { this.setState({ modelValue: editor.getContent() }) }} />
+                    <Editor 
+                        tinymceScriptSrc={ process.env.PUBLIC_URL + '/tinymce/tinymce.min.js' }
+                        initialValue={this.state.initialValue} init={this.state.config}
+                        onChange={(event, editor) => {
+                            this.setState({ modelValue: editor.getContent() })
+                        }} />
                     <div className={style.editor_bottom}>
                         <div className={style.left_user_info}>
                         </div>
