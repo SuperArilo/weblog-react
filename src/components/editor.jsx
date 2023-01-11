@@ -87,10 +87,10 @@ class EditorSkeleton extends React.Component {
             <div className={style.editor_skeleton}>
                 <div className={style.editor_top}>
                     <div>
-                        <Skeleton variant="text" sx={{ fontSize: '1rem' }} width='100%' height='3.2rem' />
+                        <Skeleton variant="text" sx={{ fontSize: '1rem' }} width='100%' height='3rem' />
                     </div>
                     <div>
-                        <Skeleton variant="text" sx={{ fontSize: '1rem' }} width='100%' height='3.2rem' />
+                        <Skeleton variant="text" sx={{ fontSize: '1rem' }} width='100%' height='3rem' />
                     </div>
                 </div>
                 <Skeleton variant="rounded" width='100%' height='8rem' />
