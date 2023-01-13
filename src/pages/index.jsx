@@ -147,11 +147,7 @@ class IndexPage extends React.Component {
                                                                         let [...temp] = this.state.articleList
                                                                         let index = temp.findIndex(item => item.id === articleId)
                                                                         temp[index].isLike = resq.data.status
-                                                                        if(resq.data.status) {
-                                                                            temp[index].articleLikes++
-                                                                        } else {
-                                                                            temp[index].articleLikes--
-                                                                        }
+                                                                        temp[index].articleLikes = resq.data.likes
                                                                         this.setState({ articleList: temp })
                                                                     } else {
                                                                         customTips.error(resq.message)

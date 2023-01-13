@@ -89,29 +89,31 @@ class ArticleInfoTop extends React.Component {
     }
     render() {
         return (
-            this.state.articleInstance  === '' ? <ArticleSkeleton />:<ArticleContent 
-                                                                        articleInstance={this.state.articleInstance} 
-                                                                        handleLike={(articleId) => { 
-                                                                            let data = new FormData()
-                                                                            data.append('articleId', articleId)
-                                                                            increaseArticleLike(data).then(resq => {
-                                                                                if(resq.code === 200) {
-                                                                                    customTips.success(resq.message)
-                                                                                    let {...temp} = this.state.articleInstance
-                                                                                    temp.hasLike = resq.data.status
-                                                                                    if(resq.data.status) {
-                                                                                        temp.articleLikes++
-                                                                                    } else {
-                                                                                        temp.articleLikes--
-                                                                                    }
-                                                                                    this.setState({ articleInstance: temp })
-                                                                                } else {
-                                                                                    customTips.error(resq.message)
-                                                                                }
-                                                                            }).catch(err => {
-                                                                                customTips.error(err.message)
-                                                                            })
-                                                                        }} />
+            <SwitchTransition mode='out-in'>
+                <CSSTransition key={this.state.articleInstance  === ''} timeout={300} classNames="change" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
+                    {
+                        this.state.articleInstance  === '' ? <ArticleSkeleton />:<ArticleContent 
+                        articleInstance={this.state.articleInstance} 
+                        handleLike={(articleId) => { 
+                            let data = new FormData()
+                            data.append('articleId', articleId)
+                            increaseArticleLike(data).then(resq => {
+                                if(resq.code === 200) {
+                                    customTips.success(resq.message)
+                                    let {...temp} = this.state.articleInstance
+                                    temp.hasLike = resq.data.status
+                                    temp.articleLikes = resq.data.likes
+                                    this.setState({ articleInstance: temp })
+                                } else {
+                                    customTips.error(resq.message)
+                                }
+                            }).catch(err => {
+                                customTips.error(err.message)
+                            })
+                        }} />
+                    }
+                </CSSTransition>
+            </SwitchTransition>
         )
     }
 }
@@ -180,11 +182,7 @@ class ArticleVistorList extends React.Component {
                                                                     let [...temp] = this.state.commentList
                                                                     let index = temp.findIndex(key => key.commentId === item.commentId)
                                                                     temp[index].isLike = resq.data.status
-                                                                    if(resq.data.status) {
-                                                                        temp[index].likes = temp[index].likes + 1
-                                                                    } else {
-                                                                        temp[index].likes = temp[index].likes - 1
-                                                                    }
+                                                                    temp[index].likes = resq.data.likes
                                                                     this.setState({ commentList: temp })
                                                                 } else {
                                                                     customTips.error(resq.message)

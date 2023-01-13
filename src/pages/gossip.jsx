@@ -48,14 +48,8 @@ export default class Gossip extends React.Component {
                                                         customTips.success(resq.message)
                                                         let temp = [...this.state.gossipList]
                                                         let index = temp.findIndex(item => item.id === gossipId)
-                                                        if(resq.data.status) {
-                                                            temp[index].likes++
-                                                        } else {
-                                                            if(temp[index].likes >= 0) {
-                                                                temp[index].likes--
-                                                            }
-                                                        }
                                                         temp[index].isLike = resq.data.status
+                                                        temp[index].likes = resq.data.likes
                                                         this.setState({ gossipList: temp })
                                                     } else {
                                                         customTips.error(reqs.message)

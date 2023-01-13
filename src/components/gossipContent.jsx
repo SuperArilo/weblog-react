@@ -169,11 +169,7 @@ export default class GossipContent extends React.Component {
                                                                             let [...temp] = this.state.commentList
                                                                             let index = temp.findIndex(key => key.commentId === item.commentId)
                                                                             temp[index].isLike = resq.data.status
-                                                                            if(resq.data.status) {
-                                                                                temp[index].likes = temp[index].likes + 1
-                                                                            } else {
-                                                                                temp[index].likes = temp[index].likes - 1
-                                                                            }
+                                                                            temp[index].likes = resq.data.likes
                                                                             this.setState({ commentList: temp })
                                                                         } else {
                                                                             customTips.error(resq.message)
