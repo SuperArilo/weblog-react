@@ -1,0 +1,91 @@
+.guestbook
+{
+    max-width: 768px;
+    padding-top: 1rem;
+    margin: 0 auto;
+    .guestbook_comment_list
+    {
+        margin-top: 1rem;
+        border-radius: 0.3rem;
+        overflow: hidden;
+        .guestbook_comment_item
+        {
+            background-color: #ffffff;
+            border-bottom: solid 1px rgb(226, 226, 226);
+            padding: 0.5rem;
+            .comment_item_top
+            {
+                height: 3.2rem;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                .user_info
+                {
+                    display: flex;
+                    justify-content: flex-start;
+                    div
+                    {
+                        margin-left: 1rem;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-around;
+                        span:nth-child(1)
+                        {
+                            font-size: 0.9rem;
+                            color: #333;
+                        }
+                        span:nth-child(2)
+                        {
+                            font-size: 0.6rem;
+                            color: #4c4e4d;
+                            font-weight: 400;
+                            letter-spacing: 0.05rem;
+                        }
+                    }
+                }
+                i
+                {
+                    width: 2rem;
+                    height: 2rem;
+                    overflow: hidden;
+                    cursor: pointer;
+                    border-radius: 50%;
+                    color: #666;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+            }
+            .comment_html
+            {
+                padding: 0.5rem 1rem;
+                min-height: 3rem;
+                border-radius: 0.2rem;
+                background-color: #fcfcfc;
+            }
+        }
+        .guestbook_comment_item:last-child
+        {
+            border-bottom: none;
+        }
+    }
+    .guestbook_skeleton
+    {
+        background-color: #ffffff;
+        padding: 0.5rem;
+        .guestbook_skeleton_top
+        {
+            height: 3.2rem;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            div
+            {
+                margin-left: 1rem;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+        }
+    }
+}
