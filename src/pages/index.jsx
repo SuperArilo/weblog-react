@@ -1,4 +1,3 @@
-import React, { useState } from 'react'
 //样式
 import style from '../assets/scss/indexPage.module.scss'
 import '../assets/scss/currencyTransition.scss'
@@ -14,203 +13,231 @@ import Slider from "react-slick"
 import GossipSkeleton from '../components/GossipSkeleton'
 import Skeleton from '@mui/material/Skeleton'
 import { SwitchTransition, CSSTransition } from 'react-transition-group'
+import Pagination from '../components/Pagination'
 //hook
 import { articleListGet } from '../util/article'
 import { useNavigate } from "react-router-dom"
-import $ from 'jquery'
+import React, { useState, useRef, useEffect, useCallback } from 'react'
 //方法
-import { gossipList, likeGossip } from '../util/gossip'
+import { gossipListRequest, likeGossip } from '../util/gossip'
 import { increaseArticleLike } from '../util/article'
 import customTips from '../util/notostack/customTips'
-class IndexPage extends React.Component {
-    state = {
-        articleList: [],
-        hotArticleList: [],
-        gossipList: [],
-        sliderIndex: 0,
-        sliderRef: React.createRef(),
-        articleRequestInstance: {
-            pageNum: 1,
-            pageSize: 10
-        },
-        hotArticleRequestInstance: {
-            pageNum: 1,
-            pageSize: 3,
-            keyword: 'hot'
-        },
-        gossipRequestInstance: {
-            pageNum: 1,
-            pageSize: 10
-        },
-        SliderSettings: {
-            adaptiveHeight: false,
-            arrows: false,
-            fade: true,
-            dots: false,
-            infinite: true,
-            autoplay: true,
-            centerPadding: '0px',
-            speed: 300,
-            afterChange: (index) => {
-                this.setState({ sliderIndex: index })
-            }
+import $ from 'jquery'
+export default function IndexPage(props) {
+    //params
+    const [articleObject, setArticleObject] = useState({
+        pages: 0,
+        list: []
+    })
+    const [hotArticleList, setHotArticleList] = useState([])
+    const [gossipList, setGossipList] = useState([])
+    //instane
+    const [articleRequestInstance, setArticleRequestInstance] = useState({
+        pageNum: 1,
+        pageSize: 10
+    })
+    const [hotArticleRequestInstance, setHotArticleRequestInstance] = useState({
+        pageNum: 1,
+        pageSize: 3,
+        keyword: 'hot'
+    })
+    const [gossipRequestInstance, setGossipRequestInstance] = useState({
+        pageNum: 1,
+        pageSize: 10
+    })
+    //slider
+    const sliderRef = useRef(null)
+    const [sliderIndex, setSliderIndex] = useState(0)
+    const [sliderSettings, setSliderSettings] = useState({
+        adaptiveHeight: false,
+        arrows: false,
+        fade: true,
+        dots: false,
+        infinite: true,
+        autoplay: true,
+        centerPadding: '0px',
+        speed: 300,
+        afterChange: (index) => {
+            setSliderIndex(index)
         }
-    }
-    componentDidMount(){
-        articleListGet(this.state.hotArticleRequestInstance).then(resq => {
+    })
+    //function
+    const articleData = useCallback((instance) => {
+        articleListGet(instance).then(resq => {
             if(resq.code === 200) {
-                this.setState({ hotArticleList: resq.data.list })
+                setArticleObject(current => { return ({ ...current, list: resq.data.list, pages: resq.data.pages }) })
             } else {
                 customTips.error(resq.message)
             }
         }).catch(err => {
             customTips.error(err.message)
         })
-        articleListGet(this.state.articleRequestInstance).then(resq => {
+    }, [])
+    const hotArticleData = useCallback((instance) => {
+        articleListGet(instance).then(resq => {
             if(resq.code === 200) {
-                this.setState({ articleList: resq.data.list })
+                setHotArticleList(resq.data.list)
             } else {
                 customTips.error(resq.message)
             }
         }).catch(err => {
             customTips.error(err.message)
         })
-        gossipList(this.state.gossipRequestInstance).then(resq => {
+    }, [])
+    const gossipData = useCallback((instance) => {
+        gossipListRequest(instance).then(resq => {
             if(resq.code === 200) {
-                this.setState({ gossipList: resq.data.list })
+                setGossipList(resq.data.list)
             } else {
                 customTips.error(resq.message)
             }
         }).catch(err => {
             customTips.error(err.message)
         })
-    }
-    render() {
-        return (
-            <div className={ this.props.isMobile ? style.index_content_mobile:style.index_content }>
-                <div className={style.index_sider}>
-                    <header className={style.sider_header_tips}>
-                        <Switch defaultChecked onChange={(e) => { 
-                            if(e.target.checked) {
-                                this.state.sliderRef.current.slickPlay() 
-                            } else {
-                                this.state.sliderRef.current.slickPause() 
-                            }
-                        }} />
-                        <span className={style.auto_play_span}>自动播放</span>
-                    </header>
-                    <SwitchTransition mode="out-in">
-                        <CSSTransition key={this.state.hotArticleList.length === 0 ? true:false} classNames='change' timeout={300} nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
+    }, [])
+
+    //顶部
+    useEffect(() => {
+        hotArticleData(hotArticleRequestInstance)
+    }, [hotArticleRequestInstance, hotArticleData])
+    //文章
+    useEffect(() => {
+        articleData(articleRequestInstance)
+    }, [articleRequestInstance, articleData])
+    //碎语
+    useEffect(() => {
+        gossipData(gossipRequestInstance)
+    }, [gossipRequestInstance, gossipData])
+
+    return (
+        <div className={ props.isMobile ? style.index_content_mobile:style.index_content }>
+            <div className={style.index_sider}>
+                <header className={style.sider_header_tips}>
+                    <Switch defaultChecked onChange={(e) => { 
+                        if(e.target.checked) {
+                            sliderRef.current.slickPlay() 
+                        } else {
+                            sliderRef.current.slickPause() 
+                        }
+                    }} />
+                    <span className={style.auto_play_span}>自动播放</span>
+                </header>
+                <SwitchTransition mode="out-in">
+                    <CSSTransition key={hotArticleList.length === 0} classNames='change' timeout={300} nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
+                        {
+                            hotArticleList.length === 0 ? <div className={style.loading_sider}><i className='fas fa-circle-notch fa-spin' /></div>:
+                            <section className={style.sider_carousel}>
+                                <Slider ref={sliderRef} {...sliderSettings}>
+                                    {
+                                        hotArticleList.map(item => { return <SiderItem key={item.id} object={item} /> })
+                                    }
+                                </Slider>
+                                <ul className={style.sider_carousel_index}>
+                                    {
+                                        hotArticleList.map((item, index) => {
+                                            return (
+                                                <li key={item.id} onClick={() => { sliderRef.current.slickGoTo(index, false) }}>
+                                                    <i className={sliderIndex === index ? 'fas fa-circle':'far fa-circle'} />
+                                                </li>
+                                            )
+                                        }) 
+                                    }
+                                </ul>
+                            </section>
+                        }
+                    </CSSTransition>
+                </SwitchTransition>
+            </div>
+            <section className={style.index_section}>
+                <div className={style.public_sub_content}>
+                    <span className={style.public_sub_content_header}>全部文章</span>
+                    <SwitchTransition mode='out-in'>
+                        <CSSTransition classNames='change' key={articleObject.list.length === 0} timeout={300} mountOnEnter={true} unmountOnExit={true}>
                             {
-                                this.state.hotArticleList.length === 0 ? <div className={style.loading_sider}><i className='fas fa-circle-notch fa-spin' /></div>:
-                                <section className={style.sider_carousel}>
-                                    <Slider ref={this.state.sliderRef} {...this.state.SliderSettings}>
-                                        {
-                                            this.state.hotArticleList.map(item => { return <SiderItem key={item.id} object={item} /> })
-                                        }
-                                    </Slider>
-                                    <ul className={style.sider_carousel_index}>
-                                        {
-                                            this.state.hotArticleList.map((item, index) => {
-                                                return (
-                                                    <li key={item.id} onClick={() => { this.state.sliderRef.current.slickGoTo(index, false) }}>
-                                                        <i className={this.state.sliderIndex === index ? 'fas fa-circle':'far fa-circle'} />
-                                                    </li>
-                                                )
-                                            }) 
-                                        }
-                                    </ul>
-                                </section>
+                                articleObject.list.length === 0 ? <ArticleSkeleton />:
+                                <ul className={style.article_list}>
+                                    {
+                                        articleObject.list.map(item => {
+                                            return (<Article 
+                                                        key={item.id}
+                                                        item={item}
+                                                        handleLike={(articleId) => { 
+                                                            let data = new FormData()
+                                                            data.append('articleId', articleId)
+                                                            increaseArticleLike(data).then(resq => {
+                                                                if(resq.code === 200) {
+                                                                    customTips.success(resq.message)
+                                                                    let [...temp] = articleList
+                                                                    let index = temp.findIndex(item => item.id === articleId)
+                                                                    temp[index].isLike = resq.data.status
+                                                                    temp[index].articleLikes = resq.data.likes
+                                                                    setArticleObject({...articleObject, list: temp})
+                                                                } else {
+                                                                    customTips.error(resq.message)
+                                                                }            
+                                                            }).catch(err => {
+                                                                customTips.error(err.message)
+                                                            })
+                                                        }} 
+                                                    />)
+                                        })
+                                    }
+                                </ul>
+                            }
+                        </CSSTransition>
+                    </SwitchTransition>
+                    <Pagination 
+                        pages={articleObject.pages}
+                        onPageChange={e => { setArticleRequestInstance({...articleRequestInstance, pageNum: e}) }}/>
+                </div>
+                <div className={style.public_sub_content}>
+                    <span className={style.public_sub_content_header}>最近碎语</span>
+                    <SwitchTransition mode='out-in'>
+                        <CSSTransition key={gossipList.length === 0} classNames='change' timeout={300} nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
+                            {
+                                gossipList.length === 0 ? <GossipSkeleton />:
+                                <div className={style.gossip_list}>
+                                    {
+                                        gossipList.map(item => {
+                                            return <GossipContent
+                                                        key={item.id} 
+                                                        data={item} 
+                                                        userInfo={props.userInfo}
+                                                        handleLike={(gossipId) => {
+                                                            let data = new FormData()
+                                                            data.append('gossipId', gossipId)
+                                                            likeGossip(data).then(resq => {
+                                                                if(resq.code === 200) {
+                                                                    customTips.success(resq.message)
+                                                                    let temp = [...gossipList]
+                                                                    let index = temp.findIndex(item => item.id === gossipId)
+                                                                    if(resq.data.status) {
+                                                                        temp[index].likes++
+                                                                    } else {
+                                                                        if(temp[index].likes >= 0) {
+                                                                            temp[index].likes--
+                                                                        }
+                                                                    }
+                                                                    temp[index].isLike = resq.data.status
+                                                                    setGossipList(temp)
+                                                                } else {
+                                                                    customTips.error(reqs.message)
+                                                                }
+                                                            }).catch(err => {
+                                                                customTips.error(err.message)
+                                                            })
+                                                        }}
+                                                    />
+                                        })
+                                    }
+                                </div>
                             }
                         </CSSTransition>
                     </SwitchTransition>
                 </div>
-                <section className={style.index_section}>
-                    <div className={style.public_sub_content}>
-                        <span className={style.public_sub_content_header}>全部文章</span>
-                        <SwitchTransition mode='out-in'>
-                            <CSSTransition classNames='change' key={this.state.articleList.length === 0 ? true:false} timeout={300} mountOnEnter={true} unmountOnExit={true}>
-                                {
-                                    this.state.articleList.length === 0 ? <ArticleSkeleton />:
-                                    <ul className={style.article_list}>
-                                        {
-                                            this.state.articleList.map(item => {
-                                                return (<Article 
-                                                            key={item.id}
-                                                            item={item}
-                                                            handleLike={(articleId) => { 
-                                                                let data = new FormData()
-                                                                data.append('articleId', articleId)
-                                                                increaseArticleLike(data).then(resq => {
-                                                                    if(resq.code === 200) {
-                                                                        customTips.success(resq.message)
-                                                                        let [...temp] = this.state.articleList
-                                                                        let index = temp.findIndex(item => item.id === articleId)
-                                                                        temp[index].isLike = resq.data.status
-                                                                        temp[index].articleLikes = resq.data.likes
-                                                                        this.setState({ articleList: temp })
-                                                                    } else {
-                                                                        customTips.error(resq.message)
-                                                                    }            
-                                                                }).catch(err => {
-                                                                    customTips.error(err.message)
-                                                                })
-                                                            }} />)
-                                            })
-                                        }
-                                    </ul>
-                                }
-                            </CSSTransition>
-                        </SwitchTransition>
-                    </div>
-                    <div className={style.public_sub_content}>
-                        <span className={style.public_sub_content_header}>最近碎语</span>
-                        <SwitchTransition mode='out-in'>
-                            <CSSTransition key={this.state.gossipList.length === 0 ? true:false} classNames='change' timeout={300} nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
-                                {
-                                    this.state.gossipList.length === 0 ? <GossipSkeleton />:
-                                    <div className={style.gossip_list}>
-                                        {
-                                            this.state.gossipList.map(item => {
-                                                return <GossipContent
-                                                            key={item.id} 
-                                                            data={item} 
-                                                            userInfo={this.props.userInfo}
-                                                            handleLike={(gossipId) => {
-                                                                let data = new FormData()
-                                                                data.append('gossipId', gossipId)
-                                                                likeGossip(data).then(resq => {
-                                                                    if(resq.code === 200) {
-                                                                        customTips.success(resq.message)
-                                                                        let temp = [...this.state.gossipList]
-                                                                        let index = temp.findIndex(item => item.id === gossipId)
-                                                                        if(resq.data.status) {
-                                                                            temp[index].likes++
-                                                                        } else {
-                                                                            if(temp[index].likes >= 0) {
-                                                                                temp[index].likes--
-                                                                            }
-                                                                        }
-                                                                        temp[index].isLike = resq.data.status
-                                                                        this.setState({ gossipList: temp })
-                                                                    } else {
-                                                                        customTips.error(reqs.message)
-                                                                    }
-                                                                }).catch(err => {
-                                                                    customTips.error(err.message)
-                                                                })
-                                                            }}/>
-                                            })
-                                        }
-                                    </div>
-                                }
-                            </CSSTransition>
-                        </SwitchTransition>
-                    </div>
-                </section>
-            </div>
-        )
-    }
+            </section>
+        </div>
+    )
 }
 const SiderItem = (props) => {
     //hook
@@ -295,4 +322,3 @@ class ArticleSkeleton extends React.Component {
         )
     }
 }
-export default IndexPage
