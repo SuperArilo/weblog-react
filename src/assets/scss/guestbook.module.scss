@@ -11,7 +11,6 @@
         .guestbook_comment_item
         {
             background-color: #ffffff;
-            border-bottom: solid 1px rgb(226, 226, 226);
             padding: 0.5rem;
             .comment_item_top
             {
@@ -31,7 +30,7 @@
                         justify-content: space-around;
                         span:nth-child(1)
                         {
-                            font-size: 0.9rem;
+                            font-size: 0.7rem;
                             color: #333;
                         }
                         span:nth-child(2)
@@ -47,6 +46,8 @@
                 {
                     width: 2rem;
                     height: 2rem;
+                    transition: color 0.25s;
+                    font-size: 0.8rem;
                     overflow: hidden;
                     cursor: pointer;
                     border-radius: 50%;
@@ -54,6 +55,10 @@
                     display: flex;
                     justify-content: center;
                     align-items: center;
+                }
+                i:hover, i:active
+                {
+                    color: red;
                 }
             }
             .comment_html
@@ -64,9 +69,14 @@
                 background-color: #fcfcfc;
             }
         }
-        .guestbook_comment_item:last-child
+        .empty_box
         {
-            border-bottom: none;
+            background-color: #ffffff;
+            height: 7.85rem;
+            font-size: 0.8rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
     }
     .guestbook_skeleton
