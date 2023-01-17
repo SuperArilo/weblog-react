@@ -1,7 +1,7 @@
 import request from '../util/axios'
 
 //碎语列表获取
-export const gossipList = (params) => {
+export const gossipListRequest = (params) => {
     return request({
         url: '/gossip/list',
         method: 'get',

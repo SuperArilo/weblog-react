@@ -6,7 +6,7 @@ import { TransitionGroup } from 'react-transition-group'
 import Collapse from '@mui/material/Collapse'
 import GossipContent from '../components/gossipContent'
 //方法
-import { gossipList } from '../util/gossip'
+import { gossipListRequest } from '../util/gossip'
 import customTips from '../util/notostack/customTips'
 import { likeGossip } from '../util/gossip.js'
 export default class Gossip extends React.Component {
@@ -18,7 +18,7 @@ export default class Gossip extends React.Component {
         gossipList: []
     }
     componentDidMount() {
-        gossipList(this.state.requestInstance).then(resq => {
+        gossipListRequest(this.state.requestInstance).then(resq => {
             if(resq.code === 200) {
                 this.setState({ gossipList: resq.data.list })
             } else {
