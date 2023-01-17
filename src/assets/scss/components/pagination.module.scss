@@ -1,0 +1,53 @@
+.pagination
+{
+    display: flex;
+    justify-content: center;
+    padding: 0.5rem 0;
+    ul
+    {
+        display: flex;
+        li[class~="disabled"]
+        {
+            cursor: not-allowed;
+        }
+        .pagination_item_previous , .pagination_item_next
+        {
+            border: none;
+        }
+        .pagination_item_selected
+        {
+            color: rgb(65, 129, 225) !important;
+            border-radius: 0.3rem;
+            box-shadow: 0 0 0.1rem rgba(0, 0, 0, 0.5);
+        }
+        .pagination_item , .pagination_item_previous , .pagination_item_next , .pagination_item_break
+        {
+            min-width: 1.5rem;
+            margin-right: 0.3rem;
+            cursor: pointer;
+            height: 1.8rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: rgba(0, 0, 0,0.7);
+            transition: all 0.25s;
+            a , i
+            {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            i
+            {
+                line-height: 0.2rem;
+            }
+        }
+    }
+}
+.pagination ::selection {
+    background: transparent;
+}
