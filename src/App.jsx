@@ -3,10 +3,10 @@ import AsukaButton from './components/asukaButton'
 import { SwitchTransition, CSSTransition } from 'react-transition-group'
 import signStyle from './assets/scss/sign.module.scss'
 //hook
-import { Route, Routes, useLocation, useNavigate  } from 'react-router-dom'
+import { Route, Routes, useLocation, useNavigate, Navigate  } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 //axios
-import { blogLoginUser } from './util/user'
+import { blogLoginUser, blogRegisterUser } from './util/user'
 //组件
 import customTips from './util/notostack/customTips'
 import WaterWave from 'water-wave'
@@ -19,6 +19,7 @@ import Avatar from './components/Avatar'
 import About from './components/About'
 import AsukaPopper from './components/popper'
 import Guestbook from './pages/Guestbook'
+import NotFound from './pages/NotFound'
 //样式
 import './assets/scss/currencyTransition.scss'
 
@@ -63,10 +64,12 @@ const App = () => {
 				<SwitchTransition mode="out-in">
 					<CSSTransition key={location.pathname} timeout={300} classNames="change" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
 						<Routes location={location}>
-							<Route path='/' element={<IndexPage isMobile={ isMobileStatus } userInfo={userInfo} />} />
+							<Route index path='/' element={<IndexPage isMobile={ isMobileStatus } userInfo={userInfo} />} />
 							<Route path='/detail' element={<ArticleDetail userInfo={userInfo} isMobile={ isMobileStatus } />} />
 							<Route path='/gossip' element={<Gossip userInfo={userInfo}/>} />
 							<Route path='/guestbook' element={<Guestbook />} />
+							<Route path='/notfound' element={<NotFound /> } />
+							<Route path='*' element={<Navigate to='/notfound' />} />
 						</Routes>
 					</CSSTransition>
 				</SwitchTransition>
@@ -365,70 +368,103 @@ const LoginBox = (props) => {
 		</Slide>
 	)
 }
-class RegisterBox extends React.Component {
-	state = {
-		isShowPassword: false
-	}
-	render(){
-		return(
-			<Slide direction="up" in={this.props.status} mountOnEnter unmountOnExit>
-				<div className={`${signStyle.register_box} ${this.props.isMobile ? signStyle.box_mobile:signStyle.box_pc}`}>
-					<header className={signStyle.public_title}>
-						<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
-						<i className="far fa-arrow-alt-circle-left" onClick={() => { setTimeout(() => {this.props.closeBox(false)}, 300) }}/>
-					</header>
-					<div className={signStyle.top_tips}>
-						<span className={signStyle.left_span}>欢迎您,</span>
-						<button type="button" className={signStyle.right_register} onClick={() => { 
-							this.props.openLoginBox(true)
-							this.props.closeBox(false)
-						}}>
-							登陆
-						</button>
-					</div>
-					<p className={signStyle.top_tips_line}>请填写以下信息进行注册</p>
-					<div className={signStyle.input_list}>
-						<label className={signStyle.input_item}>
-							<div className={signStyle.input_top_div}>
-								<span>邮箱</span>
-								<span>*</span>
-							</div>
-							<input type="text" placeholder="请输入邮箱" />
-							<div className={signStyle.input_tips_div}>
-								<span></span>
-							</div>
-						</label>
-						<form className={signStyle.input_password}>
-							<div className={signStyle.input_top_div}>
-								<span>密码</span>
-								<span>*</span>
-							</div>
-							<div className={signStyle.input_password_label}>
-								<input type={true ? 'text':'password'} maxLength="16" placeholder="请输入密码" autoComplete="off" />
-								<i className={'far ' + signStyle.input_show_password + ' ' + (this.state.isShowPassword? 'fa-eye-slash':'fa-eye')} onClick={() => { this.setState({ isShowPassword: !this.state.isShowPassword }) }} />
-							</div>
-							<div className={signStyle.input_tips_div}>
-								<span></span>
-							</div>
-						</form>
-						<label className={signStyle.input_item}>
-							<div className={signStyle.input_top_div}>
-								<span>昵称</span>
-								<span>*</span>
-							</div>
-							<input type="text" placeholder="请输入昵称" />
-							<div className={signStyle.input_tips_div}>
-								<span></span>
-							</div>
-						</label>
-					</div>
-					<button type="button" title="注册" className={signStyle.confirm_button + ' ' + (this.props.isMobile ? signStyle.confirm_button_mobile:signStyle.confirm_button_pc)} >
-						注册
-						<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
+const RegisterBox = (props) => {
+
+	const [isShowPassword, setIsShowPassword] = useState(false)
+	const [email, setEmail] = useState('')
+	const [password, setPassword] = useState('')
+	const [nickName, setNickName] = useState('')
+
+	const [requestStatus, setRequestStatus] = useState(false)
+
+	return(
+		<Slide direction="up" in={props.status} mountOnEnter unmountOnExit>
+			<div className={`${signStyle.register_box} ${props.isMobile ? signStyle.box_mobile:signStyle.box_pc}`}>
+				<header className={signStyle.public_title}>
+					<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
+					<i className="far fa-arrow-alt-circle-left" onClick={() => { setTimeout(() => {props.closeBox(false)}, 300) }}/>
+				</header>
+				<div className={signStyle.top_tips}>
+					<span className={signStyle.left_span}>欢迎您,</span>
+					<button type="button" className={signStyle.right_register} onClick={() => { 
+						props.openLoginBox(true)
+						props.closeBox(false)
+					}}>
+						登陆
 					</button>
 				</div>
-			</Slide>
-		)
-	}
+				<p className={signStyle.top_tips_line}>请填写以下信息进行注册</p>
+				<div className={signStyle.input_list}>
+					<label className={signStyle.input_item}>
+						<div className={signStyle.input_top_div}>
+							<span>邮箱</span>
+							<span>*</span>
+						</div>
+						<input type="text" placeholder="请输入邮箱" onChange={e => { setEmail(e.target.value) }} />
+						<div className={signStyle.input_tips_div}>
+							<span></span>
+						</div>
+					</label>
+					<form className={signStyle.input_password}>
+						<div className={signStyle.input_top_div}>
+							<span>密码</span>
+							<span>*</span>
+						</div>
+						<div className={signStyle.input_password_label}>
+							<input type={isShowPassword ? 'text':'password'} maxLength="16" placeholder="请输入密码" autoComplete="off" onChange={e => { setPassword(e.target.value) }} />
+							<i className={`${'far'} ${signStyle.input_show_password} ${isShowPassword ? 'fa-eye-slash':'fa-eye'}`} onClick={() => { setIsShowPassword(!isShowPassword) }} />
+						</div>
+						<div className={signStyle.input_tips_div}>
+							<span></span>
+						</div>
+					</form>
+					<label className={signStyle.input_item}>
+						<div className={signStyle.input_top_div}>
+							<span>昵称</span>
+							<span>*</span>
+						</div>
+						<input type="text" placeholder="请输入昵称" onChange={e => { setNickName(e.target.value) }} />
+						<div className={signStyle.input_tips_div}>
+							<span></span>
+						</div>
+					</label>
+				</div>
+				<button 
+					type="button"
+					title="注册"
+					className={`${signStyle.confirm_button} ${props.isMobile ? signStyle.confirm_button_mobile:signStyle.confirm_button_pc}`}
+					onClick={() => {
+						if(email === '' || password === '' || nickName === '') return customTips.info('信息没有填写完整哦 v(/▽＼)')
+						if(!requestStatus) {
+							setRequestStatus(true)
+							let data = new FormData()
+							data.append('email', email)
+							data.append('password', password)
+							data.append('nickName',nickName)
+							blogRegisterUser(data).then(resq => {
+								if(resq.code === 200) {
+									customTips.success(resq.message)
+									setTimeout(() => {
+										props.openLoginBox(true)
+										props.closeBox(false)
+									}, 500)
+								} else {
+									customTips.error(resq.message)
+								}
+								setRequestStatus(false)
+							}).catch(err => {
+								setRequestStatus(false)
+								customTips.error(err.message)
+							})
+						}
+					}}>
+					{
+						requestStatus ? <i className='fas fa-circle-notch fa-spin' />:'注册'
+					}
+					<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
+				</button>
+			</div>
+		</Slide>
+	)
 }
 export default App
