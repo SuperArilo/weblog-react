@@ -2,5 +2,14 @@
 {
     max-width: 768px;
     margin: 0 auto;
-    padding-top: 1rem;
+    .gossip_empty
+    {
+        height: 10rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 0.9rem;
+        letter-spacing: 0.01rem;
+        color: #777;
+    }
 }
