@@ -20,8 +20,10 @@ import About from './components/About'
 import AsukaPopper from './components/popper'
 import Guestbook from './pages/Guestbook'
 import NotFound from './pages/NotFound'
+import User from './pages/User'
 //样式
 import './assets/scss/currencyTransition.scss'
+import './assets/css/iconfont.css'
 
 const App = () => {
 	//hook
@@ -68,6 +70,7 @@ const App = () => {
 							<Route path='/detail' element={<ArticleDetail userInfo={userInfo} isMobile={ isMobileStatus } />} />
 							<Route path='/gossip' element={<Gossip userInfo={userInfo}/>} />
 							<Route path='/guestbook' element={<Guestbook />} />
+							<Route path='/user/:viewUid' element={<User />} />
 							<Route path='/notfound' element={<NotFound /> } />
 							<Route path='*' element={<Navigate to='/notfound' />} />
 						</Routes>
@@ -94,53 +97,62 @@ const PCheaderNav = (props) => {
 	const navigate = useNavigate()
 	const location = useLocation()
 	//param
-	const [menuIndex, setMenuIndex] = useState(0)
-	const [menuList] = useState([
-		{
-			id: 0,
-			title: '首页',
-			path: '/',
-			iconClass: 'fa-home'
-		},
-		{
-			id: 1,
-			title: '碎语',
-			path: '/gossip',
-			iconClass: 'fa-feather-alt'
-		},
-		{
-			id: 2,
-			title: '留言',
-			path: '/guestbook',
-			iconClass: 'fa-comment-alt'
-		},
-		{
-			id: 3,
-			title: '友邻',
-			path: '/links',
-			iconClass: 'fa-user-friends'
-		},
-		{
-			id: 4,
-			title: '圈子',
-			path: '/friends',
-			iconClass: 'fa-paw'
-		}
-	])
+	const [menuInstance, setMenuInstance] = useState({
+		index: 0,
+		list: [
+			{
+				id: 0,
+				title: '首页',
+				path: '/',
+				iconClass: 'fa-home'
+			},
+			{
+				id: 1,
+				title: '碎语',
+				path: '/gossip',
+				iconClass: 'fa-feather-alt'
+			},
+			{
+				id: 2,
+				title: '留言',
+				path: '/guestbook',
+				iconClass: 'fa-comment-alt'
+			},
+			{
+				id: 3,
+				title: '友邻',
+				path: '/links',
+				iconClass: 'fa-user-friends'
+			},
+			{
+				id: 4,
+				title: '圈子',
+				path: '/friends',
+				iconClass: 'fa-paw'
+			}
+		]
+	})
 	const [popperStatus, setPopperStatus] = useState(false)
 	const [popperTarget, setPopperTarget] =useState(null)
-	//function
 	//路由变化匹配
 	useEffect(() => {
-		let index = menuList.findIndex(item => item.path === location.pathname)
+		let index = menuInstance.list.findIndex(item => item.path === location.pathname)
 		if(index === -1) {
-			index = 0
+			index = null
+			setMenuInstance(target => ({
+				...target,
+				index: null
+			}))
+			return
 		}
-		setMenuIndex(menuList[index].id)
-	}, [location.pathname, menuList])
+		setMenuInstance(target => ({
+			...target,
+			index: target.list[index].id
+		}))
+	}, [location.pathname, menuInstance.list])
 
 	const menuNavFunction = (object) => {
-		if(menuIndex === object.id) return
+		if(menuInstance.index === object.id) return
 		navigate(object.path, { replace: true, state: { id : '666' } })
 		$('#react-by-asukamis').children().stop().animate({'scrollTop': 0})
 	}
@@ -152,15 +164,19 @@ const PCheaderNav = (props) => {
 			</span>
 			<ul className='nav-menu-list'>
 				{
-					menuList.map(item => {
-						return <li className={menuIndex === item.id ? 'active':''} onClick={() => { menuNavFunction(item) }} key={item.id}>{item.title}</li>
+					menuInstance.list.map(item => {
+						return <li className={menuInstance.index === item.id ? 'active':''} onClick={() => { menuNavFunction(item) }} key={item.id}>{item.title}</li>
 					})
 				}
 			</ul>
 			<div className='right-some-function'>
 				{ props.userInfo === null ? <AsukaButton text='登录' onClick={() => { props.openLoginBox(true) }}/>:
 					<div className='logged-box'>
-						<Avatar src={props.userInfo.avatar} title={props.userInfo.nickName} alt={props.userInfo.nickName}/>
+						<Avatar
+							src={props.userInfo.avatar}
+							title={props.userInfo.nickName}
+							alt={props.userInfo.nickName}
+							onClick={() => { navigate(`user/${props.userInfo.uid}`) }}/>
 						<i className='fas fa-sign-out-alt' onClick={(e) => { setPopperStatus(true);setPopperTarget(e.target) }}/>
 						<AsukaPopper open={popperStatus} title='确定要退出登陆吗？' target={popperTarget} placement='bottom' onConfirm={() => { setPopperStatus(false);dispatch({ type: 'userInfo/setInfo', payload: null });localStorage.removeItem('token') }} onCancel={() => { setPopperStatus(false) }} />
 					</div>
