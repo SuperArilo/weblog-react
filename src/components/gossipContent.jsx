@@ -13,8 +13,11 @@ import { SwitchTransition, CSSTransition, TransitionGroup } from 'react-transiti
 import customTips from '../util/notostack/customTips'
 import Pagination from './Pagination'
 //方法
+import { useNavigate } from 'react-router-dom'
 import { gossipCommentList, replyGossipComment, likeGossipComment, deleteGossipComment } from '../util/gossip.js'
 export default function GossipContent(props) {
+    //hook
+    const navigate = useNavigate()
     //params
     const [editorStatus, setEditorStatus] = useState(false)
     const [requestInstance, setRequestInstance] = useState({
@@ -23,8 +26,9 @@ export default function GossipContent(props) {
         gossipId: props.data.id
     })
     const [commentObject, setCommentObject] = useState({
-        pages: 0,
+        pages: 1,
         total: 0,
+        current: 0,
         list: null
     })
     const [selectCommentItem, setSelectCommentItem] = useState(null)
@@ -35,7 +39,7 @@ export default function GossipContent(props) {
     const commentData = useCallback((instance) => {
         gossipCommentList(instance).then(resq => {
             if(resq.code === 200) {
-                setCommentObject(current => { return { ...current, list: resq.data.list, total: resq.data.total, pages: resq.data.pages } })
+                setCommentObject(target => { return { ...target, list: resq.data.list, total: resq.data.total, pages: resq.data.pages, current: resq.data.current - 1} })
             } else {
                 customTips.error(resq.message)
             }
@@ -53,7 +57,11 @@ export default function GossipContent(props) {
         <div className={style.gossip_box}>
             <header className={style.gossip_box_title}>
                 <div className={style.left_info}>
-                    <Avatar width='2.8rem' height='2.8rem' src={props.data.avatar}/>
+                    <Avatar
+                        width='2.8rem'
+                        height='2.8rem'
+                        src={props.data.avatar}
+                        onClick={() => { navigate(`/user/${props.data.author}`) }}/>
                     <div className={style.info_content}>
                         <div>
                             <span>{props.data.nickName}</span>
@@ -211,6 +219,7 @@ export default function GossipContent(props) {
                         </SwitchTransition>
                         <Pagination 
                             pages={commentObject.pages}
+                            current={commentObject.current}
                             onPageChange={e => { setRequestInstance({...requestInstance, pageNum: e}) }}/>
                     </div>
                 }

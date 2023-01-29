@@ -26,7 +26,7 @@ import $ from 'jquery'
 export default function IndexPage(props) {
     //params
     const [articleObject, setArticleObject] = useState({
-        pages: 0,
+        pages: 1,
         list: []
     })
     const [hotArticleList, setHotArticleList] = useState([])
@@ -167,7 +167,7 @@ export default function IndexPage(props) {
                                                             increaseArticleLike(data).then(resq => {
                                                                 if(resq.code === 200) {
                                                                     customTips.success(resq.message)
-                                                                    let [...temp] = articleList
+                                                                    let [...temp] = articleObject.list
                                                                     let index = temp.findIndex(item => item.id === articleId)
                                                                     temp[index].isLike = resq.data.status
                                                                     temp[index].articleLikes = resq.data.likes

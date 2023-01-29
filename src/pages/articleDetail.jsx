@@ -1,7 +1,7 @@
 import { TransitionGroup, SwitchTransition, CSSTransition } from 'react-transition-group'
 //hook
 import React, { useEffect, useState, useRef, useCallback, forwardRef, useImperativeHandle } from 'react'
-import { useParams, useSearchParams } from 'react-router-dom'
+import { useParams, useSearchParams, useNavigate } from 'react-router-dom'
 //样式
 import style from '../assets/scss/articleDetail.module.scss'
 import renderHtml from '../assets/scss/renderHtml.module.scss'
@@ -22,7 +22,7 @@ import ImageViewer from 'awesome-image-viewer'
 import $ from 'jquery'
 export default function ArticleDetail(props) {
     //hook
-    const [ searchParams, setSearchParams] = useSearchParams()
+    const [searchParams, setSearchParams] = useSearchParams()
     const articleId = searchParams.get('threadId')
     //Params
     const [addCommentStatus, setAddCommentStatus] = useState(false)
@@ -33,7 +33,7 @@ export default function ArticleDetail(props) {
     return (
         <div className={style.article_detail}>
             <div className={style.article_detail_content}>
-                <ArticleInfoTop ref={articleContentRef} articleId={articleId} />
+                <ArticleInfoTop ref={articleContentRef} articleId={articleId} userInfo={props.userInfo} />
                 { 
                     articleContentRef.current === null || articleContentRef.current.state.articleInstance === '' ? '':
                     <Tinymce
@@ -98,6 +98,10 @@ class ArticleInfoTop extends React.Component {
                         this.state.articleInstance  === '' ? <ArticleSkeleton />:<ArticleContent 
                         articleInstance={this.state.articleInstance} 
                         handleLike={(articleId) => { 
+                            if(!this.props.userInfo) {
+                                customTips.info('你需要登录才能进行下一步操作哦')
+                                return
+                            }
                             let data = new FormData()
                             data.append('articleId', articleId)
                             increaseArticleLike(data).then(resq => {
@@ -128,15 +132,19 @@ const ArticleVistorList = forwardRef((props, ref) => {
         articleId: props.articleId
     })
     const [commentObject, setCommentObject] = useState({
-        pages: 0,
+        pages: 1,
+        current: 0,
         list: null
     })
     const [selectCommentItem, setSelectCommentItem] = useState(null)
+
+    const commentRef = useRef(null)
+
     //function
     const commentData = useCallback(instance => {
         articleCommentGet(instance).then(resq => {
             if(resq.code === 200) {
-                setCommentObject(current => { return { ...current, pages: resq.data.pages, list: resq.data.list } })
+                setCommentObject(target => { return { ...target, list: resq.data.list, pages: resq.data.pages, current: resq.data.current - 1} })
             } else {
                 customTips.error(resq.message)
             }
@@ -144,7 +152,6 @@ const ArticleVistorList = forwardRef((props, ref) => {
             customTips.error(err.message)
         })
     }, [])
-
     useEffect(() => {
         commentData(requestInstance)
     }, [requestInstance, commentData])
@@ -177,7 +184,8 @@ const ArticleVistorList = forwardRef((props, ref) => {
                                             return (
                                                 <Collapse key={item.commentId}>
                                                     <Comment
-                                                        userInfo={props.userInfo} 
+                                                        ref={commentRef}
+                                                        userInfo={props.userInfo}
                                                         key={item.commentId}
                                                         foldStatus={selectCommentItem === item.commentId}
                                                         data={item}
@@ -205,7 +213,7 @@ const ArticleVistorList = forwardRef((props, ref) => {
                                                                 customTips.error(err.message)
                                                             })
                                                         }}
-                                                        handleReply={(content, ref) => {
+                                                        handleReply={(content) => {
                                                             let data = new FormData()
                                                             data.append('articleId', props.articleId)
                                                             data.append('content', content)
@@ -215,14 +223,14 @@ const ArticleVistorList = forwardRef((props, ref) => {
                                                                 if(resq.code === 200) {
                                                                     customTips.success(resq.message)
                                                                     commentData(requestInstance)
-                                                                    ref.closeBox()
                                                                     setSelectCommentItem(null)
                                                                 } else {
                                                                     customTips.error(resq.message)
                                                                 }
+                                                                commentRef.current.changeEditorLoadingStatus(false)
                                                             }).catch(err => {
-                                                                ref.setStatus(false)
                                                                 customTips.error(err.message)
+                                                                commentRef.current.changeEditorLoadingStatus(false)
                                                             })
                                                         }}
                                                         handleDelete={() => {
@@ -233,9 +241,7 @@ const ArticleVistorList = forwardRef((props, ref) => {
                                                                 if(resq.code === 200) {
                                                                     customTips.success(resq.message)
                                                                     setTimeout(() => {
-                                                                        let [...temp] = commentObject.list
-                                                                        temp.splice(temp.findIndex(key => key.commentId === item.commentId), 1)
-                                                                        setCommentObject({...commentObject, list: temp})
+                                                                        commentData(requestInstance)
                                                                     }, 500)
                                                                 } else {
                                                                     customTips.error(resq.message)
@@ -256,54 +262,61 @@ const ArticleVistorList = forwardRef((props, ref) => {
             </div>
             <Pagination 
                 pages={commentObject.pages}
+                current={commentObject.current}
                 onPageChange={e => { setRequestInstance({...requestInstance, pageNum: e}) }}/>
         </>
     )
 })
-class ArticleContent extends React.Component {
-    state = { 
-        renderContentRef: React.createRef(),
-    }
-    componentDidMount(){
-        $(this.state.renderContentRef.current).find('img').on('click', (element) => {
+const ArticleContent = (props) => {
+    //hook
+    const navigate = useNavigate()
+    //params
+    const renderContentRef = useRef(null)
+    useEffect(() => {
+        $(renderContentRef.current).find('img').on('click', (element) => {
             let list = []
-            $(this.state.renderContentRef.current).find('img').each((index, e) => {
-                list.push({ mainUrl: $(e).attr('src') })
+            $(renderContentRef.current).find('img').each((index, e) => {
+                list.push({ mainUrl: $(e).attr('src'), index: index })
             })
             new ImageViewer({
                 images: list,
                 showThumbnails: false,
                 isZoomable: false,
-                currentSelected: $(element.target).index()
+                currentSelected: list.findIndex(item => item.mainUrl === $(element.target).attr('src'))
             })
         })
-    }
-    render() {
-        return(
-            <>
-                <div className={style.article_detail_info}>
-                    <div className={style.article_detail_top}>
-                        <img className={style.article_background_image} src={this.props.articleInstance.articlePicture} alt={this.props.articleInstance.nickName}/>
-                        <p className={style.article_detail_title}>{this.props.articleInstance.articleTitle}</p>
-                        <div className={style.article_data}>
-                            <div className={style.data_author}>
-                                <Avatar width='3.4rem' height='3.4rem' src={this.props.articleInstance.avatar} title={this.props.articleInstance.nickName} alt={this.props.articleInstance.nickName}/>
-                                <div className={style.author_info}>
-                                    <span>{this.props.articleInstance.nickName}</span>
-                                    <span>{this.props.articleInstance.createTime}</span>
-                                </div>
-                            </div>
-                            <div className={style.article_data_info} onClick={() => { this.props.handleLike(this.props.articleInstance.id) }} >
-                                <div><i className="fas fa-eye"/><span>{this.props.articleInstance.articleViews}</span></div>
-                                <div><i className={`${'fas fa-heart'} ${this.props.articleInstance.hasLike ? style.article_liked:''}`} /><span>{this.props.articleInstance.articleLikes}</span><WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } /></div>
+    }, [])
+    return (
+        <>
+            <div className={style.article_detail_info}>
+                <div className={style.article_detail_top}>
+                    <img className={style.article_background_image} src={props.articleInstance.articlePicture} alt={props.articleInstance.nickName}/>
+                    <p className={style.article_detail_title}>{props.articleInstance.articleTitle}</p>
+                    <div className={style.article_data}>
+                        <div className={style.data_author}>
+                            <Avatar
+                                width='3.4rem'
+                                height='3.4rem'
+                                src={props.articleInstance.avatar}
+                                title={props.articleInstance.nickName}
+                                alt={props.articleInstance.nickName}
+                                onClick={() => { navigate(`/user/${props.articleInstance.publisher}`) }}/>
+                            <div className={style.author_info}>
+                                <span>{props.articleInstance.nickName}</span>
+                                <span>{props.articleInstance.createTime}</span>
                             </div>
                         </div>
+                        <div className={style.article_data_info}>
+                            <div><i className="fas fa-eye"/><span>{props.articleInstance.articleViews}</span></div>
+                            <div onClick={() => { props.handleLike(props.articleInstance.id) }}><i className={`${'fas fa-heart'} ${props.articleInstance.hasLike ? style.article_liked:''}`} /><span>{props.articleInstance.articleLikes}</span><WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } /></div>
+                        </div>
                     </div>
-                    <div className={`${style.article_render_content} ${renderHtml.render_html}`} ref={this.state.renderContentRef} dangerouslySetInnerHTML={{ __html: this.props.articleInstance.articleContent}}></div>
                 </div>
-            </>
-        )
-    }
+                <div className={`${style.article_render_content} ${renderHtml.render_html}`} ref={renderContentRef} dangerouslySetInnerHTML={{ __html: props.articleInstance.articleContent}} />
+            </div>
+        </>
+    )
+
 }
 class ArticleSkeleton extends React.Component {
     render() {

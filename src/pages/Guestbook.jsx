@@ -18,12 +18,16 @@ import { guestbookList, addGuestbook, deleteGuestbook } from '../util/guestbook'
 import customTips from '../util/notostack/customTips'
 export default function Guestbook() {
     //params
-    const [dataList, setDataList] = useState(null)
     const [requestInstance, setRequestInstance] = useState({
         pageNum: 1,
         pageSize: 10,
     })
-    const [dataPage, setDataPage] = useState(0)
+    const [dataObject, setDataObject] = useState({
+        total: 0,
+        pages: 1,
+        list: null,
+        current: 0
+    })
     const tinymceRef = useRef(null)
     const [addGuestbookStatus, setAddGuestbookStatus] = useState(false)
     const userInfo = useSelector((state) => state.userInfo.info)
@@ -31,8 +35,7 @@ export default function Guestbook() {
     const dataListGet = useCallback((instance) => {
         guestbookList(instance).then(resq => {
             if(resq.code === 200) {
-                setDataList(resq.data.list)
-                setDataPage(resq.data.pages)
+                setDataObject(target => { return { ...target, list: resq.data.list, total: resq.data.total, pages: resq.data.pages, current: resq.data.current - 1} })
             } else {
                 customTips.error(resq.message)
             }
@@ -76,18 +79,19 @@ export default function Guestbook() {
                 }}/>
             <div className={style.guestbook_comment_list}>
                 {
-                    dataList === null ? <GuestbookSkeleton />:
+                    dataObject.list === null ? <GuestbookSkeleton />:
                     <SwitchTransition mode='out-in'>
-                        <CSSTransition key={dataList.length === 0} classNames='change' timeout={300} nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
+                        <CSSTransition key={dataObject.list.length === 0} classNames='change' timeout={300} nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
                             {
-                                dataList.length === 0 ? <div className={style.empty_box}>当前没有留言，赶快来评论吧 ψ(｀∇´)ψ</div>:
+                                dataObject.list.length === 0 ? <div className={style.empty_box}>当前没有留言，赶快来评论吧 ψ(｀∇´)ψ</div>:
                                 <TransitionGroup>
                                     {
-                                        dataList.map(item => {
+                                        dataObject.list.map(item => {
                                             return (
                                                 <Collapse key={item.guestbookId}>
                                                     <GuestbookCommentItem
                                                         dataListGet={dataListGet}
+                                                        requestInstance={requestInstance}
                                                         userInfo={userInfo}
                                                         item={item}/>
                                                 </Collapse>
@@ -101,7 +105,8 @@ export default function Guestbook() {
                 }
             </div>
             <Pagination
-                pages={dataPage}
+                pages={dataObject.pages}
+                current={dataObject.current}
                 onPageChange={(e) => {
                     setRequestInstance({...requestInstance, pageNum: e})
                 }}/>
@@ -151,7 +156,7 @@ const GuestbookCommentItem = (props) => {
                         deleteGuestbook(data).then(resq => {
                             if(resq.code === 200) {
                                 customTips.success(resq.message)
-                                props.dataListGet()
+                                props.dataListGet(props.requestInstance)
                             } else {
                                 customTips.error(resq.message)
                             }
@@ -170,15 +175,37 @@ const GuestbookCommentItem = (props) => {
 }
 const GuestbookSkeleton = () => {
     return (
-        <div className={style.guestbook_skeleton}>
-            <div className={style.guestbook_skeleton_top}>
-                <Skeleton variant="circular" width='2.5rem' height='2.5rem' />
-                <div>
-                    <Skeleton variant="text" width='6rem' sx={{ fontSize: '1.25rem' }} />
-                    <Skeleton variant="text" width='4rem' sx={{ fontSize: '1.25rem' }} />
+        <>
+            <div className={style.guestbook_skeleton}>
+                <div className={style.guestbook_skeleton_top}>
+                    <Skeleton variant="circular" width='2.5rem' height='2.5rem' />
+                    <div>
+                        <Skeleton variant="text" width='6rem' sx={{ fontSize: '1.25rem' }} />
+                        <Skeleton variant="text" width='4rem' sx={{ fontSize: '1.25rem' }} />
+                    </div>
                 </div>
+                <Skeleton variant="rounded" height='3rem' />
             </div>
-            <Skeleton variant="rounded" height='3rem' />
-        </div>
+            <div className={style.guestbook_skeleton}>
+                <div className={style.guestbook_skeleton_top}>
+                    <Skeleton variant="circular" width='2.5rem' height='2.5rem' />
+                    <div>
+                        <Skeleton variant="text" width='6rem' sx={{ fontSize: '1.25rem' }} />
+                        <Skeleton variant="text" width='4rem' sx={{ fontSize: '1.25rem' }} />
+                    </div>
+                </div>
+                <Skeleton variant="rounded" height='3rem' />
+            </div>
+            <div className={style.guestbook_skeleton}>
+                <div className={style.guestbook_skeleton_top}>
+                    <Skeleton variant="circular" width='2.5rem' height='2.5rem' />
+                    <div>
+                        <Skeleton variant="text" width='6rem' sx={{ fontSize: '1.25rem' }} />
+                        <Skeleton variant="text" width='4rem' sx={{ fontSize: '1.25rem' }} />
+                    </div>
+                </div>
+                <Skeleton variant="rounded" height='3rem' />
+            </div>
+        </>
     )
 }

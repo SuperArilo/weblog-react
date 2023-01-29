@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react'
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 //组件
 import ReactPaginate from 'react-paginate'
 //样式
@@ -20,12 +20,14 @@ export default function Pagination(props) {
                 pageCount={props.pages}
                 marginPagesDisplayed={0}
                 renderOnZeroPageCount={null}
+                forcePage={props.current}
             />
         </div>
     )
 }
 Pagination.defaultProps = {
-    pages: 0,
+    pages: 1,
+    current: 0,
     pageRangeDisplayed: 3,
     onPageChange: (e) => {
         return e.selected + 1 || null
