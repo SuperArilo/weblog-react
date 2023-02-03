@@ -31,6 +31,9 @@ export default function IndexPage(props) {
     })
     const [hotArticleList, setHotArticleList] = useState([])
     const [gossipList, setGossipList] = useState([])
+
+    const [selectGossipItem, setSelectGossipItem] = useState(null)
+
     //instane
     const [articleRequestInstance, setArticleRequestInstance] = useState({
         pageNum: 1,
@@ -203,6 +206,8 @@ export default function IndexPage(props) {
                                                         key={item.id} 
                                                         data={item} 
                                                         userInfo={props.userInfo}
+                                                        foldStatus={selectGossipItem === item.id}
+                                                        handleFold={id => { setSelectGossipItem(selectGossipItem === id ? null:id) }}
                                                         handleLike={(gossipId) => {
                                                             let data = new FormData()
                                                             data.append('gossipId', gossipId)

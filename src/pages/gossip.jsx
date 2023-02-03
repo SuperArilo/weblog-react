@@ -24,6 +24,9 @@ export default function Gossip(props) {
         list: null,
         current: 0,
     })
+
+    const [selectGossipItem, setSelectGossipItem] = useState(null)
+
     const gossipDataGet = useCallback(instance => {
         gossipListRequest(instance).then(resq => {
             if(resq.code === 200) {
@@ -43,6 +46,7 @@ export default function Gossip(props) {
             customTips.error(err.message)
         })
     }, [])
+
     useEffect(() => {
         gossipDataGet(requestInstance)        
     }, [requestInstance, gossipDataGet])
@@ -62,6 +66,10 @@ export default function Gossip(props) {
                                                 <GossipContent
                                                     userInfo={props.userInfo} 
                                                     data={item}
+                                                    foldStatus={selectGossipItem === item.id}
+                                                    handleFold={id => {
+                                                        setSelectGossipItem(selectGossipItem === id ? null:id)
+                                                    }}
                                                     handleLike={(gossipId) => {
                                                         let data = new FormData()
                                                         data.append('gossipId', gossipId)
