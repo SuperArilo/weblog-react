@@ -1,15 +1,20 @@
 import React, { useEffect, useState, useRef } from 'react'
 //组件
 import Popper from '@mui/material/Popper'
-import Zoom from '@mui/material/Zoom'
+import Fade from '@mui/material/Fade'
 import AsukaButton from './asukaButton'
 //样式
 import style from '../assets/scss/components/popper.module.scss'
 const AsukaPopper = (props) => {
     return (
-        <Popper open={props.open} anchorEl={props.target} placement={props.placement} transition disablePortal>
+        <Popper
+            open={props.open}
+            anchorEl={props.target}
+            placement={props.placement}
+            transition
+            style={{zIndex: 10}}>
             {({ TransitionProps }) => (
-                <Zoom {...TransitionProps} timeout={350}>
+                <Fade {...TransitionProps} timeout={350}>
                     <div className={style.popper_box}>
                         <p>{props.title}</p>
                         <div>
@@ -17,7 +22,7 @@ const AsukaPopper = (props) => {
                             <AsukaButton text='取消' class='danger' size='small' onClick={ () => props.onCancel() }/>
                         </div>
                     </div>
-                </Zoom>
+                </Fade>
             )}
         </Popper>
     )
@@ -26,7 +31,7 @@ AsukaPopper.defaultProps = {
     title: '未设置',
     open: false,
     status: false,
-    placement: 'bottom-start',
+    placement: 'bottom',
     target: null
 }
 export default AsukaPopper
