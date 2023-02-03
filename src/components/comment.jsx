@@ -97,7 +97,7 @@ const Comment = forwardRef((props, ref) => {
                 open={popperInstance.status} 
                 title='确定要删除评论吗？ (/▽＼)' 
                 target={popperInstance.target} 
-                placement='bottom-start' 
+                placement='bottom' 
                 onConfirm={() => { 
                     popperChange(null)
                     props.handleDelete()
