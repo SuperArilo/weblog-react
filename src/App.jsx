@@ -11,16 +11,17 @@ import { blogLoginUser, blogRegisterUser } from './util/user'
 import customTips from './util/notostack/customTips'
 import WaterWave from 'water-wave'
 import Slide from '@mui/material/Slide'
+import Menu from './components/Menu'
 import ArticleDetail from './pages/articleDetail'
 import Gossip from './pages/gossip'
 import IndexPage from './pages/index'
 import $ from 'jquery'
 import Avatar from './components/Avatar'
 import About from './components/About'
-import AsukaPopper from './components/popper'
 import Guestbook from './pages/Guestbook'
 import NotFound from './pages/NotFound'
 import User from './pages/User'
+import CreateGossipWindow from './components/CreateGossipWindow'
 //样式
 import './assets/scss/currencyTransition.scss'
 import './assets/css/iconfont.css'
@@ -34,6 +35,7 @@ const App = () => {
 	//param
 	const [loginBoxStatus, setLoginBoxStatus] = useState(false)
 	const [registerBoxStatus, setRegisterBoxStatus] = useState(false)
+	const [createGossipWindowStatus, setCreateGossipWindowStatus] = useState(false)
 	//function
 	const checkIsMobile = useCallback((value) => {
 		dispatch({ type: 'isMobile/setStatus', payload: value < 1080 })
@@ -61,7 +63,21 @@ const App = () => {
 	}, [loginSetUserInfo])
 	return (
 		<div className='render-content'>
-			{ isMobileStatus ? <MobileHeaderNav userInfo={userInfo} openLoginBox={(status) => { setLoginBoxStatus(status) }} />:<PCheaderNav userInfo={userInfo} openLoginBox={e => { setLoginBoxStatus(e) }}/> }
+			{
+				isMobileStatus ? 
+				<MobileHeaderNav
+					userInfo={userInfo}
+					openLoginBox={(status) => {
+						setLoginBoxStatus(status)
+					}} />
+				:
+				<PCheaderNav
+					userInfo={userInfo}
+					setCreateGossipWindowStatus={setCreateGossipWindowStatus}
+					openLoginBox={e => {
+						setLoginBoxStatus(e)
+					}}/>
+			}
 			<div className={`${'router-render'} ${isMobileStatus ? 'router-render-mobile':''}`}>
 				<SwitchTransition mode="out-in">
 					<CSSTransition key={location.pathname} timeout={300} classNames="change" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
@@ -86,6 +102,14 @@ const App = () => {
 			<CSSTransition in={registerBoxStatus} timeout={300} classNames="mask-fade" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
 				<div className={signStyle.funtion_mask}>
 					<RegisterBox status={registerBoxStatus} isMobile={isMobileStatus} openLoginBox={(e) => { setLoginBoxStatus(e) }} closeBox={(e) => {setRegisterBoxStatus(e)}} />
+				</div>
+			</CSSTransition>
+			<CSSTransition in={createGossipWindowStatus} timeout={300} classNames="mask-fade" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
+				<div className={signStyle.funtion_mask}>
+					<CreateGossipWindow
+						status={createGossipWindowStatus}
+						userInfo={userInfo}
+						setCreateGossipWindowStatus={setCreateGossipWindowStatus}/>
 				</div>
 			</CSSTransition>
 		</div>
@@ -132,8 +156,38 @@ const PCheaderNav = (props) => {
 			}
 		]
 	})
-	const [popperStatus, setPopperStatus] = useState(false)
-	const [popperTarget, setPopperTarget] =useState(null)
+
+	const [userNavInstance, setUserNavInstance] = useState({
+		popperStatus: false,
+		popperTarget: null,
+		myMenuList:[
+			{
+				id: 0,
+				title: '我的账号',
+				iconClass: 'avatar'
+			},
+			{
+				id: 1,
+				title: '发表碎语',
+				iconClass: 'gossip'
+			},
+			{
+				id: 2,
+				title: '设置',
+				iconClass: 'setting'
+			},
+			{
+				id: 3,
+				title: '退出',
+				iconClass: 'signout',
+				function: () => {
+					dispatch({ type: 'userInfo/setInfo', payload: null })
+					localStorage.removeItem('token')
+				}
+			}
+		]
+	})
+
 	//路由变化匹配
 	useEffect(() => {
 		let index = menuInstance.list.findIndex(item => item.path === location.pathname)
@@ -153,7 +207,7 @@ const PCheaderNav = (props) => {
 
 	const menuNavFunction = (object) => {
 		if(menuInstance.index === object.id) return
-		navigate(object.path, { replace: true, state: { id : '666' } })
+		navigate(object.path)
 		$('#react-by-asukamis').children().stop().animate({'scrollTop': 0})
 	}
 	return (
@@ -176,9 +230,34 @@ const PCheaderNav = (props) => {
 							src={props.userInfo.avatar}
 							title={props.userInfo.nickName}
 							alt={props.userInfo.nickName}
-							onClick={() => { navigate(`user/${props.userInfo.uid}`) }}/>
-						<i className='fas fa-sign-out-alt' onClick={(e) => { setPopperStatus(true);setPopperTarget(e.target) }}/>
-						<AsukaPopper open={popperStatus} title='确定要退出登陆吗？' target={popperTarget} placement='bottom' onConfirm={() => { setPopperStatus(false);dispatch({ type: 'userInfo/setInfo', payload: null });localStorage.removeItem('token') }} onCancel={() => { setPopperStatus(false) }} />
+							onClick={(e) => {
+								setUserNavInstance({...userNavInstance, popperStatus: true, popperTarget: e.target})
+							}}/>
+						<Menu
+							open={userNavInstance.popperStatus}
+							targetElement={userNavInstance.popperTarget}
+							renderObject={userNavInstance.myMenuList}
+							onClickItem={id => {
+								switch(id) {
+									case 0:
+									case 2:
+										navigate(`/user/${props.userInfo.uid}`)
+										break
+									case 1:
+										props.setCreateGossipWindowStatus(true)
+										break
+									case 3:
+										dispatch({ type: 'userInfo/setInfo', payload: null })
+										localStorage.removeItem('token')
+										break
+									default:
+										break
+								}
+								setUserNavInstance({...userNavInstance, popperStatus: false, popperTarget: null})
+							}}
+							onClose={status => {
+								setUserNavInstance({...userNavInstance, popperStatus: status})
+							}}/>
 					</div>
 				}
 			</div>

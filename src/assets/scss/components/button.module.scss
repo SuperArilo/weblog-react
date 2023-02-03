@@ -1,39 +1,58 @@
-.asuka-button
+.asuka_button
 {
     overflow: hidden;
     letter-spacing: 0.1rem;
     border-radius: 0.3rem;
     transition: color 0.25s, background-color 0.25s;
+    i
+    {
+        font-size: 1.2rem;
+        display: block;
+    }
 }
-.asuka-button-normal
+.asuka_button_normal
 {
     background-color: rgb(25, 118, 210);
     color: #ffffff;
 }
-.asuka-button-read
+.asuka_button_read
 {
     color: #ec558c;
     background-color: #ffffff;
 }
-.asuka-button-danger
+.asuka_button_danger
 {
     color: #ffffff;
     background-color: rgb(241, 86, 86);
 }
-.button-size-big
+.button_size_big
 {
     width: 100%;
     padding: 0.6rem 0;
 }
-.button-size-normal
+.button_size_normal
 {
     min-width: 3rem;
-    min-height: 1.7rem;
+    min-height: 1.6rem;
     padding: 0 0.6rem;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
 }
-.button-size-small
+.button_size_small
 {
     font-size: 0.7rem;
     padding: 0.25rem 0.4rem;
+}
+.rotate
+{
+    animation: rotate 3s linear infinite;
+}
+@keyframes rotate {
+    from
+    {
+        transform: rotate(0deg);
+    }
+    to
+    {
+        transform: rotate(360deg);
+    }
 }

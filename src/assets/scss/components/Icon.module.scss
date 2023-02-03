@@ -1,0 +1,28 @@
+.asukamis_icon
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.25s;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+}
+.asukamis_icon:hover
+{
+    background-color: rgba(209, 224, 233, 0.5);
+}
+.rotate
+{
+    animation: rotate 3s linear infinite;
+}
+@keyframes rotate {
+    from
+    {
+        transform: rotate(0deg);
+    }
+    to
+    {
+        transform: rotate(360deg);
+    }
+}

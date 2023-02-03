@@ -7,31 +7,45 @@
     {
         .user_head_box
         {
-            height: 12rem;
+            min-height: 12rem;
+            padding: 1.5rem 0;
             background-color: #ffffff;
             border-radius: 0.3rem;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            p
+            .public_info_item
             {
-                font-size: 1.05rem;
-                letter-spacing: 0.05rem;
-                margin: 1.5rem 0 0.5rem 0;
-                color: #333;
-                font-weight: 700;
+                display: flex;
+                align-items: center;
+                .nick_name
+                {
+                    font-size: 0.95rem;
+                    letter-spacing: 0.05rem;
+                    color: #333;
+                    font-weight: 700;
+                    margin: 0;
+                }
+                .autograph
+                {
+                    max-width: 12rem;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    font-size: 0.7rem;
+                    letter-spacing: 0.05rem;
+                    color: #666;
+                    text-align: center;
+                }
             }
-            .autograph
+            .public_info_item:nth-child(2)
             {
-                max-width: 12rem;
-                overflow: hidden;
-                white-space: nowrap;
-                text-overflow: ellipsis;
-                font-size: 0.7rem;
-                letter-spacing: 0.05rem;
-                color: #666;
-                text-align: center;
+                margin: 1.5rem 0 0.8rem 0;
+            }
+            .public_info_item:nth-child(3)
+            {
+                margin-bottom: 0.8rem;
             }
         }
         .function_box
@@ -93,8 +107,8 @@
                     flex-direction: column;
                     li
                     {
-                        height: 2.6rem;
-                        padding: 0 1rem;
+                        min-height: 2.6rem;
+                        padding: 0.5rem 1rem;
                         border-bottom: solid 1px rgba(0, 0, 0,0.12);
                         display: flex;
                         .info_title , .info_content
@@ -125,7 +139,7 @@
                             justify-content: flex-end;
                             i
                             {
-                                margin: 0 0.5rem;
+                                margin-left: 0.5rem;
                             }
                             span
                             {

@@ -1,0 +1,56 @@
+.instant_input
+{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background-color: #ffffff;
+    .main_content
+    {
+        display: flex;
+        align-items: center;
+        position: relative;
+        z-index: 2;
+        .function_handle
+        {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            i
+            {
+                margin-left: 0.5rem;
+                width: 1.5rem;
+                height: 1.5rem;
+                overflow: hidden;
+                border-radius: 50%;
+                cursor: pointer;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                transition: background-color 0.25s;
+            }
+            i:hover
+            {
+                background-color: rgba(209, 224, 233, 0.5);
+            }
+        }
+    }
+    .error_message
+    {
+        position: relative;
+        z-index: 1;
+        padding-left: 0.5rem;
+        font-size: 0.7rem;
+        height: 2rem;
+        line-height: 2rem;
+        color: #d32f2fed;
+        transition: all 0.25s;
+        margin-top: -2rem;
+        opacity: 0;
+    }
+    .error_message_active
+    {
+        margin-top: 0;
+        opacity: 1;
+    }
+}
