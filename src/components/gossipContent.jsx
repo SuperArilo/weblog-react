@@ -19,7 +19,6 @@ export default function GossipContent(props) {
     //hook
     const navigate = useNavigate()
     //params
-    const [editorStatus, setEditorStatus] = useState(false)
     const [requestInstance, setRequestInstance] = useState({
         pageNum: 1,
         pageSize: 10,
@@ -39,7 +38,7 @@ export default function GossipContent(props) {
     const commentData = useCallback((instance) => {
         gossipCommentList(instance).then(resq => {
             if(resq.code === 200) {
-                setCommentObject(target => { return { ...target, list: resq.data.list, total: resq.data.total, pages: resq.data.pages, current: resq.data.current - 1} })
+                setCommentObject(target => { return { ...target, list: resq.data.list, total: resq.data.total, pages: resq.data.pages, current: resq.data.current} })
             } else {
                 customTips.error(resq.message)
             }
@@ -49,9 +48,9 @@ export default function GossipContent(props) {
     }, [])
 
     useEffect(() => {
-        if(!editorStatus) return
+        if(!props.foldStatus) return
         commentData(requestInstance)
-    }, [commentData, requestInstance, editorStatus])
+    }, [commentData, requestInstance, props.foldStatus])
 
     return (
         <div className={style.gossip_box}>
@@ -92,7 +91,7 @@ export default function GossipContent(props) {
                     <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
                 </button>
                 <button type='button' 
-                    onClick={() => { setEditorStatus(!editorStatus) }}>
+                    onClick={() => { props.handleFold(props.data.id) }}>
                     <i className='fas fa-comment-dots' />
                     评论
                     <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
@@ -103,7 +102,7 @@ export default function GossipContent(props) {
                     <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
                 </button>
             </div>
-            <Collapse in={editorStatus} mountOnEnter unmountOnExit>
+            <Collapse in={props.foldStatus} mountOnEnter unmountOnExit>
                 <Tinymce
                     ref={tinymce}
                     placeholder='发表一条友善的评论吧...'
@@ -226,4 +225,7 @@ export default function GossipContent(props) {
             </Collapse>
         </div>
     )
+}
+GossipContent.defaultProps = {
+    foldStatus: false
 }
