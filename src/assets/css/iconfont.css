@@ -2,9 +2,9 @@
   font-family: "asukamis"; /* Project id 3870659 */
   /* Color fonts */
   src: 
-       url('iconfont.woff2?t=1674955898811') format('woff2'),
-       url('iconfont.woff?t=1674955898811') format('woff'),
-       url('iconfont.ttf?t=1674955898811') format('truetype');
+       url('iconfont.woff2?t=1675404774289') format('woff2'),
+       url('iconfont.woff?t=1675404774289') format('woff'),
+       url('iconfont.ttf?t=1675404774289') format('truetype');
 }
 
 .asukamis {
@@ -13,6 +13,38 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.back:before {
+  content: "\e606";
+}
+
+.signout:before {
+  content: "\e7fa";
+}
+
+.gossip:before {
+  content: "\e60f";
+}
+
+.loading:before {
+  content: "\eb78";
+}
+
+.editor:before {
+  content: "\e601";
+}
+
+.save:before {
+  content: "\e636";
+}
+
+.close:before {
+  content: "\e60e";
+}
+
+.setting:before {
+  content: "\e617";
 }
 
 .identity:before {
@@ -55,7 +87,7 @@
   content: "\e61d";
 }
 
-.gossip:before {
+.guestbook:before {
   content: "\ed60";
 }
 
