@@ -1,20 +1,29 @@
 import React from 'react'
 import WaterWave from 'water-wave'
 import 'water-wave/style.css'
-import '../assets/scss/components/button.scss'
-export default class AsukaButton extends React.Component {
-    static defaultProps = {
-        text: '未设置',
-        status: false,
-        class: 'normal',
-        size: 'normal'
-    }
-    render() {
-        return(
-            <button onClick={this.props.onClick} className={`${'asuka-button'} ${'asuka-button-' + this.props.class} ${'button-size-' + this.props.size}`} type='button'>
-                { this.props.status ? <i className='fas fa-circle-notch fa-spin' />:this.props.text }
-                <WaterWave color={`${this.props.class === 'normal' ? 'rgba(0, 0, 0, 0.7)':''} ${this.props.class === 'read' ? 'rgb(228, 177, 177)':''}`} duration={ 500 } />
-            </button>
-        )
-    }
+import style from '../assets/scss/components/button.module.scss'
+export default function AsukaButton(props) {
+    return (
+        <button
+            onClick={props.onClick}
+            className={`${style.asuka_button} ${props.class === 'normal' ? style.asuka_button_normal:''} ${props.class === 'red' ? style.asuka_button_read:''} ${props.class === 'danger' ? style.asuka_button_danger:''} ${props.size === 'normal' ? style.button_size_normal:''} ${props.size === 'big' ? style.button_size_big:''} ${props.size === 'small' ? style.button_size_small:''}`}
+            title='提交'
+            type='button'>
+            { 
+                props.status ? 
+                <i className={`${'asukamis loading'} ${props.status ? style.rotate:''}`} />
+                :
+                props.text
+            }
+            <WaterWave
+                color={`${props.class === 'normal' ? 'rgba(0, 0, 0, 0.7)':''} ${props.class === 'read' ? 'rgb(228, 177, 177)':''}`}
+                duration={ 500 } />
+        </button>
+    )
+}
+AsukaButton.defaultProps = {
+    text: '未设置',
+    status: false,
+    class: 'normal',
+    size: 'normal'
 }
