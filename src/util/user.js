@@ -20,3 +20,10 @@ export const blogUserProfiles = (params) => {
         method: 'get'
     })
 }
+export const blogUserProfilesModify = (query) => {
+    return request({
+        url: '/user/profiles/modify',
+        method: 'put',
+        data: query,
+    })
+}
