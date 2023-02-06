@@ -64,7 +64,7 @@ export default class Tinymce extends React.Component {
         return (
             <>
                 { this.state.tinymce ? '':<EditorSkeleton /> }
-                <div className={style.editor_tinymce} style={{ display: this.state.tinymce ? 'block':'none' }}>
+                <div className={style.editor_tinymce} style={{ display: this.state.tinymce ? 'flex':'none' }}>
                     <Editor 
                         tinymceScriptSrc={ process.env.PUBLIC_URL + '/tinymce/tinymce.min.js' }
                         initialValue={this.state.initialValue} init={this.state.config}
