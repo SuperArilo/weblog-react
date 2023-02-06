@@ -327,10 +327,27 @@
         }
         .slide_bottom_function
         {
-            height: 5rem;
+            height: 4rem;
             padding: 0 1rem;
             display: flex;
             align-items: center;
+            justify-content: space-around;
+            .function_box
+            {
+                height: 3rem;
+                padding: 0 1rem;
+                display: flex;
+                align-items: center;
+                border-radius: 0.3rem;
+                overflow: hidden;
+                cursor: pointer;
+                span
+                {
+                    margin-left: 0.8rem;
+                    color: #ffffff;
+                    
+                }
+            }
         }
     }
 }

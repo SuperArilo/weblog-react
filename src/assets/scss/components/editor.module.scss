@@ -1,10 +1,13 @@
 .editor_tinymce
 {
     width: 100%;
+    flex-direction: column;
+    background-color: rgba(255, 255, 255, 1);
+    border-radius: 0.3rem;
     .editor_bottom
     {
         width: 100%;
-        margin-top: 1rem;
+        margin: 1rem 0;
         padding: 0 1rem;
         display: flex;
         justify-content: space-between;
@@ -26,6 +29,9 @@
 .editor_skeleton
 {
     display: block;
+    background-color: #ffffff;
+    padding: 0.5rem;
+    border-radius: 0.3rem;
     .editor_top
     {
         display: flex;

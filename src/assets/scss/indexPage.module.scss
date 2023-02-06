@@ -33,7 +33,7 @@
             align-items: center;
             .auto_play_span
             {
-                color: rgba(0, 0, 0, 0.6);
+                color: #ffffff;
                 font-size: 1rem;
                 letter-spacing: 0.15rem;
             }
@@ -170,19 +170,20 @@
                 align-items: center;
                 font-size: 1rem;
                 letter-spacing: 0.15rem;
+                color: #ffffff;
+                font-weight: bold;
             }
             .article_list
             {
-                width: 100%;
                 li
                 {
-                    width: 100%;
                     border-radius: 0.5rem;
                     margin-bottom: 1rem;
                     overflow: hidden;
                     background-color: #ffffff;
                     display: flex;
                     flex-direction: column;
+                    box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.2);
                     img
                     {
                         width: 100%;
