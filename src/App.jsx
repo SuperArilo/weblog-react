@@ -267,7 +267,7 @@ const PCheaderNav = (props) => {
 const MobileHeaderNav = (props) => {
 	//hook
 	const navigate = useNavigate()
-	const location = useLocation()
+	const dispatch = useDispatch()
 	//param
 	const [drawerStatus, setDrawerStatus] = useState(false)
 	const [menuList] = useState([
@@ -324,7 +324,6 @@ const MobileHeaderNav = (props) => {
 						<div className={signStyle.slide_box}>
 							<header className={signStyle.header_function}>
 								<i className='fas fa-bell' />
-								<i className='fas fa-sign-out-alt' />
 							</header>
 							<div className={signStyle.user_info_box}>
 								<img src={props.userInfo ? props.userInfo.avatar:''} alt={props.userInfo ? props.userInfo.nickName:''} title={props.userInfo ? props.userInfo.nickName:''} />
@@ -349,7 +348,37 @@ const MobileHeaderNav = (props) => {
 								}
 							</ul>
 							<div className={signStyle.slide_bottom_function}>
-								<AsukaButton text='登录' size='big' onClick={() => { props.openLoginBox(true) }} />
+								{
+									props.userInfo ?
+									<>
+										<div 
+											className={signStyle.function_box}
+											onClick={() => {
+												setTimeout(() => {
+													navigate(`/user/${props.userInfo.uid}`)
+													setDrawerStatus(false)
+												}, 500)
+											}}>
+											<i className='asukamis setting' />
+											<span>设置</span>
+											<WaterWave color="rgba(255, 255, 255, 0.7)" duration={ 500 } />
+										</div>
+										<div 
+											className={signStyle.function_box}
+											onClick={() => {
+												setDrawerStatus(false)
+												dispatch({ type: 'userInfo/setInfo', payload: null })
+												localStorage.removeItem('token')
+											}}>
+											<i className='asukamis signout' />
+											<span>注销</span>
+											<WaterWave color="rgba(255, 255, 255, 0.7)" duration={ 500 } />
+										</div>
+									</>
+									:
+									<AsukaButton text='登录' size='big' onClick={() => { props.openLoginBox(true) }} />
+								}
+								
 							</div>
 						</div>
 					</Slide>
