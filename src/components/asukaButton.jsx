@@ -6,7 +6,7 @@ export default function AsukaButton(props) {
     return (
         <button
             onClick={props.onClick}
-            className={`${style.asuka_button} ${props.class === 'normal' ? style.asuka_button_normal:''} ${props.class === 'red' ? style.asuka_button_read:''} ${props.class === 'danger' ? style.asuka_button_danger:''} ${props.size === 'normal' ? style.button_size_normal:''} ${props.size === 'big' ? style.button_size_big:''} ${props.size === 'small' ? style.button_size_small:''}`}
+            className={`${style.asuka_button} ${props.class === 'normal' ? style.asuka_button_normal:''} ${props.class === 'read' ? style.asuka_button_read:''} ${props.class === 'danger' ? style.asuka_button_danger:''} ${props.size === 'normal' ? style.button_size_normal:''} ${props.size === 'big' ? style.button_size_big:''} ${props.size === 'small' ? style.button_size_small:''}`}
             title='提交'
             type='button'>
             { 

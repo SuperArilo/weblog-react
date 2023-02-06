@@ -133,6 +133,7 @@ const ArticleVistorList = forwardRef((props, ref) => {
     })
     const [commentObject, setCommentObject] = useState({
         pages: 1,
+        total: 0,
         current: 0,
         list: null
     })
@@ -144,7 +145,7 @@ const ArticleVistorList = forwardRef((props, ref) => {
     const commentData = useCallback(instance => {
         articleCommentGet(instance).then(resq => {
             if(resq.code === 200) {
-                setCommentObject(target => { return { ...target, list: resq.data.list, pages: resq.data.pages, current: resq.data.current - 1} })
+                setCommentObject(target => { return { ...target, list: resq.data.list, pages: resq.data.pages, current: resq.data.current, total: resq.data.total} })
             } else {
                 customTips.error(resq.message)
             }
@@ -260,10 +261,14 @@ const ArticleVistorList = forwardRef((props, ref) => {
                     </SwitchTransition>
                 }
             </div>
-            <Pagination 
-                pages={commentObject.pages}
-                current={commentObject.current}
-                onPageChange={e => { setRequestInstance({...requestInstance, pageNum: e}) }}/>
+            {
+                commentObject.pages === 1 || commentObject.pages === 0 ? '':
+                <Pagination 
+                    pages={commentObject.pages}
+                    current={commentObject.current}
+                    onPageChange={e => { setRequestInstance({...requestInstance, pageNum: e}) }}/>
+            }
+            
         </>
     )
 })

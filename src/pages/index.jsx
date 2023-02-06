@@ -27,6 +27,8 @@ export default function IndexPage(props) {
     //params
     const [articleObject, setArticleObject] = useState({
         pages: 1,
+        total: 0,
+        current: 0,
         list: []
     })
     const [hotArticleList, setHotArticleList] = useState([])
@@ -68,7 +70,7 @@ export default function IndexPage(props) {
     const articleData = useCallback((instance) => {
         articleListGet(instance).then(resq => {
             if(resq.code === 200) {
-                setArticleObject(current => { return ({ ...current, list: resq.data.list, pages: resq.data.pages }) })
+                setArticleObject(target => { return ({ ...target, list: resq.data.list, pages: resq.data.pages, total: resq.data.total, current: resq.data.current }) })
             } else {
                 customTips.error(resq.message)
             }
@@ -189,9 +191,13 @@ export default function IndexPage(props) {
                             }
                         </CSSTransition>
                     </SwitchTransition>
-                    <Pagination 
-                        pages={articleObject.pages}
-                        onPageChange={e => { setArticleRequestInstance({...articleRequestInstance, pageNum: e}) }}/>
+                    {
+                        articleObject.pages === 0 || articleObject.pages === 1 ? '':
+                        <Pagination 
+                            total={articleObject.total}
+                            onPageChange={e => { setArticleRequestInstance({...articleRequestInstance, pageNum: e}) }}/>
+                    }
+                    
                 </div>
                 <div className={style.public_sub_content}>
                     <span className={style.public_sub_content_header}>最近碎语</span>

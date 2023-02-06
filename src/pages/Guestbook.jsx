@@ -35,7 +35,7 @@ export default function Guestbook() {
     const dataListGet = useCallback((instance) => {
         guestbookList(instance).then(resq => {
             if(resq.code === 200) {
-                setDataObject(target => { return { ...target, list: resq.data.list, total: resq.data.total, pages: resq.data.pages, current: resq.data.current - 1} })
+                setDataObject(target => { return { ...target, list: resq.data.list, total: resq.data.total, pages: resq.data.pages, current: resq.data.current} })
             } else {
                 customTips.error(resq.message)
             }
@@ -104,12 +104,16 @@ export default function Guestbook() {
                     </SwitchTransition>
                 }
             </div>
-            <Pagination
-                pages={dataObject.pages}
-                current={dataObject.current}
-                onPageChange={(e) => {
-                    setRequestInstance({...requestInstance, pageNum: e})
-                }}/>
+            {
+                dataObject.pages === 0 || dataObject.pages === 1 ? '':
+                <Pagination
+                    total={dataObject.total}
+                    current={dataObject.current}
+                    onPageChange={(e) => {
+                        setRequestInstance({...requestInstance, pageNum: e})
+                    }}/>
+            }
+            
         </div>
     )
 }

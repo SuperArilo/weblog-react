@@ -25,9 +25,9 @@ export default function GossipContent(props) {
         gossipId: props.data.id
     })
     const [commentObject, setCommentObject] = useState({
-        pages: 1,
+        pages: 0,
         total: 0,
-        current: 0,
+        current: 1,
         list: null
     })
     const [selectCommentItem, setSelectCommentItem] = useState(null)
@@ -38,7 +38,7 @@ export default function GossipContent(props) {
     const commentData = useCallback((instance) => {
         gossipCommentList(instance).then(resq => {
             if(resq.code === 200) {
-                setCommentObject(target => { return { ...target, list: resq.data.list, total: resq.data.total, pages: resq.data.pages, current: resq.data.current} })
+                setCommentObject(target => { return { ...target, list: resq.data.list, total: resq.data.total, pages: resq.data.pages, current: resq.data.current } })
             } else {
                 customTips.error(resq.message)
             }
@@ -216,10 +216,14 @@ export default function GossipContent(props) {
                                 }
                             </CSSTransition>
                         </SwitchTransition>
-                        <Pagination 
-                            pages={commentObject.pages}
-                            current={commentObject.current}
-                            onPageChange={e => { setRequestInstance({...requestInstance, pageNum: e}) }}/>
+                        {
+                            commentObject.pages === 0 || commentObject.pages === 1 ? '':
+                            <Pagination 
+                                total={commentObject.total}
+                                current={commentObject.current}
+                                onPageChange={e => { setRequestInstance({...requestInstance, pageNum: e}) }}/>
+                        }
+                        
                     </div>
                 }
             </Collapse>
