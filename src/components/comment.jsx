@@ -105,7 +105,8 @@ const Comment = forwardRef((props, ref) => {
                 onCancel={() => { popperChange(null) }}/>
             <KeepAlive>
                 <Collapse in={props.foldStatus} mountOnEnter unmountOnExit>
-                    <Tinymce 
+                    <Tinymce
+                        userInfo={props.userInfo}
                         placeholder={`${'回复'}${' @' + props.data.replyUser.replyNickName}`} 
                         status={editorLoadingStatus} 
                         getContent={(content) => { 
