@@ -88,6 +88,7 @@ const App = () => {
 							<Route path='/guestbook' element={<Guestbook />} />
 							<Route path='/user/:viewUid' element={<User />} />
 							<Route path='/notfound' element={<NotFound /> } />
+							<Route path='/error' element={<NotFound /> } />
 							<Route path='*' element={<Navigate to='/notfound' />} />
 						</Routes>
 					</CSSTransition>
