@@ -17,9 +17,10 @@ export default class Tinymce extends React.Component {
             height: 200,
             skin: 'oxide',
             placeholder: this.props.placeholder,
-            content_css: 'fabric',
+            content_css: 'default',
             menubar: false,
             branding: false,
+			statusbar: false,
             language_url: "/tinymce/langs/zh-Hans.js",
             language: "zh-Hans",
             plugins: [
@@ -63,20 +64,27 @@ export default class Tinymce extends React.Component {
     render() {
         return (
             <>
-                { this.state.tinymce ? '':<EditorSkeleton /> }
-                <div className={style.editor_tinymce} style={{ display: this.state.tinymce ? 'flex':'none' }}>
-                    <Editor 
-                        tinymceScriptSrc={ process.env.PUBLIC_URL + '/tinymce/tinymce.min.js' }
-                        initialValue={this.state.initialValue} init={this.state.config}
-                        onChange={(event, editor) => {
-                            this.setState({ modelValue: editor.getContent() })
-                        }} />
-                    <div className={style.editor_bottom}>
-                        <div className={style.left_user_info}>
+                {
+                    this.props.userInfo !== null ?
+                    <>
+                        { this.state.tinymce ? '':<EditorSkeleton /> }
+                        <div className={style.editor_tinymce} style={{ display: this.state.tinymce ? 'flex':'none' }}>
+                            <Editor 
+                                tinymceScriptSrc={ process.env.PUBLIC_URL + '/tinymce/tinymce.min.js' }
+                                initialValue={this.state.initialValue} init={this.state.config}
+                                onChange={(event, editor) => {
+                                    this.setState({ modelValue: editor.getContent() })
+                                }} />
+                            <div className={style.editor_bottom}>
+                                <div className={style.left_user_info}>
+                                </div>
+                                <AsukaButton text='提交' status={this.props.status} onClick={() => { this.props.getContent(this.state.modelValue) }}/>
+                            </div>
                         </div>
-                        <AsukaButton text='提交' status={this.props.status} onClick={() => { this.props.getContent(this.state.modelValue) }}/>
-                    </div>
-                </div>
+                    </>
+                    :
+                    ''
+                }
             </>   
         )
     }
