@@ -75,7 +75,7 @@ const InstantInput = forwardRef((props, ref) => {
                     </Icon>
                     <Icon
                         iconClass={`${props.loadingStatus ? 'loading':'save'}`}
-                        status={true}
+                        status={props.loadingStatus}
                         onClick={() => {
                             if(inputConetnt === '' || inputConetnt === null) {
                                 customTips.warning('必须要填写内容哦')

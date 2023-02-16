@@ -163,7 +163,7 @@ export default function IndexPage(props) {
                                 <ul className={style.article_list}>
                                     {
                                         articleObject.list.map(item => {
-                                            return (<Article 
+                                            return <Article 
                                                         key={item.id}
                                                         item={item}
                                                         handleLike={(articleId) => { 
@@ -184,7 +184,7 @@ export default function IndexPage(props) {
                                                                 customTips.error(err.message)
                                                             })
                                                         }} 
-                                                    />)
+                                                    />
                                         })
                                     }
                                 </ul>
@@ -197,7 +197,6 @@ export default function IndexPage(props) {
                             total={articleObject.total}
                             onPageChange={e => { setArticleRequestInstance({...articleRequestInstance, pageNum: e}) }}/>
                     }
-                    
                 </div>
                 <div className={style.public_sub_content}>
                     <span className={style.public_sub_content_header}>最近碎语</span>

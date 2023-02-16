@@ -17,6 +17,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { guestbookList, addGuestbook, deleteGuestbook } from '../util/guestbook'
 import customTips from '../util/notostack/customTips'
 export default function Guestbook() {
+    //hook
     //params
     const [requestInstance, setRequestInstance] = useState({
         pageNum: 1,
@@ -49,6 +50,7 @@ export default function Guestbook() {
     return (
         <div className={style.guestbook}>
             <Tinymce
+                userInfo={userInfo}
                 ref={tinymceRef}
                 placeholder='在这里留下你想说的话吧...'
                 status={addGuestbookStatus}

@@ -37,34 +37,35 @@ export default function ArticleDetail(props) {
                 { 
                     articleContentRef.current === null || articleContentRef.current.state.articleInstance === '' ? '':
                     <Tinymce
-                    ref={tinymce} 
-                    placeholder='发表一条友善的评论吧...' 
-                    status={addCommentStatus} 
-                    getContent={(value) => { 
-                        if(value === null || value === '' || value === '<p></p>') {
-                            customTips.warning('不能提交空白哦 ⊙﹏⊙∥')
-                            return
-                        }
-                        if(!addCommentStatus) {
-                            setAddCommentStatus(true)
-                            let data = new FormData()
-                            data.append('articleId', articleId)
-                            data.append('content', value)
-                            replyComment(data).then(resq => {
-                                if(resq.code === 200) {
-                                    tinymce.current.clear()
-                                    customTips.success(resq.message)
-                                    articleListRef.current.reRequestComment()
-                                } else {
-                                    customTips.error(resq.message)
-                                }
-                                setAddCommentStatus(false)
-                            }).catch(err => {
-                                customTips.error(err.message)
-                                setAddCommentStatus(false)
-                            })
-                        }
-                    }}/>
+                        userInfo={props.userInfo}
+                        ref={tinymce} 
+                        placeholder='发表一条友善的评论吧...' 
+                        status={addCommentStatus} 
+                        getContent={(value) => { 
+                            if(value === null || value === '' || value === '<p></p>') {
+                                customTips.warning('不能提交空白哦 ⊙﹏⊙∥')
+                                return
+                            }
+                            if(!addCommentStatus) {
+                                setAddCommentStatus(true)
+                                let data = new FormData()
+                                data.append('articleId', articleId)
+                                data.append('content', value)
+                                replyComment(data).then(resq => {
+                                    if(resq.code === 200) {
+                                        tinymce.current.clear()
+                                        customTips.success(resq.message)
+                                        articleListRef.current.reRequestComment()
+                                    } else {
+                                        customTips.error(resq.message)
+                                    }
+                                    setAddCommentStatus(false)
+                                }).catch(err => {
+                                    customTips.error(err.message)
+                                    setAddCommentStatus(false)
+                                })
+                            }
+                        }}/>
                 }
                 <span className={style.article_vistor_title}>评论</span>
                 <ArticleVistorList
@@ -96,28 +97,28 @@ class ArticleInfoTop extends React.Component {
                 <CSSTransition key={this.state.articleInstance  === ''} timeout={300} classNames="change" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
                     {
                         this.state.articleInstance  === '' ? <ArticleSkeleton />:<ArticleContent 
-                        articleInstance={this.state.articleInstance} 
-                        handleLike={(articleId) => { 
-                            if(!this.props.userInfo) {
-                                customTips.info('你需要登录才能进行下一步操作哦')
-                                return
-                            }
-                            let data = new FormData()
-                            data.append('articleId', articleId)
-                            increaseArticleLike(data).then(resq => {
-                                if(resq.code === 200) {
-                                    customTips.success(resq.message)
-                                    let {...temp} = this.state.articleInstance
-                                    temp.hasLike = resq.data.status
-                                    temp.articleLikes = resq.data.likes
-                                    this.setState({ articleInstance: temp })
-                                } else {
-                                    customTips.error(resq.message)
-                                }
-                            }).catch(err => {
-                                customTips.error(err.message)
-                            })
-                        }} />
+                                                                                    articleInstance={this.state.articleInstance} 
+                                                                                    handleLike={(articleId) => { 
+                                                                                        if(!this.props.userInfo) {
+                                                                                            customTips.info('你需要登录才能进行下一步操作哦')
+                                                                                            return
+                                                                                        }
+                                                                                        let data = new FormData()
+                                                                                        data.append('articleId', articleId)
+                                                                                        increaseArticleLike(data).then(resq => {
+                                                                                            if(resq.code === 200) {
+                                                                                                customTips.success(resq.message)
+                                                                                                let {...temp} = this.state.articleInstance
+                                                                                                temp.hasLike = resq.data.status
+                                                                                                temp.articleLikes = resq.data.likes
+                                                                                                this.setState({ articleInstance: temp })
+                                                                                            } else {
+                                                                                                customTips.error(resq.message)
+                                                                                            }
+                                                                                        }).catch(err => {
+                                                                                            customTips.error(err.message)
+                                                                                        })
+                                                                                    }} />
                     }
                 </CSSTransition>
             </SwitchTransition>
@@ -317,7 +318,10 @@ const ArticleContent = (props) => {
                         </div>
                     </div>
                 </div>
-                <div className={`${style.article_render_content} ${renderHtml.render_html}`} ref={renderContentRef} dangerouslySetInnerHTML={{ __html: props.articleInstance.articleContent}} />
+                <div
+                    className={`${style.article_render_content} ${renderHtml.render_html}`}
+                    ref={renderContentRef}
+                    dangerouslySetInnerHTML={{ __html: props.articleInstance.articleContent}} />
             </div>
         </>
     )

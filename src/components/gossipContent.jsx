@@ -104,6 +104,7 @@ export default function GossipContent(props) {
             </div>
             <Collapse in={props.foldStatus} mountOnEnter unmountOnExit>
                 <Tinymce
+                    userInfo={props.userInfo} 
                     ref={tinymce}
                     placeholder='发表一条友善的评论吧...'
                     status={editorSendToServerStatus}
