@@ -9,10 +9,26 @@
         font-size: 1rem;
         display: block;
     }
+    input 
+    {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        left: 0;
+        top: 0;
+        cursor: pointer;
+        font-size: 0;
+    }
 }
 .asuka_button_normal
 {
     background-color: rgb(25, 118, 210);
+    color: #ffffff;
+}
+.asuka_button_file
+{
+    background-color: #f38992;
     color: #ffffff;
 }
 .asuka_button_read

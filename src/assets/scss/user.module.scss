@@ -15,6 +15,21 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            .user_avatar_box
+            {
+                display: flex;
+                align-items: center;
+                flex-direction: column;
+                .avatar_box_button
+                {
+                    display: flex;
+                    margin-top: 1rem;
+                    button
+                    {
+                        margin: 0 0.5rem;
+                    }
+                }
+            }
             .public_info_item
             {
                 display: flex;
