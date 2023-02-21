@@ -28,14 +28,23 @@ export default class Tinymce extends React.Component {
                 'anchor', 'searchreplace', 'visualblocks', 'code', 'insertdatetime', 'media', 'table', 'help'
             ],
             toolbar: [
-                { name: 'styles', items: [ 'styles' ] },
-                { name: 'formatting', items: [ 'bold', 'italic', 'forecolor', 'image'] },
+                { name: 'styles', items: [ 'styles', 'fontsize', 'image' ] },
+                { name: 'formatting', items: [ 'forecolor', 'bold', 'italic', 'lineheight', 'removeformat', 'hr'] },
                 { name: 'alignment', items: [ 'alignleft', 'aligncenter', 'alignright', 'alignjustify' ] },
                 { name: 'indentation', items: [ 'bullist', 'numlist', 'outdent', 'indent', 'table' ] },
                 { name: 'history', items: [ 'undo', 'redo' ] }
             ],
+            style_formats: [
+                {
+                    title: '首行缩进',
+                    block: 'p',
+                    styles: { 'text-indent': '2em' }
+                }
+            ],
+            style_formats_merge: true,
             toolbar_mode: 'sliding',
-            content_style: 'body { font-size:14px }',
+            content_style: 'body { font-size: 12pt }',
+            font_size_formats: '8pt 10pt 11pt 12pt 13pt 14pt 15pt 16pt 17pt 18pt 24pt 36pt 48pt',
             setup: (editor) => {
                 setTimeout(() => {
                     this.setState({ tinymce: editor })
