@@ -14,19 +14,26 @@ import WaterWave from 'water-wave'
 import AsukaButton from '../components/asukaButton'
 import Icon from '../components/Icon'
 import InstantInput from '../components/InstantInput'
+import AvatarCut from '../components/AvatarCut'
 
 export default function User(props) {
+
     //hook
-    const navigate = useNavigate()
+    const dispatch = useDispatch()
+
     //params
     const userInfo = useSelector((state) => state.userInfo.info)
     const [userProfiles, setUserProfiles] = useState(null)
     const { viewUid } = useParams()
+
+    const avatarCutRef = useRef(null)
+
     const [modeInstance, setModeInstance] = useState({
         menuIndex: 0,
         status: false,
         editorIndex: null,
         loadingStatus: false,
+        tempAvatar: null,
         instance: null
     })
 
@@ -74,13 +81,15 @@ export default function User(props) {
         blogUserProfiles(params).then(resq => {
             if(resq.code === 200) {
                 setUserProfiles(resq.data)
+                dispatch({ type: 'userInfo/setAvatar', payload: resq.data.avatar })
             } else {
                 customTips.error(resq.message)
             }
         }).catch(err => {
+            console.log(err)
             customTips.error(err.message)
         })
-    }, [])
+    }, [dispatch])
 
     useEffect(() => {
         queryProfiles(viewUid)
@@ -99,7 +108,8 @@ export default function User(props) {
                 ...current,
                 loadingStatus: false,
                 editorIndex: null,
-                instance: null
+                instance: null,
+                tempAvatar: null
             }))
         }).catch(err => {
             customTips.error(err.message)
@@ -116,7 +126,60 @@ export default function User(props) {
                 userProfiles === null ? <UserSkeleton />:
                 <div className={style.info_box}>
                     <div className={style.user_head_box}>
-                        <Avatar width='3.8rem' height='3.8rem' src={userProfiles.avatar} />
+                        <div className={style.user_avatar_box}>
+                            {
+                                modeInstance.tempAvatar !== null ?
+                                <AvatarCut
+                                    ref={avatarCutRef}
+                                    image={modeInstance.tempAvatar}/>
+                                :
+                                <Avatar width='3.8rem' height='3.8rem' src={userProfiles.avatar} />
+                            }
+                            {
+                                modeInstance.status ?
+                                <>
+                                    <div className={style.avatar_box_button}>
+                                    <AsukaButton
+                                        class='file'
+                                        text='上传头像'
+                                        getFile={file => {
+                                            setModeInstance({...modeInstance, tempAvatar: file})
+                                        }}/>
+                                    {
+                                        modeInstance.tempAvatar !== null ? 
+                                        <>
+                                            <AsukaButton
+                                                status={modeInstance.loadingStatus}
+                                                text='提交'
+                                                onClick={() => {
+                                                    avatarCutRef.current.getImage().current.getImageScaledToCanvas().toBlob((blob) => {
+                                                        setModeInstance(current => ({
+                                                            ...current,
+                                                            loadingStatus: true,
+                                                            instance: {
+                                                                ...current.instance,
+                                                                avatar: new File([blob], 'transform.png')
+                                                            }
+                                                        }))
+                                                        return
+                                                    })
+                                                }}/>
+                                            <AsukaButton
+                                                text='退出'
+                                                class='danger'
+                                                onClick={() => {
+                                                    setModeInstance({...modeInstance, tempAvatar: null})
+                                                }}/>
+                                        </>
+                                        : null
+                                    }
+                                    
+                                </div>
+                                </>
+                                : ''
+                            }
+                            
+                        </div>
                         <div className={style.public_info_item} eidtorindex='0'>
                             {
                                 modeInstance.editorIndex === '0' ?
@@ -323,23 +386,16 @@ const UserInfoView = (props) => {
                             loadingStatus={props.modeInstance.loadingStatus}
                             handleClose={() => { props.setModeInstance({...props.modeInstance, editorIndex: null}) }}
                             handleSave={content => {
-                                // if(!modeInstance.loadingStatus) {
-                                //     setModeInstance({...modeInstance, loadingStatus: true})
-                                //     let data = new FormData()
-                                //     data.append('autograph', content)
-                                //     blogUserProfilesModify(data).then(resq => {
-                                //         if(resq.code === 200) {
-                                //             customTips.success(resq.message)
-                                //             queryProfiles(viewUid)
-                                //         } else {
-                                //             customTips.error(resq.message)
-                                //         }
-                                //         setModeInstance({...modeInstance, loadingStatus: false, editorIndex: null})
-                                //     }).catch(err => {
-                                //         customTips.error(err.message)
-                                //         setModeInstance({...modeInstance, loadingStatus: false})
-                                //     })
-                                // }
+                                if(!props.modeInstance.loadingStatus) {
+                                    props.setModeInstance({
+                                        ...props.modeInstance, 
+                                        loadingStatus: true,
+                                        instance: {
+                                            ...props.modeInstance.instance,
+                                            age: content
+                                        }
+                                    })
+                                }
                             }}/>
                         :
                         <>
@@ -378,13 +434,23 @@ const UserInfoView = (props) => {
                             loadingStatus={props.modeInstance.loadingStatus}
                             handleClose={() => { props.setModeInstance({...props.modeInstance, editorIndex: null}) }}
                             handleSave={content => {
+                                if(!props.modeInstance.loadingStatus) {
+                                    props.setModeInstance({
+                                        ...props.modeInstance,
+                                        loadingStatus: true,
+                                        instance: {
+                                            ...props.modeInstance.instance,
+                                            sex: content
+                                        }
+                                    })
+                                }
                             }}/>
                         :
                         <>
                             {
                                 props.modeInstance?.status ?
                                 <>
-                                    <span>{props.userProfiles.sex === 0 ? '女':'男'}</span>
+                                    <span>{props.userProfiles.sex === 0 ? '女':props.userProfiles.sex === 1 ? '男':'未设置'}</span>
                                     <Icon 
                                             iconClass='editor'
                                             fontSize='1.2rem'
@@ -393,7 +459,7 @@ const UserInfoView = (props) => {
                                             }}/>
                                 </>
                                 :
-                                <span>{props.userProfiles.sex === 0 ? '女':'男'}</span>
+                                <span>{props.userProfiles.sex === 0 ? '女':props.userProfiles.sex === 1 ? '男':'未设置'}</span>
                             }
                         </>
                     }

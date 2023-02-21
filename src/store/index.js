@@ -14,11 +14,14 @@ const isMobile = createSlice({
 const userInfo = createSlice({
     name: 'userInfo',
     initialState: {
-        info: null
+        info: {}
     },
     reducers: {
         setInfo: (state, action) => {
             state.info = action.payload
+        },
+        setAvatar: (state, action) => {
+            state.info.avatar = action.payload
         }
     }
 })
