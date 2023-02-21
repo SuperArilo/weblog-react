@@ -6,9 +6,6 @@ const service = axios.create({
     timeout: 10000
 })
 service.interceptors.request.use( config => {
-    if(localStorage.getItem('token') === null){
-        return config
-    }
     if(localStorage.getItem('token')){
         config.headers.token = localStorage.getItem('token')
         return config
@@ -19,13 +16,13 @@ service.interceptors.request.use( config => {
 service.interceptors.response.use( response => {
         return Promise.resolve(response.data)
     }, error => {
-        if(error.response) {
-            return Promise.reject(error.response.data)
-        } else {
-            error.message = '无法完成请求！'
+        if((error.response && error.message) || error.response == null) {
+            error.message = '无法完成请求，网络出错！'
             return Promise.reject(error)
         }
-        
+        if(error.response.data) {
+            return Promise.reject(error.response.data)
+        }
     }
 )
 export default service
