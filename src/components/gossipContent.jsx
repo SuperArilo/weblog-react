@@ -38,7 +38,9 @@ export default function GossipContent(props) {
     const [selectCommentItem, setSelectCommentItem] = useState(null)
     //编辑器ref
     const tinymce = useRef(null)
+    const commentRef = useRef(null)
     const gossipFunctionMenuRef = useRef(null)
+    
     const [gossipFunctionMenuStatus, setGossipFunctionMenuStatus] = useState(false)
     const [editorSendToServerStatus, setEditorSendToServerStatus] = useState(false)
     //function
@@ -87,7 +89,7 @@ export default function GossipContent(props) {
                     <div className={style.info_content}>
                         <div>
                             <span>{props.data.nickName}</span>
-                            <span>{props.data.createTime}</span>
+                            <span>{props.data.createTimeFormat}</span>
                         </div>
                         <span></span>
                     </div>
@@ -134,7 +136,7 @@ export default function GossipContent(props) {
             <div className={style.gossip_button}>
                 <button 
                     type='button' 
-                    className={`${props.data.isLike ? style.gossip_liked:''}`} 
+                    className={`${props.data.like ? style.gossip_liked:''}`} 
                     onClick={() => { props.handleLike(props.data.id)
                     }}>
                     <i className='fas fa-heart' />
@@ -195,8 +197,9 @@ export default function GossipContent(props) {
                                         {
                                             commentObject.list.map(item => {
                                                 return (
-                                                    <Collapse in={true} key={item.commentId}>
+                                                    <Collapse key={item.commentId}>
                                                         <Comment
+                                                            ref={commentRef}
                                                             userInfo={props.userInfo} 
                                                             key={item.commentId} 
                                                             data={item}
@@ -215,7 +218,7 @@ export default function GossipContent(props) {
                                                                         customTips.success(resq.message)
                                                                         let [...temp] = commentObject.list
                                                                         let index = temp.findIndex(key => key.commentId === item.commentId)
-                                                                        temp[index].isLike = resq.data.status
+                                                                        temp[index].like = resq.data.status
                                                                         temp[index].likes = resq.data.likes
                                                                         setCommentObject({...commentObject, list: temp})
                                                                     } else {
@@ -225,7 +228,7 @@ export default function GossipContent(props) {
                                                                     customTips.error(err.message)
                                                                 })
                                                             }}
-                                                            handleReply={(content, ref) => {
+                                                            handleReply={content => {
                                                                 let data = new FormData()
                                                                 data.append('gossipId', props.data.id)
                                                                 data.append('content', content)
@@ -235,14 +238,14 @@ export default function GossipContent(props) {
                                                                     if(resq.code === 200) {
                                                                         customTips.success(resq.message)
                                                                         commentData(requestInstance)
-                                                                        ref.closeBox()
                                                                         setSelectCommentItem(null)
                                                                     } else {
                                                                         customTips.error(resq.message)
                                                                     }
+                                                                    commentRef.current.changeEditorLoadingStatus(false)
                                                                 }).catch(err => {
-                                                                    ref.setStatus(false)
                                                                     customTips.error(err.message)
+                                                                    commentRef.current.changeEditorLoadingStatus(false)
                                                                 })
                                                             }}
                                                             handleDelete={() => {

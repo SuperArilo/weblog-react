@@ -93,16 +93,17 @@ export default function User(props) {
             if(resq.code === 200) {
                 setUserProfiles(resq.data)
                 if(resq.data !== null) {
-                    dispatch({ type: 'userInfo/setAvatar', payload: resq.data?.avatar })
+                    if(userInfo?.uid === resq.data.uid) {
+                        dispatch({ type: 'userInfo/setAvatar', payload: resq.data?.avatar })
+                    }
                 }
             } else {
                 customTips.error(resq.message)
             }
         }).catch(err => {
             customTips.error(err.message)
-            console.log(err)
         })
-    }, [dispatch])
+    }, [dispatch, userInfo?.uid])
 
     useEffect(() => {
         queryProfiles(viewUid)

@@ -68,18 +68,23 @@ const Comment = forwardRef((props, ref) => {
                     <div className={style.vistor_info}>
                         <div>
                             <span>{props.data?.replyUser?.replyNickName}</span>
-                            { props.userInfo ? <button 
-                                                        className={style.relply_button} 
-                                                        onClick={() => {
-                                                            props.handleFold(props.data.commentId)
-                                                        }} type="button">回复</button>:'' }
+                            { 
+                                props.userInfo && props.userInfo.uid !== props.data.replyUser.replyUserId ?
+                                <button 
+                                    className={style.relply_button} 
+                                    onClick={() => {
+                                        props.handleFold(props.data.commentId)
+                                    }} type="button">回复</button>
+                                :
+                                null
+                            }
                             { props.userInfo && props.data?.replyUser?.replyUserId === props.userInfo.uid ? <button className={style.delete_button} type="button" onClick={(event) => { popperChange(event) }}>删除</button>:'' }
                         </div>
-                        <span className={style.vistor_info_time}>{props.data.createTime}</span>
+                        <span className={style.vistor_info_time}>{props.data.createTimeFormat}</span>
                     </div>
                 </div>
                 <div className={style.comment_top_right}>
-                    <i className={'fas fa-heart ' + (props.data.isLike ? style.had_liked:'')} onClick={() => { props.handleLike() }} />
+                    <i className={'fas fa-heart ' + (props.data.like ? style.had_liked:'')} onClick={() => { props.handleLike() }} />
                     <span>{props.data.likes}</span>
                 </div>
             </div>
@@ -89,7 +94,7 @@ const Comment = forwardRef((props, ref) => {
                 dangerouslySetInnerHTML={
                     { 
                         __html: props.data.byReplyUser ? 
-                            '<blockquote><a title="' + props.data.byReplyUser.byReplyName + '" href="#' + props.data.byReplyUser.byReplyUserId + props.data.byReplyUser.byReplyCommentId + '" target="_self">@ ' + props.data.byReplyUser.byReplyName + '</a></blockquote>' + props.data.content
+                            '<blockquote><a title="' + props.data.byReplyUser.byReplyNickName + '" href="#' + props.data.byReplyUser.byReplyUserId + props.data.byReplyUser.byReplyCommentId + '" target="_self">@ ' + props.data.byReplyUser.byReplyNickName + '</a></blockquote>' + props.data.content
                             :props.data.content
                     }
                 } />

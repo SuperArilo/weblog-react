@@ -174,7 +174,7 @@ export default function IndexPage(props) {
                                                                     customTips.success(resq.message)
                                                                     let [...temp] = articleObject.list
                                                                     let index = temp.findIndex(item => item.id === articleId)
-                                                                    temp[index].isLike = resq.data.status
+                                                                    temp[index].like = resq.data.status
                                                                     temp[index].articleLikes = resq.data.likes
                                                                     setArticleObject({...articleObject, list: temp})
                                                                 } else {
@@ -228,7 +228,7 @@ export default function IndexPage(props) {
                                                                             temp[index].likes--
                                                                         }
                                                                     }
-                                                                    temp[index].isLike = resq.data.status
+                                                                    temp[index].like = resq.data.status
                                                                     setGossipList(temp)
                                                                 } else {
                                                                     customTips.error(reqs.message)
@@ -288,7 +288,7 @@ const Article = (props) => {
                             <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
                         </div>
                         <div onClick={() => { props.handleLike(props.item.id) }}>
-                            <i className={`${'fas fa-heart'} ${props.item.isLike ? style.article_is_liked:''}`} />
+                            <i className={`${'fas fa-heart'} ${props.item.like ? style.article_is_liked:''}`} />
                             <span>{props.item.articleLikes}</span>
                             <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
                         </div>

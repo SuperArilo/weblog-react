@@ -135,7 +135,7 @@ const GuestbookCommentItem = (props) => {
                         <Avatar src={props.item.avatar} title={props.item.nickName} alt={props.item.nickName}/>
                         <div>
                             <span>{props.item.nickName}</span>
-                            <span>{props.item.createTime}</span>
+                            <span>{props.item.createTimeFormat}</span>
                         </div>
                     </div>
                     {

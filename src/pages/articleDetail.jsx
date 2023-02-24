@@ -205,7 +205,7 @@ const ArticleVistorList = forwardRef((props, ref) => {
                                                                     customTips.success(resq.message)
                                                                     let [...temp] = commentObject.list
                                                                     let index = temp.findIndex(key => key.commentId === item.commentId)
-                                                                    temp[index].isLike = resq.data.status
+                                                                    temp[index].like = resq.data.status
                                                                     temp[index].likes = resq.data.likes
                                                                     setCommentObject({...commentObject, list: temp})
                                                                 } else {
