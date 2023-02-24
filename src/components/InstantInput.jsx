@@ -16,14 +16,20 @@ import FormControl from '@mui/material/FormControl';
 const InstantInput = forwardRef((props, ref) => {
 
     const mainRef = useRef(null)
+    const iconDivRef = useRef(null)
     const [inputConetnt, setInputContent] = useState(props.value)
+
+
+    useEffect(() => {
+        $(iconDivRef.current).css({ 'height': $(mainRef.current).height() })
+    })
 
     useImperativeHandle(ref, ()=> {
 
     })
     return (
         <div className={`${style.instant_input}`}>
-            <div className={style.main_content}>
+            <div ref={mainRef} className={style.main_content}>
                 {
                     props.mode === 'input' &&
                     <TextField
@@ -69,7 +75,7 @@ const InstantInput = forwardRef((props, ref) => {
                             </Select>
                         </FormControl>
                 }
-                <div className={style.function_handle}>
+                <div ref={iconDivRef} className={style.function_handle}>
                     <Icon iconClass='close' onClick={() => { props.handleClose() }}>
                         <WaterWave color="rgb(155, 195, 219)" duration={ 500 } />
                     </Icon>

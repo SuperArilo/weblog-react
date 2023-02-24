@@ -12,12 +12,17 @@ import CommentSkeleton from './CommentSkeleton'
 import { SwitchTransition, CSSTransition, TransitionGroup } from 'react-transition-group'
 import customTips from '../util/notostack/customTips'
 import Pagination from './Pagination'
+import Menu from './Menu'
 //方法
+import ImageViewer from 'awesome-image-viewer'
+import $ from 'jquery'
 import { useNavigate } from 'react-router-dom'
-import { gossipCommentList, replyGossipComment, likeGossipComment, deleteGossipComment } from '../util/gossip.js'
+import { gossipCommentList, replyGossipComment, likeGossipComment, deleteGossipComment, deleteGossip } from '../util/gossip.js'
 export default function GossipContent(props) {
     //hook
     const navigate = useNavigate()
+    //ref
+    const renderContentRef = useRef()
     //params
     const [requestInstance, setRequestInstance] = useState({
         pageNum: 1,
@@ -33,6 +38,8 @@ export default function GossipContent(props) {
     const [selectCommentItem, setSelectCommentItem] = useState(null)
     //编辑器ref
     const tinymce = useRef(null)
+    const gossipFunctionMenuRef = useRef(null)
+    const [gossipFunctionMenuStatus, setGossipFunctionMenuStatus] = useState(false)
     const [editorSendToServerStatus, setEditorSendToServerStatus] = useState(false)
     //function
     const commentData = useCallback((instance) => {
@@ -52,6 +59,22 @@ export default function GossipContent(props) {
         commentData(requestInstance)
     }, [commentData, requestInstance, props.foldStatus])
 
+
+    useEffect(() => {
+        $(renderContentRef.current).find('img').on('click', (element) => {
+            let list = []
+            $(renderContentRef.current).find('img').each((index, e) => {
+                list.push({ mainUrl: $(e).attr('src'), index: index })
+            })
+            new ImageViewer({
+                images: list,
+                showThumbnails: false,
+                isZoomable: false,
+                currentSelected: list.findIndex(item => item.mainUrl === $(element.target).attr('src'))
+            })
+        })
+    }, [])
+
     return (
         <div className={style.gossip_box}>
             <header className={style.gossip_box_title}>
@@ -69,12 +92,40 @@ export default function GossipContent(props) {
                         <span></span>
                     </div>
                 </div>
-                <div className={style.right_function}>
-                    <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
-                    <i className='fas fa-ellipsis-v' />
-                </div>
+                {
+                    props.userInfo?.uid === props.data.author &&
+                    <div ref={gossipFunctionMenuRef} className={style.right_function} onClick={() => { setGossipFunctionMenuStatus(true) }}>
+                        <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
+                        <i className='fas fa-ellipsis-v' />
+                    </div>
+                }
+                <Menu 
+                    open={gossipFunctionMenuStatus}
+                    targetElement={gossipFunctionMenuRef.current}
+                    renderObject={[{ id: 0, title: '删除' }]}
+                    onClickItem={(e) => {
+                        switch(e) {
+                            case 0:
+                                let data = new FormData()
+                                data.append('gossipId', props.data.id)
+                                deleteGossip(data).then(resq => {
+                                    if(resq.code === 200) {
+                                        customTips.success(resq.message)
+                                        props.gossipDataGet(requestInstance)
+                                    } else {
+                                        customTips.error(resq.message)
+                                    }
+                                }).catch(err => {
+                                    customTips.error(err.message)
+                                })
+                            break
+                            default:
+                                break
+                        }
+                    }}
+                    onClose={() => { setGossipFunctionMenuStatus(false) }}/>
             </header>
-            <div className={`${style.gossip_render_content} ${renderHtml.render_html}`} dangerouslySetInnerHTML={{ __html: props.data.content}} />
+            <div ref={renderContentRef} className={`${style.gossip_render_content} ${renderHtml.render_html}`} dangerouslySetInnerHTML={{ __html: props.data.content}} />
             <div className={style.gossip_state}>
                 <span>{props.data.likes} 个喜欢</span>
                 <span>|</span>

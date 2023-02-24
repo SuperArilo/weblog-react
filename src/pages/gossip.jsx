@@ -66,6 +66,8 @@ export default function Gossip(props) {
                                                 <GossipContent
                                                     userInfo={props.userInfo} 
                                                     data={item}
+                                                    gossipDataGet={gossipDataGet}
+                                                    requestInstance={requestInstance}
                                                     foldStatus={selectGossipItem === item.id}
                                                     handleFold={id => {
                                                         setSelectGossipItem(selectGossipItem === id ? null:id)

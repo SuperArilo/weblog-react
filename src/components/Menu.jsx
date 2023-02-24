@@ -11,6 +11,7 @@ export default function AsukaMenu(props) {
         <Menu
             anchorEl={props.targetElement}
             open={props.open}
+            autoFocus={false}
             onClose={() => { props.onClose(false) }}>
             {
                 props.renderObject.map(item => {
@@ -20,7 +21,7 @@ export default function AsukaMenu(props) {
                             key={item.id}
                             onClick={() => { props.onClickItem(item.id) }}>
                             {
-                                item.iconClass === ''? '':<Icon iconClass={item.iconClass} />
+                                item.iconClass === '' || item.iconClass === undefined ? '':<Icon iconClass={item.iconClass} />
                             }
                             <span className={style.asuka_menu_span}>
                                 {item.title}

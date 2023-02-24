@@ -77,17 +77,30 @@ export default function User(props) {
     //ref
     const menuLineRef = useRef(null)
 
+    // useEffect(() => {
+    //     if(modeInstance.editorIndex === null) {
+    //         setModeInstance(current => ({
+    //             ...current,
+    //             instance: null,
+                
+    //         }))
+    //         console.log(111)
+    //     }
+    // }, [modeInstance.editorIndex])
+
     const queryProfiles = useCallback(params => {
         blogUserProfiles(params).then(resq => {
             if(resq.code === 200) {
                 setUserProfiles(resq.data)
-                dispatch({ type: 'userInfo/setAvatar', payload: resq.data.avatar })
+                if(resq.data !== null) {
+                    dispatch({ type: 'userInfo/setAvatar', payload: resq.data?.avatar })
+                }
             } else {
                 customTips.error(resq.message)
             }
         }).catch(err => {
-            console.log(err)
             customTips.error(err.message)
+            console.log(err)
         })
     }, [dispatch])
 
@@ -519,6 +532,8 @@ const RenderEditorFunctionView = ({modeInstance ,setModeInstance , userProfiles,
 }
 const UserSkeleton = () => {
     return (
-        <div className={style.user_skeleton}></div>
+        <div className={style.user_skeleton}>
+            
+        </div>
     )
 }

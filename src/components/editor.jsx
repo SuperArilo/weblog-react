@@ -43,7 +43,7 @@ export default class Tinymce extends React.Component {
             ],
             style_formats_merge: true,
             toolbar_mode: 'sliding',
-            content_style: 'body { font-size: 12pt }',
+            content_style: 'body { font-size: 10pt }',
             font_size_formats: '8pt 10pt 11pt 12pt 13pt 14pt 15pt 16pt 17pt 18pt 24pt 36pt 48pt',
             setup: (editor) => {
                 setTimeout(() => {
@@ -87,7 +87,11 @@ export default class Tinymce extends React.Component {
                             <div className={style.editor_bottom}>
                                 <div className={style.left_user_info}>
                                 </div>
-                                <AsukaButton text='提交' status={this.props.status} onClick={() => { this.props.getContent(this.state.modelValue) }}/>
+                                <AsukaButton 
+                                    text='提交'
+                                    status={this.props.status} onClick={() => {
+                                        this.props.getContent(this.state.modelValue)
+                                    }}/>
                             </div>
                         </div>
                     </>

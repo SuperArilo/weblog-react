@@ -57,23 +57,23 @@ const Comment = forwardRef((props, ref) => {
         })
     }, [])
     return (
-        <div className={style.comment_box} id={`${props.data.replyUser.replyUserId.toString() + props.data.commentId.toString()}`}>
+        <div className={style.comment_box} id={`${props.data?.replyUser?.replyUserId.toString() + props.data.commentId.toString()}`}>
             <div className={style.comment_top}>
                 <div className={style.comment_top_left}>
                     <Avatar
-                        src={props.data.replyUser.replyAvatar}
-                        title={props.data.replyUser.replyNickName}
-                        alt={props.data.replyUser.replyNickName}
-                        onClick={() => { navigate(`/user/${props.data.replyUser.replyUserId}`) }}/>
+                        src={props.data?.replyUser?.replyAvatar}
+                        title={props.data?.replyUser?.replyNickName}
+                        alt={props.data?.replyUser?.replyNickName}
+                        onClick={() => { navigate(`/user/${props.data?.replyUser?.replyUserId}`) }}/>
                     <div className={style.vistor_info}>
                         <div>
-                            <span>{props.data.replyUser.replyNickName}</span>
+                            <span>{props.data?.replyUser?.replyNickName}</span>
                             { props.userInfo ? <button 
                                                         className={style.relply_button} 
                                                         onClick={() => {
                                                             props.handleFold(props.data.commentId)
                                                         }} type="button">回复</button>:'' }
-                            { props.userInfo && props.data.replyUser.replyUserId === props.userInfo.uid ? <button className={style.delete_button} type="button" onClick={(event) => { popperChange(event) }}>删除</button>:'' }
+                            { props.userInfo && props.data?.replyUser?.replyUserId === props.userInfo.uid ? <button className={style.delete_button} type="button" onClick={(event) => { popperChange(event) }}>删除</button>:'' }
                         </div>
                         <span className={style.vistor_info_time}>{props.data.createTime}</span>
                     </div>
@@ -107,7 +107,7 @@ const Comment = forwardRef((props, ref) => {
                 <Collapse in={props.foldStatus} mountOnEnter unmountOnExit>
                     <Tinymce
                         userInfo={props.userInfo}
-                        placeholder={`${'回复'}${' @' + props.data.replyUser.replyNickName}`} 
+                        placeholder={`${'回复'}${' @' + props.data?.replyUser?.replyNickName}`} 
                         status={editorLoadingStatus} 
                         getContent={(content) => { 
                             if(content === null || content === undefined || content === '' || content === '<p></p>') {

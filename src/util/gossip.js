@@ -16,6 +16,14 @@ export const userCreateGossip = (query) => {
         data: query,
     })
 }
+//删除某条碎语
+export const deleteGossip = (query) => {
+    return request({
+        url: '/gossip/delete',
+        method: 'Delete',
+        data: query,
+    })
+}
 //喜欢某条碎语
 export const likeGossip = (query) => {
     return request({
