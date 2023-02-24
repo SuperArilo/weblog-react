@@ -2,6 +2,7 @@
 {
     display: flex;
     justify-content: center;
+    align-items: center;
     padding: 0.5rem 0;
     ul
     {
@@ -9,8 +10,8 @@
         .pagination_item_selected
         {
             color: rgb(65, 129, 225);
-            border-radius: 0.3rem;
-            box-shadow: 0 0 0.1rem rgba(0, 0, 0, 0.5);
+            border-bottom: solid 1px rgba(0, 0, 0, 0.4);
+            margin-top: 1px;
         }
         .pagination_item_selected_link
         {
@@ -18,10 +19,9 @@
         }
         .pagination_item
         {
-            min-width: 1.5rem;
-            margin-right: 0.3rem;
+            min-width: 1.2rem;
             cursor: pointer;
-            height: 1.8rem;
+            height: 1.6rem;
             display: flex;
             justify-content: center;
             align-items: center;

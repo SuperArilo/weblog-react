@@ -149,7 +149,6 @@
                     background-color: #f3f3f4;
                     height: 2.4rem;
                     border-radius: 0.3rem;
-                    border: none;
                     margin-top: 0.5rem;
                     transition: all 0.3s;
                     outline: none;
@@ -160,6 +159,28 @@
                 {
                     box-shadow: 0 0 0.3rem rgb(147, 182, 211);
                     border: solid 1px rgb(89, 164, 240);
+                }
+                .custom_email_style
+                {
+                    display: flex;
+                    align-items: center;
+                    input
+                    {
+                        flex: 1 0 1px;
+                    }
+                    button
+                    {
+                        margin-top: 0.5rem;
+                        margin-left: 0.5rem;
+                        width: 6rem;
+                        height: 2rem;
+                        color: #ec558c;
+                        background-color: #ffffff;
+                        border-radius: 0.3rem;
+                        overflow: hidden;
+                        transform: rotate(0deg);
+ 	                    -webkit-transform: rotate(0deg);
+                    }
                 }
             }
             .input_password .input_password_label
@@ -287,6 +308,8 @@
             {
                 padding: 0 1rem;
                 border-radius: 0.5rem;
+                transform: rotate(0deg);
+ 	            -webkit-transform: rotate(0deg);
                 overflow: hidden;
                 cursor: pointer;
                 margin-bottom: 0.5rem;
@@ -335,10 +358,12 @@
             .function_box
             {
                 height: 3rem;
-                padding: 0 1rem;
+                padding: 0.5rem;
                 display: flex;
                 align-items: center;
-                border-radius: 0.3rem;
+                border-radius: 1rem;
+                transform: rotate(0deg);
+ 	            -webkit-transform: rotate(0deg);
                 overflow: hidden;
                 cursor: pointer;
                 span
@@ -349,6 +374,21 @@
                 }
             }
         }
+    }
+}
+.rotate
+{
+    animation: rotate 3s linear infinite;
+    display: block;
+}
+@keyframes rotate {
+    from
+    {
+        transform: rotate(0deg);
+    }
+    to
+    {
+        transform: rotate(360deg);
     }
 }
 @media screen and (min-width:1080px)

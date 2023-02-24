@@ -8,7 +8,7 @@
         flex-wrap: nowrap;
         .public_sub_content:nth-child(1)
         {
-            flex: 1.8 0 1px;
+            flex: 1.7 0 1px;
         }
         .public_sub_content:nth-child(2)
         {
@@ -42,6 +42,8 @@
         {
             flex: 1 0 1px;
             border-radius: 1rem;
+            transform: rotate(0deg);
+ 	        -webkit-transform: rotate(0deg);
             overflow: hidden;
         }
         .sider_carousel
@@ -206,6 +208,10 @@
                         {
                             text-align: left;
                             overflow: hidden;
+                            display: -webkit-box;
+                            -webkit-line-clamp: 2;
+                            -webkit-box-orient: vertical;
+                            text-overflow: ellipsis;
                         }
                         .article_title
                         {
@@ -224,10 +230,6 @@
                             margin-top: 1rem;
                             font-size: 0.85rem;
                             letter-spacing: 0.04rem;
-                            display: -webkit-box;
-                            -webkit-line-clamp: 2;
-                            -webkit-box-orient: vertical;
-                            text-overflow: ellipsis;
                         }
                     }
                     .article_bottom_function
@@ -275,10 +277,6 @@
                 {
                     margin-bottom: 0;
                 }
-            }
-            .gossip_list
-            {
-                display: block;
             }
         }
     }
