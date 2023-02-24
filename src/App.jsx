@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import AsukaButton from './components/asukaButton'
 import { SwitchTransition, CSSTransition } from 'react-transition-group'
 import signStyle from './assets/scss/sign.module.scss'
@@ -7,6 +7,7 @@ import { Route, Routes, useLocation, useNavigate, Navigate  } from 'react-router
 import { useSelector, useDispatch } from 'react-redux'
 //axios
 import { blogLoginUser, blogRegisterUser } from './util/user'
+import { regiserMail } from './util/mail/mail'
 //组件
 import customTips from './util/notostack/customTips'
 import WaterWave from 'water-wave'
@@ -22,6 +23,8 @@ import Guestbook from './pages/Guestbook'
 import NotFound from './pages/NotFound'
 import User from './pages/User'
 import CreateGossipWindow from './components/CreateGossipWindow'
+import Notice from './pages/notice'
+import Icon from './components/Icon'
 //样式
 import './assets/scss/currencyTransition.scss'
 import './assets/css/iconfont.css'
@@ -67,6 +70,7 @@ const App = () => {
 				isMobileStatus ? 
 				<MobileHeaderNav
 					userInfo={userInfo}
+					setCreateGossipWindowStatus={setCreateGossipWindowStatus}
 					openLoginBox={(status) => {
 						setLoginBoxStatus(status)
 					}} />
@@ -87,6 +91,7 @@ const App = () => {
 							<Route path='/gossip' element={<Gossip userInfo={userInfo}/>} />
 							<Route path='/guestbook' element={<Guestbook />} />
 							<Route path='/user/:viewUid' element={<User />} />
+							<Route path='/notice' element={<Notice />} />
 							<Route path='/notfound' element={<NotFound /> } />
 							<Route path='/error' element={<NotFound /> } />
 							<Route path='*' element={<Navigate to='/notfound' />} />
@@ -225,8 +230,16 @@ const PCheaderNav = (props) => {
 				}
 			</ul>
 			<div className='right-some-function'>
-				{ props.userInfo === null ? <AsukaButton text='登录' onClick={() => { props.openLoginBox(true) }}/>:
+				{ props.userInfo === null ? 
+					<AsukaButton text='登录' onClick={() => { props.openLoginBox(true) }}/>
+					:
 					<div className='logged-box'>
+						<Icon
+							iconClass='notice'
+							width='2rem'
+							height='2rem'
+							fontSize='1.5rem'
+							onClick={() => { navigate('/notice') }}/>
 						<Avatar
 							src={props.userInfo.avatar}
 							title={props.userInfo.nickName}
@@ -306,7 +319,15 @@ const MobileHeaderNav = (props) => {
 	return (
 		<>
 			<nav className='mobile-header-nav'>
-				<div className='left-empty-div' />
+				<div className='left-mobile-bar'>
+					<Icon
+						width='2.5rem'
+						height='2.5rem'
+						fontSize='1.3rem'
+						iconClass='gossip'
+						onClick={() => { props.setCreateGossipWindowStatus(true) }}/>
+					<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
+				</div>
 				<span className='left-webside-icon'>Asukamis</span>
 				<div className='right-mobile-bar' onClick={() => { setDrawerStatus(true) }}>
 					<i className="fas fa-bars"/>
@@ -482,13 +503,13 @@ const LoginBox = (props) => {
 					{ userInfo !== null && !loginStatus ? <i className='fas fa-check' style={{ 'color': '#80e298' }} />:''}
 					<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
 				</button>
-				<span className={signStyle.other_login_tips}>其他登录方式</span>
+				{/* <span className={signStyle.other_login_tips}>其他登录方式</span>
 				<div className={signStyle.other_login_list}>
 					<i className="fab fa-qq"/>
 					<i className="fab fa-github"/>
 					<i className="fab fa-google"/>
 					<i className="fab fa-xbox"/>
-				</div>
+				</div> */}
 			</div>
 		</Slide>
 	)
@@ -496,11 +517,19 @@ const LoginBox = (props) => {
 const RegisterBox = (props) => {
 
 	const [isShowPassword, setIsShowPassword] = useState(false)
-	const [email, setEmail] = useState('')
-	const [password, setPassword] = useState('')
-	const [nickName, setNickName] = useState('')
 
-	const [requestStatus, setRequestStatus] = useState(false)
+	const [inputInstance, setInputInstance] = useState({
+		email: '',
+		password: '',
+		nickName: '',
+		verifyCode: ''
+	})
+	const [requestStatus, setRequestStatus] = useState({
+		registerStatus: false,
+		sendMailStatus: false,
+		countDown: 60
+	})
+	const intervalID = useRef(null)
 
 	return(
 		<Slide direction="up" in={props.status} mountOnEnter unmountOnExit>
@@ -525,9 +554,69 @@ const RegisterBox = (props) => {
 							<span>邮箱</span>
 							<span>*</span>
 						</div>
-						<input type="text" placeholder="请输入邮箱" onChange={e => { setEmail(e.target.value) }} />
+						<input type="text" placeholder="请输入邮箱" onChange={e => { setInputInstance({...inputInstance, email: e.target.value}) }} />
 						<div className={signStyle.input_tips_div}>
 							<span></span>
+						</div>
+					</label>
+					<label className={signStyle.input_item}>
+						<div className={signStyle.input_top_div}>
+							<span>验证码</span>
+							<span>*</span>
+						</div>
+						<div className={signStyle.custom_email_style}>
+							<input
+								type="text"
+								value={inputInstance.verifyCode}
+								placeholder="验证码"
+								onChange={e => {
+									setInputInstance({...inputInstance, verifyCode: e.target.value.replaceAll(' ', '')})
+								}} />
+							<button
+								type='button'
+								onClick={() => {
+									if(!requestStatus.sendMailStatus && requestStatus.countDown === 60) {
+										setRequestStatus({...requestStatus, sendMailStatus: true})
+										if(inputInstance.email === '' || inputInstance.email === null) {
+											customTips.info('邮箱不能为空哦')
+											return
+										}
+										let data = new FormData()
+										data.append('mail', inputInstance.email)
+										regiserMail(data).then(resq => {
+											if(resq.code === 200) {
+												customTips.success(resq.message)
+												setRequestStatus({...requestStatus, sendMailStatus: false})
+												intervalID.current = setInterval(() => {
+													if(requestStatus.countDown === 0) {
+														setRequestStatus({...requestStatus, countDown: 60})
+														clearInterval(intervalID.current)
+														intervalID.current = null
+														return
+													}
+													setRequestStatus({...requestStatus, countDown: requestStatus.countDown--})
+												}, 1000)
+											} else {
+												customTips.info(resq.message)
+											}
+										}).catch(err => {
+											setRequestStatus({...requestStatus, sendMailStatus: false})
+											customTips.error(err.message)
+										})
+									}
+									
+								}}>
+									{
+										(requestStatus.countDown === 60 && !requestStatus.sendMailStatus) && '获取验证码'
+									}
+									{
+										requestStatus.sendMailStatus && <i className={`${'asukamis loading'} ${signStyle.rotate}`} />
+									}
+									{
+										requestStatus.countDown < 60 && requestStatus.countDown
+									}
+									<WaterWave color='rgb(228, 177, 177)' duration={ 500 } />
+									</button>
 						</div>
 					</label>
 					<form className={signStyle.input_password}>
@@ -536,7 +625,14 @@ const RegisterBox = (props) => {
 							<span>*</span>
 						</div>
 						<div className={signStyle.input_password_label}>
-							<input type={isShowPassword ? 'text':'password'} maxLength="16" placeholder="请输入密码" autoComplete="off" onChange={e => { setPassword(e.target.value) }} />
+							<input
+								type={isShowPassword ? 'text':'password'}
+								maxLength="16"
+								placeholder="请输入密码"
+								autoComplete="off"
+								onChange={e => {
+									setInputInstance({...inputInstance, password: e.target.value})
+								}} />
 							<i className={`${'far'} ${signStyle.input_show_password} ${isShowPassword ? 'fa-eye-slash':'fa-eye'}`} onClick={() => { setIsShowPassword(!isShowPassword) }} />
 						</div>
 						<div className={signStyle.input_tips_div}>
@@ -548,7 +644,12 @@ const RegisterBox = (props) => {
 							<span>昵称</span>
 							<span>*</span>
 						</div>
-						<input type="text" placeholder="请输入昵称" onChange={e => { setNickName(e.target.value) }} />
+						<input
+							type="text"
+							placeholder="请输入昵称"
+							onChange={e => {
+								setInputInstance({...inputInstance, nickName: e.target.value})
+							}} />
 						<div className={signStyle.input_tips_div}>
 							<span></span>
 						</div>
@@ -559,32 +660,35 @@ const RegisterBox = (props) => {
 					title="注册"
 					className={`${signStyle.confirm_button} ${props.isMobile ? signStyle.confirm_button_mobile:signStyle.confirm_button_pc}`}
 					onClick={() => {
-						if(email === '' || password === '' || nickName === '') return customTips.info('信息没有填写完整哦 v(/▽＼)')
-						if(!requestStatus) {
-							setRequestStatus(true)
+						if(inputInstance.email === '' || inputInstance.password === '' || inputInstance.nickName === '' || inputInstance.verifyCode === '') return customTips.info('信息没有填写完整哦 v(/▽＼)')
+						if(!requestStatus.registerStatus) {
+							setRequestStatus({...requestStatus, registerStatus: true})
 							let data = new FormData()
-							data.append('email', email)
-							data.append('password', password)
-							data.append('nickName',nickName)
+							data.append('email', inputInstance.email)
+							data.append('password', inputInstance.password)
+							data.append('nickName', inputInstance.nickName)
+							data.append('verifyCode', inputInstance.verifyCode)
 							blogRegisterUser(data).then(resq => {
 								if(resq.code === 200) {
 									customTips.success(resq.message)
 									setTimeout(() => {
+										clearInterval(intervalID.current)
+										intervalID.current = null
 										props.openLoginBox(true)
 										props.closeBox(false)
 									}, 500)
 								} else {
-									customTips.error(resq.message)
+									customTips.info(resq.message)
 								}
-								setRequestStatus(false)
+								setRequestStatus({...requestStatus, registerStatus: false})
 							}).catch(err => {
-								setRequestStatus(false)
+								setRequestStatus({...requestStatus, registerStatus: false})
 								customTips.error(err.message)
 							})
 						}
 					}}>
 					{
-						requestStatus ? <i className='fas fa-circle-notch fa-spin' />:'注册'
+						requestStatus.registerStatus ? <i className='fas fa-circle-notch fa-spin' />:'注册'
 					}
 					<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
 				</button>
