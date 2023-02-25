@@ -75,6 +75,7 @@
         background-color: #ffffff;
         display: flex;
         flex-direction: column;
+        user-select: none;
         .top_tips
         {
             width: 100%;
@@ -256,6 +257,7 @@
     .slide_box
     {
         position: relative;
+        user-select: none;
         z-index: 101;
         height: 100%;
         background-color: rgb(26, 29, 83);
@@ -270,6 +272,15 @@
             padding: 0 1.5rem;
             i
             {
+                width: 2.5rem;
+                height: 2.5rem;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border-radius: 50%;
+                overflow: hidden;
+                transform: rotate(0deg);
+ 	            -webkit-transform: rotate(0deg);
                 font-size: 1.2rem;
                 color: #ffffff;
                 cursor: pointer;

@@ -345,7 +345,14 @@ const MobileHeaderNav = (props) => {
 					<Slide direction="right" in={drawerStatus} mountOnEnter unmountOnExit>
 						<div className={signStyle.slide_box}>
 							<header className={signStyle.header_function}>
-								<i className='fas fa-bell' />
+								<i className='fas fa-bell' onClick={() => {
+										navigate('/notice')
+										setTimeout(() => {
+											setDrawerStatus(false)
+										}, 500)
+									}}>
+									<WaterWave color="rgba(255, 255, 255, 0.7)" duration={ 500 } />
+								</i>
 							</header>
 							<div className={signStyle.user_info_box}>
 								<img src={props.userInfo ? props.userInfo.avatar:''} alt={props.userInfo ? props.userInfo.nickName:''} title={props.userInfo ? props.userInfo.nickName:''} />
