@@ -46,24 +46,27 @@
         }
         .notice_function
         {
-            background-color: rgba(255, 255, 255, 0.5);
-            .mention_me
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            .notice_data_list
             {
-                background-color: #ffffffd5;
-                display: flex;
-                flex-direction: column;
-                align-items: flex-end;
-                .notice_data_list
+                width: 100%;
+                min-height: 11rem;
+                max-height: 18rem;
+                overflow-y: overlay;
+                li
                 {
-                    width: 100%;
-                    li
+                    .notice_title
                     {
-                        height: 2.5rem;
+                        height: inherit;
                         display: flex;
                         align-items: center;
-                        transition: background-color 0.25s;
                         span
                         {
+                            height: 2.5rem;
+                            line-height: 2.5rem;
                             padding: 0 1rem;
                             color: #444;
                             flex: 1 0 1px;
@@ -75,46 +78,72 @@
                             -webkit-line-clamp: 1;
                             -webkit-box-orient: vertical;
                             text-overflow: ellipsis;
+                            cursor: pointer;
                         }
                     }
-                    
-                }
-                .mention_me li:hover
-                {
-                    background-color: rgb(245, 245, 245);
-                }
-                .notice_data_list li i , .bottom_function i
-                {
-                    padding: 0 1rem;
-                    line-height: 0.2rem;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    cursor: pointer;
-                    font-size: 0.9rem;
-                }
-                .bottom_function
-                {
-                    width: 100%;
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    height: 2.5rem;
-                    padding-right: 1rem;
-                    border-top: solid 1px rgba(0, 0, 0, 0.1);
-                    div
+                    .notice_content
                     {
-                        height: inherit;
-                        display: flex;
-                        align-items: center;
-                        button
-                        {
-                            margin-left: 1rem;
-                        }
+                        padding: 0.5rem 2rem;
+                        height: 10rem;
+                    }
+                }
+                
+            }
+            .notice_data_list li .notice_title i , .bottom_function i
+            {
+                padding: 0 1rem;
+                line-height: 0.2rem;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+                font-size: 0.9rem;
+            }
+            .notice_data_empty , .notice_data_skeleton
+            {
+                width: 100%;
+                height: 13.5rem;
+            }
+            .notice_data_skeleton
+            {
+                padding: 0.5rem;
+            }
+            .notice_data_empty
+            {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 0.8rem;
+                color: #666;
+            }
+            .bottom_function
+            {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                height: 2.5rem;
+                padding-right: 1rem;
+                border-top: solid 1px rgba(0, 0, 0, 0.1);
+                .select_all 
+                {
+                    span
+                    {
+                        font-size: 0.8rem;
+                        color: #444;
+                    }
+                }
+                div
+                {
+                    height: inherit;
+                    display: flex;
+                    align-items: center;
+                    button
+                    {
+                        margin-left: 1rem;
                     }
                 }
             }
-            
         }
     }
 }
