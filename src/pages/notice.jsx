@@ -2,12 +2,14 @@ import React, { useState, useEffect, useCallback, useRef } from 'react'
 //样式
 import style from '../assets/scss/notice.module.scss'
 import renderHtml from '../assets/scss/renderHtml.module.scss'
+import '../assets/scss/currencyTransition.scss'
 //方法
 import $ from 'jquery'
-import { noticeGet } from '../util/notice'
+import { noticeGet, readNotice } from '../util/notice'
 import customTips from '../util/notostack/customTips'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate  } from 'react-router-dom'
+import { TransitionGroup, SwitchTransition, CSSTransition } from 'react-transition-group'
 //组件
 import WaterWave from 'water-wave'
 import Pagination from '../components/Pagination'
@@ -67,19 +69,19 @@ export default function Notice(props) {
         list: null
     })
 
+    const [selectNoticeList, setSelectNoticeList] = useState([])
+
     const noticeListGet = useCallback(instance => {
         noticeGet(instance).then(resq => {
             if(resq.code === 200) {
-                setTimeout(() => {
-                    setNoticeInstance(current => ({
-                        ...current,
-                        list: resq.data.list,
-                        pages: resq.data.pages,
-                        total: resq.data.total,
-                        current: resq.data.current,
-                        size: resq.data.size
-                    }))
-                }, 1000)
+                setNoticeInstance(current => ({
+                    ...current,
+                    list: resq.data.list,
+                    pages: resq.data.pages,
+                    total: resq.data.total,
+                    current: resq.data.current,
+                    size: resq.data.size
+                }))
             }
         }).catch(err => {
             customTips.error(err.message)
@@ -104,6 +106,7 @@ export default function Notice(props) {
         $(lineRef.current).css({ 'left': navMenuInstance.selectIndex * $(lineRef.current).width() })
     }, [navMenuInstance.selectIndex])
 
+    
     return (
         <div className={style.notice_box}>
             <main className={style.notice_container}>
@@ -144,6 +147,8 @@ export default function Notice(props) {
                     <div ref={lineRef} className={style.scroll_line}></div>
                 </nav>
                 <div className={style.notice_function}>
+                <SwitchTransition mode='out-in'>
+                <CSSTransition key={noticeInstance.list === null} timeout={300} classNames="change" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
                     {
                         noticeInstance.list === null ?
                         <div className={style.notice_data_skeleton}>
@@ -167,7 +172,17 @@ export default function Notice(props) {
                                             return (
                                                 <li key={item.noticeId}>
                                                     <div className={style.notice_title}>
-                                                        <i className='far fa-square' />
+                                                        <i className={`${'far'} ${selectNoticeList.indexOf(item.noticeId) === -1 ? 'fa-square':'far fa-check-square'}`}
+                                                            onClick={() => {
+                                                                let copy = [...selectNoticeList]
+                                                                let index = copy.indexOf(item.noticeId)
+                                                                if(index === -1) {
+                                                                    copy.push(item.noticeId)
+                                                                } else {
+                                                                    copy.splice(index, 1)
+                                                                }
+                                                                setSelectNoticeList(copy)
+                                                            }}/>
                                                         <span onClick={() => { setNavMenuInstance({...navMenuInstance, selectItemIndex: navMenuInstance.selectItemIndex === item.noticeId ? null:item.noticeId}) }}>{item.title}</span>
                                                         <i className='fas fa-trash' />
                                                     </div>
@@ -183,7 +198,21 @@ export default function Notice(props) {
                                 </ul>
                                 <div className={style.bottom_function}>
                                     <div className={style.select_all}>
-                                        <i className='far fa-square' />
+                                        <i 
+                                            className={`${'far'} ${selectNoticeList.length === 0 ? 'fa-square':''} ${selectNoticeList.length >= 1 && selectNoticeList.length < noticeInstance.list.length ? 'fa-minus-square':''} ${selectNoticeList.length === noticeInstance.list.length ? 'fa-check-square':''}`} 
+                                            onClick={() => {
+                                                if(selectNoticeList.length === noticeInstance.list.length) {
+                                                    setSelectNoticeList([])
+                                                    return
+                                                }
+                                                let [...list] = selectNoticeList
+                                                noticeInstance.list.forEach(key => {
+                                                    if(selectNoticeList.indexOf(key.noticeId) === -1) {
+                                                        list.push(key.noticeId)
+                                                    }
+                                                })
+                                                setSelectNoticeList(list)
+                                            }}/>
                                         <span>全选</span>
                                     </div>
                                     <div>
@@ -197,13 +226,31 @@ export default function Notice(props) {
                                         <AsukaButton 
                                             text='删除'
                                             class='read'
-                                            size='small'/>
+                                            size='small'
+                                            onClick={() => {
+                                                let data = new FormData()
+                                                data.append('noticeIds', selectNoticeList)
+                                                readNotice(data).then(resq => {
+                                                    if(resq.code === 200)  {
+                                                        noticeListGet(requestInstance)
+                                                        customTips.success(resq.message)
+                                                        setSelectNoticeList([])
+                                                    } else {
+                                                        customTips.error(resq.message)
+                                                    }
+                                                }).catch(err => {
+                                                    customTips.error(err.message)
+                                                })
+                                            }}/>
                                     </div>
                                 </div>
                                 </>
                             }
                         </>
                     }
+                </CSSTransition>
+                </SwitchTransition>
+                    
                     
                 </div>
             </main>

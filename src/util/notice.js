@@ -7,3 +7,10 @@ export const noticeGet = (params) => {
         params: params
     })
 }
+export const readNotice = (query) => {
+    return request({
+        url: '/notice/read',
+        method: 'post',
+        data: query
+    })
+}
