@@ -52,53 +52,60 @@ export default function Gossip(props) {
     }, [requestInstance, gossipDataGet])
     return (
         <div className={style.gossip_page} style={{ paddingTop: requestInstance.viewUid ? null:'1rem' }}>
-            {
-                gossipObject.list === null ? <GossipSkeleton />:
-                <SwitchTransition mode='out-in'>
-                    <CSSTransition key={gossipObject.list.length === 0} classNames='change' timeout={300} nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
-                        {
-                            gossipObject.list.length === 0 ? <span className={style.gossip_empty}>TA还没有写过碎语</span>:
-                            <TransitionGroup>
-                                {
-                                    gossipObject.list.map(item => {
-                                        return (
-                                            <Collapse key={item.id}>
-                                                <GossipContent
-                                                    userInfo={props.userInfo} 
-                                                    data={item}
-                                                    gossipDataGet={gossipDataGet}
-                                                    requestInstance={requestInstance}
-                                                    foldStatus={selectGossipItem === item.id}
-                                                    handleFold={id => {
-                                                        setSelectGossipItem(selectGossipItem === id ? null:id)
-                                                    }}
-                                                    handleLike={(gossipId) => {
-                                                        let data = new FormData()
-                                                        data.append('gossipId', gossipId)
-                                                        likeGossip(data).then(resq => {
-                                                            if(resq.code === 200) {
-                                                                customTips.success(resq.message)
-                                                                let [...temp] = gossipObject.list
-                                                                let index = temp.findIndex(item => item.id === gossipId)
-                                                                temp[index].isLike = resq.data.status
-                                                                temp[index].likes = resq.data.likes
-                                                                setGossipObject({...gossipObject, list: temp})
-                                                            } else {
-                                                                customTips.error(reqs.message)
-                                                            }
-                                                        }).catch(err => {
-                                                            customTips.error(err.message)
-                                                        })
-                                                    }}/>
-                                            </Collapse>
-                                        )
-                                    })
-                                }
-                            </TransitionGroup>
-                        }
-                    </CSSTransition>
-                </SwitchTransition>
-            }
+            <SwitchTransition mode='out-in'>
+                <CSSTransition key={gossipObject.list === null} classNames='change' timeout={300} nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
+                    {
+                        gossipObject.list === null ?
+                        <GossipSkeleton />
+                        :
+                        <>
+                            {
+                                gossipObject.list.length === 0 ? <span className={style.gossip_empty}>TA还没有写过碎语</span>:
+                                <TransitionGroup>
+                                    {
+                                        gossipObject.list.map(item => {
+                                            return (
+                                                <Collapse key={item.id}>
+                                                    <GossipContent
+                                                        userInfo={props.userInfo} 
+                                                        data={item}
+                                                        gossipDataGet={gossipDataGet}
+                                                        requestInstance={requestInstance}
+                                                        foldStatus={selectGossipItem === item.id}
+                                                        handleFold={id => {
+                                                            setSelectGossipItem(selectGossipItem === id ? null:id)
+                                                        }}
+                                                        handleLike={(gossipId) => {
+                                                            let data = new FormData()
+                                                            data.append('gossipId', gossipId)
+                                                            likeGossip(data).then(resq => {
+                                                                if(resq.code === 200) {
+                                                                    customTips.success(resq.message)
+                                                                    let [...temp] = gossipObject.list
+                                                                    let index = temp.findIndex(item => item.id === gossipId)
+                                                                    temp[index].like = resq.data.status
+                                                                    temp[index].likes = resq.data.likes
+                                                                    setGossipObject({...gossipObject, list: temp})
+                                                                } else {
+                                                                    customTips.error(reqs.message)
+                                                                }
+                                                            }).catch(err => {
+                                                                customTips.error(err.message)
+                                                            })
+                                                        }}
+                                                        handleGossipList={() => {
+                                                            gossipData(gossipRequestInstance)
+                                                        }}/>
+                                                </Collapse>
+                                            )
+                                        })
+                                    }
+                                </TransitionGroup>
+                            }
+                        </>
+                    }
+                </CSSTransition>
+            </SwitchTransition>
         </div>
     )
 }

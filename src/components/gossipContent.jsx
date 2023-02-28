@@ -87,11 +87,11 @@ export default function GossipContent(props) {
                         src={props.data.avatar}
                         onClick={() => { navigate(`/user/${props.data.author}`) }}/>
                     <div className={style.info_content}>
-                        <div>
+                        <div className={style.info_about_user}>
                             <span>{props.data.nickName}</span>
                             <span>{props.data.createTimeFormat}</span>
                         </div>
-                        <span></span>
+                        <span className={style.info_autograph}></span>
                     </div>
                 </div>
                 {
@@ -113,7 +113,7 @@ export default function GossipContent(props) {
                                 deleteGossip(data).then(resq => {
                                     if(resq.code === 200) {
                                         customTips.success(resq.message)
-                                        props.gossipDataGet(requestInstance)
+                                        props.handleGossipList()
                                     } else {
                                         customTips.error(resq.message)
                                     }
@@ -137,7 +137,8 @@ export default function GossipContent(props) {
                 <button 
                     type='button' 
                     className={`${props.data.like ? style.gossip_liked:''}`} 
-                    onClick={() => { props.handleLike(props.data.id)
+                    onClick={() => {
+                        props.handleLike(props.data.id)
                     }}>
                     <i className='fas fa-heart' />
                     喜欢
