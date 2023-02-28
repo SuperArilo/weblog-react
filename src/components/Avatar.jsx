@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import types from 'prop-types'
 //样式
 import style from '../assets/scss/components/avatar.module.scss'
 export default class Avatar extends React.Component {
@@ -12,7 +11,20 @@ export default class Avatar extends React.Component {
     }
     render() {
         return (
-            <img style={{'width': this.props.width, 'height': this.props.height}} onClick={this.props.onClick} className={style.avatar} src={this.props.src} title={this.props.title} alt={this.props.alt} />
+            <img
+                style={
+                    {
+                        'width': this.props.width,
+                        'height': this.props.height,
+                        'minHeight': this.props.height,
+                        'minWidth': this.props.width
+                    }
+                }
+                onClick={this.props.onClick}
+                className={style.avatar}
+                src={this.props.src}
+                title={this.props.title}
+                alt={this.props.alt}/>
         )
     }
 }

@@ -18,21 +18,34 @@
             .info_content
             {
                 margin-left: 0.6rem;
+                max-width: 10rem;
                 height: inherit;
                 display: flex;
                 flex-direction: column;
-                justify-content: space-around;  
+                justify-content: space-around;
+                .info_about_user
+                {
+                    white-space: nowrap;
+                    span:nth-child(1)
+                    {
+                        font-weight: bold;
+                        font-size: 0.85rem;
+                    }
+                    span:nth-child(2)
+                    {
+                        font-size: 0.7rem;
+                        margin-left: 0.5rem;
+                        color: rgba(0, 0, 0, 0.6);
+                    }
+                }
             }
-            .info_content div span:nth-child(1)
+            .info_autograph
             {
-                font-weight: bold;
-                font-size: 0.85rem;
-            }
-            .info_content div span:nth-child(2)
-            {
-                font-size: 0.7rem;
-                margin-left: 0.5rem;
-                color: rgba(0, 0, 0, 0.6);
+                font-size: 0.76rem;
+                color: #777777;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
             }
         }
         .right_function
