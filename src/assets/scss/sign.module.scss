@@ -94,6 +94,7 @@
                 height: 1.8rem;
                 color: #ec558c;
                 font-size: 0.86rem;
+                white-space: nowrap;
             }
         }
         .top_tips_line
@@ -243,6 +244,8 @@
         color: rgb(111, 111, 111);
         overflow: hidden;
         border-radius: 0.5rem;
+        transform: rotate(0);
+        -webkit-transform: rotate(0);
         i
         {
             width: inherit;
