@@ -170,6 +170,10 @@ export default function IndexPage(props) {
                                                             let data = new FormData()
                                                             data.append('articleId', articleId)
                                                             increaseArticleLike(data).then(resq => {
+                                                                if(props.userInfo === null) {
+                                                                    customTips.success('你需要登录哦 (￣y▽,￣)╭ ')
+                                                                    return
+                                                                }
                                                                 if(resq.code === 200) {
                                                                     customTips.success(resq.message)
                                                                     let [...temp] = articleObject.list
@@ -214,6 +218,10 @@ export default function IndexPage(props) {
                                                         foldStatus={selectGossipItem === item.id}
                                                         handleFold={id => { setSelectGossipItem(selectGossipItem === id ? null:id) }}
                                                         handleLike={(gossipId) => {
+                                                            if(props.userInfo === null) {
+                                                                customTips.success('你需要登录哦 (￣y▽,￣)╭ ')
+                                                                return
+                                                            }
                                                             let data = new FormData()
                                                             data.append('gossipId', gossipId)
                                                             likeGossip(data).then(resq => {
