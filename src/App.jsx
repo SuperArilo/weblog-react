@@ -20,6 +20,7 @@ import $ from 'jquery'
 import Avatar from './components/Avatar'
 import About from './components/About'
 import Guestbook from './pages/Guestbook'
+import Links from './pages/Links'
 import NotFound from './pages/NotFound'
 import User from './pages/User'
 import CreateGossipWindow from './components/CreateGossipWindow'
@@ -92,6 +93,7 @@ const App = () => {
 							<Route path='/guestbook' element={<Guestbook />} />
 							<Route path='/user/:viewUid' element={<User />} />
 							<Route path='/notice' element={<Notice />} />
+							<Route path='/links' element={<Links />} />
 							<Route path='/notfound' element={<NotFound /> } />
 							<Route path='/error' element={<NotFound /> } />
 							<Route path='*' element={<Navigate to='/notfound' />} />
@@ -320,13 +322,18 @@ const MobileHeaderNav = (props) => {
 		<>
 			<nav className='mobile-header-nav'>
 				<div className='left-mobile-bar'>
-					<Icon
-						width='2.5rem'
-						height='2.5rem'
-						fontSize='1.3rem'
-						iconClass='gossip'
-						onClick={() => { props.setCreateGossipWindowStatus(true) }}/>
-					<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
+					{
+						props.userInfo !== null &&
+						<>
+							<Icon
+								width='2.5rem'
+								height='2.5rem'
+								fontSize='1.3rem'
+								iconClass='gossip'
+								onClick={() => { props.setCreateGossipWindowStatus(true) }}/>
+							<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
+						</>
+					}
 				</div>
 				<span className='left-webside-icon'>Asukamis</span>
 				<div className='right-mobile-bar' onClick={() => { setDrawerStatus(true) }}>

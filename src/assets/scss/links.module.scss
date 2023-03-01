@@ -1,0 +1,175 @@
+.link_page
+{
+    margin: 0 auto;
+    max-width: 668px;
+    .apply_content
+    {
+        display: flex;
+        flex-direction: column;
+        .function_title
+        {
+            color: #ef5350;
+        }
+        .apply_html , .apply_info
+        {
+            background-color: #ffffff;
+            overflow: hidden;
+            transform: rotate(0);
+        }
+        .apply_html
+        {
+            padding: 0.5rem;
+            border-radius: 0.3rem 0.3rem 0 0;
+        }
+        .apply_info
+        {
+            border-radius: 0 0 0.3rem 0.3rem;
+            border-top: solid 1px #0477be25;
+            .apply_input_list
+            {
+                display: grid;
+                padding: 0.5rem 1rem;
+                grid-row-gap: 1rem;
+                grid-column-gap: 1rem;
+                .input_item
+                {
+                    display: flex;
+                    justify-content: flex-end;
+                    align-items: center;
+                    label
+                    {
+                        font-size: 0.82rem;
+                    }
+                }
+            }
+        }
+    }
+    .apply_content , .friends_content
+    {
+        .function_title
+        {
+            height: 2rem;
+            text-align: left;
+            line-height: 2rem;
+            font-size: 0.8rem;
+        }
+    }
+    .friends_content
+    {
+        display: flex;
+        flex-direction: column;
+        .function_title
+        {
+            color: #ffffff;
+        }
+        .friends_list
+        {
+            display: grid;
+            grid-row-gap: 1rem;
+            grid-column-gap: 1rem;
+            li
+            {
+                padding: 0.5rem;
+                border-radius: 0.3rem;
+                overflow: hidden;
+                transform: rotate(0);
+                background-color: #ffffff;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                .friends_info
+                {
+                    flex: 1 0 1px;
+                    margin-left: 1rem;
+                    min-width: 0;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    .friends_name
+                    {
+                        color: #0478be;
+                        min-width: 0;
+                        height: 1.6rem;
+                        line-height: 1.6rem;
+                        font-size: 0.86rem;
+                        font-weight: bold;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        white-space: nowrap;
+                    }
+                    .friends_describe
+                    {
+                        font-size: 0.7rem;
+                        margin: 0;
+                        margin-top: 0.3rem;
+                        display: -webkit-box;
+                        -webkit-line-clamp: 2;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        -webkit-box-orient:vertical;
+                    }
+                }
+            }
+        }
+    }
+}
+@media screen and (min-width:1400px)
+{
+    .link_page
+    {
+        .apply_content .apply_info .apply_input_list , .friends_content .friends_list
+        {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+}
+@media screen and (max-width:1400px) and (min-width:1200px)
+{
+    .link_page
+    {
+        .apply_content .apply_info .apply_input_list , .friends_content .friends_list
+        {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+}
+@media screen and (max-width:1200px) and (min-width:936px)
+{
+    .link_page
+    {
+        .apply_content .apply_info .apply_input_list , .friends_content .friends_list
+        {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+}
+@media screen and (max-width:936px) and (min-width:767px)
+{
+    .link_page
+    {
+        .apply_content .apply_info .apply_input_list , .friends_content .friends_list
+        {
+            grid-template-columns: 1fr;
+        }
+    }
+}
+@media screen and (max-width:767px) and (min-width:676px)
+{
+    .link_page
+    {
+        .apply_content .apply_info .apply_input_list , .friends_content .friends_list
+        {
+            grid-template-columns: 1fr;
+        }
+    }
+}
+@media screen and (max-width:676px)
+{
+    .link_page
+    {
+        .apply_content .apply_info .apply_input_list , .friends_content .friends_list
+        {
+            grid-template-columns: 1fr;
+        }
+    }
+}
