@@ -76,6 +76,10 @@ export default function Gossip(props) {
                                                             setSelectGossipItem(selectGossipItem === id ? null:id)
                                                         }}
                                                         handleLike={(gossipId) => {
+                                                            if(props.userInfo === null) {
+                                                                customTips.success('你需要登录哦 (￣y▽,￣)╭ ')
+                                                                return
+                                                            }
                                                             let data = new FormData()
                                                             data.append('gossipId', gossipId)
                                                             likeGossip(data).then(resq => {

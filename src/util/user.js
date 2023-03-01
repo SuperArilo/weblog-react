@@ -1,4 +1,5 @@
 import request from '../util/axios'
+import Qs from 'query-string'
 
 export const blogLoginUser = (query) => {
     return request({
@@ -24,14 +25,14 @@ export const blogUserProfilesModify = (query) => {
     return request({
         url: '/user/profiles/modify',
         method: 'put',
-        data: parseFormData(query),
+        data: Qs.stringify(query),
     })
 }
-const parseFormData = (obj) => {
-    let data = new FormData()
-    Object.keys(obj).map(key => {
-        data.append(key, obj[key])
-        return null
-    })
-    return data
-}
+// const parseFormData = (obj) => {
+//     let data = new FormData()
+//     Object.keys(obj).map(key => {
+//         data.append(key, obj[key])
+//         return null
+//     })
+//     return data
+// }
