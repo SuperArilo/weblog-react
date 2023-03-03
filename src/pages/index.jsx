@@ -304,7 +304,7 @@ const Article = (props) => {
                         </div>
                         <div>
                             <i className="fas fa-comment-alt"/>
-                            <span>{props.item.commentTotal}</span>
+                            <span>{props.item.comments}</span>
                             <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
                         </div>
                     </div>

@@ -91,7 +91,7 @@ export default function GossipContent(props) {
                             <span>{props.data.nickName}</span>
                             <span>{props.data.createTimeFormat}</span>
                         </div>
-                        <span className={style.info_autograph}></span>
+                        <span className={style.info_autograph}>{props.data.categoryName}</span>
                     </div>
                 </div>
                 {

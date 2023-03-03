@@ -531,6 +531,10 @@ const LoginBox = (props) => {
 const RegisterBox = (props) => {
 
 	const [isShowPassword, setIsShowPassword] = useState(false)
+	const [againPassword, setAgainPassword] = useState({
+		show: false,
+		content: ''
+	})
 
 	const [inputInstance, setInputInstance] = useState({
 		email: '',
@@ -593,6 +597,7 @@ const RegisterBox = (props) => {
 										setRequestStatus({...requestStatus, sendMailStatus: true})
 										if(inputInstance.email === '' || inputInstance.email === null) {
 											customTips.info('邮箱不能为空哦')
+											setRequestStatus({...requestStatus, sendMailStatus: false})
 											return
 										}
 										let data = new FormData()
@@ -610,6 +615,8 @@ const RegisterBox = (props) => {
 													}
 													setRequestStatus({...requestStatus, countDown: requestStatus.countDown--})
 												}, 1000)
+											} else if(resq.code === 0) {
+												customTips.info(resq.message)
 											} else {
 												customTips.info(resq.message)
 											}
@@ -653,6 +660,26 @@ const RegisterBox = (props) => {
 							<span></span>
 						</div>
 					</form>
+					<form className={signStyle.input_password}>
+						<div className={signStyle.input_top_div}>
+							<span>确认</span>
+							<span>*</span>
+						</div>
+						<div className={signStyle.input_password_label}>
+							<input
+								type={againPassword.show ? 'text':'password'}
+								maxLength="16"
+								placeholder="请输入确认密码"
+								autoComplete="off"
+								onChange={e => {
+									setAgainPassword({...againPassword, content: e.target.value})
+								}} />
+							<i className={`${'far'} ${signStyle.input_show_password} ${againPassword.show ? 'fa-eye-slash':'fa-eye'}`} onClick={() => { setAgainPassword({...againPassword, show: !againPassword.show}) }} />
+						</div>
+						<div className={signStyle.input_tips_div}>
+							<span></span>
+						</div>
+					</form>
 					<label className={signStyle.input_item}>
 						<div className={signStyle.input_top_div}>
 							<span>昵称</span>
@@ -675,6 +702,10 @@ const RegisterBox = (props) => {
 					className={`${signStyle.confirm_button} ${props.isMobile ? signStyle.confirm_button_mobile:signStyle.confirm_button_pc}`}
 					onClick={() => {
 						if(inputInstance.email === '' || inputInstance.password === '' || inputInstance.nickName === '' || inputInstance.verifyCode === '') return customTips.info('信息没有填写完整哦 v(/▽＼)')
+						if(inputInstance.password !== againPassword.content) {
+							customTips.info('两次输入的密码不一致，请检查')
+							return
+						}
 						if(!requestStatus.registerStatus) {
 							setRequestStatus({...requestStatus, registerStatus: true})
 							let data = new FormData()
@@ -691,8 +722,10 @@ const RegisterBox = (props) => {
 										props.openLoginBox(true)
 										props.closeBox(false)
 									}, 500)
-								} else {
+								} else if(resq.code === 0) {
 									customTips.info(resq.message)
+								} else {
+									customTips.error(resq.message)
 								}
 								setRequestStatus({...requestStatus, registerStatus: false})
 							}).catch(err => {

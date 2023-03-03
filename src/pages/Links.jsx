@@ -61,11 +61,11 @@ export default function Links(props) {
 
     return (
         <div className={style.link_page}>
-            <div className={style.apply_content}>
-                <p className={style.function_title}>申请规则</p>
-                <div className={`${style.apply_html} ${renderHtml.render_html}`} dangerouslySetInnerHTML={{ __html: tempContent }}></div>
-                {
-                    userInfo !== null &&
+            {
+                userInfo !== null &&
+                <div className={style.apply_content}>
+                    <p className={style.function_title}>申请规则</p>
+                    <div className={`${style.apply_html} ${renderHtml.render_html}`} dangerouslySetInnerHTML={{ __html: tempContent }} />
                     <div className={style.apply_info}>
                         <div className={style.apply_input_list}>
                             <div className={style.input_item}>
@@ -129,8 +129,8 @@ export default function Links(props) {
                             </div>
                         </div>
                     </div>
-                }
-            </div>
+                </div>
+            }
             <div className={style.friends_content}>
                 <p className={style.function_title}>朋友们 (默认按添加时间排序)</p>
                 <ul className={style.friends_list}>
