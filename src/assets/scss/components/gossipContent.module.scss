@@ -19,6 +19,7 @@
             {
                 margin-left: 0.6rem;
                 max-width: 10rem;
+                padding: 0.2rem 0;
                 height: inherit;
                 display: flex;
                 flex-direction: column;
@@ -38,14 +39,15 @@
                         color: rgba(0, 0, 0, 0.6);
                     }
                 }
-            }
-            .info_autograph
-            {
-                font-size: 0.76rem;
-                color: #777777;
-                white-space: nowrap;
-                text-overflow: ellipsis;
-                overflow: hidden;
+                .info_autograph
+                {
+                    font-size: 0.7rem;
+                    letter-spacing: 0.05rem;
+                    color: #777777;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                }
             }
         }
         .right_function
@@ -107,6 +109,8 @@
             font-size: 0.8rem;
             background-color: rgb(245, 245, 245);
             color: #777777;
+            overflow: hidden;
+            transform: rotate(0);
             i
             {
                 font-size: 1rem;
