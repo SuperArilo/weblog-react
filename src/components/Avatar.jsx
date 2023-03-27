@@ -11,7 +11,8 @@ export default class Avatar extends React.Component {
     }
     render() {
         return (
-            <img
+            <div
+                className={style.avatar}
                 style={
                     {
                         'width': this.props.width,
@@ -19,12 +20,15 @@ export default class Avatar extends React.Component {
                         'minHeight': this.props.height,
                         'minWidth': this.props.width
                     }
-                }
-                onClick={this.props.onClick}
-                className={style.avatar}
-                src={this.props.src}
-                title={this.props.title}
-                alt={this.props.alt}/>
+                }>
+                <img
+                    onClick={this.props.onClick}
+                    className={style.avatar}
+                    src={this.props.src}
+                    title={this.props.title}
+                    alt={this.props.alt}/>
+            </div>
+            
         )
     }
 }
