@@ -21,6 +21,7 @@ import Avatar from './components/Avatar'
 import About from './components/About'
 import Guestbook from './pages/Guestbook'
 import Links from './pages/Links'
+import Friends from './pages/Friends'
 import NotFound from './pages/NotFound'
 import User from './pages/User'
 import CreateGossipWindow from './components/CreateGossipWindow'
@@ -94,6 +95,7 @@ const App = () => {
 							<Route path='/user/:viewUid' element={<User />} />
 							<Route path='/notice' element={<Notice />} />
 							<Route path='/links' element={<Links />} />
+							<Route path='/friends' element={<Friends /> } />
 							<Route path='/notfound' element={<NotFound /> } />
 							<Route path='/error' element={<NotFound /> } />
 							<Route path='*' element={<Navigate to='/notfound' />} />
