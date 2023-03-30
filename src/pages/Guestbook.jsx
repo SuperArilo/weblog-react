@@ -80,31 +80,33 @@ export default function Guestbook() {
                     
                 }}/>
             <div className={style.guestbook_comment_list}>
-                {
-                    dataObject.list === null ? <GuestbookSkeleton />:
-                    <SwitchTransition mode='out-in'>
-                        <CSSTransition key={dataObject.list.length === 0} classNames='change' timeout={300} nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
-                            {
-                                dataObject.list.length === 0 ? <div className={style.empty_box}>当前没有留言，赶快来评论吧 ψ(｀∇´)ψ</div>:
-                                <TransitionGroup>
-                                    {
-                                        dataObject.list.map(item => {
-                                            return (
-                                                <Collapse key={item.guestbookId}>
-                                                    <GuestbookCommentItem
-                                                        dataListGet={dataListGet}
-                                                        requestInstance={requestInstance}
-                                                        userInfo={userInfo}
-                                                        item={item}/>
-                                                </Collapse>
-                                            )
-                                        })
-                                    }
-                                </TransitionGroup>
-                            }
-                        </CSSTransition>
-                    </SwitchTransition>
-                }
+                <SwitchTransition mode='out-in'>
+                    <CSSTransition key={dataObject.list === null} classNames='change' timeout={300} nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
+                        {
+                            dataObject.list === null ? <GuestbookSkeleton />:
+                            <>
+                                {
+                                    dataObject.list.length === 0 ? <div className={style.empty_box}>当前没有留言，赶快来评论吧 ψ(｀∇´)ψ</div>:
+                                    <TransitionGroup>
+                                        {
+                                            dataObject.list.map(item => {
+                                                return (
+                                                    <Collapse key={item.guestbookId}>
+                                                        <GuestbookCommentItem
+                                                            dataListGet={dataListGet}
+                                                            requestInstance={requestInstance}
+                                                            userInfo={userInfo}
+                                                            item={item}/>
+                                                    </Collapse>
+                                                )
+                                            })
+                                        }
+                                    </TransitionGroup>
+                                }
+                            </>
+                        }
+                    </CSSTransition>
+                </SwitchTransition>
             </div>
             {
                 dataObject.pages === 0 || dataObject.pages === 1 ? '':
@@ -181,7 +183,7 @@ const GuestbookCommentItem = (props) => {
 }
 const GuestbookSkeleton = () => {
     return (
-        <>
+        <div>
             <div className={style.guestbook_skeleton}>
                 <div className={style.guestbook_skeleton_top}>
                     <Skeleton variant="circular" width='2.5rem' height='2.5rem' />
@@ -190,7 +192,7 @@ const GuestbookSkeleton = () => {
                         <Skeleton variant="text" width='4rem' sx={{ fontSize: '1.25rem' }} />
                     </div>
                 </div>
-                <Skeleton variant="rounded" height='3rem' />
+                <Skeleton variant="rounded" height='3.4rem' />
             </div>
             <div className={style.guestbook_skeleton}>
                 <div className={style.guestbook_skeleton_top}>
@@ -200,7 +202,7 @@ const GuestbookSkeleton = () => {
                         <Skeleton variant="text" width='4rem' sx={{ fontSize: '1.25rem' }} />
                     </div>
                 </div>
-                <Skeleton variant="rounded" height='3rem' />
+                <Skeleton variant="rounded" height='3.4rem' />
             </div>
             <div className={style.guestbook_skeleton}>
                 <div className={style.guestbook_skeleton_top}>
@@ -210,8 +212,8 @@ const GuestbookSkeleton = () => {
                         <Skeleton variant="text" width='4rem' sx={{ fontSize: '1.25rem' }} />
                     </div>
                 </div>
-                <Skeleton variant="rounded" height='3rem' />
+                <Skeleton variant="rounded" height='3.4rem' />
             </div>
-        </>
+        </div>
     )
 }
