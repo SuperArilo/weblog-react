@@ -1,6 +1,6 @@
 .index_content
 {
-    width: 1080px;
+    max-width: 1080px;
     margin: 0 auto;
     .index_section
     {
@@ -129,20 +129,6 @@
             {
                 font-size: 2rem;
                 display: block;
-            }
-            .rotate
-            {
-                animation: rotate 3s linear infinite;
-            }
-            @keyframes rotate {
-                from
-                {
-                    transform: rotate(0deg);
-                }
-                to
-                {
-                    transform: rotate(360deg);
-                }
             }
         }
     }
