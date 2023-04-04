@@ -113,7 +113,7 @@ export default function GossipContent(props) {
                                 deleteGossip(data).then(resq => {
                                     if(resq.code === 200) {
                                         customTips.success(resq.message)
-                                        props.handleGossipList()
+                                        props.gossipDataGet()
                                     } else {
                                         customTips.error(resq.message)
                                     }
