@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react'
 //样式
 import style from '../assets/scss/components/gossipContent.module.scss'
 import renderHtml from '../assets/scss/renderHtml.module.scss'
+import '../assets/scss/currencyTransition.scss'
 //组件
 import Avatar from '../components/Avatar'
 import WaterWave from 'water-wave'
@@ -14,8 +15,7 @@ import customTips from '../util/notostack/customTips'
 import Pagination from './Pagination'
 import Menu from './Menu'
 //方法
-import ImageViewer from 'awesome-image-viewer'
-import $ from 'jquery'
+
 import { useNavigate } from 'react-router-dom'
 import { gossipCommentList, replyGossipComment, likeGossipComment, deleteGossipComment, deleteGossip } from '../util/gossip.js'
 export default function GossipContent(props) {
@@ -40,7 +40,7 @@ export default function GossipContent(props) {
     const tinymce = useRef(null)
     const commentRef = useRef(null)
     const gossipFunctionMenuRef = useRef(null)
-    
+
     const [gossipFunctionMenuStatus, setGossipFunctionMenuStatus] = useState(false)
     const [editorSendToServerStatus, setEditorSendToServerStatus] = useState(false)
     //function
@@ -62,20 +62,6 @@ export default function GossipContent(props) {
     }, [commentData, requestInstance, props.foldStatus])
 
 
-    useEffect(() => {
-        $(renderContentRef.current).find('img').on('click', (element) => {
-            let list = []
-            $(renderContentRef.current).find('img').each((index, e) => {
-                list.push({ mainUrl: $(e).attr('src'), index: index })
-            })
-            new ImageViewer({
-                images: list,
-                showThumbnails: false,
-                isZoomable: false,
-                currentSelected: list.findIndex(item => item.mainUrl === $(element.target).attr('src'))
-            })
-        })
-    }, [])
 
     return (
         <div className={style.gossip_box}>
@@ -187,101 +173,103 @@ export default function GossipContent(props) {
                             })
                         }
                     }}/>
-                {
-                    commentObject.list === null ? <CommentSkeleton />:
-                    <div className={style.gossip_comment_list}>
-                        <SwitchTransition mode='out-in'>
-                            <CSSTransition key={commentObject.list.length === 0} classNames='change' timeout={300} nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
-                                {
-                                    commentObject.list.length === 0 ? <div className={style.empty_box}>当前没有评论，赶快来评论吧 ψ(｀∇´)ψ</div>:
-                                    <TransitionGroup>
-                                        {
-                                            commentObject.list.map(item => {
-                                                return (
-                                                    <Collapse key={item.commentId}>
-                                                        <Comment
-                                                            ref={commentRef}
-                                                            userInfo={props.userInfo} 
-                                                            key={item.commentId} 
-                                                            data={item}
-                                                            foldStatus={selectCommentItem === item.commentId}
-                                                            handleFold={(id) => { setSelectCommentItem(id === selectCommentItem ? null:id) }}
-                                                            handleLike={() => { 
-                                                                if(props.userInfo === null) {
-                                                                    customTips.info('你需要登陆才能继续哦 ⊙﹏⊙∥')
-                                                                    return
-                                                                }
-                                                                let data = new FormData()
-                                                                data.append('gossipId', props.data.id)
-                                                                data.append('commentId', item.commentId)
-                                                                likeGossipComment(data).then(resq => {
-                                                                    if(resq.code === 200) {
-                                                                        customTips.success(resq.message)
-                                                                        let [...temp] = commentObject.list
-                                                                        let index = temp.findIndex(key => key.commentId === item.commentId)
-                                                                        temp[index].like = resq.data.status
-                                                                        temp[index].likes = resq.data.likes
-                                                                        setCommentObject({...commentObject, list: temp})
-                                                                    } else {
-                                                                        customTips.error(resq.message)
+                <div className={style.gossip_comment_list}>
+                    <SwitchTransition mode='out-in'>
+                        <CSSTransition key={commentObject.list === null} classNames='change' timeout={300} nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
+                            {
+                                commentObject.list === null ?
+                                <CommentSkeleton />:
+                                <>
+                                    {
+                                        commentObject.list.length === 0 ? <div className={style.empty_box}>当前没有评论，赶快来评论吧 ψ(｀∇´)ψ</div>:
+                                        <TransitionGroup>
+                                            {
+                                                commentObject.list.map(item => {
+                                                    return (
+                                                        <Collapse key={item.commentId}>
+                                                            <Comment
+                                                                ref={commentRef}
+                                                                userInfo={props.userInfo} 
+                                                                key={item.commentId} 
+                                                                data={item}
+                                                                foldStatus={selectCommentItem === item.commentId}
+                                                                handleFold={(id) => { setSelectCommentItem(id === selectCommentItem ? null:id) }}
+                                                                handleLike={() => { 
+                                                                    if(props.userInfo === null) {
+                                                                        customTips.info('你需要登陆才能继续哦 ⊙﹏⊙∥')
+                                                                        return
                                                                     }
-                                                                }).catch(err => {
-                                                                    customTips.error(err.message)
-                                                                })
-                                                            }}
-                                                            handleReply={content => {
-                                                                let data = new FormData()
-                                                                data.append('gossipId', props.data.id)
-                                                                data.append('content', content)
-                                                                data.append('replyCommentId', item.commentId)
-                                                                data.append('replyUserId', item.replyUser.replyUserId)
-                                                                replyGossipComment(data).then(resq => {
-                                                                    if(resq.code === 200) {
-                                                                        customTips.success(resq.message)
-                                                                        commentData(requestInstance)
-                                                                        setSelectCommentItem(null)
-                                                                    } else {
-                                                                        customTips.error(resq.message)
-                                                                    }
-                                                                    commentRef.current.changeEditorLoadingStatus(false)
-                                                                }).catch(err => {
-                                                                    customTips.error(err.message)
-                                                                    commentRef.current.changeEditorLoadingStatus(false)
-                                                                })
-                                                            }}
-                                                            handleDelete={() => {
-                                                                let data = new FormData()
-                                                                data.append('gossipId', props.data.id)
-                                                                data.append('commentId', item.commentId)
-                                                                deleteGossipComment(data).then(resq => {
-                                                                    if(resq.code === 200) {
-                                                                        customTips.success(resq.message)
-                                                                        commentData(requestInstance)
-                                                                    } else {
-                                                                        customTips.error(resq.message)
-                                                                    }
-                                                                }).catch(err => {
-                                                                    customTips.error(err.message)
-                                                                })
-                                                            }}/>
-                                                    </Collapse>
-                                                )
-                                            })
-                                        }
-                                    </TransitionGroup>
-                                }
-                            </CSSTransition>
-                        </SwitchTransition>
-                        {
-                            commentObject.pages === 0 || commentObject.pages === 1 ? '':
-                            <Pagination 
-                                total={commentObject.total}
-                                current={commentObject.current}
-                                onPageChange={e => { setRequestInstance({...requestInstance, pageNum: e}) }}/>
-                        }
-                        
-                    </div>
-                }
+                                                                    let data = new FormData()
+                                                                    data.append('gossipId', props.data.id)
+                                                                    data.append('commentId', item.commentId)
+                                                                    likeGossipComment(data).then(resq => {
+                                                                        if(resq.code === 200) {
+                                                                            customTips.success(resq.message)
+                                                                            let [...temp] = commentObject.list
+                                                                            let index = temp.findIndex(key => key.commentId === item.commentId)
+                                                                            temp[index].like = resq.data.status
+                                                                            temp[index].likes = resq.data.likes
+                                                                            setCommentObject({...commentObject, list: temp})
+                                                                        } else {
+                                                                            customTips.error(resq.message)
+                                                                        }
+                                                                    }).catch(err => {
+                                                                        customTips.error(err.message)
+                                                                    })
+                                                                }}
+                                                                handleReply={content => {
+                                                                    let data = new FormData()
+                                                                    data.append('gossipId', props.data.id)
+                                                                    data.append('content', content)
+                                                                    data.append('replyCommentId', item.commentId)
+                                                                    data.append('replyUserId', item.replyUser.replyUserId)
+                                                                    replyGossipComment(data).then(resq => {
+                                                                        if(resq.code === 200) {
+                                                                            customTips.success(resq.message)
+                                                                            commentData(requestInstance)
+                                                                            setSelectCommentItem(null)
+                                                                        } else {
+                                                                            customTips.error(resq.message)
+                                                                        }
+                                                                        commentRef.current.changeEditorLoadingStatus(false)
+                                                                    }).catch(err => {
+                                                                        customTips.error(err.message)
+                                                                        commentRef.current.changeEditorLoadingStatus(false)
+                                                                    })
+                                                                }}
+                                                                handleDelete={() => {
+                                                                    let data = new FormData()
+                                                                    data.append('gossipId', props.data.id)
+                                                                    data.append('commentId', item.commentId)
+                                                                    deleteGossipComment(data).then(resq => {
+                                                                        if(resq.code === 200) {
+                                                                            customTips.success(resq.message)
+                                                                            commentData(requestInstance)
+                                                                        } else {
+                                                                            customTips.error(resq.message)
+                                                                        }
+                                                                    }).catch(err => {
+                                                                        customTips.error(err.message)
+                                                                    })
+                                                                }}/>
+                                                        </Collapse>
+                                                    )
+                                                })
+                                            }
+                                        </TransitionGroup>
+                                    }
+                                </>
+                            }
+                        </CSSTransition>
+                    </SwitchTransition>
+                    {
+                        commentObject.pages === 0 || commentObject.pages === 1 ? '':
+                        <Pagination 
+                            total={commentObject.total}
+                            current={commentObject.current}
+                            onPageChange={e => { setRequestInstance({...requestInstance, pageNum: e}) }}/>
+                    }
+                </div>
             </Collapse>
         </div>
     )

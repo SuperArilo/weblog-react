@@ -18,8 +18,7 @@ import CommentSkeleton from '../components/CommentSkeleton'
 import Pagination from '../components/Pagination'
 //方法
 import { articleContentGet, articleCommentGet, replyComment, increaseArticleLike, likeComment, deleteComment } from '../util/article'
-import ImageViewer from 'awesome-image-viewer'
-import $ from 'jquery'
+
 export default function ArticleDetail(props) {
     //hook
     const [searchParams, setSearchParams] = useSearchParams()
@@ -278,20 +277,7 @@ const ArticleContent = (props) => {
     const navigate = useNavigate()
     //params
     const renderContentRef = useRef(null)
-    useEffect(() => {
-        $(renderContentRef.current).find('img').on('click', (element) => {
-            let list = []
-            $(renderContentRef.current).find('img').each((index, e) => {
-                list.push({ mainUrl: $(e).attr('src'), index: index })
-            })
-            new ImageViewer({
-                images: list,
-                showThumbnails: false,
-                isZoomable: false,
-                currentSelected: list.findIndex(item => item.mainUrl === $(element.target).attr('src'))
-            })
-        })
-    }, [])
+    
     return (
         <>
             <div className={style.article_detail_info}>

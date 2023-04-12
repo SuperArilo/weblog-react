@@ -11,8 +11,6 @@ import KeepAlive from 'react-activation'
 //方法
 import { useNavigate } from 'react-router-dom'
 import customTips from '../util/notostack/customTips'
-import ImageViewer from 'awesome-image-viewer'
-import $ from 'jquery'
 
 const Comment = forwardRef((props, ref) => {
     //hook
@@ -41,21 +39,6 @@ const Comment = forwardRef((props, ref) => {
             setEditorLoadingStatus(status)
         }
     }))
-
-    useEffect(() => {
-        $(renderContentRef.current).find('img').on('click', (element) => {
-            let list = []
-            $(renderContentRef.current).find('img').each((index, e) => {
-                list.push({ mainUrl: $(e).attr('src'), index: index })
-            })
-            new ImageViewer({
-                images: list,
-                showThumbnails: false,
-                isZoomable: false,
-                currentSelected: list.findIndex(item => item.mainUrl === $(element.target).attr('src'))
-            })
-        })
-    }, [])
     return (
         <div className={style.comment_box} id={`${props.data?.replyUser?.replyUserId.toString() + props.data.commentId.toString()}`}>
             <div className={style.comment_top}>
