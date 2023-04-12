@@ -67,7 +67,7 @@ const App = () => {
 		}
 	}, [loginSetUserInfo])
 	return (
-		<div className='render-content' id='renderContent'>
+		<div className='render-content'>
 			{
 				isMobileStatus ? 
 				<MobileHeaderNav
