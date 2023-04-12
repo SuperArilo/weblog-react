@@ -58,15 +58,15 @@ ul , li
 #react-by-asukamis
 {
     height: 100%;
-    overflow: hidden;
+    background-image: url('../images/bp_p0.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    overflow-y: overlay;
+    overflow-x: hidden;
     .render-content
     {
         height: 100%;
-        overflow-y: overlay;
-        background-image: url('../images/bp_p0.jpg');
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position: center;
         .header-nav , .mobile-header-nav
         {
             width: 100%;

@@ -8,6 +8,9 @@
         border-radius: 0.3rem;
         overflow: hidden;
         transform: rotate(0);
+        transition: all 0.3s;
+        max-width: fit-content;
+        max-height: 16rem;
     }
     table
     {

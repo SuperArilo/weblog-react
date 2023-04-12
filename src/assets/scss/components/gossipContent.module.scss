@@ -3,7 +3,6 @@
     padding: 0.5rem 1rem;
     background-color: #ffffff;
     border-radius: 0.3rem;
-    overflow: hidden;
     margin-bottom: 1rem;
     .gossip_box_title
     {
@@ -74,9 +73,9 @@
     {
         min-height: 3rem;
         padding: 0 0.5rem;
-        overflow: hidden;
         border-radius: 0.3rem;
         background-color: #fcfcfc;
+        overflow: hidden;
     }
     .gossip_state
     {
@@ -132,7 +131,7 @@
     }
     .empty_box
     {
-        height: 7.85rem;
+        height: 6.2rem;
         font-size: 0.8rem;
         display: flex;
         justify-content: center;
