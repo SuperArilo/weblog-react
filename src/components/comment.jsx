@@ -8,6 +8,7 @@ import AsukaPoppor from './popper'
 import Collapse from '@mui/material/Collapse'
 import Tinymce from './editor'
 import KeepAlive from 'react-activation'
+import PreviewImage from './PreviewImage'
 //方法
 import { useNavigate } from 'react-router-dom'
 import customTips from '../util/notostack/customTips'
@@ -107,6 +108,7 @@ const Comment = forwardRef((props, ref) => {
                         }}/>
                 </Collapse>
             </KeepAlive>
+            <PreviewImage current={renderContentRef} />
         </div>
     )
 })

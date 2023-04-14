@@ -16,6 +16,7 @@ import Collapse from '@mui/material/Collapse'
 import Avatar from '../components/Avatar'
 import CommentSkeleton from '../components/CommentSkeleton'
 import Pagination from '../components/Pagination'
+import PreviewImage from '../components/PreviewImage'
 //方法
 import { articleContentGet, articleCommentGet, replyComment, increaseArticleLike, likeComment, deleteComment } from '../util/article'
 
@@ -279,37 +280,36 @@ const ArticleContent = (props) => {
     const renderContentRef = useRef(null)
     
     return (
-        <>
-            <div className={style.article_detail_info}>
-                <div className={style.article_detail_top}>
-                    <img className={style.article_background_image} src={props.articleInstance.articlePicture} alt={props.articleInstance.nickName}/>
-                    <p className={style.article_detail_title}>{props.articleInstance.articleTitle}</p>
-                    <div className={style.article_data}>
-                        <div className={style.data_author}>
-                            <Avatar
-                                width='3.4rem'
-                                height='3.4rem'
-                                src={props.articleInstance.avatar}
-                                title={props.articleInstance.nickName}
-                                alt={props.articleInstance.nickName}
-                                onClick={() => { navigate(`/user/${props.articleInstance.publisher}`) }}/>
-                            <div className={style.author_info}>
-                                <span>{props.articleInstance.nickName}</span>
-                                <span>{props.articleInstance.createTime}</span>
-                            </div>
-                        </div>
-                        <div className={style.article_data_info}>
-                            <div><i className="fas fa-eye"/><span>{props.articleInstance.articleViews}</span></div>
-                            <div onClick={() => { props.handleLike(props.articleInstance.id) }}><i className={`${'fas fa-heart'} ${props.articleInstance.hasLike ? style.article_liked:''}`} /><span>{props.articleInstance.articleLikes}</span><WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } /></div>
+        <div className={style.article_detail_info}>
+            <div className={style.article_detail_top}>
+                <img className={style.article_background_image} src={props.articleInstance.articlePicture} alt={props.articleInstance.nickName}/>
+                <p className={style.article_detail_title}>{props.articleInstance.articleTitle}</p>
+                <div className={style.article_data}>
+                    <div className={style.data_author}>
+                        <Avatar
+                            width='3.4rem'
+                            height='3.4rem'
+                            src={props.articleInstance.avatar}
+                            title={props.articleInstance.nickName}
+                            alt={props.articleInstance.nickName}
+                            onClick={() => { navigate(`/user/${props.articleInstance.publisher}`) }}/>
+                        <div className={style.author_info}>
+                            <span>{props.articleInstance.nickName}</span>
+                            <span>{props.articleInstance.createTime}</span>
                         </div>
                     </div>
+                    <div className={style.article_data_info}>
+                        <div><i className="fas fa-eye"/><span>{props.articleInstance.articleViews}</span></div>
+                        <div onClick={() => { props.handleLike(props.articleInstance.id) }}><i className={`${'fas fa-heart'} ${props.articleInstance.hasLike ? style.article_liked:''}`} /><span>{props.articleInstance.articleLikes}</span><WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } /></div>
+                    </div>
                 </div>
-                <div
-                    className={`${style.article_render_content} ${renderHtml.render_html}`}
-                    ref={renderContentRef}
-                    dangerouslySetInnerHTML={{ __html: props.articleInstance.articleContent}} />
             </div>
-        </>
+            <div
+                className={`${style.article_render_content} ${renderHtml.render_html}`}
+                ref={renderContentRef}
+                dangerouslySetInnerHTML={{ __html: props.articleInstance.articleContent}} />
+            <PreviewImage current={renderContentRef} />
+        </div>
     )
 
 }

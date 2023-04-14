@@ -8,6 +8,7 @@ import Skeleton from '@mui/material/Skeleton'
 import Collapse from '@mui/material/Collapse'
 import AsukaPoppor from '../components/popper'
 import Pagination from '../components/Pagination'
+import PreviewImage from '../components/PreviewImage'
 //样式
 import style from '../assets/scss/guestbook.module.scss'
 import renderHtml from '../assets/scss/renderHtml.module.scss'
@@ -128,6 +129,9 @@ const GuestbookCommentItem = (props) => {
         target: null,
         title: '确定要删除评论吗？ (/▽＼)'
     })
+
+    const renderHtmlRef = useRef(null)
+
     const [deleteStatus, setDeleteStatus] = useState(false)
     return (
         <>
@@ -150,7 +154,10 @@ const GuestbookCommentItem = (props) => {
                         </i>
                     }
                 </header>
-                <div className={`${style.comment_html} ${renderHtml.render_html}`} dangerouslySetInnerHTML={{ __html: props.item.content }}></div>
+                <div
+                    ref={renderHtmlRef}
+                    className={`${style.comment_html} ${renderHtml.render_html}`}
+                    dangerouslySetInnerHTML={{ __html: props.item.content }} />
             </div>
             <AsukaPoppor 
                 {...popporObject}
@@ -178,6 +185,7 @@ const GuestbookCommentItem = (props) => {
                     }
                 }} 
                 onCancel={() => { setPopporObject({...popporObject, open: false, target: null}) }}/>
+            <PreviewImage current={renderHtmlRef} />
         </>
     )
 }

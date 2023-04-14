@@ -3,6 +3,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react'
 import style from '../assets/scss/components/gossipContent.module.scss'
 import renderHtml from '../assets/scss/renderHtml.module.scss'
 import '../assets/scss/currencyTransition.scss'
+
 //组件
 import Avatar from '../components/Avatar'
 import WaterWave from 'water-wave'
@@ -14,6 +15,7 @@ import { SwitchTransition, CSSTransition, TransitionGroup } from 'react-transiti
 import customTips from '../util/notostack/customTips'
 import Pagination from './Pagination'
 import Menu from './Menu'
+import PreviewImage from './PreviewImage'
 //方法
 
 import { useNavigate } from 'react-router-dom'
@@ -22,7 +24,7 @@ export default function GossipContent(props) {
     //hook
     const navigate = useNavigate()
     //ref
-    const renderContentRef = useRef()
+    const renderContentRef = useRef(null)
     //params
     const [requestInstance, setRequestInstance] = useState({
         pageNum: 1,
@@ -36,6 +38,7 @@ export default function GossipContent(props) {
         list: null
     })
     const [selectCommentItem, setSelectCommentItem] = useState(null)
+
     //编辑器ref
     const tinymce = useRef(null)
     const commentRef = useRef(null)
@@ -43,6 +46,8 @@ export default function GossipContent(props) {
 
     const [gossipFunctionMenuStatus, setGossipFunctionMenuStatus] = useState(false)
     const [editorSendToServerStatus, setEditorSendToServerStatus] = useState(false)
+
+    const [previewStatus, setPreviewStatus] = useState(false)
     //function
     const commentData = useCallback((instance) => {
         gossipCommentList(instance).then(resq => {
@@ -60,8 +65,6 @@ export default function GossipContent(props) {
         if(!props.foldStatus) return
         commentData(requestInstance)
     }, [commentData, requestInstance, props.foldStatus])
-
-
 
     return (
         <div className={style.gossip_box}>
@@ -113,7 +116,10 @@ export default function GossipContent(props) {
                     }}
                     onClose={() => { setGossipFunctionMenuStatus(false) }}/>
             </header>
-            <div ref={renderContentRef} className={`${style.gossip_render_content} ${renderHtml.render_html}`} dangerouslySetInnerHTML={{ __html: props.data.content}} />
+            <div
+                ref={renderContentRef}
+                className={`${style.gossip_render_content} ${renderHtml.render_html}`}
+                dangerouslySetInnerHTML={{ __html: props.data.content}}/>
             <div className={style.gossip_state}>
                 <span>{props.data.likes} 个喜欢</span>
                 <span>|</span>
@@ -271,6 +277,8 @@ export default function GossipContent(props) {
                     }
                 </div>
             </Collapse>
+            <PreviewImage 
+                current={renderContentRef}/>
         </div>
     )
 }
