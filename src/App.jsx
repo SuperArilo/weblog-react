@@ -619,8 +619,10 @@ const RegisterBox = (props) => {
 												}, 1000)
 											} else if(resq.code === 0) {
 												customTips.info(resq.message)
+												setRequestStatus({...requestStatus, sendMailStatus: false})
 											} else {
 												customTips.info(resq.message)
+												setRequestStatus({...requestStatus, sendMailStatus: false})
 											}
 										}).catch(err => {
 											setRequestStatus({...requestStatus, sendMailStatus: false})
