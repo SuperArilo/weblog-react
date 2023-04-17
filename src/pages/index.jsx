@@ -289,7 +289,7 @@ const Article = (props) => {
                 <div className={style.article_bottom_function}>
                     <AsukaButton text='开始阅读' class='read' onClick={() => { 
                         navigate('detail?threadId=' + props.item.id)
-                        $('#react-by-asukamis').children().stop().animate({'scrollTop': 0})
+                        $('#react-by-asukamis').stop().animate({'scrollTop': 0})
                      }}/>
                     <div className={style.right_article_data}>
                         <div>

@@ -2,13 +2,16 @@ import React, { useState, useEffect, useCallback, useRef } from 'react'
 //样式
 import style from '../assets/scss/links.module.scss'
 import renderHtml from '../assets/scss/renderHtml.module.scss'
+import '../assets/scss/currencyTransition.scss'
 //组件
 import Avatar from '../components/Avatar'
 import TextField from '@mui/material/TextField'
 import AsukaButton from '../components/asukaButton'
+import { SwitchTransition, CSSTransition, TransitionGroup } from 'react-transition-group'
+import Skeleton from '@mui/material/Skeleton'
 //方法
 import { useSelector, useDispatch } from 'react-redux'
-import { linksList, linksApply } from '../util/links'
+import { friendList, linksApply } from '../util/links'
 import customTips from '../util/notostack/customTips'
 
 export default function Links(props) {
@@ -38,7 +41,7 @@ export default function Links(props) {
     const [applyStatus, setApplyStatus] = useState(false)
 
     const friendListGet = useCallback(instance => {
-        linksList(instance).then(resq => {
+        friendList(instance).then(resq => {
             if(resq.code === 200) {
                 setDataInstance(current => ({
                     ...current,
@@ -133,18 +136,52 @@ export default function Links(props) {
             }
             <div className={style.friends_content}>
                 <p className={style.function_title}>朋友们 (默认按添加时间排序)</p>
-                <ul className={style.friends_list}>
-                    <li>
-                        <Avatar 
-                            width='3.2rem'
-                            height='3.2rem'
-                            src='http://139.155.94.20:3090/image/b8795c66-ae23-4ec0-9184-6cbad2478bc6.png'/>
-                        <div className={style.friends_info}>
-                            <span className={style.friends_name}>这次换你听歌</span>
-                            <p className={style.friends_describe}>这是简介这是简介</p>
-                        </div>
-                    </li>
-                </ul>
+                <div className={style.friends_list}>
+                    <SwitchTransition mode='out-in'>
+                        <CSSTransition key={dataInstance.list === null} classNames='change' timeout={300} nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
+                            {
+                                dataInstance.list === null ?
+                                <LinksSkeleton />
+                                :
+                                <>
+                                    {
+                                        dataInstance.list.length === 0 ?
+                                        <div className={style.friends_list_item_skeleton}>
+                                            <span className={style.empty_box}>一个朋友都没有 o(TヘTo)</span>
+                                        </div>
+                                        :
+                                        dataInstance.list.map(item => {
+                                            return (
+                                                <div className={style.friends_list_item} key={item.id}>
+                                                    <Avatar 
+                                                        width='3.2rem'
+                                                        height='3.2rem'
+                                                        src={item.friendAvatar}/>
+                                                    <div className={style.friends_info}>
+                                                        <span className={style.friends_name}>{item.friendName}</span>
+                                                        <p className={style.friends_describe}>{item.friendIntroduction}</p>
+                                                    </div>
+                                                </div>
+                                            )
+                                        })
+                                    }
+                                </>
+                            }
+                        </CSSTransition>
+                    </SwitchTransition>
+                    
+                </div>
+            </div>
+        </div>
+    )
+}
+const LinksSkeleton = () => {
+    return (
+        <div className={style.friends_list_item_skeleton}>
+            <Skeleton variant="circular" width='3.2rem' height='3.2rem' />
+            <div className={style.friends_info}>
+                <Skeleton variant="text" width='90%' sx={{ fontSize: '1.25rem' }} />
+                <Skeleton variant="text" width='50%' sx={{ fontSize: '1.25rem' }} />
             </div>
         </div>
     )

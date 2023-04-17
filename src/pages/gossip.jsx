@@ -30,17 +30,15 @@ export default function Gossip(props) {
     const gossipDataGet = useCallback(instance => {
         gossipListRequest(instance).then(resq => {
             if(resq.code === 200) {
-                setTimeout(() => {
-                    setGossipObject(target => {
-                        return {
-                            ...target,
-                            pages: resq.data.pages,
-                            total: resq.data.total,
-                            list: resq.data.list,
-                            current: resq.data.current
-                        }
-                    })
-                }, 500)
+                setGossipObject(target => {
+                    return {
+                        ...target,
+                        pages: resq.data.pages,
+                        total: resq.data.total,
+                        list: resq.data.list,
+                        current: resq.data.current
+                    }
+                })
             }
         }).catch(err => {
             customTips.error(err.message)
