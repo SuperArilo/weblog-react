@@ -130,7 +130,7 @@ export default function IndexPage(props) {
                 <SwitchTransition mode="out-in">
                     <CSSTransition key={hotArticleList.length === 0} classNames='change' timeout={300} nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
                         {
-                            hotArticleList.length === 0 ? <div className={style.loading_sider}><i className={`${'asukamis loading'} ${style.rotate}`} /></div>:
+                            hotArticleList.length === 0 ? <div className={style.loading_sider}><i className={`${'asukamis loading'} ${'rotate'}`} /></div>:
                             <section className={style.sider_carousel}>
                                 <Slider ref={sliderRef} {...sliderSettings}>
                                     {
@@ -244,6 +244,9 @@ export default function IndexPage(props) {
                                                             }).catch(err => {
                                                                 customTips.error(err.message)
                                                             })
+                                                        }}
+                                                        gossipDataGet={() => {
+                                                            gossipData(gossipRequestInstance)
                                                         }}
                                                         handleGossipList={() => {
                                                             gossipData(gossipRequestInstance)
