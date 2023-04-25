@@ -16,7 +16,7 @@ export const blogRegisterUser = (query) => {
 }
 export const blogUserProfiles = (params) => {
     return request({
-        url: '/user/profiles/' + params,
+        url: '/user/profiles/view/' + params,
         method: 'get'
     })
 }
