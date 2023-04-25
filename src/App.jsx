@@ -59,11 +59,14 @@ const App = () => {
 		if(token) {
 			blogLoginUser().then(resq => {
 				if(resq.code === 200) {
+					$('#react-by-asukamis').css({ 'background-image': 'url(' + resq.data.user.background + ')' })
 					loginSetUserInfo(resq.data.user)
 				} else {
 					localStorage.removeItem('token')
 				}
 			})
+		} else {
+			$('#react-by-asukamis').css({ 'background-image': 'url(http://image.superarilo.icu/defalut_bg.jpg)' })
 		}
 	}, [loginSetUserInfo])
 	return (

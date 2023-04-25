@@ -57,7 +57,7 @@ ul , li
 #react-by-asukamis
 {
     height: 100%;
-    background-image: url('../images/bp_p0.jpg');
+    transition: background-image 0.25s;
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
