@@ -64,7 +64,7 @@ export default function Friends(props) {
                                     :
                                     dataInstance.list.map(item => {
                                         return (
-                                            <div className={style.friends_list_item}>
+                                            <div className={style.friends_list_item} key={item.id}>
                                                 <Avatar
                                                     src={item.avatar}
                                                     width='3rem'
