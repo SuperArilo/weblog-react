@@ -77,23 +77,12 @@ export default function User(props) {
     //ref
     const menuLineRef = useRef(null)
 
-    // useEffect(() => {
-    //     if(modeInstance.editorIndex === null) {
-    //         setModeInstance(current => ({
-    //             ...current,
-    //             instance: null,
-                
-    //         }))
-    //         console.log(111)
-    //     }
-    // }, [modeInstance.editorIndex])
-
     const queryProfiles = useCallback(params => {
         blogUserProfiles(params).then(resq => {
             if(resq.code === 200) {
                 setUserProfiles(resq.data)
                 if(resq.data !== null) {
-                    if(userInfo?.uid === resq.data.uid) {
+                    if(params === resq.data.uid) {
                         dispatch({ type: 'userInfo/setAvatar', payload: resq.data?.avatar })
                     }
                 }
@@ -103,7 +92,7 @@ export default function User(props) {
         }).catch(err => {
             customTips.error(err.message)
         })
-    }, [dispatch, userInfo?.uid])
+    }, [dispatch])
 
     useEffect(() => {
         queryProfiles(viewUid)
@@ -268,12 +257,15 @@ export default function User(props) {
                             }
                         </div>
                         {
-                            userInfo?.uid !== parseInt(viewUid) ? null:<AsukaButton 
-                                                                            text={modeInstance.status ? '退出编辑模式':'编辑个人资料'}
-                                                                            class={modeInstance.status ? 'danger':'normal'}
-                                                                            onClick={() => {
-                                                                                setModeInstance({...modeInstance, status: !modeInstance.status, editorIndex: null})
-                                                                            }}/>
+                            userInfo?.uid !== parseInt(viewUid) ?
+                            null
+                            :
+                            <AsukaButton 
+                                text={modeInstance.status ? '退出编辑模式':'编辑个人资料'}
+                                class={modeInstance.status ? 'danger':'normal'}
+                                onClick={() => {
+                                    setModeInstance({...modeInstance, status: !modeInstance.status, editorIndex: null})
+                                }}/>
                         }
                         
                     </div>
@@ -349,20 +341,45 @@ const UserInfoView = (props) => {
                     <i className='asukamis ucontact' />
                     <span>联系方式</span>
                 </div>
-                <div className={style.info_content}>
+                <div className={style.info_content} editorindex='3'>
                     {
-                        props.modeInstance?.status ?
-                        <>
-                            <span>{props.userProfiles.email}</span>
-                            <Icon 
-                                iconClass='editor'
-                                fontSize='1.2rem'
-                                onClick={e => {
-
-                                }}/>
-                            </>
+                        props.modeInstance?.editorIndex === '3' ?
+                        <InstantInput
+                            width='12rem'
+                            mode='input'
+                            label='联系方式'
+                            value={props.userProfiles.contact}
+                            loadingStatus={props.modeInstance.loadingStatus}
+                            handleClose={() => { props.setModeInstance({...props.modeInstance, editorIndex: null}) }}
+                            handleSave={content => {
+                                if(!props.modeInstance.loadingStatus) {
+                                    props.setModeInstance({
+                                        ...props.modeInstance, 
+                                        loadingStatus: true,
+                                        instance: {
+                                            ...props.modeInstance.instance,
+                                            contact: content
+                                        }
+                                    })
+                                }
+                            }}/>
                         :
-                        <span>{props.userProfiles.email}</span>
+                        <>
+                            {
+                                props.modeInstance?.status ?
+                                <>
+                                    <span>{props.userProfiles.contact}</span>
+                                    <Icon 
+                                        iconClass='editor'
+                                        fontSize='1.2rem'
+                                        onClick={e => {
+                                            props.setModeInstance({...props.modeInstance, editorIndex: $(e.currentTarget).parent().attr('editorindex')})
+                                        }}/>
+                                    </>
+                                :
+                                <span>{props.userProfiles.contact}</span>
+                            }
+                        </>
                     }
                 </div>
             </li>
@@ -503,6 +520,134 @@ const UserInfoView = (props) => {
         </ul>
     )
 }
+
+const AccountInfoView = (props) => {
+    return (
+        <ul className={style.user_info_view}>
+            <li>
+                <div className={style.info_title}>
+                    <i className='asukamis uid' />
+                    <span>UID</span>
+                </div>
+                <div className={style.info_content}>
+                    <span>{props.userProfiles.uid}</span>
+                </div>
+            </li>
+            <li>
+                <div className={style.info_title}>
+                    <i className='asukamis account'/>
+                    <span>用户名</span>
+                </div>
+                <div className={style.info_content} editorindex='8'>
+                    {
+                        props.modeInstance?.editorIndex === '8' ?
+                        <InstantInput
+                            width='12rem'
+                            mode='input'
+                            label='用户名'
+                            value={props.userProfiles.email}
+                            loadingStatus={props.modeInstance.loadingStatus}
+                            handleClose={() => { props.setModeInstance({...props.modeInstance, editorIndex: null}) }}
+                            handleSave={content => {
+                                if(!props.modeInstance.loadingStatus) {
+                                    props.setModeInstance({
+                                        ...props.modeInstance, 
+                                        loadingStatus: true,
+                                        instance: {
+                                            ...props.modeInstance.instance,
+                                            email: content
+                                        }
+                                    })
+                                }
+                            }}/>
+                        :
+                        <>
+                            {
+                                props.modeInstance?.status ?
+                                <>
+                                    <span>{props.userProfiles.email}</span>
+                                    <Icon 
+                                        iconClass='editor'
+                                        fontSize='1.2rem'
+                                        onClick={e => {
+                                            props.setModeInstance({...props.modeInstance, editorIndex: $(e.currentTarget).parent().attr('editorindex')})
+                                        }}/>
+                                    </>
+                                :
+                                <span>{props.userProfiles.email}</span>
+                            }
+                        </>
+                    }
+                    
+                </div>
+            </li>
+            <li>
+                <div className={style.info_title}>
+                    <i className='asukamis password' />
+                    <span>密码</span>
+                </div>
+                <div className={style.info_content} editorindex='9'>
+                    {
+                        props.modeInstance?.editorIndex === '9'
+                        ?
+                        <InstantInput
+                            width='12rem'
+                            mode='input'
+                            label='密码'
+                            value=''
+                            loadingStatus={props.modeInstance.loadingStatus}
+                            handleClose={() => { props.setModeInstance({...props.modeInstance, editorIndex: null}) }}
+                            handleSave={content => {
+                                if(!props.modeInstance.loadingStatus) {
+                                    props.setModeInstance({
+                                        ...props.modeInstance, 
+                                        loadingStatus: true
+                                    })
+                                }
+                            }}/>
+                        :
+                        <>
+                            {
+                                props.modeInstance?.status ?
+                                    <>
+                                        <span>点击修改</span>
+                                        <Icon 
+                                            iconClass='editor'
+                                            fontSize='1.2rem'
+                                            onClick={e => {
+                                                props.setModeInstance({...props.modeInstance, editorIndex: $(e.currentTarget).parent().attr('editorindex')})
+                                            }}/>
+                                    </>
+                                    :
+                                    <span>点击修改</span>
+                                }
+                        </>
+                    }
+                </div>
+            </li>
+        </ul>
+    )
+}
+
+const SettingInfoView = (props) => {
+    return (
+        <ul className={style.user_info_view}>
+            <li>
+                <div className={style.info_title}>
+                    <i className='asukamis background' />
+                    <span>背景图</span>
+                </div>
+                <div className={style.info_content}>
+                    <div className={style.background_change}>
+                        <input type='file' />
+                        <span className={style.tips_span}>点击修改</span>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    )
+}
+
 const RenderFunctionView = ({ menuIndex, userProfiles, userInfo, viewUid }) => {
     switch(menuIndex) {
         case 0:
@@ -521,12 +666,17 @@ const RenderEditorFunctionView = ({modeInstance ,setModeInstance , userProfiles,
             return <UserInfoView
                         modeInstance={modeInstance}
                         setModeInstance={setModeInstance}
-                        userProfiles={userProfiles}
-                        />
+                        userProfiles={userProfiles} />
         case 1:
-            return <span>开发中</span>
+            return <AccountInfoView
+                        modeInstance={modeInstance}
+                        setModeInstance={setModeInstance}
+                        userProfiles={userProfiles} />
         case 2:
-            return <span>开发中</span>
+            return <SettingInfoView
+                        modeInstance={modeInstance}
+                        setModeInstance={setModeInstance}
+                        userProfiles={userProfiles} />
         default:
             break
     }
