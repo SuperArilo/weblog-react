@@ -24,6 +24,7 @@ import Links from './pages/Links'
 import Friends from './pages/Friends'
 import NotFound from './pages/NotFound'
 import User from './pages/User'
+import VerifyPage from './pages/VerifyPage'
 import CreateGossipWindow from './components/CreateGossipWindow'
 import Notice from './pages/notice'
 import Icon from './components/Icon'
@@ -59,16 +60,22 @@ const App = () => {
 		if(token) {
 			blogLoginUser().then(resq => {
 				if(resq.code === 200) {
-					$('#react-by-asukamis').css({ 'background-image': 'url(' + resq.data.user.background + ')' })
 					loginSetUserInfo(resq.data.user)
 				} else {
 					localStorage.removeItem('token')
 				}
 			})
+		}
+	}, [loginSetUserInfo])
+
+	useEffect(() => {
+		if(userInfo !== null) {
+			$('#react-by-asukamis').css({ 'background-image': 'url(' + userInfo.background + ')' })
 		} else {
 			$('#react-by-asukamis').css({ 'background-image': 'url(http://image.superarilo.icu/defalut_bg.jpg)' })
 		}
-	}, [loginSetUserInfo])
+	}, [userInfo])
+
 	return (
 		<div className='render-content'>
 			{
@@ -96,6 +103,7 @@ const App = () => {
 							<Route path='/gossip' element={<Gossip userInfo={userInfo}/>} />
 							<Route path='/guestbook' element={<Guestbook />} />
 							<Route path='/user/:viewUid' element={<User />} />
+							<Route path='/user/verify' element={<VerifyPage />} />
 							<Route path='/notice' element={<Notice />} />
 							<Route path='/links' element={<Links />} />
 							<Route path='/friends' element={<Friends /> } />

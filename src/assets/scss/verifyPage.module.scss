@@ -1,0 +1,29 @@
+.verify_page
+{
+    max-width: 768px;
+    margin: 0 auto;
+    .verify_content
+    {
+        margin-top: 1rem;
+        height: 10rem;
+        background-color: #fff;
+        border-radius: 0.3rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        p
+        {
+            margin: 0.5rem 0;
+        }
+        p:first-child
+        {
+            font-size: 0.9rem;
+            color: rgb(29, 63, 177);
+        }
+        p:last-child
+        {
+            font-size: 0.8rem;
+        }
+    }
+}

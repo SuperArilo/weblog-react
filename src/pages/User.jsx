@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 //样式
 import style from '../assets/scss/user.module.scss'
 //方法
 import { useSelector, useDispatch } from 'react-redux'
 import { useParams, useNavigate } from "react-router-dom"
 import $ from 'jquery'
-import { blogUserProfiles, blogUserProfilesModify } from '../util/user'
+import { blogUserProfiles, blogUserProfilesModify, blogUserModifyEmail } from '../util/user'
+import { modifyEmail } from '../util/mail/mail'
 import customTips from '../util/notostack/customTips'
 //组件
 import Gossip from './gossip'
@@ -84,6 +85,9 @@ export default function User(props) {
                 if(resq.data !== null) {
                     if(params === resq.data.uid) {
                         dispatch({ type: 'userInfo/setAvatar', payload: resq.data?.avatar })
+                        dispatch({ type: 'userInfo/setBackground', payload: resq.data?.background })
+                    } else {
+                        $('#react-by-asukamis').css({ 'background-image': 'url(' + resq.data.background + ')' })
                     }
                 }
             } else {
@@ -122,6 +126,30 @@ export default function User(props) {
             }))
         })
     }, [modeInstance.instance, queryProfiles, viewUid])
+
+    useEffect(() => {
+        if(userInfo === null) {
+            setModeInstance(current => ({
+                ...current,
+                status: false,
+                loadingStatus: false,
+                editorIndex: null,
+                instance: null,
+                tempAvatar: null
+            }))
+        }
+    }, [userInfo])
+
+    //销毁
+    useEffect(() => {
+        return () => {
+            if (userInfo === null) {
+                $('#react-by-asukamis').css({ 'background-image': 'url(http://image.superarilo.icu/defalut_bg.jpg)' })
+            } else {
+                $('#react-by-asukamis').css({ 'background-image': 'url(' + userInfo.background + ')' })
+            }
+        }
+      }, [userInfo])
 
     return (
         <div className={style.user_info}>
@@ -522,6 +550,9 @@ const UserInfoView = (props) => {
 }
 
 const AccountInfoView = (props) => {
+
+    const [requestStatus, setRequestStatus] = useState(false)
+
     return (
         <ul className={style.user_info_view}>
             <li>
@@ -546,17 +577,27 @@ const AccountInfoView = (props) => {
                             mode='input'
                             label='用户名'
                             value={props.userProfiles.email}
-                            loadingStatus={props.modeInstance.loadingStatus}
+                            loadingStatus={requestStatus}
                             handleClose={() => { props.setModeInstance({...props.modeInstance, editorIndex: null}) }}
                             handleSave={content => {
-                                if(!props.modeInstance.loadingStatus) {
-                                    props.setModeInstance({
-                                        ...props.modeInstance, 
-                                        loadingStatus: true,
-                                        instance: {
-                                            ...props.modeInstance.instance,
-                                            email: content
+                                if(content === null || content === '') {
+                                    customTips.info("填写的信息不能为空")
+                                    return
+                                }
+                                if(!requestStatus) {
+                                    setRequestStatus(true)
+                                    let data = new FormData()
+                                    data.append('email', content)
+                                    modifyEmail(data).then(resq => {
+                                        if(resq.code === 200) {
+                                            customTips.success(resq.message)
+                                        } else {
+                                            customTips.error(resq.message)
                                         }
+                                        setRequestStatus(false)
+                                    }).catch(err => {
+                                        customTips.error(err.message)
+                                        setRequestStatus(false)
                                     })
                                 }
                             }}/>
@@ -601,7 +642,10 @@ const AccountInfoView = (props) => {
                                 if(!props.modeInstance.loadingStatus) {
                                     props.setModeInstance({
                                         ...props.modeInstance, 
-                                        loadingStatus: true
+                                        loadingStatus: true,
+                                        instance: {
+                                            password: content
+                                        }
                                     })
                                 }
                             }}/>
@@ -639,8 +683,22 @@ const SettingInfoView = (props) => {
                 </div>
                 <div className={style.info_content}>
                     <div className={style.background_change}>
-                        <input type='file' />
-                        <span className={style.tips_span}>点击修改</span>
+                        <input
+                            type='file'
+                            accept="image/*"
+                            onChange={e => {
+                                let files = {...e.target.files}
+                                props.setModeInstance({
+                                    ...props.modeInstance,
+                                    loadingStatus: true,
+                                    instance: {
+                                        ...props.modeInstance.instance,
+                                        background: files[0]
+                                    }
+                                })
+                                e.target.value = ''
+                            }}/>
+                        <span className={style.tips_span}>{props.modeInstance.loadingStatus ? '上传中...':'点击修改'}</span>
                     </div>
                 </div>
             </li>
