@@ -7,3 +7,10 @@ export const regiserMail = (query) => {
         data: query,
     })
 }
+export const modifyEmail = (query) => {
+    return request({
+        url: '/mail/modify/email',
+        method: 'post',
+        data: query
+    })
+}
