@@ -26,6 +26,13 @@ const userInfo = createSlice({
             } else {
                 state.info.avatar = action.payload
             }
+        },
+        setBackground: (state, action) => {
+            if(state.info === null) {
+                state.info = {...state.info, background: 'http://image.superarilo.icu/defalut_bg.jpg'}
+            } else {
+                state.info.background = action.background
+            }
         }
     }
 })
