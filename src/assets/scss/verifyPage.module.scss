@@ -12,18 +12,38 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        .verifying , .verify_success , .verify_error
+        {
+            display: flex;
+            
+        }
+        .verifying
+        {
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.9rem;
+        }
         p
         {
             margin: 0.5rem 0;
         }
-        p:first-child
+        .verify_success , .verify_error
         {
-            font-size: 0.9rem;
+            justify-content: center;
+            align-items: center;
+            p
+            {
+                margin-left: 0.5rem;
+                font-size: 0.85rem;
+            }
+        }
+        .verify_success p
+        {
             color: rgb(29, 63, 177);
         }
-        p:last-child
+        .verify_error p
         {
-            font-size: 0.8rem;
+            color: darkred;
         }
     }
 }
