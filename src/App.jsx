@@ -245,7 +245,8 @@ const PCheaderNav = (props) => {
 				}
 			</ul>
 			<div className='right-some-function'>
-				{ props.userInfo === null ? 
+				{
+					props.userInfo === null ? 
 					<AsukaButton text='登录' onClick={() => { props.openLoginBox(true) }}/>
 					:
 					<div className='logged-box'>
@@ -510,7 +511,7 @@ const LoginBox = (props) => {
 							<span></span>
 						</div>
 					</label>
-					<form className={signStyle.input_password}>
+					<label className={signStyle.input_password}>
 						<div className={signStyle.input_top_div}>
 							<span>密码</span>
 							<span>*</span>
@@ -522,7 +523,7 @@ const LoginBox = (props) => {
 						<div className={signStyle.input_tips_div}>
 							<span></span>
 						</div>
-					</form>
+					</label>
 				</div>
 				<button type="button" title="登录" className={signStyle.confirm_button + ' ' + (isMobileStatus ? signStyle.confirm_button_mobile:signStyle.confirm_button_pc)} onClick={() => { loginFunction() }}>
 					{ !loginStatus && userInfo === null ? '登陆':'' }
