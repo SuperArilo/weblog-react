@@ -3,8 +3,8 @@
     overflow: hidden;
     letter-spacing: 0.1rem;
     border-radius: 0.3rem;
+    -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
- 	-webkit-transform: rotate(0deg);
     transition: color 0.25s, background-color 0.25s;
     white-space: nowrap;
     i

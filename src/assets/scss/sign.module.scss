@@ -180,8 +180,8 @@
                         background-color: #ffffff;
                         border-radius: 0.3rem;
                         overflow: hidden;
+                        -webkit-transform: rotate(0deg);
                         transform: rotate(0deg);
- 	                    -webkit-transform: rotate(0deg);
                     }
                 }
             }
@@ -244,8 +244,8 @@
         color: rgb(111, 111, 111);
         overflow: hidden;
         border-radius: 0.5rem;
-        transform: rotate(0);
         -webkit-transform: rotate(0);
+        transform: rotate(0);
         i
         {
             width: inherit;
@@ -282,8 +282,8 @@
                 align-items: center;
                 border-radius: 50%;
                 overflow: hidden;
+                -webkit-transform: rotate(0deg);
                 transform: rotate(0deg);
- 	            -webkit-transform: rotate(0deg);
                 font-size: 1.2rem;
                 color: #ffffff;
                 cursor: pointer;
@@ -322,8 +322,8 @@
             {
                 padding: 0 1rem;
                 border-radius: 0.5rem;
+                -webkit-transform: rotate(0deg);
                 transform: rotate(0deg);
- 	            -webkit-transform: rotate(0deg);
                 overflow: hidden;
                 cursor: pointer;
                 margin-bottom: 0.5rem;
@@ -376,8 +376,8 @@
                 display: flex;
                 align-items: center;
                 border-radius: 1rem;
+                -webkit-transform: rotate(0deg);
                 transform: rotate(0deg);
- 	            -webkit-transform: rotate(0deg);
                 overflow: hidden;
                 cursor: pointer;
                 span

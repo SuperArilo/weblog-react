@@ -149,8 +149,8 @@ ul , li
                 width: 2.5rem;
                 height: 2.5rem;
                 border-radius: 50%;
+                -webkit-transform: rotate(0deg);
                 transform: rotate(0deg);
- 	            -webkit-transform: rotate(0deg);
                 overflow: hidden;
                 display: flex;
                 justify-content: center;

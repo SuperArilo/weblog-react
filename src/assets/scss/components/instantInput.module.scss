@@ -23,8 +23,8 @@
                 height: 1.5rem;
                 overflow: hidden;
                 border-radius: 50%;
+                -webkit-transform: rotate(0deg);
                 transform: rotate(0deg);
- 	            -webkit-transform: rotate(0deg);
                 cursor: pointer;
                 display: flex;
                 justify-content: center;

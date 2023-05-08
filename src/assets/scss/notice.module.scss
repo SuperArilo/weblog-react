@@ -9,8 +9,8 @@
         flex-direction: column;
         border-radius: 0.3rem;
         overflow: hidden;
+        -webkit-transform: rotate(0deg);
         transform: rotate(0deg);
- 	    -webkit-transform: rotate(0deg);
         .notice_container_nav
         {
             height: 2.5rem;
