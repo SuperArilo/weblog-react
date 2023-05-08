@@ -27,6 +27,15 @@ export const blogUserProfilesModify = (query) => {
         data: parseFormData(query),
     })
 }
+
+export const blogUserProfilesModifyEmail = (query) => {
+    return request({
+        url: '/user/profiles/modify/email',
+        method: 'post',
+        data: parseFormData(query),
+    })
+}
+
 const parseFormData = (obj) => {
     let data = new FormData()
     Object.keys(obj).map(key => {
