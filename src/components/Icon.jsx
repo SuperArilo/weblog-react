@@ -10,7 +10,7 @@ const Icon = forwardRef((props, ref) => {
     return (
         <i 
             style={{ width: props.width, height: props.height, fontSize: props.fontSize }}
-            className={`${style.asukamis_icon} ${'asukamis'} ${props.iconClass} ${props.status && style.rotate}`}
+            className={`${style.asukamis_icon} ${'asukamis'} ${props.iconClass} ${props.status ? style.rotate:''}`}
             onClick={props.onClick}>
                 <WaterWave color="rgb(155, 195, 219)" duration={ 500 } />
             </i>
