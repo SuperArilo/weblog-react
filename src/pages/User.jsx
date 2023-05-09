@@ -531,18 +531,7 @@ const UserInfoView = (props) => {
                     <span>位置</span>
                 </div>
                 <div className={style.info_content}>
-                    {
-                        props.modeInstance?.status ?
-                        <>
-                            <span>{props.userProfiles.location === null ? '未设置':props.userProfiles.location}</span>
-                            <Icon 
-                                iconClass='editor'
-                                fontSize='1.2rem'
-                                onClick={e => {}}/>
-                        </>
-                        :
-                        <span>{props.userProfiles.location === null ? '未设置':props.userProfiles.location}</span>
-                    }
+                    <span>{ props.userProfiles.location === null ? '未知归属地':props.userProfiles.location }</span>
                 </div>
             </li>
         </ul>
@@ -591,6 +580,15 @@ const AccountInfoView = (props) => {
                                     modifyEmail(data).then(resq => {
                                         if(resq.code === 200) {
                                             customTips.success(resq.message)
+                                            props.setModeInstance(current => ({
+                                                ...current,
+                                                loadingStatus: false,
+                                                editorIndex: null,
+                                                instance: null,
+                                                tempAvatar: null
+                                            }))
+                                        } else if(resq.code === 0) {
+                                            customTips.info(resq.message)
                                         } else {
                                             customTips.error(resq.message)
                                         }
@@ -634,6 +632,7 @@ const AccountInfoView = (props) => {
                         <InstantInput
                             width='12rem'
                             mode='input'
+                            type='password'
                             label='密码'
                             value=''
                             loadingStatus={props.modeInstance.loadingStatus}

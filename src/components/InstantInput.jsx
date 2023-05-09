@@ -33,6 +33,7 @@ const InstantInput = forwardRef((props, ref) => {
                 {
                     props.mode === 'input' &&
                     <TextField
+                        type={props.type}
                         style={{width: props.width}}
                         label={props.label}
                         defaultValue={props.value}
@@ -46,6 +47,7 @@ const InstantInput = forwardRef((props, ref) => {
                     props.mode === 'textarea' &&
                     <TextField
                         fullWidth
+                        type={props.type}
                         style={{width: props.width}}
                         hiddenLabel
                         placeholder={props.placeholder}
@@ -102,6 +104,7 @@ const InstantInput = forwardRef((props, ref) => {
 })
 InstantInput.defaultProps = {
     label: '未设置',
+    type: 'text',
     value: '未设置',
     mode: 'input',
     width: null,
