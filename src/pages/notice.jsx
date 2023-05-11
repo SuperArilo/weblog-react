@@ -11,6 +11,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate  } from 'react-router-dom'
 import { TransitionGroup, SwitchTransition, CSSTransition } from 'react-transition-group'
 //组件
+import Icon from '../components/Icon'
 import WaterWave from 'water-wave'
 import Pagination from '../components/Pagination'
 import AsukaButton from '../components/asukaButton'
@@ -36,7 +37,7 @@ export default function Notice(props) {
             },
             {
                 id: 2,
-                title: '@我'
+                title: '回复'
             },
             {
                 id: 3,
@@ -44,10 +45,6 @@ export default function Notice(props) {
             },
             {
                 id: 4,
-                title: '碎语'
-            },
-            {
-                id: 5,
                 title: '赞'
             }
         ],
@@ -106,7 +103,22 @@ export default function Notice(props) {
         $(lineRef.current).css({ 'left': navMenuInstance.selectIndex * $(lineRef.current).width() })
     }, [navMenuInstance.selectIndex])
 
-    
+    const userReadNotice = () => {
+        let data = new FormData()
+        data.append('noticeIds', selectNoticeList)
+        readNotice(data).then(resq => {
+            if(resq.code === 200)  {
+                noticeListGet(requestInstance)
+                customTips.success(resq.message)
+                setSelectNoticeList([])
+            } else {
+                customTips.error(resq.message)
+            }
+        }).catch(err => {
+            customTips.error(err.message)
+        })
+    }
+
     return (
         <div className={style.notice_box}>
             <main className={style.notice_container}>
@@ -167,91 +179,87 @@ export default function Notice(props) {
                                     :
                                     <>
                                         <ul className={style.notice_data_list}>
-                                        {
-                                            noticeInstance.list.map((item, index, array) => {
-                                                return (
-                                                    <li key={item.noticeId}>
-                                                        <div className={style.notice_title}>
-                                                            <i className={`${'far'} ${selectNoticeList.indexOf(item.noticeId) === -1 ? 'fa-square':'far fa-check-square'}`}
-                                                                onClick={() => {
-                                                                    let copy = [...selectNoticeList]
-                                                                    let index = copy.indexOf(item.noticeId)
-                                                                    if(index === -1) {
-                                                                        copy.push(item.noticeId)
-                                                                    } else {
-                                                                        copy.splice(index, 1)
-                                                                    }
-                                                                    setSelectNoticeList(copy)
-                                                                }}/>
-                                                            <span onClick={() => { setNavMenuInstance({...navMenuInstance, selectItemIndex: navMenuInstance.selectItemIndex === item.noticeId ? null:item.noticeId}) }}>{item.title}</span>
-                                                            <i className='fas fa-trash' />
-                                                        </div>
-                                                        <Collapse in={navMenuInstance.selectItemIndex === item.noticeId} mountOnEnter unmountOnExit>
-                                                            <div
-                                                                className={`${style.notice_content} ${renderHtml.render_html}`}
-                                                                dangerouslySetInnerHTML={{ __html: item.content }}/>
-                                                        </Collapse>
-                                                    </li>
-                                                )
-                                            })
-                                        }
-                                    </ul>
-                                    <div className={style.bottom_function}>
-                                        <div className={style.select_all}>
-                                            <i 
-                                                className={`${'far'} ${selectNoticeList.length === 0 ? 'fa-square':''} ${selectNoticeList.length >= 1 && selectNoticeList.length < noticeInstance.list.length ? 'fa-minus-square':''} ${selectNoticeList.length === noticeInstance.list.length ? 'fa-check-square':''}`} 
-                                                onClick={() => {
-                                                    if(selectNoticeList.length === noticeInstance.list.length) {
-                                                        setSelectNoticeList([])
-                                                        return
-                                                    }
-                                                    let [...list] = selectNoticeList
-                                                    noticeInstance.list.forEach(key => {
-                                                        if(selectNoticeList.indexOf(key.noticeId) === -1) {
-                                                            list.push(key.noticeId)
-                                                        }
-                                                    })
-                                                    setSelectNoticeList(list)
-                                                }}/>
-                                            <span>全选</span>
-                                        </div>
-                                        <div>
                                             {
-                                                noticeInstance.list.length !== 0 &&
-                                                <Pagination
-                                                    total={noticeInstance.total}
-                                                    current={noticeInstance.current}
-                                                    onPageChange={e => { setRequestInstance({...requestInstance, pageNum: e}) }}/>
+                                                noticeInstance.list.map((item, index, array) => {
+                                                    return (
+                                                        <li key={item.noticeId}>
+                                                            <div className={style.notice_title}>
+                                                                <Icon
+                                                                    width='1.7rem'
+                                                                    height='1.7rem'
+                                                                    iconClass={selectNoticeList.indexOf(item.noticeId) === -1 ? 'un_select':'selected'}
+                                                                    onClick={() => {
+                                                                        let copy = [...selectNoticeList]
+                                                                        let index = copy.indexOf(item.noticeId)
+                                                                        if(index === -1) {
+                                                                            copy.push(item.noticeId)
+                                                                        } else {
+                                                                            copy.splice(index, 1)
+                                                                        }
+                                                                        setSelectNoticeList(copy)
+                                                                    }}/>
+                                                                <span
+                                                                    onClick={() => {
+                                                                        setNavMenuInstance({
+                                                                            ...navMenuInstance,
+                                                                            selectItemIndex: navMenuInstance.selectItemIndex === item.noticeId ? null:item.noticeId
+                                                                        })
+                                                                    }}>{item.title}</span>
+                                                            </div>
+                                                            <Collapse in={navMenuInstance.selectItemIndex === item.noticeId} mountOnEnter unmountOnExit>
+                                                                <div className={style.notice_content}>
+                                                                    <span className={style.notice_send_time}>时间：{item.createTime}</span>
+                                                                    <div
+                                                                        className={`${style.notice_render} ${renderHtml.render_html}`}
+                                                                        dangerouslySetInnerHTML={{ __html: item.content }}/>
+                                                                </div>
+                                                            </Collapse>
+                                                        </li>
+                                                    )
+                                                })
                                             }
-                                            <AsukaButton 
-                                                text='删除'
-                                                class='read'
-                                                size='small'
-                                                onClick={() => {
-                                                    let data = new FormData()
-                                                    data.append('noticeIds', selectNoticeList)
-                                                    readNotice(data).then(resq => {
-                                                        if(resq.code === 200)  {
-                                                            noticeListGet(requestInstance)
-                                                            customTips.success(resq.message)
+                                        </ul>
+                                        <div className={style.bottom_function}>
+                                            <div className={style.select_all}>
+                                                <Icon iconClass={`${selectNoticeList.length === 0 ? 'un_select':''} ${selectNoticeList.length >= 1 && selectNoticeList.length < noticeInstance.list.length ? 'selected_other':''} ${selectNoticeList.length === noticeInstance.list.length ? 'selected':''}`}
+                                                    onClick={() => {
+                                                        if(selectNoticeList.length === noticeInstance.list.length) {
                                                             setSelectNoticeList([])
-                                                        } else {
-                                                            customTips.error(resq.message)
+                                                            return
                                                         }
-                                                    }).catch(err => {
-                                                        customTips.error(err.message)
-                                                    })
-                                                }}/>
+                                                        let [...list] = selectNoticeList
+                                                        noticeInstance.list.forEach(key => {
+                                                            if(selectNoticeList.indexOf(key.noticeId) === -1) {
+                                                                list.push(key.noticeId)
+                                                            }
+                                                        })
+                                                        setSelectNoticeList(list)
+                                                    }}/>
+                                                <span>全选</span>
+                                            </div>
+                                            <div>
+                                                {
+                                                    noticeInstance.list.length !== 0 &&
+                                                    <Pagination
+                                                        total={noticeInstance.total}
+                                                        current={noticeInstance.current}
+                                                        onPageChange={e => { setRequestInstance({...requestInstance, pageNum: e}) }}/>
+                                                }
+                                                <AsukaButton 
+                                                    text='删除'
+                                                    class='read'
+                                                    size='small'
+                                                    onClick={() => {
+                                                        userReadNotice()
+                                                    }}/>
+                                            </div>
                                         </div>
-                                    </div>
                                     </>
                                 }
                             </>
                         }
                     </CSSTransition>
-                </SwitchTransition>
-                    
-                    
+                </SwitchTransition>   
                 </div>
             </main>
         </div>

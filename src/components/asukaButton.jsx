@@ -2,6 +2,7 @@ import React from 'react'
 import WaterWave from 'water-wave'
 import 'water-wave/style.css'
 import style from '../assets/scss/components/button.module.scss'
+import Icon from './Icon'
 export default function AsukaButton(props) {
     return (
         <button
@@ -10,8 +11,13 @@ export default function AsukaButton(props) {
             title={props.class === 'file' ? '点击上传':'提交'}
             type='button'>
             { 
-                props.status ? 
-                <i className={`${'asukamis loading'} ${props.status ? style.rotate:''}`} />
+                props.status ?
+                <Icon
+                    width='1.5rem'
+                    height='1.5rem'
+                    iconClass={`${'asukamis loading'}`}
+                    status={props.status}
+                    />
                 :
                 props.text
             }
