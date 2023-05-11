@@ -10,15 +10,7 @@ export default function AsukaButton(props) {
             className={`${style.asuka_button} ${props.class === 'normal' ? style.asuka_button_normal:''} ${props.class === 'read' ? style.asuka_button_read:''} ${props.class === 'danger' ? style.asuka_button_danger:''} ${props.class === 'file' ? style.asuka_button_file:''} ${props.size === 'normal' ? style.button_size_normal:''} ${props.size === 'big' ? style.button_size_big:''} ${props.size === 'small' ? style.button_size_small:''}`}
             title={props.class === 'file' ? '点击上传':'提交'}
             type='button'>
-            { 
-                props.status ?
-                <Icon
-                    width='1.5rem'
-                    height='1.5rem'
-                    iconClass={`${'asukamis loading'}`}
-                    status={props.status}
-                    />
-                :
+            {
                 props.text
             }
             {
@@ -44,7 +36,6 @@ export default function AsukaButton(props) {
 }
 AsukaButton.defaultProps = {
     text: '未设置',
-    status: false,
     class: 'normal',
     size: 'normal',
     getFile: () => {

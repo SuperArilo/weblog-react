@@ -12,7 +12,7 @@ import Collapse from '@mui/material/Collapse'
 import Comment from './comment'
 import CommentSkeleton from './CommentSkeleton'
 import { SwitchTransition, CSSTransition, TransitionGroup } from 'react-transition-group'
-import customTips from '../util/notostack/customTips'
+import toast from 'react-hot-toast'
 import Pagination from './Pagination'
 import Menu from './Menu'
 import PreviewImage from './PreviewImage'
@@ -54,10 +54,10 @@ export default function GossipContent(props) {
             if(resq.code === 200) {
                 setCommentObject(target => { return { ...target, list: resq.data.list, total: resq.data.total, pages: resq.data.pages, current: resq.data.current } })
             } else {
-                customTips.error(resq.message)
+                toast.error(resq.message)
             }
         }).catch(err => {
-            customTips.error(err.message)
+            toast.error(err.message)
         })
     }, [])
 
@@ -97,17 +97,19 @@ export default function GossipContent(props) {
                     onClickItem={(e) => {
                         switch(e) {
                             case 0:
+                                toast.loading('操作中...')
                                 let data = new FormData()
                                 data.append('gossipId', props.data.id)
                                 deleteGossip(data).then(resq => {
+                                    toast.remove()
                                     if(resq.code === 200) {
-                                        customTips.success(resq.message)
+                                        toast.success(resq.message)
                                         props.gossipDataGet()
                                     } else {
-                                        customTips.error(resq.message)
+                                        toast.error(resq.message)
                                     }
                                 }).catch(err => {
-                                    customTips.error(err.message)
+                                    toast.error(err.message)
                                 })
                             break
                             default:
@@ -156,25 +158,28 @@ export default function GossipContent(props) {
                     status={editorSendToServerStatus}
                     getContent={(value) => { 
                         if(value === null || value === '' || value === '<p></p>') {
-                            customTips.warning('不能提交空白哦 ⊙﹏⊙∥')
+                            toast('不能提交空白哦 ⊙﹏⊙∥')
                             return
                         }
                         if(!editorSendToServerStatus) {
+                            toast.loading('提交中...')
                             setEditorSendToServerStatus(true)
                             let data = new FormData()
                             data.append('gossipId', props.data.id)
                             data.append('content', value)
                             replyGossipComment(data).then(resq => {
+                                toast.remove()
                                 if(resq.code === 200) {
                                     tinymce.current.clear()
-                                    customTips.success(resq.message)
+                                    toast.success(resq.message)
                                     commentData(requestInstance)
                                 } else {
-                                    customTips.error(resq.message)
+                                    toast.error(resq.message)
                                 }
                                 setEditorSendToServerStatus(false)
                             }).catch(err => {
-                                customTips.error(err.message)
+                                toast.remove()
+                                toast.error(err.message)
                                 setEditorSendToServerStatus(false)
                             })
                         }
@@ -200,60 +205,69 @@ export default function GossipContent(props) {
                                                             handleFold={(id) => { setSelectCommentItem(id === selectCommentItem ? null:id) }}
                                                             handleLike={() => { 
                                                                 if(props.userInfo === null) {
-                                                                    customTips.info('你需要登陆才能继续哦 ⊙﹏⊙∥')
+                                                                    toast('你需要登陆才能继续哦 ⊙﹏⊙∥')
                                                                     return
                                                                 }
+                                                                toast.loading('提交中...')
                                                                 let data = new FormData()
                                                                 data.append('gossipId', props.data.id)
                                                                 data.append('commentId', item.commentId)
                                                                 likeGossipComment(data).then(resq => {
+                                                                    toast.remove()
                                                                     if(resq.code === 200) {
-                                                                        customTips.success(resq.message)
+                                                                        toast.success(resq.message)
                                                                         let [...temp] = commentObject.list
                                                                         let index = temp.findIndex(key => key.commentId === item.commentId)
                                                                         temp[index].like = resq.data.status
                                                                         temp[index].likes = resq.data.likes
                                                                         setCommentObject({...commentObject, list: temp})
                                                                     } else {
-                                                                        customTips.error(resq.message)
+                                                                        toast.error(resq.message)
                                                                     }
                                                                 }).catch(err => {
-                                                                    customTips.error(err.message)
+                                                                    toast.remove()
+                                                                    toast.error(err.message)
                                                                 })
                                                             }}
                                                             handleReply={content => {
+                                                                toast.loading('提交中...')
                                                                 let data = new FormData()
                                                                 data.append('gossipId', props.data.id)
                                                                 data.append('content', content)
                                                                 data.append('replyCommentId', item.commentId)
                                                                 data.append('replyUserId', item.replyUser.replyUserId)
                                                                 replyGossipComment(data).then(resq => {
+                                                                    toast.remove()
                                                                     if(resq.code === 200) {
-                                                                        customTips.success(resq.message)
+                                                                        toast.success(resq.message)
                                                                         commentData(requestInstance)
                                                                         setSelectCommentItem(null)
                                                                     } else {
-                                                                        customTips.error(resq.message)
+                                                                        toast.error(resq.message)
                                                                     }
                                                                     commentRef.current.changeEditorLoadingStatus(false)
                                                                 }).catch(err => {
-                                                                    customTips.error(err.message)
+                                                                    toast.remove()
+                                                                    toast.error(err.message)
                                                                     commentRef.current.changeEditorLoadingStatus(false)
                                                                 })
                                                             }}
                                                             handleDelete={() => {
+                                                                toast.loading('提交中...')
                                                                 let data = new FormData()
                                                                 data.append('gossipId', props.data.id)
                                                                 data.append('commentId', item.commentId)
                                                                 deleteGossipComment(data).then(resq => {
+                                                                    toast.remove()
                                                                     if(resq.code === 200) {
-                                                                        customTips.success(resq.message)
+                                                                        toast.success(resq.message)
                                                                         commentData(requestInstance)
                                                                     } else {
-                                                                        customTips.error(resq.message)
+                                                                        toast.error(resq.message)
                                                                     }
                                                                 }).catch(err => {
-                                                                    customTips.error(err.message)
+                                                                    toast.remove()
+                                                                    toast.error(err.message)
                                                                 })
                                                             }}/>
                                                     </Collapse>

@@ -11,7 +11,7 @@ import KeepAlive from 'react-activation'
 import PreviewImage from './PreviewImage'
 //方法
 import { useNavigate } from 'react-router-dom'
-import customTips from '../util/notostack/customTips'
+import toast from 'react-hot-toast'
 
 const Comment = forwardRef((props, ref) => {
     //hook
@@ -100,7 +100,7 @@ const Comment = forwardRef((props, ref) => {
                         status={editorLoadingStatus} 
                         getContent={(content) => { 
                             if(content === null || content === undefined || content === '' || content === '<p></p>') {
-                                customTips.warning('回复的内容不能为空白哦 (ง •_•)ง')
+                                toast('回复的内容不能为空白哦 (ง •_•)ง')
                                 return
                             }
                             props.handleReply(content)

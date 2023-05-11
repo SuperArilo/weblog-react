@@ -6,7 +6,7 @@ import Tinymce from './editor'
 //样式
 import style from '../assets/scss/createGossipWindow.module.scss'
 //方法
-import customTips from '../util/notostack/customTips'
+import toast from 'react-hot-toast'
 import { userCreateGossip } from '../util/gossip'
 
 export default function CreateGossipWindow(props) {
@@ -32,22 +32,25 @@ export default function CreateGossipWindow(props) {
                     getContent={content => {
                         if(!gossipInstance.status) {
                             if(content === '<p></p>' || content === null || content === '') {
-                                customTips.warning('内容不能为空哦！')
+                                toast('内容不能为空哦！')
                                 return
                             }
                             setGossipInstance({...gossipInstance, status: true})
+                            toast.loading('提交中...')
                             let data = new FormData()
                             data.append('content', content)
                             userCreateGossip(data).then(resq => {
+                                toast.remove()
                                 if(resq.code === 200) {
-                                    customTips.success(resq.message)
+                                    toast.success(resq.message)
                                 } else {
-                                    customTips.error(err.message)
+                                    toast.error(err.message)
                                 }
                                 setGossipInstance({...gossipInstance, status: false})
                                 props.setCreateGossipWindowStatus(false)
                             }).catch(err => {
-                                customTips.error(err.message)
+                                toast.remove()
+                                toast.error(err.message)
                                 setGossipInstance({...gossipInstance, status: false})
                                 props.setCreateGossipWindowStatus(false)
                             })

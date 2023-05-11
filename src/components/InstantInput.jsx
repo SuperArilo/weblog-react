@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback, useRef, useMemo, forwardRef, u
 import style from '../assets/scss/components/instantInput.module.scss'
 //方法
 import $ from 'jquery'
-import customTips from '../util/notostack/customTips'
+import toast from 'react-hot-toast'
 //组件
 import WaterWave from 'water-wave'
 import TextField from '@mui/material/TextField'
@@ -82,11 +82,10 @@ const InstantInput = forwardRef((props, ref) => {
                         <WaterWave color="rgb(155, 195, 219)" duration={ 500 } />
                     </Icon>
                     <Icon
-                        iconClass={`${props.loadingStatus ? 'loading':'save'}`}
-                        status={props.loadingStatus}
+                        iconClass='save'
                         onClick={() => {
                             if(inputConetnt === '' || inputConetnt === null) {
-                                customTips.warning('必须要填写内容哦')
+                                toast('必须要填写内容哦')
                                 return
                             }
                             props.handleSave(inputConetnt)
@@ -109,7 +108,6 @@ InstantInput.defaultProps = {
     mode: 'input',
     width: null,
     placeholder: '未设置',
-    loadingStatus: false,
     renderObject: [
         {
             id: 0,

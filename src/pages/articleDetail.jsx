@@ -8,7 +8,7 @@ import renderHtml from '../assets/scss/renderHtml.module.scss'
 import '../assets/scss/currencyTransition.scss'
 //组件
 import Tinymce from '../components/editor'
-import customTips from '../util/notostack/customTips'
+import toast from 'react-hot-toast'
 import Skeleton from '@mui/material/Skeleton'
 import Comment from '../components/comment'
 import WaterWave from 'water-wave'
@@ -43,25 +43,28 @@ export default function ArticleDetail(props) {
                         status={addCommentStatus} 
                         getContent={(value) => { 
                             if(value === null || value === '' || value === '<p></p>') {
-                                customTips.warning('不能提交空白哦 ⊙﹏⊙∥')
+                                toast('不能提交空白哦 ⊙﹏⊙∥')
                                 return
                             }
                             if(!addCommentStatus) {
+                                toast.loading('提交中...')
                                 setAddCommentStatus(true)
                                 let data = new FormData()
                                 data.append('articleId', articleId)
                                 data.append('content', value)
                                 replyComment(data).then(resq => {
+                                    toast.remove()
                                     if(resq.code === 200) {
                                         tinymce.current.clear()
-                                        customTips.success(resq.message)
+                                        toast.success(resq.message)
                                         articleListRef.current.reRequestComment()
                                     } else {
-                                        customTips.error(resq.message)
+                                        toast.error(resq.message)
                                     }
                                     setAddCommentStatus(false)
                                 }).catch(err => {
-                                    customTips.error(err.message)
+                                    toast.remove()
+                                    toast.error(err.message)
                                     setAddCommentStatus(false)
                                 })
                             }
@@ -85,10 +88,10 @@ class ArticleInfoTop extends React.Component {
             if(resq.code === 200) {
                 this.setState({ articleInstance: resq.data })
             } else {
-                customTips.error(resq.message)
+                toast.error(resq.message)
             }
         }).catch(err => {
-            customTips.error(err.message)
+            toast.error(err.message)
         })
     }
     render() {
@@ -100,23 +103,26 @@ class ArticleInfoTop extends React.Component {
                                                                                     articleInstance={this.state.articleInstance} 
                                                                                     handleLike={(articleId) => { 
                                                                                         if(!this.props.userInfo) {
-                                                                                            customTips.info('你需要登录才能进行下一步操作哦')
+                                                                                            toast('你需要登录才能进行下一步操作哦')
                                                                                             return
                                                                                         }
+                                                                                        toast.loading('提交中...')
                                                                                         let data = new FormData()
                                                                                         data.append('articleId', articleId)
                                                                                         increaseArticleLike(data).then(resq => {
+                                                                                            toast.remove()
                                                                                             if(resq.code === 200) {
-                                                                                                customTips.success(resq.message)
+                                                                                                toast.success(resq.message)
                                                                                                 let {...temp} = this.state.articleInstance
                                                                                                 temp.hasLike = resq.data.status
                                                                                                 temp.articleLikes = resq.data.likes
                                                                                                 this.setState({ articleInstance: temp })
                                                                                             } else {
-                                                                                                customTips.error(resq.message)
+                                                                                                toast.error(resq.message)
                                                                                             }
                                                                                         }).catch(err => {
-                                                                                            customTips.error(err.message)
+                                                                                            toast.remove()
+                                                                                            toast.error(err.message)
                                                                                         })
                                                                                     }} />
                     }
@@ -148,10 +154,10 @@ const ArticleVistorList = forwardRef((props, ref) => {
             if(resq.code === 200) {
                 setCommentObject(target => { return { ...target, list: resq.data.list, pages: resq.data.pages, current: resq.data.current, total: resq.data.total} })
             } else {
-                customTips.error(resq.message)
+                toast.error(resq.message)
             }
         }).catch(err => {
-            customTips.error(err.message)
+            toast.error(err.message)
         })
     }, [])
     useEffect(() => {
@@ -164,10 +170,10 @@ const ArticleVistorList = forwardRef((props, ref) => {
                 if(resq.code === 200) {
                     setCommentObject(current => { return { ...current, pages: resq.data.pages, list: resq.data.list } })
                 } else {
-                    customTips.error(resq.message)
+                    toast.error(resq.message)
                 }
             }).catch(err => {
-                customTips.error(err.message)
+                toast.error(err.message)
             })
         }
     }))
@@ -194,62 +200,71 @@ const ArticleVistorList = forwardRef((props, ref) => {
                                                         handleFold={(id) => { setSelectCommentItem(id === selectCommentItem ? null:id) }}
                                                         handleLike={() => { 
                                                             if(props.userInfo === null) {
-                                                                customTips.info('你需要登陆才能继续哦 ⊙﹏⊙∥')
+                                                                toast('你需要登陆才能继续哦 ⊙﹏⊙∥')
                                                                 return
                                                             }
+                                                            toast.loading('提交中...')
                                                             let data = new FormData()
                                                             data.append('articleId', props.articleId)
                                                             data.append('commentId', item.commentId)
                                                             likeComment(data).then(resq => {
+                                                                toast.remove()
                                                                 if(resq.code === 200) {
-                                                                    customTips.success(resq.message)
+                                                                    toast.success(resq.message)
                                                                     let [...temp] = commentObject.list
                                                                     let index = temp.findIndex(key => key.commentId === item.commentId)
                                                                     temp[index].like = resq.data.status
                                                                     temp[index].likes = resq.data.likes
                                                                     setCommentObject({...commentObject, list: temp})
                                                                 } else {
-                                                                    customTips.error(resq.message)
+                                                                    toast.error(resq.message)
                                                                 }
                                                             }).catch(err => {
-                                                                customTips.error(err.message)
+                                                                toast.remove()
+                                                                toast.error(err.message)
                                                             })
                                                         }}
                                                         handleReply={(content) => {
+                                                            toast.loading('提交中...')
                                                             let data = new FormData()
                                                             data.append('articleId', props.articleId)
                                                             data.append('content', content)
                                                             data.append('replyCommentId', item.commentId)
                                                             data.append('replyUserId', item.replyUser.replyUserId)
                                                             replyComment(data).then(resq => {
+                                                                toast.remove()
                                                                 if(resq.code === 200) {
-                                                                    customTips.success(resq.message)
+                                                                    toast.success(resq.message)
                                                                     commentData(requestInstance)
                                                                     setSelectCommentItem(null)
                                                                 } else {
-                                                                    customTips.error(resq.message)
+                                                                    toast.error(resq.message)
                                                                 }
                                                                 commentRef.current.changeEditorLoadingStatus(false)
                                                             }).catch(err => {
-                                                                customTips.error(err.message)
+                                                                toast.remove()
+                                                                toast.error(err.message)
                                                                 commentRef.current.changeEditorLoadingStatus(false)
                                                             })
                                                         }}
                                                         handleDelete={() => {
+                                                            toast.loading('提交中...')
                                                             let data = new FormData()
                                                             data.append('articleId', props.articleId)
                                                             data.append('commentId', item.commentId)
                                                             deleteComment(data).then(resq => {
+                                                                toast.remove()
                                                                 if(resq.code === 200) {
-                                                                    customTips.success(resq.message)
+                                                                    toast.success(resq.message)
                                                                     setTimeout(() => {
                                                                         commentData(requestInstance)
                                                                     }, 500)
                                                                 } else {
-                                                                    customTips.error(resq.message)
+                                                                    toast.error(resq.message)
                                                                 }
                                                             }).catch(err => {
-                                                                customTips.error(err.message)
+                                                                toast.remove()
+                                                                toast.error(err.message)
                                                             })
                                                         }}/>
                                                 </Collapse>

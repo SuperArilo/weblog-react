@@ -89,7 +89,7 @@ export default class Tinymce extends React.Component {
                                 </div>
                                 <AsukaButton
                                     text='提交'
-                                    status={this.props.status} onClick={() => {
+                                    onClick={() => {
                                         this.props.getContent(this.state.modelValue)
                                     }}/>
                             </div>

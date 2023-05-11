@@ -9,7 +9,7 @@ import GossipContent from '../components/gossipContent'
 import GossipSkeleton from '../components/GossipSkeleton'
 //方法
 import { gossipListRequest } from '../util/gossip'
-import customTips from '../util/notostack/customTips'
+import toast from 'react-hot-toast'
 import { likeGossip } from '../util/gossip.js'
 //hook
 import { useParams, useNavigate, useLocation  } from "react-router-dom"
@@ -47,7 +47,7 @@ export default function Gossip(props) {
                 })
             }
         }).catch(err => {
-            customTips.error(err.message)
+            toast.error(err.message)
         })
     }, [])
 
@@ -87,24 +87,27 @@ export default function Gossip(props) {
                                                         }}
                                                         handleLike={(gossipId) => {
                                                             if(props.userInfo === null) {
-                                                                customTips.success('你需要登录哦 (￣y▽,￣)╭ ')
+                                                                toast('你需要登录哦 (￣y▽,￣)╭ ')
                                                                 return
                                                             }
+                                                            toast.loading('加载中...')
                                                             let data = new FormData()
                                                             data.append('gossipId', gossipId)
                                                             likeGossip(data).then(resq => {
+                                                                toast.remove()
                                                                 if(resq.code === 200) {
-                                                                    customTips.success(resq.message)
+                                                                    toast.success(resq.message)
                                                                     let [...temp] = gossipObject.list
                                                                     let index = temp.findIndex(item => item.id === gossipId)
                                                                     temp[index].like = resq.data.status
                                                                     temp[index].likes = resq.data.likes
                                                                     setGossipObject({...gossipObject, list: temp})
                                                                 } else {
-                                                                    customTips.error(reqs.message)
+                                                                    toast.error(resq.message)
                                                                 }
                                                             }).catch(err => {
-                                                                customTips.error(err.message)
+                                                                toast.remove()
+                                                                toast.error(err.message)
                                                             })
                                                         }}
                                                         handleGossipList={() => {

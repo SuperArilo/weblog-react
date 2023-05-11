@@ -18,7 +18,7 @@ const AsukaPopper = (props) => {
                     <div className={style.popper_box}>
                         <p>{props.title}</p>
                         <div>
-                            <AsukaButton text='确定' status={props.status} size='small' onClick={ () => props.onConfirm() } />
+                            <AsukaButton text='确定' size='small' onClick={ () => props.onConfirm() } />
                             <AsukaButton text='取消' class='danger' size='small' onClick={ () => props.onCancel() }/>
                         </div>
                     </div>

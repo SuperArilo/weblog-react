@@ -9,7 +9,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { blogLoginUser, blogRegisterUser } from './util/user'
 import { regiserMail } from './util/mail/mail'
 //组件
-import customTips from './util/notostack/customTips'
+import toast from 'react-hot-toast'
 import WaterWave from 'water-wave'
 import Slide from '@mui/material/Slide'
 import Menu from './components/Menu'
@@ -451,14 +451,15 @@ const LoginBox = (props) => {
 	const [loginStatus, setLoginStatus] = useState(false)
 	const loginFunction = () => {
 		if(userInfo !== null) {
-			customTips.warning('你已经登陆过了！')
+			toast('你已经登陆过了！')
 			return
 		}
 		if(!loginStatus) {
 			if(emailAndUID === null || emailAndUID === '' || password === null || password === '') {
-				customTips.info('输入的内容不能为空哦')
+				toast('输入的内容不能为空哦')
 				return
 			}
+			toast.loading('提交中...')
 			setLoginStatus(true)
 			let data = new FormData()
 			if(emailMatchRule.test(emailAndUID)) {
@@ -468,17 +469,19 @@ const LoginBox = (props) => {
 			}
 			data.append('password', password)
 			blogLoginUser(data).then(resq => {
+				toast.remove()
 				if(resq.code === 200) {
 					localStorage.setItem('token', resq.data.token)
 					dispatch({ type: 'userInfo/setInfo', payload: resq.data.user })
-					customTips.success(resq.message)
+					toast.success(resq.message)
 					setTimeout(() => { props.closeBox(false) }, 1000)
 				} else {
-					customTips.error(resq.message)
+					toast.error(resq.message)
 				}
 				setLoginStatus(false)
 			}).catch(err => {
-				customTips.error(err.message)
+				toast.remove()
+				toast.error(err.message)
 				setLoginStatus(false)
 			})
 		}
@@ -610,15 +613,17 @@ const RegisterBox = (props) => {
 									if(!requestStatus.sendMailStatus && requestStatus.countDown === 60) {
 										setRequestStatus({...requestStatus, sendMailStatus: true})
 										if(inputInstance.email === '' || inputInstance.email === null) {
-											customTips.info('邮箱不能为空哦')
+											toast('邮箱不能为空哦')
 											setRequestStatus({...requestStatus, sendMailStatus: false})
 											return
 										}
+										toast.loading('提交中...')
 										let data = new FormData()
 										data.append('mail', inputInstance.email)
 										regiserMail(data).then(resq => {
+											toast.remove()
 											if(resq.code === 200) {
-												customTips.success(resq.message)
+												toast.success(resq.message)
 												setRequestStatus({...requestStatus, sendMailStatus: false})
 												intervalID.current = setInterval(() => {
 													if(requestStatus.countDown === 0) {
@@ -630,15 +635,16 @@ const RegisterBox = (props) => {
 													setRequestStatus({...requestStatus, countDown: requestStatus.countDown--})
 												}, 1000)
 											} else if(resq.code === 0) {
-												customTips.info(resq.message)
+												toast(resq.message)
 												setRequestStatus({...requestStatus, sendMailStatus: false})
 											} else {
-												customTips.info(resq.message)
+												toast(resq.message)
 												setRequestStatus({...requestStatus, sendMailStatus: false})
 											}
 										}).catch(err => {
+											toast.remove()
 											setRequestStatus({...requestStatus, sendMailStatus: false})
-											customTips.error(err.message)
+											toast.error(err.message)
 										})
 									}
 									
@@ -717,12 +723,13 @@ const RegisterBox = (props) => {
 					title="注册"
 					className={`${signStyle.confirm_button} ${props.isMobile ? signStyle.confirm_button_mobile:signStyle.confirm_button_pc}`}
 					onClick={() => {
-						if(inputInstance.email === '' || inputInstance.password === '' || inputInstance.nickName === '' || inputInstance.verifyCode === '') return customTips.info('信息没有填写完整哦 v(/▽＼)')
+						if(inputInstance.email === '' || inputInstance.password === '' || inputInstance.nickName === '' || inputInstance.verifyCode === '') return toast('信息没有填写完整哦 v(/▽＼)')
 						if(inputInstance.password !== againPassword.content) {
-							customTips.info('两次输入的密码不一致，请检查')
+							toast('两次输入的密码不一致，请检查')
 							return
 						}
 						if(!requestStatus.registerStatus) {
+							toast.loading('提交中...')
 							setRequestStatus({...requestStatus, registerStatus: true})
 							let data = new FormData()
 							data.append('email', inputInstance.email)
@@ -730,8 +737,9 @@ const RegisterBox = (props) => {
 							data.append('nickName', inputInstance.nickName)
 							data.append('verifyCode', inputInstance.verifyCode)
 							blogRegisterUser(data).then(resq => {
+								toast.remove()
 								if(resq.code === 200) {
-									customTips.success(resq.message)
+									toast.success(resq.message)
 									setTimeout(() => {
 										clearInterval(intervalID.current)
 										intervalID.current = null
@@ -739,14 +747,15 @@ const RegisterBox = (props) => {
 										props.closeBox(false)
 									}, 500)
 								} else if(resq.code === 0) {
-									customTips.info(resq.message)
+									toast(resq.message)
 								} else {
-									customTips.error(resq.message)
+									toast.error(resq.message)
 								}
 								setRequestStatus({...requestStatus, registerStatus: false})
 							}).catch(err => {
+								toast.remove()
 								setRequestStatus({...requestStatus, registerStatus: false})
-								customTips.error(err.message)
+								toast.error(err.message)
 							})
 						}
 					}}>

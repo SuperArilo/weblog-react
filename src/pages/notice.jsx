@@ -6,7 +6,7 @@ import '../assets/scss/currencyTransition.scss'
 //方法
 import $ from 'jquery'
 import { noticeGet, readNotice } from '../util/notice'
-import customTips from '../util/notostack/customTips'
+import toast from 'react-hot-toast'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate  } from 'react-router-dom'
 import { TransitionGroup, SwitchTransition, CSSTransition } from 'react-transition-group'
@@ -81,7 +81,7 @@ export default function Notice(props) {
                 }))
             }
         }).catch(err => {
-            customTips.error(err.message)
+            toast.error(err.message)
         })
     }, [])
 
@@ -104,18 +104,21 @@ export default function Notice(props) {
     }, [navMenuInstance.selectIndex])
 
     const userReadNotice = () => {
+        toast.loading('提交中...')
         let data = new FormData()
         data.append('noticeIds', selectNoticeList)
         readNotice(data).then(resq => {
+            toast.remove()
             if(resq.code === 200)  {
                 noticeListGet(requestInstance)
-                customTips.success(resq.message)
+                toast.success(resq.message)
                 setSelectNoticeList([])
             } else {
-                customTips.error(resq.message)
+                toast.error(resq.message)
             }
         }).catch(err => {
-            customTips.error(err.message)
+            toast.remove()
+            toast.error(err.message)
         })
     }
 

@@ -8,7 +8,7 @@ import { SwitchTransition, CSSTransition, TransitionGroup } from 'react-transiti
 import style from '../assets/scss/friends.module.scss'
 import '../assets/scss/currencyTransition.scss'
 import { friendGet } from '../util/friend'
-import customTips from '../util/notostack/customTips'
+import toast from 'react-hot-toast'
 
 export default function Friends(props) {
 
@@ -38,10 +38,10 @@ export default function Friends(props) {
                     }
                 })
             } else {
-                customTips.error(resq.message)
+                toast.error(resq.message)
             }
         }).catch(err => {
-            customTips.error(err.message)
+            toast.error(err.message)
         })
     }, [])
 

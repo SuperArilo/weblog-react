@@ -7,7 +7,7 @@ import { useParams, useNavigate } from "react-router-dom"
 import $ from 'jquery'
 import { blogUserProfiles, blogUserProfilesModify, blogUserModifyEmail } from '../util/user'
 import { modifyEmail } from '../util/mail/mail'
-import customTips from '../util/notostack/customTips'
+import toast from 'react-hot-toast'
 //组件
 import Gossip from './gossip'
 import Avatar from '../components/Avatar'
@@ -91,10 +91,10 @@ export default function User(props) {
                     }
                 }
             } else {
-                customTips.error(resq.message)
+                toast.error(resq.message)
             }
         }).catch(err => {
-            customTips.error(err.message)
+            toast.error(err.message)
         })
     }, [dispatch])
 
@@ -104,12 +104,14 @@ export default function User(props) {
 
     useEffect(() => {
         if(modeInstance.instance === null) return
+        toast.loading('提交中...')
         blogUserProfilesModify(modeInstance.instance).then(resq => {
+            toast.remove()
             if(resq.code === 200) {
-                customTips.success(resq.message)
+                toast.success(resq.message)
                 queryProfiles(viewUid)
             } else {
-                customTips.error(resq.message)
+                toast.error(resq.message)
             }
             setModeInstance(current => ({
                 ...current,
@@ -119,7 +121,8 @@ export default function User(props) {
                 tempAvatar: null
             }))
         }).catch(err => {
-            customTips.error(err.message)
+            toast.remove()
+            toast.error(err.message)
             setModeInstance(current => ({
                 ...current,
                 loadingStatus: false
@@ -570,16 +573,18 @@ const AccountInfoView = (props) => {
                             handleClose={() => { props.setModeInstance({...props.modeInstance, editorIndex: null}) }}
                             handleSave={content => {
                                 if(content === null || content === '') {
-                                    customTips.info("填写的信息不能为空")
+                                    toast("填写的信息不能为空")
                                     return
                                 }
                                 if(!requestStatus) {
+                                    toast.loading('提交中...')
                                     setRequestStatus(true)
                                     let data = new FormData()
                                     data.append('email', content)
                                     modifyEmail(data).then(resq => {
+                                        toast.remove()
                                         if(resq.code === 200) {
-                                            customTips.success(resq.message)
+                                            toast.success(resq.message)
                                             props.setModeInstance(current => ({
                                                 ...current,
                                                 loadingStatus: false,
@@ -588,13 +593,14 @@ const AccountInfoView = (props) => {
                                                 tempAvatar: null
                                             }))
                                         } else if(resq.code === 0) {
-                                            customTips.info(resq.message)
+                                            toast(resq.message)
                                         } else {
-                                            customTips.error(resq.message)
+                                            toast.error(resq.message)
                                         }
                                         setRequestStatus(false)
                                     }).catch(err => {
-                                        customTips.error(err.message)
+                                        toast.remove()
+                                        toast.error(err.message)
                                         setRequestStatus(false)
                                     })
                                 }

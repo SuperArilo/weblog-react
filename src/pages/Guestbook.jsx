@@ -16,7 +16,7 @@ import '../assets/scss/currencyTransition.scss'
 //方法
 import { useSelector, useDispatch } from 'react-redux'
 import { guestbookList, addGuestbook, deleteGuestbook } from '../util/guestbook'
-import customTips from '../util/notostack/customTips'
+import toast from 'react-hot-toast'
 export default function Guestbook() {
     //hook
     //params
@@ -39,10 +39,10 @@ export default function Guestbook() {
             if(resq.code === 200) {
                 setDataObject(target => { return { ...target, list: resq.data.list, total: resq.data.total, pages: resq.data.pages, current: resq.data.current} })
             } else {
-                customTips.error(resq.message)
+                toast.error(resq.message)
             }
         }).catch(err => {
-            customTips.error(err.message)
+            toast.error(err.message)
         })
     }, [])
     useEffect(() => {
@@ -57,25 +57,28 @@ export default function Guestbook() {
                 status={addGuestbookStatus}
                 getContent={(content) => {
                     if(content === null || content === undefined || content === '' || content === '<p></p>') {
-                        customTips.warning('回复的内容不能为空白哦 (ง •_•)ง')
+                        toast('回复的内容不能为空白哦 (ง •_•)ง')
                         return
                     }
                     if(!addGuestbookStatus) {
+                        toast.loading('提交中...')
                         setAddGuestbookStatus(true)
                         let data = new FormData()
                         data.append('content', content)
                         addGuestbook(data).then(resq => {
+                            toast.remove()
                             if(resq.code === 200) {
-                                customTips.success(resq.message)
+                                toast.success(resq.message)
                                 tinymceRef.current.clear()
                                 dataListGet(requestInstance)
                             } else {
-                                customTips.error(resq.message)
+                                toast.error(resq.message)
                             }
                             setAddGuestbookStatus(false)
                         }).catch(err => {
+                            toast.remove()
                             setAddGuestbookStatus(false)
-                            customTips.error(err.message)
+                            toast.error(err.message)
                         })
                     }
                     
@@ -165,21 +168,24 @@ const GuestbookCommentItem = (props) => {
                 status={deleteStatus}
                 onConfirm={() => {
                     if(!deleteStatus) {
+                        toast.loading('提交中...')
                         setDeleteStatus(true)
                         let data = new FormData()
                         data.append('guestbookId', props.item.guestbookId)
                         deleteGuestbook(data).then(resq => {
+                            toast.remove()
                             if(resq.code === 200) {
-                                customTips.success(resq.message)
+                                toast.success(resq.message)
                                 props.dataListGet(props.requestInstance)
                             } else {
-                                customTips.error(resq.message)
+                                toast.error(resq.message)
                             }
                             setDeleteStatus(false)
                             setPopporObject({...popporObject, open: false, target: null})
                         }).catch(err => {
+                            toast.remove()
                             setDeleteStatus(false)
-                            customTips.error(err.message)
+                            toast.error(err.message)
                             setPopporObject({...popporObject, open: false, target: null})
                         })
                     }

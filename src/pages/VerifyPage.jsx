@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import style from '../assets/scss/verifyPage.module.scss'
 import { useParams, useNavigate, useLocation  } from "react-router-dom"
 import { blogUserProfilesModifyEmail } from '../util/user'
-import customTips from '../util/notostack/customTips'
+import toast from 'react-hot-toast'
 import Icon from '../components/Icon'
 export default function VerifyPage(props) {
 
@@ -29,7 +29,7 @@ export default function VerifyPage(props) {
                 }
             })
         } else {
-            customTips.error('获取到的实例参数为空')
+            toast.error('获取到的实例参数为空')
         }
     }, [search])
 
@@ -46,11 +46,11 @@ export default function VerifyPage(props) {
                 localStorage.setItem('token', resq.data)
             } else {
                 setFinalState(false)
-                customTips.error(resq.message)
+                toast.error(resq.message)
             }
             redirect()
         }).catch(err => {
-            customTips.error(err.message)
+            toast.error(err.message)
             setFinalState(false)
             redirect()
         })

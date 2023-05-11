@@ -12,7 +12,7 @@ import Skeleton from '@mui/material/Skeleton'
 //方法
 import { useSelector, useDispatch } from 'react-redux'
 import { friendList, linksApply } from '../util/links'
-import customTips from '../util/notostack/customTips'
+import toast from 'react-hot-toast'
 
 export default function Links(props) {
 
@@ -51,10 +51,10 @@ export default function Links(props) {
                     list: resq.data.list
                 }))
             } else {
-                customTips.error(resq.message)
+                toast.error(resq.message)
             }
         }).catch(err => {
-            customTips.error(err.message)
+            toast.error(err.message)
         })
     }, [])
 
@@ -111,20 +111,23 @@ export default function Links(props) {
                                     size='small'
                                     onClick={() => {
                                         if(blogInstance.blogAvatar === '' || blogInstance.blogIntroduction === '' || blogInstance.blogLocation === '' || blogInstance.blogName === '') {
-                                            customTips.info('填写的信息为空哦')
+                                            toast('填写的信息为空哦')
                                             return
                                         }
                                         if(!applyStatus) {
+                                            toast.loading('提交中...')
                                             setApplyStatus(true)
                                             linksApply(blogInstance).then(resq => {
+                                                toast.remove()
                                                 if(resq.code === 200) {
-                                                    customTips.success(resq.message)
+                                                    toast.success(resq.message)
                                                 } else {
-                                                    customTips.error(resq.message)
+                                                    toast.error(resq.message)
                                                 }
                                                 setApplyStatus(false)
                                             }).catch(err => {
-                                                customTips.error(err.message)
+                                                toast.remove()
+                                                toast.error(err.message)
                                                 setApplyStatus(false)
                                             })
                                         }

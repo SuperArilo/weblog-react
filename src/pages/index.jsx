@@ -21,7 +21,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react'
 //方法
 import { gossipListRequest, likeGossip } from '../util/gossip'
 import { increaseArticleLike } from '../util/article'
-import customTips from '../util/notostack/customTips'
+import toast from 'react-hot-toast'
 import $ from 'jquery'
 export default function IndexPage(props) {
     //params
@@ -72,10 +72,10 @@ export default function IndexPage(props) {
             if(resq.code === 200) {
                 setArticleObject(target => { return ({ ...target, list: resq.data.list, pages: resq.data.pages, total: resq.data.total, current: resq.data.current }) })
             } else {
-                customTips.error(resq.message)
+                toast.error(resq.message)
             }
         }).catch(err => {
-            customTips.error(err.message)
+            toast.error(err.message)
         })
     }, [])
     const hotArticleData = useCallback((instance) => {
@@ -83,10 +83,10 @@ export default function IndexPage(props) {
             if(resq.code === 200) {
                 setHotArticleList(resq.data.list)
             } else {
-                customTips.error(resq.message)
+                toast.error(resq.message)
             }
         }).catch(err => {
-            customTips.error(err.message)
+            toast.error(err.message)
         })
     }, [])
     const gossipData = useCallback((instance) => {
@@ -94,10 +94,10 @@ export default function IndexPage(props) {
             if(resq.code === 200) {
                 setGossipList(resq.data.list)
             } else {
-                customTips.error(resq.message)
+                toast.error(resq.message)
             }
         }).catch(err => {
-            customTips.error(err.message)
+            toast.error(err.message)
         })
     }, [])
 
@@ -167,25 +167,28 @@ export default function IndexPage(props) {
                                                         key={item.id}
                                                         item={item}
                                                         handleLike={(articleId) => { 
+                                                            if(props.userInfo === null) {
+                                                                toast('你需要登录哦 (￣y▽,￣)╭ ')
+                                                                return
+                                                            }
+                                                            toast.loading('提交中...')
                                                             let data = new FormData()
                                                             data.append('articleId', articleId)
                                                             increaseArticleLike(data).then(resq => {
-                                                                if(props.userInfo === null) {
-                                                                    customTips.success('你需要登录哦 (￣y▽,￣)╭ ')
-                                                                    return
-                                                                }
+                                                                toast.remove()
                                                                 if(resq.code === 200) {
-                                                                    customTips.success(resq.message)
+                                                                    toast.success(resq.message)
                                                                     let [...temp] = articleObject.list
                                                                     let index = temp.findIndex(item => item.id === articleId)
                                                                     temp[index].like = resq.data.status
                                                                     temp[index].articleLikes = resq.data.likes
                                                                     setArticleObject({...articleObject, list: temp})
                                                                 } else {
-                                                                    customTips.error(resq.message)
+                                                                    toast.error(resq.message)
                                                                 }            
                                                             }).catch(err => {
-                                                                customTips.error(err.message)
+                                                                toast.remove()
+                                                                toast.error(err.message)
                                                             })
                                                         }} 
                                                     />
@@ -219,14 +222,16 @@ export default function IndexPage(props) {
                                                         handleFold={id => { setSelectGossipItem(selectGossipItem === id ? null:id) }}
                                                         handleLike={(gossipId) => {
                                                             if(props.userInfo === null) {
-                                                                customTips.success('你需要登录哦 (￣y▽,￣)╭ ')
+                                                                toast('你需要登录哦 (￣y▽,￣)╭ ')
                                                                 return
                                                             }
+                                                            toast.loading('提交中...')
                                                             let data = new FormData()
                                                             data.append('gossipId', gossipId)
                                                             likeGossip(data).then(resq => {
+                                                                toast.remove()
                                                                 if(resq.code === 200) {
-                                                                    customTips.success(resq.message)
+                                                                    toast.success(resq.message)
                                                                     let temp = [...gossipList]
                                                                     let index = temp.findIndex(item => item.id === gossipId)
                                                                     if(resq.data.status) {
@@ -239,10 +244,11 @@ export default function IndexPage(props) {
                                                                     temp[index].like = resq.data.status
                                                                     setGossipList(temp)
                                                                 } else {
-                                                                    customTips.error(reqs.message)
+                                                                    toast.error(reqs.message)
                                                                 }
                                                             }).catch(err => {
-                                                                customTips.error(err.message)
+                                                                toast.remove()
+                                                                toast.error(err.message)
                                                             })
                                                         }}
                                                         gossipDataGet={() => {
