@@ -11,7 +11,13 @@ import GossipSkeleton from '../components/GossipSkeleton'
 import { gossipListRequest } from '../util/gossip'
 import customTips from '../util/notostack/customTips'
 import { likeGossip } from '../util/gossip.js'
+//hook
+import { useParams, useNavigate, useLocation  } from "react-router-dom"
 export default function Gossip(props) {
+
+    //hook
+    const { search } = useLocation()
+
     //params
     const [requestInstance, setRequestInstance] = useState({
         pageNum: 1,
@@ -48,6 +54,12 @@ export default function Gossip(props) {
     useEffect(() => {
         gossipDataGet(requestInstance)        
     }, [requestInstance, gossipDataGet])
+
+    useEffect(() => {
+        let searchParams = new URLSearchParams(search)
+        console.log(searchParams)
+    }, [search])
+
     return (
         <div className={style.gossip_page} style={{ paddingTop: requestInstance.viewUid ? null:'1rem' }}>
             <SwitchTransition mode='out-in'>
