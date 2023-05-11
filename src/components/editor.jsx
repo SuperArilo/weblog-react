@@ -87,7 +87,7 @@ export default class Tinymce extends React.Component {
                             <div className={style.editor_bottom}>
                                 <div className={style.left_user_info}>
                                 </div>
-                                <AsukaButton 
+                                <AsukaButton
                                     text='提交'
                                     status={this.props.status} onClick={() => {
                                         this.props.getContent(this.state.modelValue)
