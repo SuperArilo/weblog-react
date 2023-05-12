@@ -66,7 +66,7 @@ export default function Guestbook() {
                         let data = new FormData()
                         data.append('content', content)
                         addGuestbook(data).then(resq => {
-                            toast.remove()
+                            toast.dismiss()
                             if(resq.code === 200) {
                                 toast.success(resq.message)
                                 tinymceRef.current.clear()
@@ -76,7 +76,7 @@ export default function Guestbook() {
                             }
                             setAddGuestbookStatus(false)
                         }).catch(err => {
-                            toast.remove()
+                            toast.dismiss()
                             setAddGuestbookStatus(false)
                             toast.error(err.message)
                         })
@@ -173,7 +173,7 @@ const GuestbookCommentItem = (props) => {
                         let data = new FormData()
                         data.append('guestbookId', props.item.guestbookId)
                         deleteGuestbook(data).then(resq => {
-                            toast.remove()
+                            toast.dismiss()
                             if(resq.code === 200) {
                                 toast.success(resq.message)
                                 props.dataListGet(props.requestInstance)
@@ -183,7 +183,7 @@ const GuestbookCommentItem = (props) => {
                             setDeleteStatus(false)
                             setPopporObject({...popporObject, open: false, target: null})
                         }).catch(err => {
-                            toast.remove()
+                            toast.dismiss()
                             setDeleteStatus(false)
                             toast.error(err.message)
                             setPopporObject({...popporObject, open: false, target: null})

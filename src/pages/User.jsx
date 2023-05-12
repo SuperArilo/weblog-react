@@ -106,7 +106,7 @@ export default function User(props) {
         if(modeInstance.instance === null) return
         toast.loading('提交中...')
         blogUserProfilesModify(modeInstance.instance).then(resq => {
-            toast.remove()
+            toast.dismiss()
             if(resq.code === 200) {
                 toast.success(resq.message)
                 queryProfiles(viewUid)
@@ -121,7 +121,7 @@ export default function User(props) {
                 tempAvatar: null
             }))
         }).catch(err => {
-            toast.remove()
+            toast.dismiss()
             toast.error(err.message)
             setModeInstance(current => ({
                 ...current,
@@ -582,7 +582,7 @@ const AccountInfoView = (props) => {
                                     let data = new FormData()
                                     data.append('email', content)
                                     modifyEmail(data).then(resq => {
-                                        toast.remove()
+                                        toast.dismiss()
                                         if(resq.code === 200) {
                                             toast.success(resq.message)
                                             props.setModeInstance(current => ({
@@ -599,7 +599,7 @@ const AccountInfoView = (props) => {
                                         }
                                         setRequestStatus(false)
                                     }).catch(err => {
-                                        toast.remove()
+                                        toast.dismiss()
                                         toast.error(err.message)
                                         setRequestStatus(false)
                                     })

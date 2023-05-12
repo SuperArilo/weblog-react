@@ -40,7 +40,7 @@ export default function CreateGossipWindow(props) {
                             let data = new FormData()
                             data.append('content', content)
                             userCreateGossip(data).then(resq => {
-                                toast.remove()
+                                toast.dismiss()
                                 if(resq.code === 200) {
                                     toast.success(resq.message)
                                 } else {
@@ -49,7 +49,7 @@ export default function CreateGossipWindow(props) {
                                 setGossipInstance({...gossipInstance, status: false})
                                 props.setCreateGossipWindowStatus(false)
                             }).catch(err => {
-                                toast.remove()
+                                toast.dismiss()
                                 toast.error(err.message)
                                 setGossipInstance({...gossipInstance, status: false})
                                 props.setCreateGossipWindowStatus(false)

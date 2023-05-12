@@ -94,7 +94,7 @@ export default function Gossip(props) {
                                                             let data = new FormData()
                                                             data.append('gossipId', gossipId)
                                                             likeGossip(data).then(resq => {
-                                                                toast.remove()
+                                                                toast.dismiss()
                                                                 if(resq.code === 200) {
                                                                     toast.success(resq.message)
                                                                     let [...temp] = gossipObject.list
@@ -102,11 +102,13 @@ export default function Gossip(props) {
                                                                     temp[index].like = resq.data.status
                                                                     temp[index].likes = resq.data.likes
                                                                     setGossipObject({...gossipObject, list: temp})
+                                                                } else if(resq.code === 0) {
+                                                                    toast(resq.message)
                                                                 } else {
                                                                     toast.error(resq.message)
                                                                 }
                                                             }).catch(err => {
-                                                                toast.remove()
+                                                                toast.dismiss()
                                                                 toast.error(err.message)
                                                             })
                                                         }}

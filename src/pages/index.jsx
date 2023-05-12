@@ -175,7 +175,7 @@ export default function IndexPage(props) {
                                                             let data = new FormData()
                                                             data.append('articleId', articleId)
                                                             increaseArticleLike(data).then(resq => {
-                                                                toast.remove()
+                                                                toast.dismiss()
                                                                 if(resq.code === 200) {
                                                                     toast.success(resq.message)
                                                                     let [...temp] = articleObject.list
@@ -187,7 +187,7 @@ export default function IndexPage(props) {
                                                                     toast.error(resq.message)
                                                                 }            
                                                             }).catch(err => {
-                                                                toast.remove()
+                                                                toast.dismiss()
                                                                 toast.error(err.message)
                                                             })
                                                         }} 
@@ -229,7 +229,7 @@ export default function IndexPage(props) {
                                                             let data = new FormData()
                                                             data.append('gossipId', gossipId)
                                                             likeGossip(data).then(resq => {
-                                                                toast.remove()
+                                                                toast.dismiss()
                                                                 if(resq.code === 200) {
                                                                     toast.success(resq.message)
                                                                     let temp = [...gossipList]
@@ -247,7 +247,7 @@ export default function IndexPage(props) {
                                                                     toast.error(reqs.message)
                                                                 }
                                                             }).catch(err => {
-                                                                toast.remove()
+                                                                toast.dismiss()
                                                                 toast.error(err.message)
                                                             })
                                                         }}

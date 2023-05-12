@@ -469,7 +469,7 @@ const LoginBox = (props) => {
 			}
 			data.append('password', password)
 			blogLoginUser(data).then(resq => {
-				toast.remove()
+				toast.dismiss()
 				if(resq.code === 200) {
 					localStorage.setItem('token', resq.data.token)
 					dispatch({ type: 'userInfo/setInfo', payload: resq.data.user })
@@ -480,7 +480,7 @@ const LoginBox = (props) => {
 				}
 				setLoginStatus(false)
 			}).catch(err => {
-				toast.remove()
+				toast.dismiss()
 				toast.error(err.message)
 				setLoginStatus(false)
 			})
@@ -621,7 +621,7 @@ const RegisterBox = (props) => {
 										let data = new FormData()
 										data.append('mail', inputInstance.email)
 										regiserMail(data).then(resq => {
-											toast.remove()
+											toast.dismiss()
 											if(resq.code === 200) {
 												toast.success(resq.message)
 												setRequestStatus({...requestStatus, sendMailStatus: false})
@@ -642,7 +642,7 @@ const RegisterBox = (props) => {
 												setRequestStatus({...requestStatus, sendMailStatus: false})
 											}
 										}).catch(err => {
-											toast.remove()
+											toast.dismiss()
 											setRequestStatus({...requestStatus, sendMailStatus: false})
 											toast.error(err.message)
 										})
@@ -737,7 +737,7 @@ const RegisterBox = (props) => {
 							data.append('nickName', inputInstance.nickName)
 							data.append('verifyCode', inputInstance.verifyCode)
 							blogRegisterUser(data).then(resq => {
-								toast.remove()
+								toast.dismiss()
 								if(resq.code === 200) {
 									toast.success(resq.message)
 									setTimeout(() => {
@@ -753,7 +753,7 @@ const RegisterBox = (props) => {
 								}
 								setRequestStatus({...requestStatus, registerStatus: false})
 							}).catch(err => {
-								toast.remove()
+								toast.dismiss()
 								setRequestStatus({...requestStatus, registerStatus: false})
 								toast.error(err.message)
 							})

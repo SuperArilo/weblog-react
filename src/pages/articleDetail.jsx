@@ -53,17 +53,19 @@ export default function ArticleDetail(props) {
                                 data.append('articleId', articleId)
                                 data.append('content', value)
                                 replyComment(data).then(resq => {
-                                    toast.remove()
+                                    toast.dismiss()
                                     if(resq.code === 200) {
                                         tinymce.current.clear()
                                         toast.success(resq.message)
                                         articleListRef.current.reRequestComment()
+                                    } else if(resq.code === 0) {
+                                        toast(resq.message)
                                     } else {
                                         toast.error(resq.message)
                                     }
                                     setAddCommentStatus(false)
                                 }).catch(err => {
-                                    toast.remove()
+                                    toast.dismiss()
                                     toast.error(err.message)
                                     setAddCommentStatus(false)
                                 })
@@ -110,18 +112,20 @@ class ArticleInfoTop extends React.Component {
                                                                                         let data = new FormData()
                                                                                         data.append('articleId', articleId)
                                                                                         increaseArticleLike(data).then(resq => {
-                                                                                            toast.remove()
+                                                                                            toast.dismiss()
                                                                                             if(resq.code === 200) {
                                                                                                 toast.success(resq.message)
                                                                                                 let {...temp} = this.state.articleInstance
                                                                                                 temp.hasLike = resq.data.status
                                                                                                 temp.articleLikes = resq.data.likes
                                                                                                 this.setState({ articleInstance: temp })
+                                                                                            } else if(resq.code === 0) {
+                                                                                                toast(resq.message)
                                                                                             } else {
                                                                                                 toast.error(resq.message)
                                                                                             }
                                                                                         }).catch(err => {
-                                                                                            toast.remove()
+                                                                                            toast.dismiss()
                                                                                             toast.error(err.message)
                                                                                         })
                                                                                     }} />
@@ -208,7 +212,7 @@ const ArticleVistorList = forwardRef((props, ref) => {
                                                             data.append('articleId', props.articleId)
                                                             data.append('commentId', item.commentId)
                                                             likeComment(data).then(resq => {
-                                                                toast.remove()
+                                                                toast.dismiss()
                                                                 if(resq.code === 200) {
                                                                     toast.success(resq.message)
                                                                     let [...temp] = commentObject.list
@@ -216,11 +220,13 @@ const ArticleVistorList = forwardRef((props, ref) => {
                                                                     temp[index].like = resq.data.status
                                                                     temp[index].likes = resq.data.likes
                                                                     setCommentObject({...commentObject, list: temp})
+                                                                } else if(resq.code === 0) {
+                                                                    toast(resq.message)
                                                                 } else {
                                                                     toast.error(resq.message)
                                                                 }
                                                             }).catch(err => {
-                                                                toast.remove()
+                                                                toast.dismiss()
                                                                 toast.error(err.message)
                                                             })
                                                         }}
@@ -232,17 +238,19 @@ const ArticleVistorList = forwardRef((props, ref) => {
                                                             data.append('replyCommentId', item.commentId)
                                                             data.append('replyUserId', item.replyUser.replyUserId)
                                                             replyComment(data).then(resq => {
-                                                                toast.remove()
+                                                                toast.dismiss()
                                                                 if(resq.code === 200) {
                                                                     toast.success(resq.message)
                                                                     commentData(requestInstance)
                                                                     setSelectCommentItem(null)
+                                                                } else if (resq.code === 0) {
+                                                                    toast(resq.message)
                                                                 } else {
                                                                     toast.error(resq.message)
                                                                 }
                                                                 commentRef.current.changeEditorLoadingStatus(false)
                                                             }).catch(err => {
-                                                                toast.remove()
+                                                                toast.dismiss()
                                                                 toast.error(err.message)
                                                                 commentRef.current.changeEditorLoadingStatus(false)
                                                             })
@@ -253,7 +261,7 @@ const ArticleVistorList = forwardRef((props, ref) => {
                                                             data.append('articleId', props.articleId)
                                                             data.append('commentId', item.commentId)
                                                             deleteComment(data).then(resq => {
-                                                                toast.remove()
+                                                                toast.dismiss()
                                                                 if(resq.code === 200) {
                                                                     toast.success(resq.message)
                                                                     setTimeout(() => {
@@ -263,7 +271,7 @@ const ArticleVistorList = forwardRef((props, ref) => {
                                                                     toast.error(resq.message)
                                                                 }
                                                             }).catch(err => {
-                                                                toast.remove()
+                                                                toast.dismiss()
                                                                 toast.error(err.message)
                                                             })
                                                         }}/>

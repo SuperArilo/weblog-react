@@ -101,7 +101,7 @@ export default function GossipContent(props) {
                                 let data = new FormData()
                                 data.append('gossipId', props.data.id)
                                 deleteGossip(data).then(resq => {
-                                    toast.remove()
+                                    toast.dismiss()
                                     if(resq.code === 200) {
                                         toast.success(resq.message)
                                         props.gossipDataGet()
@@ -168,17 +168,19 @@ export default function GossipContent(props) {
                             data.append('gossipId', props.data.id)
                             data.append('content', value)
                             replyGossipComment(data).then(resq => {
-                                toast.remove()
+                                toast.dismiss()
                                 if(resq.code === 200) {
                                     tinymce.current.clear()
                                     toast.success(resq.message)
                                     commentData(requestInstance)
+                                } else if(resq.code === 0) {
+                                    toast(resq.message)
                                 } else {
                                     toast.error(resq.message)
                                 }
                                 setEditorSendToServerStatus(false)
                             }).catch(err => {
-                                toast.remove()
+                                toast.dismiss()
                                 toast.error(err.message)
                                 setEditorSendToServerStatus(false)
                             })
@@ -213,7 +215,7 @@ export default function GossipContent(props) {
                                                                 data.append('gossipId', props.data.id)
                                                                 data.append('commentId', item.commentId)
                                                                 likeGossipComment(data).then(resq => {
-                                                                    toast.remove()
+                                                                    toast.dismiss()
                                                                     if(resq.code === 200) {
                                                                         toast.success(resq.message)
                                                                         let [...temp] = commentObject.list
@@ -221,11 +223,13 @@ export default function GossipContent(props) {
                                                                         temp[index].like = resq.data.status
                                                                         temp[index].likes = resq.data.likes
                                                                         setCommentObject({...commentObject, list: temp})
+                                                                    } else if(resq.code === 0) {
+                                                                        toast(resq.message)
                                                                     } else {
                                                                         toast.error(resq.message)
                                                                     }
                                                                 }).catch(err => {
-                                                                    toast.remove()
+                                                                    toast.dismiss()
                                                                     toast.error(err.message)
                                                                 })
                                                             }}
@@ -237,17 +241,19 @@ export default function GossipContent(props) {
                                                                 data.append('replyCommentId', item.commentId)
                                                                 data.append('replyUserId', item.replyUser.replyUserId)
                                                                 replyGossipComment(data).then(resq => {
-                                                                    toast.remove()
+                                                                    toast.dismiss()
                                                                     if(resq.code === 200) {
                                                                         toast.success(resq.message)
                                                                         commentData(requestInstance)
                                                                         setSelectCommentItem(null)
+                                                                    } else if(resq.code === 0) {
+                                                                        toast(resq.message)
                                                                     } else {
                                                                         toast.error(resq.message)
                                                                     }
                                                                     commentRef.current.changeEditorLoadingStatus(false)
                                                                 }).catch(err => {
-                                                                    toast.remove()
+                                                                    toast.dismiss()
                                                                     toast.error(err.message)
                                                                     commentRef.current.changeEditorLoadingStatus(false)
                                                                 })
@@ -258,15 +264,17 @@ export default function GossipContent(props) {
                                                                 data.append('gossipId', props.data.id)
                                                                 data.append('commentId', item.commentId)
                                                                 deleteGossipComment(data).then(resq => {
-                                                                    toast.remove()
+                                                                    toast.dismiss()
                                                                     if(resq.code === 200) {
                                                                         toast.success(resq.message)
                                                                         commentData(requestInstance)
+                                                                    } else if(resq.code === 0) {
+                                                                        toast(resq.message)
                                                                     } else {
                                                                         toast.error(resq.message)
                                                                     }
                                                                 }).catch(err => {
-                                                                    toast.remove()
+                                                                    toast.dismiss()
                                                                     toast.error(err.message)
                                                                 })
                                                             }}/>

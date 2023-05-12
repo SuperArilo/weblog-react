@@ -118,7 +118,7 @@ export default function Links(props) {
                                             toast.loading('提交中...')
                                             setApplyStatus(true)
                                             linksApply(blogInstance).then(resq => {
-                                                toast.remove()
+                                                toast.dismiss()
                                                 if(resq.code === 200) {
                                                     toast.success(resq.message)
                                                 } else {
@@ -126,7 +126,7 @@ export default function Links(props) {
                                                 }
                                                 setApplyStatus(false)
                                             }).catch(err => {
-                                                toast.remove()
+                                                toast.dismiss()
                                                 toast.error(err.message)
                                                 setApplyStatus(false)
                                             })

@@ -108,7 +108,7 @@ export default function Notice(props) {
         let data = new FormData()
         data.append('noticeIds', selectNoticeList)
         readNotice(data).then(resq => {
-            toast.remove()
+            toast.dismiss()
             if(resq.code === 200)  {
                 noticeListGet(requestInstance)
                 toast.success(resq.message)
@@ -117,7 +117,7 @@ export default function Notice(props) {
                 toast.error(resq.message)
             }
         }).catch(err => {
-            toast.remove()
+            toast.dismiss()
             toast.error(err.message)
         })
     }
