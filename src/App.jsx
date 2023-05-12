@@ -6,7 +6,7 @@ import signStyle from './assets/scss/sign.module.scss'
 import { Route, Routes, useLocation, useNavigate, Navigate  } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 //axios
-import { blogLoginUser, blogRegisterUser } from './util/user'
+import { blogLoginUser, blogRegisterUser, blogUserLoginOut } from './util/user'
 import { regiserMail } from './util/mail/mail'
 //组件
 import toast from 'react-hot-toast'
@@ -277,8 +277,15 @@ const PCheaderNav = (props) => {
 										props.setCreateGossipWindowStatus(true)
 										break
 									case 3:
-										dispatch({ type: 'userInfo/setInfo', payload: null })
-										localStorage.removeItem('token')
+										toast.promise(blogUserLoginOut(), {
+											loading: '请求中...',
+											success: resq => {
+												dispatch({ type: 'userInfo/setInfo', payload: null })
+												localStorage.removeItem('token')
+												return resq.message
+											},
+											error: err => err.message
+										})
 										break
 									default:
 										break
@@ -416,9 +423,16 @@ const MobileHeaderNav = (props) => {
 										<div 
 											className={signStyle.function_box}
 											onClick={() => {
-												setDrawerStatus(false)
-												dispatch({ type: 'userInfo/setInfo', payload: null })
-												localStorage.removeItem('token')
+												toast.promise(blogUserLoginOut(), {
+													loading: '提交中...',
+													success: resq => {
+														dispatch({ type: 'userInfo/setInfo', payload: null })
+														localStorage.removeItem('token')
+														setDrawerStatus(false)
+														return resq.message
+													},
+													error: err => err.message
+												})
 											}}>
 											<i className='asukamis signout' />
 											<span>注销</span>

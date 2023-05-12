@@ -14,6 +14,14 @@ export const blogRegisterUser = (query) => {
         data: query,
     })
 }
+export const blogUserLoginOut = () => {
+    return request({
+        url: '/user/login-out',
+        method: 'post',
+        data: null
+    })
+}
+
 export const blogUserProfiles = (params) => {
     return request({
         url: '/user/profiles/view/' + params,
