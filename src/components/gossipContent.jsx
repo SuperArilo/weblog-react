@@ -46,8 +46,7 @@ export default function GossipContent(props) {
 
     const [gossipFunctionMenuStatus, setGossipFunctionMenuStatus] = useState(false)
     const [editorSendToServerStatus, setEditorSendToServerStatus] = useState(false)
-
-    const [previewStatus, setPreviewStatus] = useState(false)
+    
     //function
     const commentData = useCallback((instance) => {
         gossipCommentList(instance).then(resq => {
