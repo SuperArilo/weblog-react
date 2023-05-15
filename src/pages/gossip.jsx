@@ -90,26 +90,24 @@ export default function Gossip(props) {
                                                                 toast('你需要登录哦 (￣y▽,￣)╭ ')
                                                                 return
                                                             }
-                                                            toast.loading('加载中...')
+                                                            const id = toast.loading('加载中...')
                                                             let data = new FormData()
                                                             data.append('gossipId', gossipId)
                                                             likeGossip(data).then(resq => {
-                                                                toast.dismiss()
                                                                 if(resq.code === 200) {
-                                                                    toast.success(resq.message)
+                                                                    toast.success(resq.message, { id: id })
                                                                     let [...temp] = gossipObject.list
                                                                     let index = temp.findIndex(item => item.id === gossipId)
                                                                     temp[index].like = resq.data.status
                                                                     temp[index].likes = resq.data.likes
                                                                     setGossipObject({...gossipObject, list: temp})
                                                                 } else if(resq.code === 0) {
-                                                                    toast(resq.message)
+                                                                    toast(resq.message, { id: id })
                                                                 } else {
-                                                                    toast.error(resq.message)
+                                                                    toast.error(resq.message, { id: id })
                                                                 }
                                                             }).catch(err => {
-                                                                toast.dismiss()
-                                                                toast.error(err.message)
+                                                                toast.error(err.message, { id: id })
                                                             })
                                                         }}
                                                         handleGossipList={() => {

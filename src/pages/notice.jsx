@@ -104,21 +104,19 @@ export default function Notice(props) {
     }, [navMenuInstance.selectIndex])
 
     const userReadNotice = () => {
-        toast.loading('提交中...')
+        const id = toast.loading('提交中...')
         let data = new FormData()
         data.append('noticeIds', selectNoticeList)
         readNotice(data).then(resq => {
-            toast.dismiss()
             if(resq.code === 200)  {
                 noticeListGet(requestInstance)
-                toast.success(resq.message)
+                toast.success(resq.message, { id: id })
                 setSelectNoticeList([])
             } else {
-                toast.error(resq.message)
+                toast.error(resq.message, { id: id })
             }
         }).catch(err => {
-            toast.dismiss()
-            toast.error(err.message)
+            toast.error(err.message, { id: id })
         })
     }
 

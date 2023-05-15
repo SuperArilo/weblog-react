@@ -115,19 +115,17 @@ export default function Links(props) {
                                             return
                                         }
                                         if(!applyStatus) {
-                                            toast.loading('提交中...')
+                                            const id = toast.loading('提交中...')
                                             setApplyStatus(true)
                                             linksApply(blogInstance).then(resq => {
-                                                toast.dismiss()
                                                 if(resq.code === 200) {
-                                                    toast.success(resq.message)
+                                                    toast.success(resq.message, { id: id })
                                                 } else {
-                                                    toast.error(resq.message)
+                                                    toast.error(resq.message, { id: id })
                                                 }
                                                 setApplyStatus(false)
                                             }).catch(err => {
-                                                toast.dismiss()
-                                                toast.error(err.message)
+                                                toast.error(err.message, { id: id })
                                                 setApplyStatus(false)
                                             })
                                         }

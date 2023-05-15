@@ -61,24 +61,22 @@ export default function Guestbook() {
                         return
                     }
                     if(!addGuestbookStatus) {
-                        toast.loading('提交中...')
+                        const id = toast.loading('提交中...')
                         setAddGuestbookStatus(true)
                         let data = new FormData()
                         data.append('content', content)
                         addGuestbook(data).then(resq => {
-                            toast.dismiss()
                             if(resq.code === 200) {
-                                toast.success(resq.message)
+                                toast.success(resq.message, { id: id })
                                 tinymceRef.current.clear()
                                 dataListGet(requestInstance)
                             } else {
-                                toast.error(resq.message)
+                                toast.error(resq.message, { id: id })
                             }
                             setAddGuestbookStatus(false)
                         }).catch(err => {
-                            toast.dismiss()
                             setAddGuestbookStatus(false)
-                            toast.error(err.message)
+                            toast.error(err.message, { id: id })
                         })
                     }
                     
@@ -173,7 +171,7 @@ const GuestbookCommentItem = (props) => {
                         let data = new FormData()
                         data.append('guestbookId', props.item.guestbookId)
                         deleteGuestbook(data).then(resq => {
-                            toast.dismiss()
+                            
                             if(resq.code === 200) {
                                 toast.success(resq.message)
                                 props.dataListGet(props.requestInstance)
@@ -183,7 +181,7 @@ const GuestbookCommentItem = (props) => {
                             setDeleteStatus(false)
                             setPopporObject({...popporObject, open: false, target: null})
                         }).catch(err => {
-                            toast.dismiss()
+                            
                             setDeleteStatus(false)
                             toast.error(err.message)
                             setPopporObject({...popporObject, open: false, target: null})

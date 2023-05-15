@@ -473,7 +473,7 @@ const LoginBox = (props) => {
 				toast('输入的内容不能为空哦')
 				return
 			}
-			toast.loading('提交中...')
+			const id = toast.loading('提交中...')
 			setLoginStatus(true)
 			let data = new FormData()
 			if(emailMatchRule.test(emailAndUID)) {
@@ -483,19 +483,17 @@ const LoginBox = (props) => {
 			}
 			data.append('password', password)
 			blogLoginUser(data).then(resq => {
-				toast.dismiss()
 				if(resq.code === 200) {
 					localStorage.setItem('token', resq.data.token)
 					dispatch({ type: 'userInfo/setInfo', payload: resq.data.user })
-					toast.success(resq.message)
+					toast.success(resq.message, { id: id })
 					setTimeout(() => { props.closeBox(false) }, 1000)
 				} else {
-					toast.error(resq.message)
+					toast.error(resq.message, { id: id })
 				}
 				setLoginStatus(false)
 			}).catch(err => {
-				toast.dismiss()
-				toast.error(err.message)
+				toast.error(err.message, { id: id })
 				setLoginStatus(false)
 			})
 		}
@@ -631,13 +629,12 @@ const RegisterBox = (props) => {
 											setRequestStatus({...requestStatus, sendMailStatus: false})
 											return
 										}
-										toast.loading('提交中...')
+										const id = toast.loading('提交中...')
 										let data = new FormData()
 										data.append('mail', inputInstance.email)
 										regiserMail(data).then(resq => {
-											toast.dismiss()
 											if(resq.code === 200) {
-												toast.success(resq.message)
+												toast.success(resq.message, { id: id })
 												setRequestStatus({...requestStatus, sendMailStatus: false})
 												intervalID.current = setInterval(() => {
 													if(requestStatus.countDown === 0) {
@@ -649,16 +646,15 @@ const RegisterBox = (props) => {
 													setRequestStatus({...requestStatus, countDown: requestStatus.countDown--})
 												}, 1000)
 											} else if(resq.code === 0) {
-												toast(resq.message)
+												toast(resq.message, { id: id })
 												setRequestStatus({...requestStatus, sendMailStatus: false})
 											} else {
-												toast(resq.message)
+												toast(resq.message, { id: id })
 												setRequestStatus({...requestStatus, sendMailStatus: false})
 											}
 										}).catch(err => {
-											toast.dismiss()
 											setRequestStatus({...requestStatus, sendMailStatus: false})
-											toast.error(err.message)
+											toast.error(err.message, { id: id })
 										})
 									}
 									
@@ -743,7 +739,7 @@ const RegisterBox = (props) => {
 							return
 						}
 						if(!requestStatus.registerStatus) {
-							toast.loading('提交中...')
+							const id = toast.loading('提交中...')
 							setRequestStatus({...requestStatus, registerStatus: true})
 							let data = new FormData()
 							data.append('email', inputInstance.email)
@@ -751,9 +747,8 @@ const RegisterBox = (props) => {
 							data.append('nickName', inputInstance.nickName)
 							data.append('verifyCode', inputInstance.verifyCode)
 							blogRegisterUser(data).then(resq => {
-								toast.dismiss()
 								if(resq.code === 200) {
-									toast.success(resq.message)
+									toast.success(resq.message, { id: id })
 									setTimeout(() => {
 										clearInterval(intervalID.current)
 										intervalID.current = null
@@ -761,15 +756,14 @@ const RegisterBox = (props) => {
 										props.closeBox(false)
 									}, 500)
 								} else if(resq.code === 0) {
-									toast(resq.message)
+									toast(resq.message, { id: id })
 								} else {
-									toast.error(resq.message)
+									toast.error(resq.message, { id: id })
 								}
 								setRequestStatus({...requestStatus, registerStatus: false})
 							}).catch(err => {
-								toast.dismiss()
 								setRequestStatus({...requestStatus, registerStatus: false})
-								toast.error(err.message)
+								toast.error(err.message, { id: id })
 							})
 						}
 					}}>

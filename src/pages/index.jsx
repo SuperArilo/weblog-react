@@ -171,24 +171,22 @@ export default function IndexPage(props) {
                                                                 toast('你需要登录哦 (￣y▽,￣)╭ ')
                                                                 return
                                                             }
-                                                            toast.loading('提交中...')
+                                                            const id = toast.loading('提交中...')
                                                             let data = new FormData()
                                                             data.append('articleId', articleId)
                                                             increaseArticleLike(data).then(resq => {
-                                                                toast.dismiss()
                                                                 if(resq.code === 200) {
-                                                                    toast.success(resq.message)
+                                                                    toast.success(resq.message, { id: id })
                                                                     let [...temp] = articleObject.list
                                                                     let index = temp.findIndex(item => item.id === articleId)
                                                                     temp[index].like = resq.data.status
                                                                     temp[index].articleLikes = resq.data.likes
                                                                     setArticleObject({...articleObject, list: temp})
                                                                 } else {
-                                                                    toast.error(resq.message)
+                                                                    toast.error(resq.message, { id: id })
                                                                 }            
                                                             }).catch(err => {
-                                                                toast.dismiss()
-                                                                toast.error(err.message)
+                                                                toast.error(err.message, { id: id })
                                                             })
                                                         }} 
                                                     />
@@ -225,13 +223,12 @@ export default function IndexPage(props) {
                                                                 toast('你需要登录哦 (￣y▽,￣)╭ ')
                                                                 return
                                                             }
-                                                            toast.loading('提交中...')
+                                                            const id = toast.loading('提交中...')
                                                             let data = new FormData()
                                                             data.append('gossipId', gossipId)
                                                             likeGossip(data).then(resq => {
-                                                                toast.dismiss()
                                                                 if(resq.code === 200) {
-                                                                    toast.success(resq.message)
+                                                                    toast.success(resq.message, { id: id })
                                                                     let temp = [...gossipList]
                                                                     let index = temp.findIndex(item => item.id === gossipId)
                                                                     if(resq.data.status) {
@@ -244,11 +241,10 @@ export default function IndexPage(props) {
                                                                     temp[index].like = resq.data.status
                                                                     setGossipList(temp)
                                                                 } else {
-                                                                    toast.error(reqs.message)
+                                                                    toast.error(reqs.message, { id: id })
                                                                 }
                                                             }).catch(err => {
-                                                                toast.dismiss()
-                                                                toast.error(err.message)
+                                                                toast.error(err.message, { id: id })
                                                             })
                                                         }}
                                                         gossipDataGet={() => {

@@ -104,14 +104,13 @@ export default function User(props) {
 
     useEffect(() => {
         if(modeInstance.instance === null) return
-        toast.loading('提交中...')
+        const id = toast.loading('提交中...')
         blogUserProfilesModify(modeInstance.instance).then(resq => {
-            toast.dismiss()
             if(resq.code === 200) {
-                toast.success(resq.message)
+                toast.success(resq.message, { id: id })
                 queryProfiles(viewUid)
             } else {
-                toast.error(resq.message)
+                toast.error(resq.message, { id: id })
             }
             setModeInstance(current => ({
                 ...current,
@@ -121,8 +120,7 @@ export default function User(props) {
                 tempAvatar: null
             }))
         }).catch(err => {
-            toast.dismiss()
-            toast.error(err.message)
+            toast.error(err.message, { id: id })
             setModeInstance(current => ({
                 ...current,
                 loadingStatus: false
@@ -577,14 +575,13 @@ const AccountInfoView = (props) => {
                                     return
                                 }
                                 if(!requestStatus) {
-                                    toast.loading('提交中...')
+                                    const id = toast.loading('提交中...')
                                     setRequestStatus(true)
                                     let data = new FormData()
                                     data.append('email', content)
                                     modifyEmail(data).then(resq => {
-                                        toast.dismiss()
                                         if(resq.code === 200) {
-                                            toast.success(resq.message)
+                                            toast.success(resq.message, { id: id })
                                             props.setModeInstance(current => ({
                                                 ...current,
                                                 loadingStatus: false,
@@ -593,14 +590,13 @@ const AccountInfoView = (props) => {
                                                 tempAvatar: null
                                             }))
                                         } else if(resq.code === 0) {
-                                            toast(resq.message)
+                                            toast(resq.message, { id: id })
                                         } else {
-                                            toast.error(resq.message)
+                                            toast.error(resq.message, { id: id })
                                         }
                                         setRequestStatus(false)
                                     }).catch(err => {
-                                        toast.dismiss()
-                                        toast.error(err.message)
+                                        toast.error(err.message, { id: id })
                                         setRequestStatus(false)
                                     })
                                 }

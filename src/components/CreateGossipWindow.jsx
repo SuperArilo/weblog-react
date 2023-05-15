@@ -36,21 +36,19 @@ export default function CreateGossipWindow(props) {
                                 return
                             }
                             setGossipInstance({...gossipInstance, status: true})
-                            toast.loading('提交中...')
+                            const id = toast.loading('提交中...')
                             let data = new FormData()
                             data.append('content', content)
                             userCreateGossip(data).then(resq => {
-                                toast.dismiss()
                                 if(resq.code === 200) {
-                                    toast.success(resq.message)
+                                    toast.success(resq.message, { id: id })
                                 } else {
-                                    toast.error(err.message)
+                                    toast.error(err.message, { id: id })
                                 }
                                 setGossipInstance({...gossipInstance, status: false})
                                 props.setCreateGossipWindowStatus(false)
                             }).catch(err => {
-                                toast.dismiss()
-                                toast.error(err.message)
+                                toast.error(err.message, { id: id })
                                 setGossipInstance({...gossipInstance, status: false})
                                 props.setCreateGossipWindowStatus(false)
                             })
