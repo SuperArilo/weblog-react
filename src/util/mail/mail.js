@@ -14,3 +14,18 @@ export const modifyEmail = (query) => {
         data: query
     })
 }
+export const findPassword = query => {
+    return request({
+        url: '/mail/find-password',
+        method: 'post',
+        data: parseFormData(query)
+    })
+}
+const parseFormData = (obj) => {
+    let data = new FormData()
+    Object.keys(obj).map(key => {
+        data.append(key, obj[key])
+        return null
+    })
+    return data
+}

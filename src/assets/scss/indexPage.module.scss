@@ -304,3 +304,31 @@
         }
     }
 }
+@media screen and (min-width: 3840px)
+{
+    .index_content
+    {
+        max-width: 2130px;
+    }
+}
+@media screen and (max-width: 3840px) and (min-width: 2560px)
+{
+    .index_content
+    {
+        max-width: 2130px;
+    }
+}
+@media screen and (max-width: 2560px) and (min-width: 1920px)
+{
+    .index_content
+    {
+        max-width: 1430px;
+    }
+}
+@media screen and (max-width: 1920px)
+{
+    .index_content
+    {
+        max-width: 1080px;
+    }
+}

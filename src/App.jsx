@@ -7,7 +7,7 @@ import { Route, Routes, useLocation, useNavigate, Navigate  } from 'react-router
 import { useSelector, useDispatch } from 'react-redux'
 //axios
 import { blogLoginUser, blogRegisterUser, blogUserLoginOut } from './util/user'
-import { regiserMail } from './util/mail/mail'
+import { regiserMail, findPassword } from './util/mail/mail'
 //组件
 import toast from 'react-hot-toast'
 import WaterWave from 'water-wave'
@@ -24,7 +24,8 @@ import Links from './pages/Links'
 import Friends from './pages/Friends'
 import NotFound from './pages/NotFound'
 import User from './pages/User'
-import VerifyPage from './pages/VerifyPage'
+import VerifyEmailPage from './pages/VerifyEmailPage'
+import FindPassword from './pages/FindPassword'
 import CreateGossipWindow from './components/CreateGossipWindow'
 import Notice from './pages/notice'
 import Icon from './components/Icon'
@@ -32,7 +33,7 @@ import Icon from './components/Icon'
 import './assets/scss/currencyTransition.scss'
 import './assets/css/iconfont.css'
 
-const App = () => {
+export default function App () {
 	//hook
 	const location = useLocation()
 	const isMobileStatus = useSelector((state) => state.isMobile.status)
@@ -103,7 +104,8 @@ const App = () => {
 							<Route path='/gossip' element={<Gossip userInfo={userInfo}/>} />
 							<Route path='/guestbook' element={<Guestbook />} />
 							<Route path='/user/:viewUid' element={<User />} />
-							<Route path='/user/verify' element={<VerifyPage />} />
+							<Route path='/user/verify' element={<VerifyEmailPage />} />
+							<Route path='/user/find-password' element={<FindPassword />} />
 							<Route path='/notice' element={<Notice />} />
 							<Route path='/links' element={<Links />} />
 							<Route path='/friends' element={<Friends /> } />
@@ -117,12 +119,19 @@ const App = () => {
 			<About />
 			<CSSTransition in={loginBoxStatus} timeout={300} classNames="mask-fade" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
 				<div className={signStyle.funtion_mask}>
-					<LoginBox status={loginBoxStatus} openRegisterBox={(e) => {setRegisterBoxStatus(e)}} closeBox={(e) => {setLoginBoxStatus(e)}} />
+					<LoginBox
+						status={loginBoxStatus}
+						openRegisterBox={(e) => {setRegisterBoxStatus(e)}}
+						closeBox={(e) => {setLoginBoxStatus(e)}} />
 				</div>
 			</CSSTransition>
 			<CSSTransition in={registerBoxStatus} timeout={300} classNames="mask-fade" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
 				<div className={signStyle.funtion_mask}>
-					<RegisterBox status={registerBoxStatus} isMobile={isMobileStatus} openLoginBox={(e) => { setLoginBoxStatus(e) }} closeBox={(e) => {setRegisterBoxStatus(e)}} />
+					<RegisterBox
+						status={registerBoxStatus}
+						isMobile={isMobileStatus}
+						openLoginBox={(e) => { setLoginBoxStatus(e) }}
+						closeBox={(e) => {setRegisterBoxStatus(e)}} />
 				</div>
 			</CSSTransition>
 			<CSSTransition in={createGossipWindowStatus} timeout={300} classNames="mask-fade" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
@@ -458,9 +467,12 @@ const LoginBox = (props) => {
 	//用户信息
 	const userInfo = useSelector((state) => state.userInfo.info)
 
+	const [requestInstance, setRequestInstance] = useState({
+		email: '',
+		password: ''
+	})
+
 	const [isShowPassword, setIsShowPassword] = useState(false)
-	const [emailAndUID, setEmailAndUID] = useState(null)
-	const [password, setPassword] = useState(null)
 	const [emailMatchRule] = useState(/^(\w+([-.][A-Za-z0-9]+)*){3,18}@\w+([-.][A-Za-z0-9]+)*\.\w+([-.][A-Za-z0-9]+)*$/)
 	const [loginStatus, setLoginStatus] = useState(false)
 	const loginFunction = () => {
@@ -469,20 +481,17 @@ const LoginBox = (props) => {
 			return
 		}
 		if(!loginStatus) {
-			if(emailAndUID === null || emailAndUID === '' || password === null || password === '') {
+			if(requestInstance.email === null || requestInstance.email === '' || requestInstance.password === null || requestInstance.password === '') {
 				toast('输入的内容不能为空哦')
+				return
+			}
+			if(!emailMatchRule.test(requestInstance.email)) {
+				toast('输入的邮箱格式不正确')
 				return
 			}
 			const id = toast.loading('提交中...')
 			setLoginStatus(true)
-			let data = new FormData()
-			if(emailMatchRule.test(emailAndUID)) {
-				data.append('email', emailAndUID)
-			} else {
-				data.append('uid', emailAndUID)
-			}
-			data.append('password', password)
-			blogLoginUser(data).then(resq => {
+			blogLoginUser(requestInstance).then(resq => {
 				if(resq.code === 200) {
 					localStorage.setItem('token', resq.data.token)
 					dispatch({ type: 'userInfo/setInfo', payload: resq.data.user })
@@ -518,10 +527,18 @@ const LoginBox = (props) => {
 				<div className={signStyle.input_list}>
 					<label className={signStyle.input_item}>
 						<div className={signStyle.input_top_div}>
-							<span>邮箱 / UID</span>
+							<span>邮箱</span>
 							<span>*</span>
 						</div>
-						<input type="text" placeholder="请输入邮箱或者UID" onChange={(e) => { setEmailAndUID(e.target.value) }} />
+						<input
+							type="text"
+							placeholder="请输入邮箱"
+							onChange={(e) => {
+								setRequestInstance({
+									...requestInstance,
+									email: e.target.value
+								})
+							}} />
 						<div className={signStyle.input_tips_div}>
 							<span></span>
 						</div>
@@ -532,13 +549,35 @@ const LoginBox = (props) => {
 							<span>*</span>
 						</div>
 						<div className={signStyle.input_password_label}>
-							<input type={isShowPassword ? 'text':'password'} maxLength="16" placeholder="请输入密码" autoComplete="off" onChange={(e) => { setPassword(e.target.value) }} />
+							<input type={isShowPassword ? 'text':'password'} maxLength="16" placeholder="请输入密码" autoComplete="off" onChange={(e) => { setRequestInstance({ ...requestInstance, password: e.target.value }) }} />
 							<i className={'far ' + signStyle.input_show_password + ' ' + (isShowPassword ? 'fa-eye-slash':'fa-eye')} onClick={() => { setIsShowPassword(!isShowPassword) }} />
 						</div>
 						<div className={signStyle.input_tips_div}>
 							<span></span>
 						</div>
 					</label>
+				</div>
+				<div className={signStyle.find_password_box}>
+					<span onClick={() => {
+						if(requestInstance.email === '' || requestInstance.email === null) {
+							toast('输入邮箱后再点击此处哦')
+							return
+						}
+						if(!emailMatchRule.test(requestInstance.email)) {
+							toast('输入的邮箱格式不正确')
+							return
+						}
+						const id = toast.loading('操作中...')
+						findPassword({ email: requestInstance.email }).then(resq => {
+							if(resq.code === 200) {
+								toast.success(resq.message, { id: id })
+							} else {
+								toast.error(resq.message, { id: id })
+							}
+						}).catch(err => {
+							toast.error(err.message, { id: id })
+						})
+					}}>忘记密码...</span>
 				</div>
 				<button type="button" title="登录" className={signStyle.confirm_button + ' ' + (isMobileStatus ? signStyle.confirm_button_mobile:signStyle.confirm_button_pc)} onClick={() => { loginFunction() }}>
 					{ !loginStatus && userInfo === null ? '登陆':'' }
@@ -776,4 +815,3 @@ const RegisterBox = (props) => {
 		</Slide>
 	)
 }
-export default App

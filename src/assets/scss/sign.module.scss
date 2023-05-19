@@ -68,6 +68,17 @@
                 color: rgb(111, 111, 111);
             }
         }
+        .find_password_box
+        {
+            display: flex;
+            justify-content: flex-end;
+            span
+            {
+                font-size: 0.56rem;
+                color: red;
+                cursor: pointer;
+            }
+        }
     }
     .login_box , .register_box
     {

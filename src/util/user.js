@@ -4,7 +4,7 @@ export const blogLoginUser = (query) => {
     return request({
         url: '/user/login',
         method: 'post',
-        data: query,
+        data: parseFormData(query),
     })
 }
 export const blogRegisterUser = (query) => {
@@ -43,7 +43,20 @@ export const blogUserProfilesModifyEmail = (query) => {
         data: parseFormData(query),
     })
 }
-
+export const findPasswordVerify = query => {
+    return request({
+        url: '/user/profiles/find-password/verify',
+        method: 'post',
+        data: parseFormData(query)
+    })
+}
+export const passwordModify = query => {
+    return request({
+        url: '/user/profiles/modify/password',
+        method: 'put',
+        data: parseFormData(query)
+    })
+}
 const parseFormData = (obj) => {
     let data = new FormData()
     Object.keys(obj).map(key => {
