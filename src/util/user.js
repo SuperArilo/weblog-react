@@ -59,6 +59,7 @@ export const passwordModify = query => {
 }
 const parseFormData = (obj) => {
     let data = new FormData()
+    if (obj === undefined) return
     Object.keys(obj).map(key => {
         data.append(key, obj[key])
         return null
