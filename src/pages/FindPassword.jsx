@@ -29,7 +29,7 @@ export default function FindPassword(props) {
                 const id = toast.loading('验证中...')
                 findPasswordVerify({ email: email, verifyCode: verifyCode }).then(resq => {
                     if(resq.code === 200) {
-                        toast.success('授权码验证成功', { id: id })
+                        toast.success(resq.message, { id: id })
                         setRequestInstance(target => {
                             return {
                                 ...target,

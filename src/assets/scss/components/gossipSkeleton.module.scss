@@ -1,33 +1,36 @@
-.gossip_skeleton
+.gossip_skeleton_list
 {
-    background-color: #ffffff;
-    padding: 0.5rem 1rem;
-    border-radius: 0.3rem;
-    margin-bottom: 1rem;
-    .gossip_skeleton_top
+    .gossip_skeleton
     {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        .gossip_skeleton_info
+        background-color: #ffffff;
+        padding: 0.5rem 1rem;
+        border-radius: 0.3rem;
+        margin-bottom: 1rem;
+        .gossip_skeleton_top
         {
-            margin-left: 0.6rem;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
+            align-items: center;
+            .gossip_skeleton_info
+            {
+                margin-left: 0.6rem;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
         }
-    }
-    .gossip_skeleton_bottom
-    {
-        display: flex;
-        justify-content: space-between;
-        div
+        .gossip_skeleton_bottom
         {
-            flex: 1 0 1px;
-        }
-        div:nth-child(2)
-        {
-            margin: 0 0.4rem;
+            display: flex;
+            justify-content: space-between;
+            div
+            {
+                flex: 1 0 1px;
+            }
+            div:nth-child(2)
+            {
+                margin: 0 0.4rem;
+            }
         }
     }
 }
