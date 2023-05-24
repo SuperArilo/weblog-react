@@ -73,7 +73,7 @@ export default function App () {
 		if(userInfo !== null) {
 			$('#react-by-asukamis').css({ 'background-image': 'url(' + userInfo.background + ')' })
 		} else {
-			$('#react-by-asukamis').css({ 'background-image': 'url(http://image.superarilo.icu/defalut_bg.jpg)' })
+			$('#react-by-asukamis').css({ 'background-image': 'url(https://image.superarilo.icu/defalut_bg.jpg)' })
 		}
 	}, [userInfo])
 

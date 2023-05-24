@@ -145,7 +145,7 @@ export default function User(props) {
     useEffect(() => {
         return () => {
             if (userInfo === null) {
-                $('#react-by-asukamis').css({ 'background-image': 'url(http://image.superarilo.icu/defalut_bg.jpg)' })
+                $('#react-by-asukamis').css({ 'background-image': 'url(https://image.superarilo.icu/defalut_bg.jpg)' })
             } else {
                 $('#react-by-asukamis').css({ 'background-image': 'url(' + userInfo.background + ')' })
             }
