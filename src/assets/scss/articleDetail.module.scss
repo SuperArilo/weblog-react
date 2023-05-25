@@ -1,6 +1,5 @@
 .article_detail
 {
-    max-width: 795px;
     min-height: 100vh;
     padding-top: 1rem;
     margin: 0 auto;
@@ -183,4 +182,31 @@
 .article_detail_mobile
 {
     padding: 0 1rem;
+}
+@media screen and (min-width: 3840px) {
+    .article_detail
+    {
+        max-width: 2301px;
+    }
+}
+@media screen and (max-width: 3839px) and (min-width: 2561px)
+{
+    .article_detail
+    {
+        max-width: 1534px;
+    }
+}
+@media screen and (max-width: 2560px) and (min-width: 1921px)
+{
+    .article_detail
+    {
+        max-width: 1151px;
+    }
+}
+@media screen and (max-width: 1920px)
+{
+    .article_detail
+    {
+        max-width: 767px;
+    }
 }

@@ -1,7 +1,6 @@
 .friends_box
 {
     margin: 0 auto;
-    max-width: 768px;
     padding-top: 1rem;
     .friends_list
     {
@@ -20,28 +19,63 @@
             align-items: center;
             .friend_name
             {
-                font-size: 0.85rem;
+                font-size: 0.8rem;
                 text-overflow: ellipsis;
                 white-space: nowrap;
                 overflow: hidden;
                 max-width: 8rem;
                 color: #343;
                 font-weight: bold;
-                margin: 0.1rem 0;
+                margin: 0.15rem 0;
             }
             .time_ago
             {
-                font-size: 0.7rem;
+                font-size: 0.65rem;
                 color: #999;
             }
         }
-        .skeleton_item
+    }
+}
+@media screen and (min-width: 3840px) {
+    .friends_box
+    {
+        max-width: 2301px;
+        .friends_list
         {
-
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
         }
     }
 }
-@media screen and (min-width:1400px)
+@media screen and (max-width: 3839px) and (min-width: 2561px)
+{
+    .friends_box
+    {
+        max-width: 1534px;
+        .friends_list
+        {
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+        }
+    }
+}
+@media screen and (max-width: 2560px) and (min-width: 1921px)
+{
+    .friends_box
+    {
+        max-width: 1151px;
+        .friends_list
+        {
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+        }
+    }
+}
+@media screen and (max-width: 1920px)
+{
+    .friends_box
+    {
+        max-width: 767px;
+    }
+}
+@media screen and (max-width:1920px) and (min-width:1400px)
 {
     .friends_box .friends_list
     {

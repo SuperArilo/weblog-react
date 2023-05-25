@@ -1,6 +1,5 @@
 .guestbook
 {
-    max-width: 768px;
     padding-top: 1rem;
     margin: 0 auto;
     .guestbook_comment_list
@@ -97,5 +96,32 @@
                 justify-content: center;
             }
         }
+    }
+}
+@media screen and (min-width: 3840px) {
+    .guestbook
+    {
+        max-width: 2301px;
+    }
+}
+@media screen and (max-width: 3839px) and (min-width: 2561px)
+{
+    .guestbook
+    {
+        max-width: 1534px;
+    }
+}
+@media screen and (max-width: 2560px) and (min-width: 1921px)
+{
+    .guestbook
+    {
+        max-width: 1151px;
+    }
+}
+@media screen and (max-width: 1920px)
+{
+    .guestbook
+    {
+        max-width: 767px;
     }
 }
