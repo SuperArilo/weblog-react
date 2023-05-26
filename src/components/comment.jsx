@@ -51,7 +51,7 @@ const Comment = forwardRef((props, ref) => {
                         onClick={() => { navigate(`/user/${props.data?.replyUser?.replyUserId}`) }}/>
                     <div className={style.vistor_info}>
                         <div>
-                            <span>{props.data?.replyUser?.replyNickName}</span>
+                            <span className={props.targetId === props.data.commentId ? style.change_color_style:''}>{props.data?.replyUser?.replyNickName}</span>
                             { 
                                 props.userInfo && props.userInfo.uid !== props.data.replyUser.replyUserId ?
                                 <button 
@@ -113,6 +113,7 @@ const Comment = forwardRef((props, ref) => {
     )
 })
 Comment.defaultProps = {
-    foldStatus: false
+    foldStatus: false,
+    commentId: null
 }
 export default Comment

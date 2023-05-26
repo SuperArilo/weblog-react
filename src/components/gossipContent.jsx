@@ -51,6 +51,9 @@ export default function GossipContent(props) {
     const commentData = useCallback((instance) => {
         gossipCommentList(instance).then(resq => {
             if(resq.code === 200) {
+                if(props.targetComment) {
+                    resq.data.list.splice(resq.data.list.findIndex(item => item.commentId === props.targetComment.commentId), 1)
+                }
                 setCommentObject(target => { return { ...target, list: resq.data.list, total: resq.data.total, pages: resq.data.pages, current: resq.data.current } })
             } else {
                 toast.error(resq.message)
@@ -58,7 +61,7 @@ export default function GossipContent(props) {
         }).catch(err => {
             toast.error(err.message)
         })
-    }, [])
+    }, [props.targetComment])
 
     useEffect(() => {
         if(!props.foldStatus) return
@@ -185,97 +188,176 @@ export default function GossipContent(props) {
                 <div className={style.gossip_comment_list}>
                     {
                         commentObject.list === null ? <CommentSkeleton />:
-                        <SwitchTransition mode='out-in'>
-                            <CSSTransition key={commentObject.list.length === 0} classNames='change' timeout={300} nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
-                                {
-                                    commentObject.list.length === 0 ? <div className={style.empty_box}>当前没有评论，赶快来评论吧 ψ(｀∇´)ψ</div>:
-                                    <TransitionGroup>
-                                        {
-                                            commentObject.list.map(item => {
-                                                return (
-                                                    <Collapse key={item.commentId}>
-                                                        <Comment
-                                                            ref={commentRef}
-                                                            userInfo={props.userInfo} 
-                                                            key={item.commentId} 
-                                                            data={item}
-                                                            foldStatus={selectCommentItem === item.commentId}
-                                                            handleFold={(id) => { setSelectCommentItem(id === selectCommentItem ? null:id) }}
-                                                            handleLike={() => { 
-                                                                if(props.userInfo === null) {
-                                                                    toast('你需要登陆才能继续哦 ⊙﹏⊙∥')
-                                                                    return
-                                                                }
-                                                                const id = toast.loading('提交中...')
-                                                                let data = new FormData()
-                                                                data.append('gossipId', props.data.id)
-                                                                data.append('commentId', item.commentId)
-                                                                likeGossipComment(data).then(resq => {
-                                                                    if(resq.code === 200) {
-                                                                        toast.success(resq.message, { id: id })
-                                                                        let [...temp] = commentObject.list
-                                                                        let index = temp.findIndex(key => key.commentId === item.commentId)
-                                                                        temp[index].like = resq.data.status
-                                                                        temp[index].likes = resq.data.likes
-                                                                        setCommentObject({...commentObject, list: temp})
-                                                                    } else if(resq.code === 0) {
-                                                                        toast(resq.message, { id: id })
-                                                                    } else {
-                                                                        toast.error(resq.message, { id: id })
-                                                                    }
-                                                                }).catch(err => {
-                                                                    toast.error(err.message, { id: id })
-                                                                })
-                                                            }}
-                                                            handleReply={content => {
-                                                                const id = toast.loading('提交中...')
-                                                                let data = new FormData()
-                                                                data.append('gossipId', props.data.id)
-                                                                data.append('content', content)
-                                                                data.append('replyCommentId', item.commentId)
-                                                                data.append('replyUserId', item.replyUser.replyUserId)
-                                                                replyGossipComment(data).then(resq => {
-                                                                    if(resq.code === 200) {
-                                                                        toast.success(resq.message, { id: id })
-                                                                        commentData(requestInstance)
-                                                                        setSelectCommentItem(null)
-                                                                    } else if(resq.code === 0) {
-                                                                        toast(resq.message, { id: id })
-                                                                    } else {
-                                                                        toast.error(resq.message, { id: id })
-                                                                    }
-                                                                    commentRef.current.changeEditorLoadingStatus(false)
-                                                                }).catch(err => {
-                                                                    toast.error(err.message, { id: id })
-                                                                    commentRef.current.changeEditorLoadingStatus(false)
-                                                                })
-                                                            }}
-                                                            handleDelete={() => {
-                                                                const id = toast.loading('提交中...')
-                                                                let data = new FormData()
-                                                                data.append('gossipId', props.data.id)
-                                                                data.append('commentId', item.commentId)
-                                                                deleteGossipComment(data).then(resq => {
-                                                                    if(resq.code === 200) {
-                                                                        toast.success(resq.message, { id: id })
-                                                                        commentData(requestInstance)
-                                                                    } else if(resq.code === 0) {
-                                                                        toast(resq.message, { id: id })
-                                                                    } else {
-                                                                        toast.error(resq.message, { id: id })
-                                                                    }
-                                                                }).catch(err => {
-                                                                    toast.error(err.message, { id: id })
-                                                                })
-                                                            }}/>
-                                                    </Collapse>
-                                                )
-                                            })
+                        <>
+                            {
+                                props.targetComment !== null
+                                &&
+                                <Comment
+                                    ref={commentRef}
+                                    targetId={props.targetComment.commentId}
+                                    userInfo={props.userInfo}
+                                    foldStatus={selectCommentItem === props.targetComment.commentId}
+                                    data={props.targetComment}
+                                    handleLike={() => { 
+                                        if(props.userInfo === null) {
+                                            toast('你需要登陆才能继续哦 ⊙﹏⊙∥')
+                                            return
                                         }
-                                    </TransitionGroup>
-                                }
-                            </CSSTransition>
-                        </SwitchTransition>
+                                        const id = toast.loading('提交中...')
+                                        let data = new FormData()
+                                        data.append('gossipId', props.data.id)
+                                        data.append('commentId', props.targetComment.commentId)
+                                        likeGossipComment(data).then(resq => {
+                                            if(resq.code === 200) {
+                                                props.reSetGossipComment(id, resq.data.likes, resq.data.status)
+                                                toast.success(resq.message, { id: id })
+                                            } else if(resq.code === 0) {
+                                                toast(resq.message, { id: id })
+                                            } else {
+                                                toast.error(resq.message, { id: id })
+                                            }
+                                        }).catch(err => {
+                                            toast.error(err.message, { id: id })
+                                        })
+                                    }}
+                                    handleFold={(id) => {
+                                        setSelectCommentItem(id === selectCommentItem ? null:id)
+                                    }}
+                                    handleReply={content => {
+                                        const id = toast.loading('提交中...')
+                                        let data = new FormData()
+                                        data.append('gossipId', props.data.id)
+                                        data.append('content', content)
+                                        data.append('replyCommentId', props.targetComment.commentId)
+                                        data.append('replyUserId', props.targetComment.replyUser.replyUserId)
+                                        replyGossipComment(data).then(resq => {
+                                            if(resq.code === 200) {
+                                                toast.success(resq.message, { id: id })
+                                                commentData(requestInstance)
+                                                setSelectCommentItem(null)
+                                            } else if(resq.code === 0) {
+                                                toast(resq.message, { id: id })
+                                            } else {
+                                                toast.error(resq.message, { id: id })
+                                            }
+                                            commentRef.current.changeEditorLoadingStatus(false)
+                                        }).catch(err => {
+                                            toast.error(err.message, { id: id })
+                                            commentRef.current.changeEditorLoadingStatus(false)
+                                        })
+                                    }}
+                                    handleDelete={() => {
+                                        const id = toast.loading('提交中...')
+                                        let data = new FormData()
+                                        data.append('gossipId', props.data.id)
+                                        data.append('commentId', props.targetComment.commentId)
+                                        deleteGossipComment(data).then(resq => {
+                                            if(resq.code === 200) {
+                                                toast.success(resq.message, { id: id })
+                                                commentData(requestInstance)
+                                            } else if(resq.code === 0) {
+                                                toast(resq.message, { id: id })
+                                            } else {
+                                                toast.error(resq.message, { id: id })
+                                            }
+                                        }).catch(err => {
+                                            toast.error(err.message, { id: id })
+                                        })
+                                    }}/>
+                            }
+                            <SwitchTransition mode='out-in'>
+                                <CSSTransition key={commentObject.list.length === 0} classNames='change' timeout={300} nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
+                                    {
+                                        commentObject.list.length === 0 ? <div className={style.empty_box}>当前没有评论，赶快来评论吧 ψ(｀∇´)ψ</div>:
+                                        <TransitionGroup>
+                                            {
+                                                commentObject.list.map(item => {
+                                                    return (
+                                                        <Collapse key={item.commentId}>
+                                                            <Comment
+                                                                ref={commentRef}
+                                                                userInfo={props.userInfo} 
+                                                                key={item.commentId} 
+                                                                data={item}
+                                                                foldStatus={selectCommentItem === item.commentId}
+                                                                handleFold={(id) => { setSelectCommentItem(id === selectCommentItem ? null:id) }}
+                                                                handleLike={() => { 
+                                                                    if(props.userInfo === null) {
+                                                                        toast('你需要登陆才能继续哦 ⊙﹏⊙∥')
+                                                                        return
+                                                                    }
+                                                                    const id = toast.loading('提交中...')
+                                                                    let data = new FormData()
+                                                                    data.append('gossipId', props.data.id)
+                                                                    data.append('commentId', item.commentId)
+                                                                    likeGossipComment(data).then(resq => {
+                                                                        if(resq.code === 200) {
+                                                                            toast.success(resq.message, { id: id })
+                                                                            let [...temp] = commentObject.list
+                                                                            let index = temp.findIndex(key => key.commentId === item.commentId)
+                                                                            temp[index].like = resq.data.status
+                                                                            temp[index].likes = resq.data.likes
+                                                                            setCommentObject({...commentObject, list: temp})
+                                                                        } else if(resq.code === 0) {
+                                                                            toast(resq.message, { id: id })
+                                                                        } else {
+                                                                            toast.error(resq.message, { id: id })
+                                                                        }
+                                                                    }).catch(err => {
+                                                                        toast.error(err.message, { id: id })
+                                                                    })
+                                                                }}
+                                                                handleReply={content => {
+                                                                    const id = toast.loading('提交中...')
+                                                                    let data = new FormData()
+                                                                    data.append('gossipId', props.data.id)
+                                                                    data.append('content', content)
+                                                                    data.append('replyCommentId', item.commentId)
+                                                                    data.append('replyUserId', item.replyUser.replyUserId)
+                                                                    replyGossipComment(data).then(resq => {
+                                                                        if(resq.code === 200) {
+                                                                            toast.success(resq.message, { id: id })
+                                                                            commentData(requestInstance)
+                                                                            setSelectCommentItem(null)
+                                                                        } else if(resq.code === 0) {
+                                                                            toast(resq.message, { id: id })
+                                                                        } else {
+                                                                            toast.error(resq.message, { id: id })
+                                                                        }
+                                                                        commentRef.current.changeEditorLoadingStatus(false)
+                                                                    }).catch(err => {
+                                                                        toast.error(err.message, { id: id })
+                                                                        commentRef.current.changeEditorLoadingStatus(false)
+                                                                    })
+                                                                }}
+                                                                handleDelete={() => {
+                                                                    const id = toast.loading('提交中...')
+                                                                    let data = new FormData()
+                                                                    data.append('gossipId', props.data.id)
+                                                                    data.append('commentId', item.commentId)
+                                                                    deleteGossipComment(data).then(resq => {
+                                                                        if(resq.code === 200) {
+                                                                            toast.success(resq.message, { id: id })
+                                                                            commentData(requestInstance)
+                                                                        } else if(resq.code === 0) {
+                                                                            toast(resq.message, { id: id })
+                                                                        } else {
+                                                                            toast.error(resq.message, { id: id })
+                                                                        }
+                                                                    }).catch(err => {
+                                                                        toast.error(err.message, { id: id })
+                                                                    })
+                                                                }}/>
+                                                        </Collapse>
+                                                    )
+                                                })
+                                            }
+                                        </TransitionGroup>
+                                    }
+                                </CSSTransition>
+                            </SwitchTransition>
+                        </>
+                        
                     }
                     {
                         commentObject.pages === 0 || commentObject.pages === 1 ? '':
@@ -292,5 +374,7 @@ export default function GossipContent(props) {
     )
 }
 GossipContent.defaultProps = {
-    foldStatus: false
+    foldStatus: false,
+    targetComment: null,
+    
 }

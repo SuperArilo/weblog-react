@@ -1,6 +1,8 @@
 .comment_box
 {
     padding-top: 0.5rem;
+    position: relative;
+    z-index: 10;
     .comment_top
     {
         width: 100%;
@@ -31,6 +33,10 @@
                         font-size: 0.85rem;
                         color: #4c4e4d;
                         transition: color 0.3s;
+                    }
+                    .change_color_style
+                    {
+                        animation: change_color 1s linear;
                     }
                     button
                     {
@@ -101,5 +107,22 @@
     .comment_editor
     {
         width: 100%;
+    }
+}
+@keyframes change_color {
+    0%
+    {
+        color: #4c4e4d;
+        transform: scale(1);
+    }
+    50%
+    {
+        color: #cf4b3a;
+        transform: scale(1.08);
+    }
+    100%
+    {
+        color: #4c4e4d;
+        transform: scale(1);
     }
 }

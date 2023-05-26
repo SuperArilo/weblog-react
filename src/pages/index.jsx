@@ -92,7 +92,7 @@ export default function IndexPage(props) {
     const gossipData = useCallback((instance) => {
         gossipListRequest(instance).then(resq => {
             if(resq.code === 200) {
-                setGossipList(resq.data.list)
+                setGossipList(resq.data.instance.list)
             } else {
                 toast.error(resq.message)
             }
