@@ -70,7 +70,7 @@ export default function VerifyPage(props) {
                     finalState === null &&
                     <div className={style.verifying}>
                         <Icon
-                            iconClass='loading'
+                            iconClass='loading rotate'
                             status={true}
                             fontSize='1.5rem'
                             />

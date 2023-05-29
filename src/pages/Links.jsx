@@ -23,7 +23,7 @@ export default function Links(props) {
 
     const [requestInstance, setRequestInstance] = useState({
         pageNum: 1,
-        pageSize: 10
+        pageSize: 20
     })
     const [dataInstance, setDataInstance] = useState({
         pages: 0,

@@ -16,7 +16,7 @@ export default function Friends(props) {
     const navigate = useNavigate()
     const [requestInstance, setRequestInstance] = useState({
         pageNum: 1,
-        pageSize: 10
+        pageSize: 30
     })
     const [dataInstance, setDataInstance] = useState({
         current: 0,

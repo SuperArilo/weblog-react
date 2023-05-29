@@ -1,6 +1,7 @@
 .verify_page
 {
     max-width: 768px;
+    min-height: 82vh;
     margin: 0 auto;
     .verify_content
     {
@@ -15,7 +16,6 @@
         .verifying , .verify_success , .verify_error
         {
             display: flex;
-            
         }
         .verifying
         {
