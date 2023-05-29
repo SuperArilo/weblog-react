@@ -1,10 +1,58 @@
 .about
 {
-    margin: 1rem 0;
-    font-size: 0.8rem;
+    margin: 0 auto;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #fff;
-    height: 8rem;
+    .info_box
+    {
+        list-style: none;
+        .info_item
+        {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #ffffff;
+            font-size: 0.82rem;
+            letter-spacing: 0.01rem;
+            margin: 0.5rem 0;
+            img
+            {
+                width: 1.4rem;
+                height: 1.4rem;
+            }
+        }
+        .info_item span
+        {
+            margin-right: 0.5rem;
+        }
+    }
+}
+@media screen and (min-width: 3840px)
+{
+    .about
+    {
+        max-width: 2130px;
+    }
+}
+@media screen and (max-width: 3839px) and (min-width: 2561px)
+{
+    .about
+    {
+        max-width: 2130px;
+    }
+}
+@media screen and (max-width: 2560px) and (min-width: 1921px)
+{
+    .about
+    {
+        max-width: 1430px;
+    }
+}
+@media screen and (max-width: 1920px)
+{
+    .about
+    {
+        max-width: 1080px;
+    }
 }

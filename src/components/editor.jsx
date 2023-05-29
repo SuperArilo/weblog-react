@@ -14,13 +14,13 @@ export default class Tinymce extends React.Component {
         modelValue: null,
         initialValue: null,
         config: {
-            height: 200,
+            height: 260,
             skin: 'oxide',
             placeholder: this.props.placeholder,
             content_css: 'default',
             menubar: false,
             branding: false,
-			statusbar: false,
+			statusbar: true,
             language_url: "/tinymce/langs/zh-Hans.js",
             language: "zh-Hans",
             plugins: [
@@ -43,8 +43,8 @@ export default class Tinymce extends React.Component {
             ],
             style_formats_merge: true,
             toolbar_mode: 'sliding',
-            content_style: 'body { font-size: 10pt }',
-            font_size_formats: '8pt 10pt 11pt 12pt 13pt 14pt 15pt 16pt 17pt 18pt 24pt 36pt 48pt',
+            content_style: 'body { font-size: 10.5pt }',
+            font_size_formats: '8pt 8.5pt 9pt 9.5pt 10pt 10.5pt 11pt 11.5pt 12pt 13pt 15pt 18pt 24pt',
             setup: (editor) => {
                 setTimeout(() => {
                     this.setState({ tinymce: editor })
@@ -114,7 +114,7 @@ class EditorSkeleton extends React.Component {
                         <Skeleton variant="text" sx={{ fontSize: '1rem' }} width='100%' height='3rem' />
                     </div>
                 </div>
-                <Skeleton variant="rounded" width='100%' height='8rem' />
+                <Skeleton variant="rounded" width='100%' height='11rem' />
                 <div className={style.editor_bottom}>
                     <Skeleton variant="rounded" width='3.4rem' height='1.8rem' />
                 </div>

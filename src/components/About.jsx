@@ -1,12 +1,23 @@
 import React from 'react'
 //样式
 import style from '../assets/scss/about.module.scss'
-export default class About extends React.Component {
-    render() {
-        return (
-            <div className={style.about}>
-                备案号
-            </div>
-        )
-    }
+
+export default function About(props) {
+    return (
+        <div className={style.about}>
+            <ul className={style.info_box}>
+                <li className={style.info_item}>
+                    <span>© 2023 superarilo.icu All Rights Reserved.</span>
+                </li>
+                <li className={style.info_item}>
+                    <span>PowerBy: Anclouds</span>
+                    <img src='https://www.anclouds.com/img/logo6.png' title='anclouds' alt='anclouds'/>
+                </li>
+                <li className={style.info_item}>
+                    <span>CDN By: BunnyCDN</span>
+                    <img src='https://dash.bunny.net/assets/images/logo-bunnynet-icon.svg' title='BunnyCDN' alt='BunnyCDN'/>
+                </li>
+            </ul>
+        </div>
+    )
 }
