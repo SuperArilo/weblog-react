@@ -1,7 +1,7 @@
 import { TransitionGroup, SwitchTransition, CSSTransition } from 'react-transition-group'
 //hook
 import React, { useEffect, useState, useRef, useCallback, forwardRef, useImperativeHandle } from 'react'
-import { useParams, useSearchParams, useNavigate } from 'react-router-dom'
+import { useSearchParams, useNavigate } from 'react-router-dom'
 //样式
 import style from '../assets/scss/articleDetail.module.scss'
 import renderHtml from '../assets/scss/renderHtml.module.scss'

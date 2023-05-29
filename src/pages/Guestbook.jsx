@@ -16,9 +16,9 @@ import '../assets/scss/currencyTransition.scss'
 //方法
 import { useSelector, useDispatch } from 'react-redux'
 import { guestbookList, addGuestbook, deleteGuestbook } from '../util/guestbook'
+import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 export default function Guestbook() {
-    //hook
     //params
     const [requestInstance, setRequestInstance] = useState({
         pageNum: 1,
@@ -124,6 +124,8 @@ export default function Guestbook() {
     )
 }
 const GuestbookCommentItem = (props) => {
+    //hook
+    const navigate = useNavigate()
     //params
     const [popporObject, setPopporObject] = useState({
         open: false,
@@ -139,7 +141,11 @@ const GuestbookCommentItem = (props) => {
             <div className={style.guestbook_comment_item}>
                 <header className={style.comment_item_top}>
                     <div className={style.user_info}>
-                        <Avatar src={props.item.avatar} title={props.item.nickName} alt={props.item.nickName}/>
+                        <Avatar
+                            src={props.item.avatar}
+                            title={props.item.nickName}
+                            alt={props.item.nickName}
+                            onClick={() => { navigate('/user/' + props.item.publisher) }}/>
                         <div>
                             <span>{props.item.nickName}</span>
                             <span>{props.item.createTimeFormat}</span>

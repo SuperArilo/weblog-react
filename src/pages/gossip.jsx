@@ -44,6 +44,7 @@ export default function Gossip(props) {
             if(resq.code === 200) {
                 if(resq.data.targetGossip) {
                     resq.data.instance.list.splice(resq.data.instance.list.findIndex(item => item.id === resq.data.targetGossip.id), 1)
+                    setSelectGossipItem(resq.data.targetGossip.id)
                 }
                 setGossipObject(target => {
                     return {
@@ -86,11 +87,11 @@ export default function Gossip(props) {
                                             data={gossipObject.targetGossip}
                                             gossipDataGet={gossipDataGet}
                                             requestInstance={requestInstance}
-                                            foldStatus={true}
+                                            foldStatus={selectGossipItem === gossipObject.targetGossip.id}
                                             targetComment={gossipObject.targetComment}
                                             handleFold={id => {
-                                                return
-                                                // setSelectGossipItem(selectGossipItem === id ? null:id)
+                                                console.log(id)
+                                                setSelectGossipItem(selectGossipItem === id ? null:id)
                                             }}
                                             handleLike={(gossipId) => {
                                                 if(props.userInfo === null) {

@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef, useCallback, forwardRef, useImperativeHandle } from 'react'
-import { useParams, useSearchParams, useNavigate } from 'react-router-dom'
+import React, { useEffect, useState, useRef, useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import Avatar from '../components/Avatar'
 import Skeleton from '@mui/material/Skeleton'
@@ -12,6 +12,8 @@ import toast from 'react-hot-toast'
 
 export default function Friends(props) {
 
+    //hook
+    const navigate = useNavigate()
     const [requestInstance, setRequestInstance] = useState({
         pageNum: 1,
         pageSize: 10
@@ -69,6 +71,9 @@ export default function Friends(props) {
                                                     src={item.avatar}
                                                     width='3rem'
                                                     height='3rem'
+                                                    onClick={() => {
+                                                        navigate('/user/' + item.uid)
+                                                    }}
                                                     />
                                                 <span className={style.friend_name}>{item.nickName}</span>
                                                 <span className={style.time_ago}>{item.visitTimeFormat}来过</span>

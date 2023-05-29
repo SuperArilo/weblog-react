@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 //样式
 import style from '../assets/scss/user.module.scss'
+import '../assets/scss/currencyTransition.scss'
 //方法
 import { useSelector, useDispatch } from 'react-redux'
-import { useParams, useNavigate } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import $ from 'jquery'
-import { blogUserProfiles, blogUserProfilesModify, blogUserModifyEmail } from '../util/user'
+import { blogUserProfiles, blogUserProfilesModify } from '../util/user'
 import { modifyEmail } from '../util/mail/mail'
 import toast from 'react-hot-toast'
 //组件
+import { SwitchTransition, CSSTransition } from 'react-transition-group'
 import Gossip from './gossip'
 import Avatar from '../components/Avatar'
 import WaterWave from 'water-wave'
@@ -16,6 +18,7 @@ import AsukaButton from '../components/asukaButton'
 import Icon from '../components/Icon'
 import InstantInput from '../components/InstantInput'
 import AvatarCut from '../components/AvatarCut'
+import Skeleton from '@mui/material/Skeleton'
 
 export default function User(props) {
 
@@ -84,8 +87,12 @@ export default function User(props) {
                 setUserProfiles(resq.data)
                 if(resq.data !== null) {
                     if(params === resq.data.uid) {
-                        dispatch({ type: 'userInfo/setAvatar', payload: resq.data?.avatar })
-                        dispatch({ type: 'userInfo/setBackground', payload: resq.data?.background })
+                        setTimeout(() => {
+                            dispatch({ type: 'userInfo/setAvatar', payload: resq.data.avatar })
+                        }, 0)
+                        setTimeout(() => {
+                            dispatch({ type: 'userInfo/setBackground', payload: resq.data.background })
+                        }, 0)
                     } else {
                         $('#react-by-asukamis').css({ 'background-image': 'url(' + resq.data.background + ')' })
                     }
@@ -154,210 +161,214 @@ export default function User(props) {
 
     return (
         <div className={style.user_info}>
-            {
-                userProfiles === null ? <UserSkeleton />:
-                <div className={style.info_box}>
-                    <div className={style.user_head_box}>
-                        <div className={style.user_avatar_box}>
-                            {
-                                modeInstance.tempAvatar !== null ?
-                                <AvatarCut
-                                    ref={avatarCutRef}
-                                    image={modeInstance.tempAvatar}/>
-                                :
-                                <Avatar width='3.8rem' height='3.8rem' src={userProfiles.avatar} />
-                            }
-                            {
-                                modeInstance.status ?
-                                <>
-                                    <div className={style.avatar_box_button}>
-                                    <AsukaButton
-                                        class='file'
-                                        text='上传头像'
-                                        getFile={file => {
-                                            setModeInstance({...modeInstance, tempAvatar: file})
-                                        }}/>
+            <SwitchTransition mode='out-in'>
+                <CSSTransition key={userProfiles === null} classNames='change' timeout={300} nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
+                    {
+                        userProfiles === null ? <UserSkeleton />:
+                        <div className={style.info_box}>
+                            <div className={style.user_head_box}>
+                                <div className={style.user_avatar_box}>
                                     {
-                                        modeInstance.tempAvatar !== null ? 
+                                        modeInstance.tempAvatar !== null ?
+                                        <AvatarCut
+                                            ref={avatarCutRef}
+                                            image={modeInstance.tempAvatar}/>
+                                        :
+                                        <Avatar width='3.8rem' height='3.8rem' src={userProfiles.avatar} />
+                                    }
+                                    {
+                                        modeInstance.status ?
                                         <>
+                                            <div className={style.avatar_box_button}>
                                             <AsukaButton
-                                                status={modeInstance.loadingStatus}
-                                                text='提交'
-                                                onClick={() => {
-                                                    avatarCutRef.current.getImage().current.getImageScaledToCanvas().toBlob((blob) => {
-                                                        setModeInstance(current => ({
-                                                            ...current,
-                                                            loadingStatus: true,
-                                                            instance: {
-                                                                ...current.instance,
-                                                                avatar: new File([blob], 'transform.png')
-                                                            }
-                                                        }))
-                                                        return
-                                                    })
+                                                class='file'
+                                                text='上传头像'
+                                                getFile={file => {
+                                                    setModeInstance({...modeInstance, tempAvatar: file})
                                                 }}/>
-                                            <AsukaButton
-                                                text='退出'
-                                                class='danger'
-                                                onClick={() => {
-                                                    setModeInstance({...modeInstance, tempAvatar: null})
-                                                }}/>
+                                            {
+                                                modeInstance.tempAvatar !== null ? 
+                                                <>
+                                                    <AsukaButton
+                                                        status={modeInstance.loadingStatus}
+                                                        text='提交'
+                                                        onClick={() => {
+                                                            avatarCutRef.current.getImage().current.getImageScaledToCanvas().toBlob((blob) => {
+                                                                setModeInstance(current => ({
+                                                                    ...current,
+                                                                    loadingStatus: true,
+                                                                    instance: {
+                                                                        ...current.instance,
+                                                                        avatar: new File([blob], 'transform.png')
+                                                                    }
+                                                                }))
+                                                                return
+                                                            })
+                                                        }}/>
+                                                    <AsukaButton
+                                                        text='退出'
+                                                        class='danger'
+                                                        onClick={() => {
+                                                            setModeInstance({...modeInstance, tempAvatar: null})
+                                                        }}/>
+                                                </>
+                                                : null
+                                            }
+                                            
+                                        </div>
                                         </>
-                                        : null
+                                        : ''
                                     }
                                     
                                 </div>
-                                </>
-                                : ''
-                            }
-                            
-                        </div>
-                        <div className={style.public_info_item} eidtorindex='0'>
-                            {
-                                modeInstance.editorIndex === '0' ?
-                                <InstantInput
-                                    label='昵称'
-                                    onErrorMessage='必填项'
-                                    handleClose={() => { setModeInstance({...modeInstance, editorIndex: null}) }}
-                                    value={userProfiles.nickName}
-                                    loadingStatus={modeInstance.loadingStatus}
-                                    handleSave={content => {
-                                        if(!modeInstance.loadingStatus) {
-                                            setModeInstance(current => ({
-                                                ...current,
-                                                loadingStatus: true,
-                                                instance: {
-                                                    ...current.instance,
-                                                    nickName: content
-                                                }
-                                            }))
-                                        }
-                                    }}/>
-                                :
-                                <>
-                                    <p className={style.nick_name}>{userProfiles.nickName}</p>
+                                <div className={style.public_info_item} eidtorindex='0'>
                                     {
-                                        modeInstance.status && <Icon 
-                                                                    iconClass='editor'
-                                                                    fontSize='1.2rem'
-                                                                    onClick={e => {
-                                                                        setModeInstance({...modeInstance, editorIndex: $(e.currentTarget).parent().attr('eidtorindex')})
-                                                                    }}/>
-                                    }
-                                </>
-                            }
-                            
-                        </div>
-                        <div className={style.public_info_item} eidtorindex='1'>
-                            {
-                                modeInstance.editorIndex === '1' ?
-                                <InstantInput
-                                    width='18rem'
-                                    mode='textarea'
-                                    label='个性签名'
-                                    onErrorMessage='必填项'
-                                    value={userProfiles.autograph}
-                                    loadingStatus={modeInstance.loadingStatus}
-                                    handleClose={() => { setModeInstance({...modeInstance, editorIndex: null}) }}
-                                    handleSave={content => {
-                                        if(!modeInstance.loadingStatus) {
-                                            setModeInstance(current => ({
-                                                ...current,
-                                                loadingStatus: true,
-                                                instance: {
-                                                    ...current.instance,
-                                                    autograph: content
+                                        modeInstance.editorIndex === '0' ?
+                                        <InstantInput
+                                            label='昵称'
+                                            onErrorMessage='必填项'
+                                            handleClose={() => { setModeInstance({...modeInstance, editorIndex: null}) }}
+                                            value={userProfiles.nickName}
+                                            loadingStatus={modeInstance.loadingStatus}
+                                            handleSave={content => {
+                                                if(!modeInstance.loadingStatus) {
+                                                    setModeInstance(current => ({
+                                                        ...current,
+                                                        loadingStatus: true,
+                                                        instance: {
+                                                            ...current.instance,
+                                                            nickName: content
+                                                        }
+                                                    }))
                                                 }
-                                            }))
-                                        }
-                                    }}/>
-                                :
-                                <>
-                                    <span className={style.autograph}>{userProfiles.autograph}</span>
-                                    {
-                                        modeInstance?.status && <Icon 
-                                                                    iconClass='editor'
-                                                                    fontSize='1.2rem'
-                                                                    onClick={e => {
-                                                                        setModeInstance({...modeInstance, editorIndex: $(e.currentTarget).parent().attr('eidtorindex')})
-                                                                    }}/>
+                                            }}/>
+                                        :
+                                        <>
+                                            <p className={style.nick_name}>{userProfiles.nickName}</p>
+                                            {
+                                                modeInstance.status && <Icon 
+                                                                            iconClass='editor'
+                                                                            fontSize='1.2rem'
+                                                                            onClick={e => {
+                                                                                setModeInstance({...modeInstance, editorIndex: $(e.currentTarget).parent().attr('eidtorindex')})
+                                                                            }}/>
+                                            }
+                                        </>
                                     }
-                                </>
-                            }
+                                    
+                                </div>
+                                <div className={style.public_info_item} eidtorindex='1'>
+                                    {
+                                        modeInstance.editorIndex === '1' ?
+                                        <InstantInput
+                                            width='18rem'
+                                            mode='textarea'
+                                            label='个性签名'
+                                            onErrorMessage='必填项'
+                                            value={userProfiles.autograph}
+                                            loadingStatus={modeInstance.loadingStatus}
+                                            handleClose={() => { setModeInstance({...modeInstance, editorIndex: null}) }}
+                                            handleSave={content => {
+                                                if(!modeInstance.loadingStatus) {
+                                                    setModeInstance(current => ({
+                                                        ...current,
+                                                        loadingStatus: true,
+                                                        instance: {
+                                                            ...current.instance,
+                                                            autograph: content
+                                                        }
+                                                    }))
+                                                }
+                                            }}/>
+                                        :
+                                        <>
+                                            <span className={style.autograph}>{userProfiles.autograph}</span>
+                                            {
+                                                modeInstance?.status && <Icon 
+                                                                            iconClass='editor'
+                                                                            fontSize='1.2rem'
+                                                                            onClick={e => {
+                                                                                setModeInstance({...modeInstance, editorIndex: $(e.currentTarget).parent().attr('eidtorindex')})
+                                                                            }}/>
+                                            }
+                                        </>
+                                    }
+                                </div>
+                                {
+                                    userInfo?.uid !== parseInt(viewUid) ?
+                                    null
+                                    :
+                                    <AsukaButton 
+                                        text={modeInstance.status ? '退出编辑模式':'编辑个人资料'}
+                                        class={modeInstance.status ? 'danger':'normal'}
+                                        onClick={() => {
+                                            setModeInstance({...modeInstance, status: !modeInstance.status, editorIndex: null})
+                                        }}/>
+                                }
+                                
+                            </div>
+                            <div className={style.function_box}>
+                                <header className={style.select_title}>
+                                    <div ref={menuLineRef} className={style.select_line} type='line' />
+                                    {
+                                        modeInstance.status ?
+                                        editorMenuList.map(item => {
+                                            return (
+                                                <div
+                                                    className={`${style.select_title_item} ${modeInstance.menuIndex === item.id ? style.select_title_item_active:''}`}
+                                                    index={item.id}
+                                                    key={item.id}
+                                                    onClick={() => {
+                                                        setModeInstance({...modeInstance, menuIndex: item.id})
+                                                        $(menuLineRef.current).css({ left: $($('div[index]')[item.id]).width() * item.id })
+                                                    }}>
+                                                    <i className={`${'asukamis'} ${item.icon}`} />
+                                                    <span>{item.title}</span>
+                                                    <WaterWave color="rgb(155, 195, 219)" duration={ 500 } />
+                                                </div>
+                                            )
+                                        })
+                                        :
+                                        infoMenuList.map(item => {
+                                            return (
+                                                <div
+                                                    className={`${style.select_title_item} ${modeInstance.menuIndex === item.id ? style.select_title_item_active:''}`}
+                                                    index={item.id}
+                                                    key={item.id}
+                                                    onClick={() => {
+                                                        setModeInstance({...modeInstance, menuIndex: item.id})
+                                                        $(menuLineRef.current).css({ left: $($('div[index]')[item.id]).width() * item.id })
+                                                    }}>
+                                                    <i className={`${'asukamis'} ${item.icon}`} />
+                                                    <span>{item.title}</span>
+                                                    <WaterWave color="rgb(155, 195, 219)" duration={ 500 } />
+                                                </div>
+                                            )
+                                        })
+                                    }
+                                </header>
+                                <div className={style.sleect_function_box}>
+                                    {
+                                        modeInstance.status ? 
+                                        <RenderEditorFunctionView
+                                            modeInstance={modeInstance}
+                                            setModeInstance={setModeInstance}
+                                            userProfiles={userProfiles}
+                                            userInfo={userInfo}
+                                            viewUid={viewUid} />
+                                        :
+                                        <RenderFunctionView
+                                            menuIndex={modeInstance.menuIndex}
+                                            userProfiles={userProfiles}
+                                            userInfo={userInfo}
+                                            viewUid={viewUid} />
+                                    }
+                                </div>
+                            </div>
                         </div>
-                        {
-                            userInfo?.uid !== parseInt(viewUid) ?
-                            null
-                            :
-                            <AsukaButton 
-                                text={modeInstance.status ? '退出编辑模式':'编辑个人资料'}
-                                class={modeInstance.status ? 'danger':'normal'}
-                                onClick={() => {
-                                    setModeInstance({...modeInstance, status: !modeInstance.status, editorIndex: null})
-                                }}/>
-                        }
-                        
-                    </div>
-                    <div className={style.function_box}>
-                        <header className={style.select_title}>
-                            <div ref={menuLineRef} className={style.select_line} type='line' />
-                            {
-                                modeInstance.status ?
-                                editorMenuList.map(item => {
-                                    return (
-                                        <div
-                                            className={`${style.select_title_item} ${modeInstance.menuIndex === item.id ? style.select_title_item_active:''}`}
-                                            index={item.id}
-                                            key={item.id}
-                                            onClick={() => {
-                                                setModeInstance({...modeInstance, menuIndex: item.id})
-                                                $(menuLineRef.current).css({ left: $($('div[index]')[item.id]).width() * item.id })
-                                            }}>
-                                            <i className={`${'asukamis'} ${item.icon}`} />
-                                            <span>{item.title}</span>
-                                            <WaterWave color="rgb(155, 195, 219)" duration={ 500 } />
-                                        </div>
-                                    )
-                                })
-                                :
-                                infoMenuList.map(item => {
-                                    return (
-                                        <div
-                                            className={`${style.select_title_item} ${modeInstance.menuIndex === item.id ? style.select_title_item_active:''}`}
-                                            index={item.id}
-                                            key={item.id}
-                                            onClick={() => {
-                                                setModeInstance({...modeInstance, menuIndex: item.id})
-                                                $(menuLineRef.current).css({ left: $($('div[index]')[item.id]).width() * item.id })
-                                            }}>
-                                            <i className={`${'asukamis'} ${item.icon}`} />
-                                            <span>{item.title}</span>
-                                            <WaterWave color="rgb(155, 195, 219)" duration={ 500 } />
-                                        </div>
-                                    )
-                                })
-                            }
-                        </header>
-                        <div className={style.sleect_function_box}>
-                            {
-                                modeInstance.status ? 
-                                <RenderEditorFunctionView
-                                    modeInstance={modeInstance}
-                                    setModeInstance={setModeInstance}
-                                    userProfiles={userProfiles}
-                                    userInfo={userInfo}
-                                    viewUid={viewUid} />
-                                :
-                                <RenderFunctionView
-                                    menuIndex={modeInstance.menuIndex}
-                                    userProfiles={userProfiles}
-                                    userInfo={userInfo}
-                                    viewUid={viewUid} />
-                            }
-                        </div>
-                    </div>
-                </div>
-            }
+                    }
+                </CSSTransition>
+            </SwitchTransition>
         </div>
     )
 }
@@ -743,7 +754,38 @@ const RenderEditorFunctionView = ({modeInstance ,setModeInstance , userProfiles,
 const UserSkeleton = () => {
     return (
         <div className={style.user_skeleton}>
-            
+            <div className={style.top_skeleton}>
+                <Skeleton variant="circular" width='3.8rem' height='3.8rem' />
+                <Skeleton variant="text" style={{ marginTop: '1rem' }} sx={{ fontSize: '1rem' }} width='6rem' height='2rem' />
+                <Skeleton variant="text" sx={{ fontSize: '0.8rem' }} width='6rem' height='2rem' />
+            </div>
+            <div className={style.center_menu}></div>
+            <ul className={style.bottom_list}>
+                <li>
+                    <Skeleton variant="text" sx={{ fontSize: '0.8rem' }} width='6rem' height='2rem' />
+                    <Skeleton variant="text" sx={{ fontSize: '0.8rem' }} width='6rem' height='2rem' />
+                </li>
+                <li>
+                    <Skeleton variant="text" sx={{ fontSize: '0.8rem' }} width='6rem' height='2rem' />
+                    <Skeleton variant="text" sx={{ fontSize: '0.8rem' }} width='6rem' height='2rem' />
+                </li>
+                <li>
+                    <Skeleton variant="text" sx={{ fontSize: '0.8rem' }} width='6rem' height='2rem' />
+                    <Skeleton variant="text" sx={{ fontSize: '0.8rem' }} width='6rem' height='2rem' />
+                </li>
+                <li>
+                    <Skeleton variant="text" sx={{ fontSize: '0.8rem' }} width='6rem' height='2rem' />
+                    <Skeleton variant="text" sx={{ fontSize: '0.8rem' }} width='6rem' height='2rem' />
+                </li>
+                <li>
+                    <Skeleton variant="text" sx={{ fontSize: '0.8rem' }} width='6rem' height='2rem' />
+                    <Skeleton variant="text" sx={{ fontSize: '0.8rem' }} width='6rem' height='2rem' />
+                </li>
+                <li>
+                    <Skeleton variant="text" sx={{ fontSize: '0.8rem' }} width='6rem' height='2rem' />
+                    <Skeleton variant="text" sx={{ fontSize: '0.8rem' }} width='6rem' height='2rem' />
+                </li>
+            </ul>
         </div>
     )
 }
