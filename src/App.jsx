@@ -243,7 +243,7 @@ const PCheaderNav = (props) => {
 	return (
 		<nav className='header-nav'>
 			<span className='left-webside-icon' onClick={() => { navigate('/') }}>
-				Asukamis
+				Arilo
 				<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
 			</span>
 			<ul className='nav-menu-list'>
@@ -365,7 +365,7 @@ const MobileHeaderNav = (props) => {
 						</>
 					}
 				</div>
-				<span className='left-webside-icon'>Asukamis</span>
+				<span className='left-webside-icon'>Arilo</span>
 				<div className='right-mobile-bar' onClick={() => { setDrawerStatus(true) }}>
 					<i className="fas fa-bars"/>
 					<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
