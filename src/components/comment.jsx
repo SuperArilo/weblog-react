@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useImperativeHandle, forwardRef } from 'react'
+import React, { useState, useRef, useImperativeHandle, forwardRef } from 'react'
 //样式
 import style from '../assets/scss/components/comment.module.scss'
 import renderHtml from '../assets/scss/renderHtml.module.scss'
@@ -78,7 +78,7 @@ const Comment = forwardRef((props, ref) => {
                 dangerouslySetInnerHTML={
                     { 
                         __html: props.data.byReplyUser ? 
-                            '<blockquote><a title="' + props.data.byReplyUser.byReplyNickName + '" href="#' + props.data.byReplyUser.byReplyUserId + props.data.byReplyUser.byReplyCommentId + '" target="_self">@ ' + props.data.byReplyUser.byReplyNickName + '</a></blockquote>' + props.data.content
+                            '<blockquote><p><span style="color: rgb(53, 152, 219);" data-mce-style="color: rgb(53, 152, 219);">' + props.data.byReplyUser.byReplyNickName + '</span></p></blockquote>' + props.data.content
                             :props.data.content
                     }
                 } />
