@@ -23,12 +23,12 @@
     "react-avatar-editor": "^13.0.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",
-    "react-js-pagination": "^3.0.3",
+    "react-js-pagination": "^3.0.2",
     "react-paginate": "^8.1.4",
     "react-photo-view": "^1.2.3",
     "react-redux": "^8.0.4",
     "react-router-dom": "^6.4.2",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^5.0.1",
     "react-slick": "^0.29.0",
     "react-transition-group": "^4.4.5",
     "slick-carousel": "^1.8.1",
@@ -66,6 +66,6 @@
     ]
   },
   "devDependencies": {
-    "node-sass": "^7.0.3"
+    "node-sass": "^8.0.0"
   }
 }
