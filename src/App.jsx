@@ -65,6 +65,8 @@ export default function App () {
 				} else {
 					localStorage.removeItem('token')
 				}
+			}).catch(err => {
+				toast(err.message)
 			})
 		}
 	}, [loginSetUserInfo])
