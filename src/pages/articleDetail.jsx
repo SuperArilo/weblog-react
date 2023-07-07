@@ -36,7 +36,8 @@ export default function ArticleDetail(props) {
                 <ArticleInfoTop ref={articleContentRef} articleId={articleId} userInfo={props.userInfo} />
                 { 
                     articleContentRef.current === null || articleContentRef.current.state.articleInstance === '' ? '':
-                    <Tinymce
+                    <div className={style.article_detail_editor}>
+                        <Tinymce
                         userInfo={props.userInfo}
                         ref={tinymce} 
                         placeholder='发表一条友善的评论吧...' 
@@ -69,6 +70,7 @@ export default function ArticleDetail(props) {
                                 })
                             }
                         }}/>
+                    </div>
                 }
                 <span className={style.article_vistor_title}>评论</span>
                 <ArticleVistorList
@@ -99,34 +101,37 @@ class ArticleInfoTop extends React.Component {
             <SwitchTransition mode='out-in'>
                 <CSSTransition key={this.state.articleInstance  === ''} timeout={300} classNames="change" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
                     {
-                        this.state.articleInstance  === '' ? <ArticleSkeleton />:<ArticleContent 
-                                                                                    articleInstance={this.state.articleInstance} 
-                                                                                    handleLike={(articleId) => { 
-                                                                                        if(!this.props.userInfo) {
-                                                                                            toast('你需要登录才能进行下一步操作哦')
-                                                                                            return
-                                                                                        }
-                                                                                        const id = toast.loading('提交中...')
-                                                                                        let data = new FormData()
-                                                                                        data.append('articleId', articleId)
-                                                                                        increaseArticleLike(data).then(resq => {
-                                                                                            
-                                                                                            if(resq.code === 200) {
-                                                                                                toast.success(resq.message, { id: id })
-                                                                                                let {...temp} = this.state.articleInstance
-                                                                                                temp.hasLike = resq.data.status
-                                                                                                temp.articleLikes = resq.data.likes
-                                                                                                this.setState({ articleInstance: temp })
-                                                                                            } else if(resq.code === 0) {
-                                                                                                toast(resq.message, { id: id })
-                                                                                            } else {
-                                                                                                toast.error(resq.message, { id: id })
-                                                                                            }
-                                                                                        }).catch(err => {
-                                                                                            
-                                                                                            toast.error(err.message, { id: id })
-                                                                                        })
-                                                                                    }} />
+                        this.state.articleInstance  === '' ?
+                        <ArticleSkeleton />
+                        :
+                        <ArticleContent 
+                            articleInstance={this.state.articleInstance} 
+                            handleLike={(articleId) => { 
+                                if(!this.props.userInfo) {
+                                    toast('你需要登录才能进行下一步操作哦')
+                                    return
+                                }
+                                const id = toast.loading('提交中...')
+                                let data = new FormData()
+                                data.append('articleId', articleId)
+                                increaseArticleLike(data).then(resq => {
+                                    
+                                    if(resq.code === 200) {
+                                        toast.success(resq.message, { id: id })
+                                        let {...temp} = this.state.articleInstance
+                                        temp.hasLike = resq.data.status
+                                        temp.articleLikes = resq.data.likes
+                                        this.setState({ articleInstance: temp })
+                                    } else if(resq.code === 0) {
+                                        toast(resq.message, { id: id })
+                                    } else {
+                                        toast.error(resq.message, { id: id })
+                                    }
+                                }).catch(err => {
+                                    
+                                    toast.error(err.message, { id: id })
+                                })
+                            }} />
                     }
                 </CSSTransition>
             </SwitchTransition>
