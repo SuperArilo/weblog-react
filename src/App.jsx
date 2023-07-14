@@ -73,9 +73,9 @@ export default function App () {
 
 	useEffect(() => {
 		if(userInfo !== null) {
-			$('#react-by-asukamis').css({ 'background-image': 'url(' + userInfo.background + ')' })
+			$('#react-by-asukamis').css({ 'backgroundImage': 'url(' + userInfo.background + ')' })
 		} else {
-			$('#react-by-asukamis').css({ 'background-image': 'url(https://image.superarilo.icu/defalut_bg.jpg)' })
+			$('#react-by-asukamis').css({ 'backgroundImage': 'url(https://image.superarilo.icu/defalut_bg.jpg)' })
 		}
 	}, [userInfo])
 
