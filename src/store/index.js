@@ -14,7 +14,7 @@ const isMobile = createSlice({
 const userInfo = createSlice({
     name: 'userInfo',
     initialState: {
-        info: null
+        info: null 
     },
     reducers: {
         setInfo: (state, action) => {
@@ -22,16 +22,16 @@ const userInfo = createSlice({
         },
         setAvatar: (state, action) => {
             if(state.info === null) {
-                state.info = {...state.info, avatar: action.payload}
+                state.info = { ...state.info, avatar: action.payload }
             } else {
-                state.info.avatar = action.payload
+                state.info.avatar =  action.payload 
             }
         },
         setBackground: (state, action) => {
             if(state.info === null) {
-                state.info = {...state.info, background: 'http://image.superarilo.icu/defalut_bg.jpg'}
+                state.info = { ...state.info, background: 'https://image.superarilo.icu/defalut_bg.jpg' }
             } else {
-                state.info.background = action.background
+                state.info.background = action.payload
             }
         }
     }

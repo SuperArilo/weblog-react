@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react'
 import style from '../assets/scss/user.module.scss'
 import '../assets/scss/currencyTransition.scss'
 //方法
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import { useParams } from "react-router-dom"
 import $ from 'jquery'
 import { blogUserProfiles, blogUserProfilesModify } from '../util/user'
@@ -26,7 +26,7 @@ export default function User(props) {
     const dispatch = useDispatch()
 
     //params
-    const userInfo = useSelector((state) => state.userInfo.info)
+    const userInfo = useSelector((state) => state.userInfo.info, shallowEqual)
     const [userProfiles, setUserProfiles] = useState(null)
     const { viewUid } = useParams()
 
@@ -85,25 +85,22 @@ export default function User(props) {
         blogUserProfiles(params).then(resq => {
             if(resq.code === 200) {
                 setUserProfiles(resq.data)
-                if(resq.data !== null) {
-                    if(params === resq.data.uid) {
-                        setTimeout(() => {
-                            dispatch({ type: 'userInfo/setAvatar', payload: resq.data.avatar })
-                        }, 0)
-                        setTimeout(() => {
-                            dispatch({ type: 'userInfo/setBackground', payload: resq.data.background })
-                        }, 0)
-                    } else {
-                        $('#react-by-asukamis').css({ 'background-image': 'url(' + resq.data.background + ')' })
-                    }
+                if(parseInt(params) === userInfo?.uid) {
+                    setTimeout(() => {
+                        dispatch({ type: 'userInfo/setAvatar', payload: resq.data.avatar })
+                    }, 0)
+                    setTimeout(() => {
+                        dispatch({ type: 'userInfo/setBackground', payload: resq.data.background })
+                    }, 0)
                 }
+                $('#react-by-asukamis').css({ 'backgroundImage': 'url(' + resq.data.background + ')' })
             } else {
                 toast.error(resq.message)
             }
         }).catch(err => {
             toast.error(err.message)
         })
-    }, [dispatch])
+    }, [dispatch, userInfo?.uid])
 
     useEffect(() => {
         queryProfiles(viewUid)
@@ -152,9 +149,10 @@ export default function User(props) {
     useEffect(() => {
         return () => {
             if (userInfo === null) {
-                $('#react-by-asukamis').css({ 'background-image': 'url(https://image.superarilo.icu/defalut_bg.jpg)' })
+                $('#react-by-asukamis').css({ 'backgroundImage': 'url(https://image.superarilo.icu/defalut_bg.jpg)' })
             } else {
-                $('#react-by-asukamis').css({ 'background-image': 'url(' + userInfo.background + ')' })
+                console.log(userInfo)
+                $('#react-by-asukamis').css({ 'backgroundImage': 'url(' + userInfo.background + ')' })
             }
         }
       }, [userInfo])
@@ -723,7 +721,7 @@ const RenderFunctionView = ({ menuIndex, userProfiles, userInfo, viewUid }) => {
         case 0:
             return <UserInfoView userProfiles={userProfiles} />
         case 1:
-            return <Gossip userInfo={userInfo} viewUid={viewUid} />
+            return <Gossip style={{ 'minHeight': 'none' }} userInfo={userInfo} viewUid={viewUid} />
         case 2:
             return <span>开发中</span>
         default:
