@@ -172,24 +172,23 @@ const GuestbookCommentItem = (props) => {
                 status={deleteStatus}
                 onConfirm={() => {
                     if(!deleteStatus) {
-                        toast.loading('提交中...')
+                        const id = toast.loading('提交中...')
                         setDeleteStatus(true)
                         let data = new FormData()
                         data.append('guestbookId', props.item.guestbookId)
                         deleteGuestbook(data).then(resq => {
-                            
                             if(resq.code === 200) {
-                                toast.success(resq.message)
+                                toast.success(resq.message, { id: id })
                                 props.dataListGet(props.requestInstance)
                             } else {
-                                toast.error(resq.message)
+                                toast.error(resq.message, { id: id })
                             }
                             setDeleteStatus(false)
                             setPopporObject({...popporObject, open: false, target: null})
                         }).catch(err => {
                             
                             setDeleteStatus(false)
-                            toast.error(err.message)
+                            toast.error(err.message, { id: id })
                             setPopporObject({...popporObject, open: false, target: null})
                         })
                     }
