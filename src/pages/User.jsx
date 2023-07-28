@@ -57,6 +57,11 @@ export default function User(props) {
             id: 2,
             title: '点赞',
             icon: 'ulike'
+        },
+        {
+            id: 3,
+            title: '留言',
+            icon: 'contact'
         }
     ])
     //editor
@@ -151,7 +156,6 @@ export default function User(props) {
             if (userInfo === null) {
                 $('#react-by-asukamis').css({ 'backgroundImage': 'url(https://image.superarilo.icu/defalut_bg.jpg)' })
             } else {
-                console.log(userInfo)
                 $('#react-by-asukamis').css({ 'backgroundImage': 'url(' + userInfo.background + ')' })
             }
         }
@@ -441,7 +445,7 @@ const UserInfoView = (props) => {
             </li>
             <li>
                 <div className={style.info_title}>
-                    <i className='asukamis calendar' />
+                    <i className='asukamis age' />
                     <span>年龄</span>
                 </div>
                 <div className={style.info_content} editorindex='4'>
