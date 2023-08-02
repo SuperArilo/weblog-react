@@ -8,14 +8,11 @@ import './assets/fontawesome/css/all.min.css'
 import { BrowserRouter } from 'react-router-dom'
 import store from './store'
 import { Provider } from 'react-redux'
-import { AliveScope } from 'react-activation'
 const root = ReactDOM.createRoot(document.getElementById('react-by-asukamis'))
 root.render(
     <Provider store={store}>
         <BrowserRouter>
-            <AliveScope>
-                <App />
-            </AliveScope>
+            <App />
             <Toaster
                 position='bottom-right'
                 containerStyle={{
