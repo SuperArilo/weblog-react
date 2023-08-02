@@ -158,7 +158,6 @@ export default function GossipContent(props) {
                     placeholder='发表一条友善的评论吧...'
                     status={editorSendToServerStatus}
                     getContent={value => {
-                        console.log(value)
                         if(value === null || value === '' || value === '<p></p>') {
                             toast('不能提交空白哦 ⊙﹏⊙∥')
                             return

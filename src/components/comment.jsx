@@ -7,7 +7,6 @@ import Avatar from './Avatar'
 import AsukaPoppor from './popper'
 import Collapse from '@mui/material/Collapse'
 import Tinymce from './editor'
-import KeepAlive from 'react-activation'
 import PreviewImage from './PreviewImage'
 //方法
 import { useNavigate } from 'react-router-dom'
@@ -92,22 +91,20 @@ const Comment = forwardRef((props, ref) => {
                     props.handleDelete()
                 }} 
                 onCancel={() => { popperChange(null) }}/>
-            <KeepAlive>
-                <Collapse in={props.foldStatus} mountOnEnter unmountOnExit>
-                    <Tinymce
-                        userInfo={props.userInfo}
-                        placeholder={`${'回复'}${' @' + props.data?.replyUser?.replyNickName}`} 
-                        status={editorLoadingStatus} 
-                        getContent={(content) => { 
-                            if(content === null || content === undefined || content === '' || content === '<p></p>') {
-                                toast('回复的内容不能为空白哦 (ง •_•)ง')
-                                return
-                            }
-                            props.handleReply(content)
-                            setEditorLoadingStatus(true)
-                        }}/>
-                </Collapse>
-            </KeepAlive>
+            <Collapse in={props.foldStatus} mountOnEnter unmountOnExit>
+                <Tinymce
+                    userInfo={props.userInfo}
+                    placeholder={`${'回复'}${' @' + props.data?.replyUser?.replyNickName}`} 
+                    status={editorLoadingStatus} 
+                    getContent={(content) => { 
+                        if(content === null || content === undefined || content === '' || content === '<p></p>') {
+                            toast('回复的内容不能为空白哦 (ง •_•)ง')
+                            return
+                        }
+                        props.handleReply(content)
+                        setEditorLoadingStatus(true)
+                    }}/>
+            </Collapse>
             <PreviewImage current={renderContentRef} />
         </div>
     )

@@ -304,14 +304,15 @@ export default function User(props) {
                                         text={modeInstance.status ? '退出编辑模式':'编辑个人资料'}
                                         class={modeInstance.status ? 'danger':'normal'}
                                         onClick={() => {
-                                            setModeInstance({...modeInstance, status: !modeInstance.status, editorIndex: null})
+                                            setModeInstance({...modeInstance, status: !modeInstance.status, editorIndex: null, menuIndex: 0})
+                                            $(menuLineRef.current).css({ left: 0 })
                                         }}/>
                                 }
                                 
                             </div>
                             <div className={style.function_box}>
                                 <header className={style.select_title}>
-                                    <div ref={menuLineRef} className={style.select_line} type='line' />
+                                    <div ref={menuLineRef} className={style.select_line} style={{ width: 'calc(100% / ' + (modeInstance.status ? editorMenuList.length:infoMenuList.length) + ')' }} type='line' />
                                     {
                                         modeInstance.status ?
                                         editorMenuList.map(item => {
