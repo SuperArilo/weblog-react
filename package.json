@@ -35,7 +35,6 @@
     "sass-loader": "^13.3.2",
     "slick-carousel": "^1.8.1",
     "tinymce": "^6.2.0",
-    "water-wave": "^2.0.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
