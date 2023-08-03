@@ -1,0 +1,30 @@
+.wave_aside {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	pointer-events: none;
+	overflow: hidden;
+}
+
+.wave_btn {
+	position: absolute;
+	border-radius: 50%;
+	transform: translate(-50%, -50%);
+	pointer-events: none;
+}
+
+@keyframes wave_animate {
+	0% {
+		width: 0;
+		height: 0;
+		opacity: 0.2;
+	}
+
+	100% {
+		width: 500px;
+		height: 500px;
+		opacity: 0;
+	}
+}
