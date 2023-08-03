@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 //组件
 import { Slide } from '@mui/material'
-import WaterWave from 'water-wave'
+import WaterWave from './WaterWave'
 import Tinymce from './editor'
 //样式
 import style from '../assets/scss/createGossipWindow.module.scss'
@@ -24,7 +24,7 @@ export default function CreateGossipWindow(props) {
                     onClick={() => {
                         setTimeout(() => { props.setCreateGossipWindowStatus(false) }, 500)
                     }}>
-                    <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
+                    <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
                 </i>
                 <p className={style.window_header_p}>发表碎语</p>
                 <Tinymce

@@ -11,7 +11,7 @@ import Tinymce from '../components/editor'
 import toast from 'react-hot-toast'
 import Skeleton from '@mui/material/Skeleton'
 import Comment from '../components/comment'
-import WaterWave from 'water-wave'
+import WaterWave from '../components/WaterWave'
 import Collapse from '@mui/material/Collapse'
 import Avatar from '../components/Avatar'
 import CommentSkeleton from '../components/CommentSkeleton'
@@ -325,7 +325,7 @@ const ArticleContent = (props) => {
                     </div>
                     <div className={style.article_data_info}>
                         <div><i className="fas fa-eye"/><span>{props.articleInstance.articleViews}</span></div>
-                        <div onClick={() => { props.handleLike(props.articleInstance.id) }}><i className={`${'fas fa-heart'} ${props.articleInstance.hasLike ? style.article_liked:''}`} /><span>{props.articleInstance.articleLikes}</span><WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } /></div>
+                        <div onClick={() => { props.handleLike(props.articleInstance.id) }}><i className={`${'fas fa-heart'} ${props.articleInstance.hasLike ? style.article_liked:''}`} /><span>{props.articleInstance.articleLikes}</span><WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } /></div>
                     </div>
                 </div>
             </div>

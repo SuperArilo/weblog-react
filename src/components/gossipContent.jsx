@@ -6,7 +6,7 @@ import '../assets/scss/currencyTransition.scss'
 
 //组件
 import Avatar from '../components/Avatar'
-import WaterWave from 'water-wave'
+import WaterWave from './WaterWave'
 import Tinymce from './editor'
 import Collapse from '@mui/material/Collapse'
 import Comment from './comment'
@@ -88,7 +88,7 @@ export default function GossipContent(props) {
                 {
                     props.userInfo?.uid === props.data.author &&
                     <div ref={gossipFunctionMenuRef} className={style.right_function} onClick={() => { setGossipFunctionMenuStatus(true) }}>
-                        <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
+                        <WaterWave color="rgba(0, 0, 0, 0.7)" duration={1} />
                         <i className='fas fa-ellipsis-v' />
                     </div>
                 }
@@ -137,18 +137,20 @@ export default function GossipContent(props) {
                     }}>
                     <i className='fas fa-heart' />
                     喜欢
-                    <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
+                    <WaterWave color="rgba(0, 0, 0, 0.7)" duration={1} />
                 </button>
                 <button type='button' 
                     onClick={() => { props.handleFold(props.data.id) }}>
                     <i className='fas fa-comment-dots' />
                     评论
-                    <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
+                    <WaterWave color="rgba(0, 0, 0, 0.7)" duration={1} />
                 </button>
                 <button type='button'>
                     <i className='fas fa-share-alt' />
                     分享
-                    <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
+                    <WaterWave
+                        color="rgba(0, 0, 0, 0.7)"
+                        duration={1}/>
                 </button>
             </div>
             <Collapse in={props.foldStatus} mountOnEnter unmountOnExit>

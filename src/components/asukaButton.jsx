@@ -1,5 +1,5 @@
 import React from 'react'
-import WaterWave from 'water-wave'
+import WaterWave from './WaterWave'
 import 'water-wave/style.css'
 import style from '../assets/scss/components/button.module.scss'
 import Icon from './Icon'
@@ -30,7 +30,7 @@ export default function AsukaButton(props) {
             }
             <WaterWave
                 color={`${props.class === 'normal' ? 'rgba(0, 0, 0, 0.7)':''} ${props.class === 'read' ? 'rgb(228, 177, 177)':''}`}
-                duration={ 500 } />
+                duration={ 1 } />
         </button>
     )
 }

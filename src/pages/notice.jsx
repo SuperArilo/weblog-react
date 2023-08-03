@@ -12,7 +12,7 @@ import { useNavigate  } from 'react-router-dom'
 import { TransitionGroup, SwitchTransition, CSSTransition } from 'react-transition-group'
 //组件
 import Icon from '../components/Icon'
-import WaterWave from 'water-wave'
+import WaterWave from '../components/WaterWave'
 import Pagination from '../components/Pagination'
 import AsukaButton from '../components/asukaButton'
 import { Collapse } from '@mui/material'
@@ -152,7 +152,7 @@ export default function Notice(props) {
                                     }}
                                     >
                                         {item.title}
-                                        <WaterWave color="rgb(155, 195, 219)" duration={ 500 } />
+                                        <WaterWave color="rgb(155, 195, 219)" duration={ 1 } />
                                     </span>
                             )
                         })

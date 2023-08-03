@@ -7,7 +7,7 @@ import "slick-carousel/slick/slick-theme.css"
 //组件
 import Switch from '@mui/material/Switch'
 import AsukaButton from '../components/asukaButton'
-import WaterWave from 'water-wave'
+import WaterWave from '../components/WaterWave'
 import GossipContent from '../components/gossipContent'
 import Slider from "react-slick"
 import GossipSkeleton from '../components/GossipSkeleton'
@@ -300,17 +300,17 @@ const Article = (props) => {
                         <div>
                             <i className="fas fa-eye"/>
                             <span>{props.item.articleViews}</span>
-                            <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
+                            <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
                         </div>
                         <div onClick={() => { props.handleLike(props.item.id) }}>
                             <i className={`${'fas fa-heart'} ${props.item.like ? style.article_is_liked:''}`} />
                             <span>{props.item.articleLikes}</span>
-                            <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
+                            <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
                         </div>
                         <div>
                             <i className="fas fa-comment-alt"/>
                             <span>{props.item.comments}</span>
-                            <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
+                            <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
                         </div>
                     </div>
                 </div>

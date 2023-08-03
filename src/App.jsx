@@ -10,7 +10,7 @@ import { blogLoginUser, blogRegisterUser, blogUserLoginOut } from './util/user'
 import { regiserMail, findPassword } from './util/mail/mail'
 //组件
 import toast from 'react-hot-toast'
-import WaterWave from 'water-wave'
+import WaterWave from './components/WaterWave'
 import Slide from '@mui/material/Slide'
 import Menu from './components/Menu'
 import ArticleDetail from './pages/articleDetail'
@@ -246,7 +246,7 @@ const PCheaderNav = (props) => {
 		<nav className='header-nav'>
 			<span className='left-webside-icon' onClick={() => { navigate('/') }}>
 				Arilo
-				<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
+				<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
 			</span>
 			<ul className='nav-menu-list'>
 				{
@@ -363,14 +363,14 @@ const MobileHeaderNav = (props) => {
 								fontSize='1.3rem'
 								iconClass='gossip'
 								onClick={() => { props.setCreateGossipWindowStatus(true) }}/>
-							<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
+							<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
 						</>
 					}
 				</div>
 				<span className='left-webside-icon'>Arilo</span>
 				<div className='right-mobile-bar' onClick={() => { setDrawerStatus(true) }}>
 					<i className="fas fa-bars"/>
-					<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
+					<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
 				</div>
 			</nav>
 			<CSSTransition in={drawerStatus} timeout={300} classNames="mask-fade" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
@@ -390,7 +390,7 @@ const MobileHeaderNav = (props) => {
 											setDrawerStatus(false)
 										}, 500)
 									}}>
-									<WaterWave color="rgba(255, 255, 255, 0.7)" duration={ 500 } />
+									<WaterWave color="rgba(255, 255, 255, 0.7)" duration={ 1 } />
 								</i>
 							</header>
 							<div className={signStyle.user_info_box}>
@@ -409,7 +409,7 @@ const MobileHeaderNav = (props) => {
 											 }}>
 												<i className={`${'fas'} ${item.iconClass}`} />
 												<span>{item.title}</span>
-												<WaterWave color='rgba(255, 255, 255, 0.7)' duration={ 500 } />
+												<WaterWave color='rgba(255, 255, 255, 0.7)' duration={ 1 } />
 											</li>
 										)
 									})
@@ -429,7 +429,7 @@ const MobileHeaderNav = (props) => {
 											}}>
 											<i className='asukamis setting' />
 											<span>设置</span>
-											<WaterWave color="rgba(255, 255, 255, 0.7)" duration={ 500 } />
+											<WaterWave color="rgba(255, 255, 255, 0.7)" duration={ 1 } />
 										</div>
 										<div 
 											className={signStyle.function_box}
@@ -447,7 +447,7 @@ const MobileHeaderNav = (props) => {
 											}}>
 											<i className='asukamis signout' />
 											<span>注销</span>
-											<WaterWave color="rgba(255, 255, 255, 0.7)" duration={ 500 } />
+											<WaterWave color="rgba(255, 255, 255, 0.7)" duration={ 1 } />
 										</div>
 									</>
 									:
@@ -513,7 +513,7 @@ const LoginBox = (props) => {
 		<Slide direction="up" in={props.status} mountOnEnter unmountOnExit>
 			<div className={`${signStyle.login_box} ${isMobileStatus? signStyle.box_mobile:signStyle.box_pc}`}>
 				<header className={signStyle.public_title}>
-					<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
+					<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
 					<i className="far fa-arrow-alt-circle-left" onClick={() => { setTimeout(() => {props.closeBox(false)}, 300) }}/>
 				</header>
 				<div className={signStyle.top_tips}>
@@ -585,7 +585,7 @@ const LoginBox = (props) => {
 					{ !loginStatus && userInfo === null ? '登陆':'' }
 					{ loginStatus ? <i className='fas fa-circle-notch fa-spin' />:'' }
 					{ userInfo !== null && !loginStatus ? <i className='fas fa-check' style={{ 'color': '#80e298' }} />:''}
-					<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
+					<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
 				</button>
 				{/* <span className={signStyle.other_login_tips}>其他登录方式</span>
 				<div className={signStyle.other_login_list}>
@@ -623,7 +623,7 @@ const RegisterBox = (props) => {
 		<Slide direction="up" in={props.status} mountOnEnter unmountOnExit>
 			<div className={`${signStyle.register_box} ${props.isMobile ? signStyle.box_mobile:signStyle.box_pc}`}>
 				<header className={signStyle.public_title}>
-					<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
+					<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
 					<i className="far fa-arrow-alt-circle-left" onClick={() => { setTimeout(() => {props.closeBox(false)}, 300) }}/>
 				</header>
 				<div className={signStyle.top_tips}>
@@ -709,7 +709,7 @@ const RegisterBox = (props) => {
 									{
 										requestStatus.countDown < 60 && requestStatus.countDown
 									}
-									<WaterWave color='rgb(228, 177, 177)' duration={ 500 } />
+									<WaterWave color='rgb(228, 177, 177)' duration={ 1 } />
 									</button>
 						</div>
 					</label>
@@ -811,7 +811,7 @@ const RegisterBox = (props) => {
 					{
 						requestStatus.registerStatus ? <i className='fas fa-circle-notch fa-spin' />:'注册'
 					}
-					<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
+					<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
 				</button>
 			</div>
 		</Slide>

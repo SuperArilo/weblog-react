@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useImperativeHandle, forwardRef } from 'react'
 //组件
-import WaterWave from 'water-wave'
+import WaterWave from './WaterWave'
 //样式
 import style from '../assets/scss/components/Icon.module.scss'
 const Icon = forwardRef((props, ref) => {
@@ -12,7 +12,7 @@ const Icon = forwardRef((props, ref) => {
             style={{ width: props.width, height: props.height, fontSize: props.fontSize }}
             className={`${style.asukamis_icon} ${'asukamis'} ${props.iconClass}`}
             onClick={props.onClick}>
-                <WaterWave color="rgb(155, 195, 219)" duration={ 500 } />
+                <WaterWave color="rgb(155, 195, 219)" duration={ 1 } />
             </i>
     )
 })

@@ -13,7 +13,7 @@ import toast from 'react-hot-toast'
 import { SwitchTransition, CSSTransition } from 'react-transition-group'
 import Gossip from './gossip'
 import Avatar from '../components/Avatar'
-import WaterWave from 'water-wave'
+import WaterWave from '../components/WaterWave'
 import AsukaButton from '../components/asukaButton'
 import Icon from '../components/Icon'
 import InstantInput from '../components/InstantInput'
@@ -327,7 +327,7 @@ export default function User(props) {
                                                     }}>
                                                     <i className={`${'asukamis'} ${item.icon}`} />
                                                     <span>{item.title}</span>
-                                                    <WaterWave color="rgb(155, 195, 219)" duration={ 500 } />
+                                                    <WaterWave color="rgb(155, 195, 219)" duration={ 1 } />
                                                 </div>
                                             )
                                         })
@@ -344,7 +344,7 @@ export default function User(props) {
                                                     }}>
                                                     <i className={`${'asukamis'} ${item.icon}`} />
                                                     <span>{item.title}</span>
-                                                    <WaterWave color="rgb(155, 195, 219)" duration={ 500 } />
+                                                    <WaterWave color="rgb(155, 195, 219)" duration={ 1 } />
                                                 </div>
                                             )
                                         })

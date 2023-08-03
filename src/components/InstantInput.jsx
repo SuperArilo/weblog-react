@@ -5,7 +5,7 @@ import style from '../assets/scss/components/instantInput.module.scss'
 import $ from 'jquery'
 import toast from 'react-hot-toast'
 //组件
-import WaterWave from 'water-wave'
+import WaterWave from './WaterWave'
 import TextField from '@mui/material/TextField'
 import Icon from './Icon'
 import Select from '@mui/material/Select'
@@ -79,7 +79,7 @@ const InstantInput = forwardRef((props, ref) => {
                 }
                 <div ref={iconDivRef} className={style.function_handle}>
                     <Icon iconClass='close' onClick={() => { props.handleClose() }}>
-                        <WaterWave color="rgb(155, 195, 219)" duration={ 500 } />
+                        <WaterWave color="rgb(155, 195, 219)" duration={ 1 } />
                     </Icon>
                     <Icon
                         iconClass='save'
@@ -90,7 +90,7 @@ const InstantInput = forwardRef((props, ref) => {
                             }
                             props.handleSave(inputConetnt)
                         }}>
-                        <WaterWave color="rgb(155, 195, 219)" duration={ 500 } />
+                        <WaterWave color="rgb(155, 195, 219)" duration={ 1 } />
                     </Icon>
                 </div>
             </div>

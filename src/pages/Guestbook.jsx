@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react'
 //组件
 import Tinymce from '../components/editor'
 import Avatar from '../components/Avatar'
-import WaterWave from 'water-wave'
+import WaterWave from '../components/WaterWave'
 import { SwitchTransition, CSSTransition, TransitionGroup } from 'react-transition-group'
 import Skeleton from '@mui/material/Skeleton'
 import Collapse from '@mui/material/Collapse'
@@ -157,7 +157,7 @@ const GuestbookCommentItem = (props) => {
                             onClick={(e) => {
                                 setPopporObject({...popporObject, open: true, target: e.target})
                             }}>
-                            <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 500 } />
+                            <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
                         </i>
                     }
                 </header>
