@@ -5,10 +5,6 @@ import Paginations from '@mui/material/Pagination'
 import style from '../assets/scss/components/pagination.module.scss'
 export default function Pagination(props) {
 
-    useEffect(() => {
-        console.log(props)
-    }, [props])
-
     return (
         <div className={style.pagination} style={{ justifyContent: props.position === 'center' ? 'center':props.position === 'left' ? 'flex-start':props.position === 'right' ? 'flex-end':'center' }}>
             <Paginations
