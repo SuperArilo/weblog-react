@@ -7,8 +7,8 @@ import { SwitchTransition, CSSTransition, TransitionGroup } from 'react-transiti
 import Skeleton from '@mui/material/Skeleton'
 import Collapse from '@mui/material/Collapse'
 import AsukaPoppor from '../components/popper'
-import Pagination from '../components/Pagination'
 import PreviewImage from '../components/PreviewImage'
+import Pagination from '../components/Pagination'
 //样式
 import style from '../assets/scss/guestbook.module.scss'
 import renderHtml from '../assets/scss/renderHtml.module.scss'
@@ -113,11 +113,10 @@ export default function Guestbook() {
             {
                 dataObject.pages === 0 || dataObject.pages === 1 ? '':
                 <Pagination
-                    total={dataObject.total}
-                    current={dataObject.current}
-                    onPageChange={(e) => {
-                        setRequestInstance({...requestInstance, pageNum: e})
-                    }}/>
+                    position='right'
+                    count={dataObject.pages}
+                    page={dataObject.current}
+                    onPageChange={e => { setRequestInstance({...requestInstance, pageNum: e}) }}/>
             }
             
         </div>

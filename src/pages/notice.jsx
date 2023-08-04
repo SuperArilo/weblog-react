@@ -7,17 +7,17 @@ import '../assets/scss/currencyTransition.scss'
 import $ from 'jquery'
 import { noticeGet, readNotice } from '../util/notice'
 import toast from 'react-hot-toast'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useNavigate  } from 'react-router-dom'
-import { TransitionGroup, SwitchTransition, CSSTransition } from 'react-transition-group'
+import { SwitchTransition, CSSTransition } from 'react-transition-group'
 //组件
 import Icon from '../components/Icon'
 import WaterWave from '../components/WaterWave'
-import Pagination from '../components/Pagination'
 import AsukaButton from '../components/asukaButton'
 import { Collapse } from '@mui/material'
 import Skeleton from '@mui/material/Skeleton'
 import Stack from '@mui/material/Stack'
+import Pagination from '../components/Pagination'
 
 export default function Notice(props) {
 
@@ -242,8 +242,9 @@ export default function Notice(props) {
                                                     {
                                                         noticeInstance.list.length !== 0 &&
                                                         <Pagination
-                                                            total={noticeInstance.total}
-                                                            current={noticeInstance.current}
+                                                            position='right'
+                                                            count={noticeInstance.pages}
+                                                            page={noticeInstance.current}
                                                             onPageChange={e => { setRequestInstance({...requestInstance, pageNum: e}) }}/>
                                                     }
                                                     <AsukaButton 

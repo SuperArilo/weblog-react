@@ -13,7 +13,6 @@ import Comment from './comment'
 import CommentSkeleton from './CommentSkeleton'
 import { SwitchTransition, CSSTransition, TransitionGroup } from 'react-transition-group'
 import toast from 'react-hot-toast'
-import Pagination from './Pagination'
 import Menu from './Menu'
 import PreviewImage from './PreviewImage'
 //方法
@@ -361,13 +360,13 @@ export default function GossipContent(props) {
                         </>
                         
                     }
-                    {
+                    {/* {
                         commentObject.pages === 0 || commentObject.pages === 1 ? '':
                         <Pagination 
                             total={commentObject.total}
                             current={commentObject.current}
                             onPageChange={e => { setRequestInstance({...requestInstance, pageNum: e}) }}/>
-                    }
+                    } */}
                 </div>
             </Collapse>
             <PreviewImage 

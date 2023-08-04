@@ -1,7 +1,6 @@
 //样式
 import style from '../assets/scss/indexPage.module.scss'
 import '../assets/scss/currencyTransition.scss'
-import 'water-wave/style.css'
 import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
 //组件
@@ -198,8 +197,10 @@ export default function IndexPage(props) {
                     </SwitchTransition>
                     {
                         articleObject.pages === 0 || articleObject.pages === 1 ? '':
-                        <Pagination 
-                            total={articleObject.total}
+                        <Pagination
+                            position='right'
+                            count={articleObject.pages}
+                            page={articleObject.current}
                             onPageChange={e => { setArticleRequestInstance({...articleRequestInstance, pageNum: e}) }}/>
                     }
                 </div>

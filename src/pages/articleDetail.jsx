@@ -15,8 +15,8 @@ import WaterWave from '../components/WaterWave'
 import Collapse from '@mui/material/Collapse'
 import Avatar from '../components/Avatar'
 import CommentSkeleton from '../components/CommentSkeleton'
-import Pagination from '../components/Pagination'
 import PreviewImage from '../components/PreviewImage'
+import Pagination from '../components/Pagination'
 //方法
 import { articleContentGet, articleCommentGet, replyComment, increaseArticleLike, likeComment, deleteComment } from '../util/article'
 
@@ -289,12 +289,12 @@ const ArticleVistorList = forwardRef((props, ref) => {
             </div>
             {
                 commentObject.pages === 1 || commentObject.pages === 0 ? '':
-                <Pagination 
-                    pages={commentObject.pages}
-                    current={commentObject.current}
+                <Pagination
+                    position='right'
+                    count={commentObject.pages}
+                    page={commentObject.current}
                     onPageChange={e => { setRequestInstance({...requestInstance, pageNum: e}) }}/>
             }
-            
         </>
     )
 })
