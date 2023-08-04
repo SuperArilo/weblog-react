@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import 'react-photo-view/dist/react-photo-view.css'
 import $ from 'jquery'
 import { PhotoSlider } from 'react-photo-view'
-export default function PreviewImage(props) {
+export default function PreviewImage({ current }) {
 
     const [previewInstance, setPreviewInstance] = useState({
         visible: false,
@@ -11,8 +11,8 @@ export default function PreviewImage(props) {
     })
 
     useEffect(() => {
-        if(props.current.current !== null && previewInstance.list.length === 0) {
-            $(props.current.current).find('img').each((index, item) => {
+        if(current.current !== null && previewInstance.list.length === 0) {
+            $(current.current).find('img').each((index, item) => {
                 setPreviewInstance(target => {
                     return {
                         ...target,
@@ -21,11 +21,12 @@ export default function PreviewImage(props) {
                 })
             })
         }
-    }, [props, previewInstance.list.length])
+    }, [current, previewInstance.list.length])
 
     useEffect(() => {
-        if(props.current.current !== null) {
-            $(props.current.current).off('click').on('click', e => {
+        const instance = current.current
+        if(instance !== null) {
+            $(instance).off('click').on('click', e => {
                 if(e.target.localName === 'img') {
                     setPreviewInstance(target => {
                         return {
@@ -37,27 +38,22 @@ export default function PreviewImage(props) {
                 }
             })
         }
-    }, [props])
+        return () => $(instance).off()
+    }, [current])
 
-    return (
-        <PhotoSlider
-            images={previewInstance.list}
-            visible={previewInstance.visible}
-            onClose={() => {
-                setPreviewInstance({ ...previewInstance, visible: false })
-            }}
-            index={previewInstance.index}
-            onIndexChange={(index, state) => {
-                setPreviewInstance(target => {
-                    return {
-                        ...target,
-                        index: index
-                    }
-                })
-            }}
-            />
-    )
-}
-PreviewImage.defaultProps = {
-    current: null
+    return <PhotoSlider
+                images={previewInstance.list}
+                visible={previewInstance.visible}
+                onClose={() => {
+                    setPreviewInstance({ ...previewInstance, visible: false })
+                }}
+                index={previewInstance.index}
+                onIndexChange={(index, state) => {
+                    setPreviewInstance(target => {
+                        return {
+                            ...target,
+                            index: index
+                        }
+                    })
+                }} />
 }
