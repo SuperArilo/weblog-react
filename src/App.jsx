@@ -153,6 +153,7 @@ const PCheaderNav = (props) => {
 	const navigate = useNavigate()
 	const location = useLocation()
 	//param
+	const navInstance = useRef(null)
 	const [menuInstance, setMenuInstance] = useState({
 		index: 0,
 		list: [
@@ -237,13 +238,23 @@ const PCheaderNav = (props) => {
 		}))
 	}, [location.pathname, menuInstance.list])
 
+	useEffect(() => {
+		$('#react-by-asukamis').off().on('scroll', e => {
+			if($(e.target).scrollTop() >= $(navInstance.current).height()) {
+				$(navInstance.current).removeClass('header-nav-default').addClass('header-nav-overflow')
+			} else {
+				$(navInstance.current).removeClass('header-nav-overflow').addClass('header-nav-default')
+			}
+		})
+	}, [])
+
 	const menuNavFunction = (object) => {
 		if(menuInstance.index === object.id) return
 		navigate(object.path)
 		$('#react-by-asukamis').children().stop().animate({'scrollTop': 0})
 	}
 	return (
-		<nav className='header-nav'>
+		<nav className='header-nav header-nav-default' ref={navInstance}>
 			<span className='left-webside-icon' onClick={() => { navigate('/') }}>
 				Arilo
 				<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />

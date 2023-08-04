@@ -90,6 +90,7 @@ export default function User(props) {
         blogUserProfiles(params).then(resq => {
             if(resq.code === 200) {
                 setUserProfiles(resq.data)
+                if(resq.data == null) return
                 if(parseInt(params) === userInfo?.uid) {
                     setTimeout(() => {
                         dispatch({ type: 'userInfo/setAvatar', payload: resq.data.avatar })

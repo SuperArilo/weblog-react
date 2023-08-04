@@ -65,13 +65,12 @@ ul , li
         {
             width: 100%;
             height: 3rem;
-            background-color: #ffffff;
             display: flex;
             align-items: center;
             position: fixed;
             top: 0;
             left: 0;
-            z-index: 10;
+            z-index: 11;
             .left-webside-icon
             {
                 font-size: 1.2rem;
@@ -84,9 +83,10 @@ ul , li
         }
         .header-nav
         {
-            background-color: rgba(255, 255, 255, 0.6);
+            
             justify-content: space-around;
             user-select: none;
+            transition: background-color 0.25s linear;
             .left-webside-icon
             {
                 padding: 0 0.5rem;
@@ -136,10 +136,19 @@ ul , li
                 }
             }
         }
+        .header-nav-default
+        {
+            background-color: rgba(255, 255, 255, 0.6);
+        }
+        .header-nav-overflow
+        {
+            background-color: rgba(255, 255, 255, 1);
+        }
         .mobile-header-nav
         {
             justify-content: space-between;
             padding: 0 0.8rem;
+            background-color: #fff;
             .right-mobile-bar , .left-mobile-bar
             {
                 width: 2.5rem;
