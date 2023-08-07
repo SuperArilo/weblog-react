@@ -4,7 +4,6 @@ import App from './App'
 import { Toaster } from 'react-hot-toast'
 import './assets/scss/App.scss'
 import './assets/fontawesome/css/all.min.css'
-// import reportWebVitals from './reportWebVitals'
 import { BrowserRouter } from 'react-router-dom'
 import store from './store'
 import { Provider } from 'react-redux'
@@ -21,4 +20,3 @@ root.render(
         </BrowserRouter>
     </Provider>
 )
-// reportWebVitals(console.log)
