@@ -26,14 +26,15 @@ export default function WaterWave(props) {
 
     useEffect(() => {
         const instance = instanceRef.current
-        instance.parentElement.style.position = 'relative'
+        instance.parentElement.style.position = props.position
         instance.parentElement.addEventListener('click',  clickFunc)
         return () => instance.parentElement.removeEventListener('click', clickFunc)
-    }, [clickFunc])
+    }, [clickFunc, props.position])
 
     return <aside className={style.wave_aside} ref={instanceRef}/>
 }
 WaterWave.defaultProps = {
     color: 'rgba(0, 0, 0, 0.7)',
-    duration: 1
+    duration: 1,
+    position: 'relative'
 }
