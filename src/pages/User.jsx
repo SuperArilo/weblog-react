@@ -309,7 +309,14 @@ export default function User(props) {
                                             $(menuLineRef.current).css({ left: 0 })
                                         }}/>
                                 }
-                                
+                                {
+                                    modeInstance.status === false &&
+                                    <div className={style.likes_box}>
+                                        <i className='asukamis user_like_on' style={{ fontSize: '1.3em' }} />
+                                        <span>114514</span>
+                                        <WaterWave position='absolute' />
+                                    </div>
+                                }
                             </div>
                             <div className={style.function_box}>
                                 <header className={style.select_title}>
@@ -351,7 +358,7 @@ export default function User(props) {
                                         })
                                     }
                                 </header>
-                                <div className={style.sleect_function_box}>
+                                <div className={style.select_function_box}>
                                     {
                                         modeInstance.status ? 
                                         <RenderEditorFunctionView
@@ -729,7 +736,9 @@ const RenderFunctionView = ({ menuIndex, userProfiles, userInfo, viewUid }) => {
         case 1:
             return <Gossip style={{ 'minHeight': 'none' }} userInfo={userInfo} viewUid={viewUid} />
         case 2:
-            return <span>开发中</span>
+            return <UserLikeView userProfiles={userProfiles} />
+        case 3:
+            break
         default:
             break
     }
@@ -755,6 +764,26 @@ const RenderEditorFunctionView = ({modeInstance ,setModeInstance , userProfiles,
             break
     }
 }
+
+const UserLikeView = (props) => {
+    return (
+        <ul className={style.user_like_view}>
+            <li className={style.like_item}>
+                <div className={style.item_content}>
+                    <Avatar width='3rem' height='3rem' src='https://image.superarilo.icu/d2649d6e-294b-48db-9d3d-7bdc32c4d6fc.png' />
+                    <div className={style.info_box}>
+                        <span>这次换你听歌</span>
+                        <span>在2023-08-07-15:18的时候赞了你</span>
+                    </div>
+                </div>
+                <div className={style.item_content}>
+                    <Icon iconClass='user_like_off' width='2rem' height='2rem' fontSize='1.2rem' />
+                </div>
+            </li>
+        </ul>
+    )
+} 
+
 const UserSkeleton = () => {
     return (
         <div className={style.user_skeleton}>
