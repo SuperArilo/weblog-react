@@ -1,12 +1,8 @@
-import React, { useEffect, useState, useRef, useImperativeHandle, forwardRef } from 'react'
 //组件
 import WaterWave from './WaterWave'
 //样式
 import style from '../assets/scss/components/Icon.module.scss'
-const Icon = forwardRef((props, ref) => {
-    useImperativeHandle(ref, () => {
-
-    })
+export default function Icon(props) {
     return (
         <i 
             style={{ width: props.width, height: props.height, fontSize: props.fontSize }}
@@ -15,7 +11,7 @@ const Icon = forwardRef((props, ref) => {
                 <WaterWave color="rgb(155, 195, 219)" duration={ 1 } />
             </i>
     )
-})
+}
 Icon.defaultProps = {
     width: '1.6rem',
     height: '1.6rem',
@@ -23,4 +19,3 @@ Icon.defaultProps = {
     iconClass: '',
     onClick: () => { return null }
 }
-export default Icon
