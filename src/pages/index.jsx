@@ -141,7 +141,7 @@ export default function IndexPage(props) {
                                         hotArticleList.map((item, index) => {
                                             return (
                                                 <li key={item.id} onClick={() => { sliderRef.current.slickGoTo(index, false) }}>
-                                                    <i className={sliderIndex === index ? 'fas fa-circle':'far fa-circle'} />
+                                                    <i className={`${sliderIndex === index ? 'fas':'far'} fa-circle`} />
                                                 </li>
                                             )
                                         }) 

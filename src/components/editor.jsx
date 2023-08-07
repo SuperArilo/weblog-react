@@ -23,8 +23,8 @@ const Tinymce = forwardRef((props, ref) => {
         menubar: false,
         branding: false,
         statusbar: true,
-        language_url: "/tinymce/langs/zh-Hans.js",
-        language: "zh-Hans",
+        language_url: '/tinymce/langs/zh_CN.js',
+        language: "zh_CN",
         plugins: [
             'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
             'anchor', 'searchreplace', 'visualblocks', 'code', 'insertdatetime', 'media', 'table', 'help'
@@ -53,17 +53,17 @@ const Tinymce = forwardRef((props, ref) => {
             }, 500)
         },
         images_upload_handler: (blobInfo, success) => new Promise((resolve, reject) => {
-            // let data = new FormData()
-            // data.append('file', blobInfo.blob())
-            // customUploadImage(data).then(resq => {
-            //     if(resq.code === 200) {
-            //         resolve(resq.data)
-            //     } else {
-            //         reject(resq.message)
-            //     }
-            // }).catch(err => {
-            //     reject(err.message)
-            // })
+            let data = new FormData()
+            data.append('file', blobInfo.blob())
+            customUploadImage(data).then(resq => {
+                if(resq.code === 200) {
+                    resolve(resq.data)
+                } else {
+                    reject(resq.message)
+                }
+            }).catch(err => {
+                reject(err.message)
+            })
         })
     })
 
