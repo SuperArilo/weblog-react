@@ -180,9 +180,6 @@ export default function GossipContent(props) {
                                     toast.error(resq.message, { id: id })
                                 }
                                 setEditorSendToServerStatus(false)
-                            }).catch(err => {
-                                toast.error(err.message, { id: id })
-                                setEditorSendToServerStatus(false)
                             })
                         }
                     }}/>
@@ -376,6 +373,5 @@ export default function GossipContent(props) {
 }
 GossipContent.defaultProps = {
     foldStatus: false,
-    targetComment: null,
-    
+    targetComment: null
 }

@@ -38,38 +38,38 @@ export default function ArticleDetail(props) {
                     articleContentRef.current === null || articleContentRef.current.state.articleInstance === '' ? '':
                     <div className={style.article_detail_editor}>
                         <Tinymce
-                        userInfo={props.userInfo}
-                        ref={tinymce} 
-                        placeholder='发表一条友善的评论吧...' 
-                        status={addCommentStatus} 
-                        getContent={(value) => { 
-                            if(value === null || value === '' || value === '<p></p>') {
-                                toast('不能提交空白哦 ⊙﹏⊙∥')
-                                return
-                            }
-                            if(!addCommentStatus) {
-                               const id = toast.loading('提交中...')
-                                setAddCommentStatus(true)
-                                let data = new FormData()
-                                data.append('articleId', articleId)
-                                data.append('content', value)
-                                replyComment(data).then(resq => {
-                                    if(resq.code === 200) {
-                                        tinymce.current.clear()
-                                        toast.success(resq.message, { id: id })
-                                        articleListRef.current.reRequestComment()
-                                    } else if(resq.code === 0) {
-                                        toast(resq.message, { id: id })
-                                    } else {
-                                        toast.error(resq.message, { id: id })
-                                    }
-                                    setAddCommentStatus(false)
-                                }).catch(err => {
-                                    toast.error(err.message, { id: id })
-                                    setAddCommentStatus(false)
-                                })
-                            }
-                        }}/>
+                            userInfo={props.userInfo}
+                            ref={tinymce} 
+                            placeholder='发表一条友善的评论吧...' 
+                            status={addCommentStatus} 
+                            getContent={(value) => { 
+                                if(value === null || value === '' || value === '<p></p>') {
+                                    toast('不能提交空白哦 ⊙﹏⊙∥')
+                                    return
+                                }
+                                if(!addCommentStatus) {
+                                const id = toast.loading('提交中...')
+                                    setAddCommentStatus(true)
+                                    let data = new FormData()
+                                    data.append('articleId', articleId)
+                                    data.append('content', value)
+                                    replyComment(data).then(resq => {
+                                        if(resq.code === 200) {
+                                            tinymce.current.clear()
+                                            toast.success(resq.message, { id: id })
+                                            articleListRef.current.reRequestComment()
+                                        } else if(resq.code === 0) {
+                                            toast(resq.message, { id: id })
+                                        } else {
+                                            toast.error(resq.message, { id: id })
+                                        }
+                                        setAddCommentStatus(false)
+                                    }).catch(err => {
+                                        toast.error(err.message, { id: id })
+                                        setAddCommentStatus(false)
+                                    })
+                                }
+                            }}/>
                     </div>
                 }
                 <span className={style.article_vistor_title}>评论</span>
