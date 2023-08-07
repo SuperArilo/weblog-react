@@ -52,8 +52,9 @@ ul , li
 }
 #react-by-asukamis
 {
+    width: 100%;
     height: 100%;
-    transition: background-image 0.25s;
+    transition: background-image 0.25s linear;
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -115,14 +116,6 @@ ul , li
                     transition: color 0.25s, background-color 0.25s;
                     color: rgb(87, 87, 87);
                 }
-                .active
-                {
-                    background-color: rgba(240, 240, 240, 0.5);
-                }
-                li:hover
-                {
-                    background-color: rgba(240, 240, 240, 0.5);
-                }
             }
             .right-some-function .logged-box
             {
@@ -139,10 +132,32 @@ ul , li
         .header-nav-default
         {
             background-color: rgba(255, 255, 255, 0.6);
+            .nav-menu-list
+            {
+                .active
+                {
+                    background-color: rgba(193, 220, 252, 0.6);
+                }
+                li:hover
+                {
+                    background-color: rgba(193, 220, 252, 0.6);
+                }
+            }
         }
         .header-nav-overflow
         {
-            background-color: rgba(255, 255, 255, 1);
+            background-color: rgb(229, 242, 252);
+            .nav-menu-list
+            {
+                .active
+                {
+                    background-color: rgba(193, 220, 252, 1);
+                }
+                li:hover
+                {
+                    background-color: rgba(193, 220, 252, 1);
+                }
+            }
         }
         .mobile-header-nav
         {
