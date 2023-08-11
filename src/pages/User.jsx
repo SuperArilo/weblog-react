@@ -4,6 +4,7 @@ import style from '../assets/scss/user.module.scss'
 import '../assets/scss/currencyTransition.scss'
 //方法
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
+import { Route, Routes, useLocation, useNavigate, Navigate  } from 'react-router-dom'
 import { useParams } from "react-router-dom"
 import $ from 'jquery'
 import { blogUserProfiles, blogUserProfilesModify } from '../util/user'
@@ -174,7 +175,12 @@ export default function User(props) {
                                             ref={avatarCutRef}
                                             image={modeInstance.tempAvatar}/>
                                         :
-                                        <Avatar width='3.8rem' height='3.8rem' src={userProfiles.avatar} />
+                                        <Avatar
+                                            width='3.8rem'
+                                            height='3.8rem'
+                                            src={userProfiles.avatar}
+                                            title={userProfiles.nickName}
+                                            alt={userProfiles.nickName}/>
                                     }
                                     {
                                         modeInstance.status ?
@@ -773,6 +779,8 @@ const RenderEditorFunctionView = ({modeInstance ,setModeInstance , userProfiles,
 
 const UserLikeView = (props) => {
 
+    const navigate = useNavigate()
+
     const [requestInstance, setRequestInstance] = useState({
         pageNum: 1,
         pageSize: 10,
@@ -826,24 +834,19 @@ const UserLikeView = (props) => {
                                                         <Collapse key={item.id}>
                                                             <div className={style.like_item}>
                                                                 <div className={style.item_content}>
-                                                                    <Avatar width='3rem' height='3rem' src={item.avatar} />
+                                                                    <Avatar
+                                                                        width='3rem'
+                                                                        height='3rem'
+                                                                        title={item.nickName}
+                                                                        alt={item.nickName}
+                                                                        src={item.avatar}
+                                                                        onClick={() => {
+                                                                            navigate(`/user/${item.uid}`)
+                                                                        }}/>
                                                                     <div className={style.info_box}>
                                                                         <span>{item.nickName}</span>
                                                                         <span>在 {item.createTime} 的时候赞了{props.userProfiles.uid === props.userInfo?.uid ? '你':'TA'}</span>
                                                                     </div>
-                                                                </div>
-                                                                <div className={style.item_content}>
-                                                                    {
-                                                                        props.userProfiles.uid === props.userInfo?.uid &&
-                                                                        <Icon
-                                                                            iconClass={props.userProfiles.viewerLike ? 'user_like_on':'user_like_off'}
-                                                                            width='2rem'
-                                                                            height='2rem'
-                                                                            fontSize='1.2rem'
-                                                                            onClick={() => {
-                                                                                console.log('可点');
-                                                                            }}/> 
-                                                                    }
                                                                 </div>
                                                             </div>
                                                         </Collapse>

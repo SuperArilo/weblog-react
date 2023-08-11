@@ -29,6 +29,7 @@ export default function CreateGossipWindow(props) {
                 <p className={style.window_header_p}>发表碎语</p>
                 <Tinymce
                     userInfo={props.userInfo}
+                    placeholder='在这里输入内容哦'
                     getContent={content => {
                         if(!gossipInstance.status) {
                             if(content === '<p></p>' || content === null || content === '') {

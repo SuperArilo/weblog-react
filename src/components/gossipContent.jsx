@@ -71,7 +71,9 @@ export default function GossipContent(props) {
                         width='2.8rem'
                         height='2.8rem'
                         src={props.data.avatar}
-                        onClick={() => { navigate(`/user/${props.data.author}`) }}/>
+                        onClick={() => { navigate(`/user/${props.data.author}`) }}
+                        title={props.data.nickName}
+                        alt={props.data.nickName}/>
                     <div className={style.info_content}>
                         <div className={style.info_about_user}>
                             <span>{props.data.nickName}</span>
