@@ -1,7 +1,6 @@
 import React from 'react'
 import WaterWave from './WaterWave'
 import style from '../assets/scss/components/button.module.scss'
-import Icon from './Icon'
 export default function AsukaButton(props) {
     return (
         <button

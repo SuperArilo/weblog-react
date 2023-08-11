@@ -67,7 +67,6 @@ const InstantInput = forwardRef((props, ref) => {
                                 value={inputConetnt}
                                 onChange={e => { 
                                     setInputContent(e.target.value)
-                                    console.log(e.target.value)
                                 }}>
                                 {
                                     props.renderObject.map(item => {

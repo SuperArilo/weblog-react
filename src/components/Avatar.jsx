@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react'
 //样式
 import style from '../assets/scss/components/avatar.module.scss'
 export default function Avatar(props) {

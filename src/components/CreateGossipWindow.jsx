@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState } from 'react'
 //组件
 import { Slide } from '@mui/material'
 import WaterWave from './WaterWave'
@@ -28,7 +28,7 @@ export default function CreateGossipWindow(props) {
                 </i>
                 <p className={style.window_header_p}>发表碎语</p>
                 <Tinymce
-                    status={gossipInstance.status}
+                    userInfo={props.userInfo}
                     getContent={content => {
                         if(!gossipInstance.status) {
                             if(content === '<p></p>' || content === null || content === '') {
@@ -36,19 +36,12 @@ export default function CreateGossipWindow(props) {
                                 return
                             }
                             setGossipInstance({...gossipInstance, status: true})
-                            const id = toast.loading('提交中...')
                             let data = new FormData()
                             data.append('content', content)
-                            userCreateGossip(data).then(resq => {
-                                if(resq.code === 200) {
-                                    toast.success(resq.message, { id: id })
-                                } else {
-                                    toast.error(err.message, { id: id })
-                                }
+                            userCreateGossip({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
                                 setGossipInstance({...gossipInstance, status: false})
                                 props.setCreateGossipWindowStatus(false)
                             }).catch(err => {
-                                toast.error(err.message, { id: id })
                                 setGossipInstance({...gossipInstance, status: false})
                                 props.setCreateGossipWindowStatus(false)
                             })
