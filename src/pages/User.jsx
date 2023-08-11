@@ -11,8 +11,9 @@ import { userlikesListGet, targetLikeUser } from '../util/userLike'
 import { modifyEmail } from '../util/mail/mail'
 import toast from 'react-hot-toast'
 //组件
-import { SwitchTransition, CSSTransition } from 'react-transition-group'
+import { SwitchTransition, CSSTransition, TransitionGroup } from 'react-transition-group'
 import Gossip from './gossip'
+import Collapse from '@mui/material/Collapse'
 import Avatar from '../components/Avatar'
 import WaterWave from '../components/WaterWave'
 import AsukaButton from '../components/asukaButton'
@@ -747,6 +748,7 @@ const RenderFunctionView = ({ menuIndex, userProfiles, userInfo, viewUid }) => {
             break
     }
 }
+
 const RenderEditorFunctionView = ({modeInstance ,setModeInstance , userProfiles, userInfo, viewUid }) => {
     switch(modeInstance.menuIndex) {
         case 0:
@@ -795,52 +797,68 @@ const UserLikeView = (props) => {
                     list: resq.data.list
                 }))
             } 
-            console.log(resq)
         }).catch(err => { })
     }, [])
 
     useEffect(() => {
         dataGet(requestInstance)
-    }, [requestInstance, dataGet])
+    }, [requestInstance, dataGet, props.userProfiles.viewerLike])
+
     return (
-        <ul className={style.user_like_view}>
-            {
-                dataObject.list === null ?
-                ''
-                :
-                <>
+        <div className={style.user_like_view}>
+            <SwitchTransition mode='out-in'>
+                <CSSTransition key={dataObject.list === null} classNames='change' timeout={300} nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
                     {
-                        dataObject.list.map((item, index) => {
-                            return (
-                                <li className={style.like_item} key={item.id}>
-                                    <div className={style.item_content}>
-                                        <Avatar width='3rem' height='3rem' src={item.avatar} />
-                                        <div className={style.info_box}>
-                                            <span>{item.nickName}</span>
-                                            <span>在 {item.createTime} 的时候赞了{props.userProfiles.uid === props.userInfo?.uid ? '你':'TA'}</span>
-                                        </div>
-                                    </div>
-                                    <div className={style.item_content}>
-                                        {
-                                            props.userProfiles.uid === props.userInfo?.uid &&
-                                             <Icon
-                                                iconClass={props.userProfiles.viewerLike ? 'user_like_on':'user_like_off'}
-                                                width='2rem'
-                                                height='2rem'
-                                                fontSize='1.2rem'
-                                                onClick={() => {
-                                                    console.log('可点');
-                                                }}/> 
-                                        }
-                                    </div>
-                                </li>
-                            )
-                        })
+                        dataObject.list === null ?
+                        <UserLikeViewSkeleton />
+                        :
+                        <SwitchTransition mode='out-in'>
+                            <CSSTransition key={dataObject.list.length === 0} classNames='change' timeout={300} nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
+                                {
+                                    dataObject.list.length === 0 ? 
+                                    <span className={style.info_empty}>TA暂时还没有被点赞哦</span>
+                                    :
+                                    <>
+                                        <TransitionGroup>
+                                            {
+                                                dataObject.list.map(item => {
+                                                    return (
+                                                        <Collapse key={item.id}>
+                                                            <div className={style.like_item}>
+                                                                <div className={style.item_content}>
+                                                                    <Avatar width='3rem' height='3rem' src={item.avatar} />
+                                                                    <div className={style.info_box}>
+                                                                        <span>{item.nickName}</span>
+                                                                        <span>在 {item.createTime} 的时候赞了{props.userProfiles.uid === props.userInfo?.uid ? '你':'TA'}</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div className={style.item_content}>
+                                                                    {
+                                                                        props.userProfiles.uid === props.userInfo?.uid &&
+                                                                        <Icon
+                                                                            iconClass={props.userProfiles.viewerLike ? 'user_like_on':'user_like_off'}
+                                                                            width='2rem'
+                                                                            height='2rem'
+                                                                            fontSize='1.2rem'
+                                                                            onClick={() => {
+                                                                                console.log('可点');
+                                                                            }}/> 
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        </Collapse>
+                                                    )
+                                                })
+                                            }
+                                        </TransitionGroup>
+                                    </>
+                                }
+                            </CSSTransition>
+                        </SwitchTransition>
                     }
-                </>
-            }
-            
-        </ul>
+                </CSSTransition>
+            </SwitchTransition>
+        </div>
     )
 } 
 
@@ -885,6 +903,28 @@ const UserSkeleton = () => {
 
 const UserLikeViewSkeleton = () => {
     return (
-        <div className={style.user_like_skeleton}></div>
+        <ul className={style.user_like_skeleton}>
+            <li className={style.skeleton_item}>
+                <Skeleton variant="circular" width='3rem' height='3rem' />
+                <div className={style.info_item}>
+                    <Skeleton variant="text" sx={{ fontSize: '0.8rem' }} width='6rem' height='2.8rem' />
+                    <Skeleton variant="text" sx={{ fontSize: '0.6rem' }} width='12rem' height='2rem' />
+                </div>
+            </li>
+            <li className={style.skeleton_item}>
+                <Skeleton variant="circular" width='3rem' height='3rem' />
+                <div className={style.info_item}>
+                    <Skeleton variant="text" sx={{ fontSize: '0.8rem' }} width='6rem' height='2.8rem' />
+                    <Skeleton variant="text" sx={{ fontSize: '0.6rem' }} width='12rem' height='2rem' />
+                </div>
+            </li>
+            <li className={style.skeleton_item}>
+                <Skeleton variant="circular" width='3rem' height='3rem' />
+                <div className={style.info_item}>
+                    <Skeleton variant="text" sx={{ fontSize: '0.8rem' }} width='6rem' height='2.8rem' />
+                    <Skeleton variant="text" sx={{ fontSize: '0.6rem' }} width='12rem' height='2rem' />
+                </div>
+            </li>
+        </ul>
     )
 }
