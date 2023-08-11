@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import style from '../assets/scss/verifyPage.module.scss'
-import { useParams, useNavigate, useLocation  } from "react-router-dom"
+import { useNavigate, useLocation  } from "react-router-dom"
 import { blogUserProfilesModifyEmail } from '../util/user'
 import toast from 'react-hot-toast'
 import Icon from '../components/Icon'
@@ -46,11 +46,9 @@ export default function VerifyPage(props) {
                 localStorage.setItem('token', resq.data)
             } else {
                 setFinalState(false)
-                toast.error(resq.message)
             }
             redirect()
         }).catch(err => {
-            toast.error(err.message)
             setFinalState(false)
             redirect()
         })

@@ -8,11 +8,10 @@ import Collapse from '@mui/material/Collapse'
 import GossipContent from '../components/gossipContent'
 import GossipSkeleton from '../components/GossipSkeleton'
 //方法
-import { gossipListRequest } from '../util/gossip'
+import { gossipListRequest , likeGossip } from '../util/gossip'
 import toast from 'react-hot-toast'
-import { likeGossip } from '../util/gossip.js'
 //hook
-import { useParams, useNavigate, useLocation  } from "react-router-dom"
+import { useLocation  } from "react-router-dom"
 export default function Gossip(props) {
 
     //hook
@@ -40,7 +39,7 @@ export default function Gossip(props) {
     const [selectGossipItem, setSelectGossipItem] = useState(null)
 
     const gossipDataGet = useCallback(instance => {
-        gossipListRequest(instance).then(resq => {
+        gossipListRequest({ data: instance, toast: null }).then(resq => {
             if(resq.code === 200) {
                 if(resq.data.targetGossip) {
                     resq.data.instance.list.splice(resq.data.instance.list.findIndex(item => item.id === resq.data.targetGossip.id), 1)
@@ -58,9 +57,7 @@ export default function Gossip(props) {
                     }
                 })
             }
-        }).catch(err => {
-            toast.error(err.message)
-        })
+        }).catch(err => { })
     }, [])
 
     useEffect(() => {
@@ -85,7 +82,9 @@ export default function Gossip(props) {
                                         <GossipContent
                                             userInfo={props.userInfo} 
                                             data={gossipObject.targetGossip}
-                                            gossipDataGet={gossipDataGet}
+                                            reDataGet={() => {
+                                                gossipDataGet()
+                                            }}
                                             requestInstance={requestInstance}
                                             foldStatus={selectGossipItem === gossipObject.targetGossip.id}
                                             targetComment={gossipObject.targetComment}
@@ -93,30 +92,22 @@ export default function Gossip(props) {
                                                 console.log(id)
                                                 setSelectGossipItem(selectGossipItem === id ? null:id)
                                             }}
-                                            handleLike={(gossipId) => {
+                                            handleLike={gossipId => {
                                                 if(props.userInfo === null) {
                                                     toast('你需要登录哦 (￣y▽,￣)╭ ')
                                                     return
                                                 }
-                                                const id = toast.loading('加载中...')
                                                 let data = new FormData()
                                                 data.append('gossipId', gossipId)
-                                                likeGossip(data).then(resq => {
+                                                likeGossip({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
                                                     if(resq.code === 200) {
-                                                        toast.success(resq.message, { id: id })
                                                         let [...temp] = gossipObject.instance.list
                                                         let index = temp.findIndex(item => item.id === gossipId)
                                                         temp[index].like = resq.data.status
                                                         temp[index].likes = resq.data.likes
                                                         setGossipObject({...gossipObject, list: temp})
-                                                    } else if(resq.code === 0) {
-                                                        toast(resq.message, { id: id })
-                                                    } else {
-                                                        toast.error(resq.message, { id: id })
                                                     }
-                                                }).catch(err => {
-                                                    toast.error(err.message, { id: id })
-                                                })
+                                                }).catch(err => { })
                                             }}
                                             handleGossipList={() => {
                                                 gossipData(gossipRequestInstance)
@@ -142,7 +133,10 @@ export default function Gossip(props) {
                                                         <GossipContent
                                                             userInfo={props.userInfo} 
                                                             data={item}
-                                                            gossipDataGet={gossipDataGet}
+                                                            reDataGet={() => {
+                                                                console.log(12345678)
+                                                                gossipDataGet()
+                                                            }}
                                                             requestInstance={requestInstance}
                                                             foldStatus={selectGossipItem === item.id}
                                                             handleFold={id => {
@@ -153,25 +147,17 @@ export default function Gossip(props) {
                                                                     toast('你需要登录哦 (￣y▽,￣)╭ ')
                                                                     return
                                                                 }
-                                                                const id = toast.loading('加载中...')
                                                                 let data = new FormData()
                                                                 data.append('gossipId', gossipId)
-                                                                likeGossip(data).then(resq => {
+                                                                likeGossip({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
                                                                     if(resq.code === 200) {
-                                                                        toast.success(resq.message, { id: id })
                                                                         let [...temp] = gossipObject.instance.list
                                                                         let index = temp.findIndex(item => item.id === gossipId)
                                                                         temp[index].like = resq.data.status
                                                                         temp[index].likes = resq.data.likes
                                                                         setGossipObject({...gossipObject, list: temp})
-                                                                    } else if(resq.code === 0) {
-                                                                        toast(resq.message, { id: id })
-                                                                    } else {
-                                                                        toast.error(resq.message, { id: id })
                                                                     }
-                                                                }).catch(err => {
-                                                                    toast.error(err.message, { id: id })
-                                                                })
+                                                                }).catch(err => { })
                                                             }}
                                                             handleGossipList={() => {
                                                                 gossipData(gossipRequestInstance)

@@ -55,7 +55,7 @@ const Tinymce = forwardRef((props, ref) => {
         images_upload_handler: (blobInfo, success) => new Promise((resolve, reject) => {
             let data = new FormData()
             data.append('file', blobInfo.blob())
-            customUploadImage(data).then(resq => {
+            customUploadImage({ data: data, toast: null }).then(resq => {
                 if(resq.code === 200) {
                     resolve(resq.data)
                 } else {

@@ -14,7 +14,7 @@ import style from '../assets/scss/guestbook.module.scss'
 import renderHtml from '../assets/scss/renderHtml.module.scss'
 import '../assets/scss/currencyTransition.scss'
 //方法
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { guestbookList, addGuestbook, deleteGuestbook } from '../util/guestbook'
 import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
@@ -38,12 +38,8 @@ export default function Guestbook() {
         guestbookList(instance).then(resq => {
             if(resq.code === 200) {
                 setDataObject(target => { return { ...target, list: resq.data.list, total: resq.data.total, pages: resq.data.pages, current: resq.data.current} })
-            } else {
-                toast.error(resq.message)
             }
-        }).catch(err => {
-            toast.error(err.message)
-        })
+        }).catch(err => { })
     }, [])
     useEffect(() => {
         dataListGet(requestInstance)
@@ -61,22 +57,17 @@ export default function Guestbook() {
                         return
                     }
                     if(!addGuestbookStatus) {
-                        const id = toast.loading('提交中...')
                         setAddGuestbookStatus(true)
                         let data = new FormData()
                         data.append('content', content)
-                        addGuestbook(data).then(resq => {
+                        addGuestbook({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
                             if(resq.code === 200) {
-                                toast.success(resq.message, { id: id })
                                 tinymceRef.current.clear()
                                 dataListGet(requestInstance)
-                            } else {
-                                toast.error(resq.message, { id: id })
                             }
                             setAddGuestbookStatus(false)
                         }).catch(err => {
                             setAddGuestbookStatus(false)
-                            toast.error(err.message, { id: id })
                         })
                     }
                     
@@ -171,23 +162,17 @@ const GuestbookCommentItem = (props) => {
                 status={deleteStatus}
                 onConfirm={() => {
                     if(!deleteStatus) {
-                        const id = toast.loading('提交中...')
                         setDeleteStatus(true)
                         let data = new FormData()
                         data.append('guestbookId', props.item.guestbookId)
-                        deleteGuestbook(data).then(resq => {
+                        deleteGuestbook({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
                             if(resq.code === 200) {
-                                toast.success(resq.message, { id: id })
                                 props.dataListGet(props.requestInstance)
-                            } else {
-                                toast.error(resq.message, { id: id })
                             }
                             setDeleteStatus(false)
                             setPopporObject({...popporObject, open: false, target: null})
                         }).catch(err => {
-                            
                             setDeleteStatus(false)
-                            toast.error(err.message, { id: id })
                             setPopporObject({...popporObject, open: false, target: null})
                         })
                     }

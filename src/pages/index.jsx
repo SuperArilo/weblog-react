@@ -70,34 +70,22 @@ export default function IndexPage(props) {
         articleListGet(instance).then(resq => {
             if(resq.code === 200) {
                 setArticleObject(target => { return ({ ...target, list: resq.data.list, pages: resq.data.pages, total: resq.data.total, current: resq.data.current }) })
-            } else {
-                toast.error(resq.message)
             }
-        }).catch(err => {
-            toast.error(err.message)
-        })
+        }).catch(() => {})
     }, [])
     const hotArticleData = useCallback((instance) => {
         articleListGet(instance).then(resq => {
             if(resq.code === 200) {
                 setHotArticleList(resq.data.list)
-            } else {
-                toast.error(resq.message)
             }
-        }).catch(err => {
-            toast.error(err.message)
-        })
+        }).catch(() => {})
     }, [])
     const gossipData = useCallback((instance) => {
         gossipListRequest(instance).then(resq => {
             if(resq.code === 200) {
                 setGossipList(resq.data.instance.list)
-            } else {
-                toast.error(resq.message)
             }
-        }).catch(err => {
-            toast.error(err.message)
-        })
+        }).catch(() => {})
     }, [])
 
     //顶部
@@ -170,23 +158,17 @@ export default function IndexPage(props) {
                                                                 toast('你需要登录哦 (￣y▽,￣)╭ ')
                                                                 return
                                                             }
-                                                            const id = toast.loading('提交中...')
                                                             let data = new FormData()
                                                             data.append('articleId', articleId)
-                                                            increaseArticleLike(data).then(resq => {
+                                                            increaseArticleLike({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
                                                                 if(resq.code === 200) {
-                                                                    toast.success(resq.message, { id: id })
                                                                     let [...temp] = articleObject.list
                                                                     let index = temp.findIndex(item => item.id === articleId)
                                                                     temp[index].like = resq.data.status
                                                                     temp[index].articleLikes = resq.data.likes
                                                                     setArticleObject({...articleObject, list: temp})
-                                                                } else {
-                                                                    toast.error(resq.message, { id: id })
-                                                                }            
-                                                            }).catch(err => {
-                                                                toast.error(err.message, { id: id })
-                                                            })
+                                                                }           
+                                                            }).catch(err => {})
                                                         }} 
                                                     />
                                         })
@@ -224,12 +206,10 @@ export default function IndexPage(props) {
                                                                 toast('你需要登录哦 (￣y▽,￣)╭ ')
                                                                 return
                                                             }
-                                                            const id = toast.loading('提交中...')
                                                             let data = new FormData()
                                                             data.append('gossipId', gossipId)
-                                                            likeGossip(data).then(resq => {
+                                                            likeGossip({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
                                                                 if(resq.code === 200) {
-                                                                    toast.success(resq.message, { id: id })
                                                                     let temp = [...gossipList]
                                                                     let index = temp.findIndex(item => item.id === gossipId)
                                                                     if(resq.data.status) {
@@ -241,12 +221,8 @@ export default function IndexPage(props) {
                                                                     }
                                                                     temp[index].like = resq.data.status
                                                                     setGossipList(temp)
-                                                                } else {
-                                                                    toast.error(reqs.message, { id: id })
                                                                 }
-                                                            }).catch(err => {
-                                                                toast.error(err.message, { id: id })
-                                                            })
+                                                            }).catch(err => {})
                                                         }}
                                                         gossipDataGet={() => {
                                                             gossipData(gossipRequestInstance)
@@ -319,32 +295,30 @@ const Article = (props) => {
         </li>
     )
 }
-class ArticleSkeleton extends React.Component {
-    render() {
-        return (
-            <div className={style.article_skeleton}>
-                <Skeleton variant="rounded" width='100%' height='21rem' />
-                <div className={style.article_skeleton_box}>
-                    <Skeleton variant="text" sx={{ fontSize: '1rem' }} width='100%' height='3rem' />
-                    <Skeleton variant="text" sx={{ fontSize: '0.8rem' }} width='8rem' height='2.5rem' />
-                    <Skeleton variant="text" sx={{ fontSize: '0.7rem' }} width='100%' height='2rem' />
-                    <Skeleton variant="text" sx={{ fontSize: '0.7rem' }} width='14rem' height='2rem' />
-                    <div className={style.article_skeleton_bottom}>
-                        <Skeleton variant="rounded" width='5rem' height='1.8rem' />
-                        <div className={style.right_data}>
-                            <div>
-                                <Skeleton variant="rounded" width='2.8rem' height='1.5rem' />
-                            </div>
-                            <div>
-                                <Skeleton variant="rounded" width='2.8rem' height='1.5rem' />
-                            </div>
-                            <div>
-                                <Skeleton variant="rounded" width='2.8rem' height='1.5rem' />
-                            </div>
+const ArticleSkeleton = () => {
+    return (
+        <div className={style.article_skeleton}>
+            <Skeleton variant="rounded" width='100%' height='21rem' />
+            <div className={style.article_skeleton_box}>
+                <Skeleton variant="text" sx={{ fontSize: '1rem' }} width='100%' height='3rem' />
+                <Skeleton variant="text" sx={{ fontSize: '0.8rem' }} width='8rem' height='2.5rem' />
+                <Skeleton variant="text" sx={{ fontSize: '0.7rem' }} width='100%' height='2rem' />
+                <Skeleton variant="text" sx={{ fontSize: '0.7rem' }} width='14rem' height='2rem' />
+                <div className={style.article_skeleton_bottom}>
+                    <Skeleton variant="rounded" width='5rem' height='1.8rem' />
+                    <div className={style.right_data}>
+                        <div>
+                            <Skeleton variant="rounded" width='2.8rem' height='1.5rem' />
+                        </div>
+                        <div>
+                            <Skeleton variant="rounded" width='2.8rem' height='1.5rem' />
+                        </div>
+                        <div>
+                            <Skeleton variant="rounded" width='2.8rem' height='1.5rem' />
                         </div>
                     </div>
                 </div>
             </div>
-        )
-    }
+        </div>
+    )
 }

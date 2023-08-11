@@ -26,52 +26,41 @@ export default function ArticleDetail(props) {
     const articleId = searchParams.get('threadId')
     //Params
     const [addCommentStatus, setAddCommentStatus] = useState(false)
-    const articleContentRef = useRef(null)
     const articleListRef = useRef(null)
     const tinymce = useRef(null)
     //function
     return (
         <div className={style.article_detail}>
             <div className={style.article_detail_content}>
-                <ArticleInfoTop ref={articleContentRef} articleId={articleId} userInfo={props.userInfo} />
-                { 
-                    articleContentRef.current === null || articleContentRef.current.state.articleInstance === '' ? '':
-                    <div className={style.article_detail_editor}>
-                        <Tinymce
-                            userInfo={props.userInfo}
-                            ref={tinymce} 
-                            placeholder='发表一条友善的评论吧...' 
-                            status={addCommentStatus} 
-                            getContent={(value) => { 
-                                if(value === null || value === '' || value === '<p></p>') {
-                                    toast('不能提交空白哦 ⊙﹏⊙∥')
-                                    return
-                                }
-                                if(!addCommentStatus) {
-                                const id = toast.loading('提交中...')
-                                    setAddCommentStatus(true)
-                                    let data = new FormData()
-                                    data.append('articleId', articleId)
-                                    data.append('content', value)
-                                    replyComment(data).then(resq => {
-                                        if(resq.code === 200) {
-                                            tinymce.current.clear()
-                                            toast.success(resq.message, { id: id })
-                                            articleListRef.current.reRequestComment()
-                                        } else if(resq.code === 0) {
-                                            toast(resq.message, { id: id })
-                                        } else {
-                                            toast.error(resq.message, { id: id })
-                                        }
-                                        setAddCommentStatus(false)
-                                    }).catch(err => {
-                                        toast.error(err.message, { id: id })
-                                        setAddCommentStatus(false)
-                                    })
-                                }
-                            }}/>
-                    </div>
-                }
+                <ArticleInfoTop articleId={articleId} userInfo={props.userInfo} />
+                <div className={style.article_detail_editor}>
+                    <Tinymce
+                        userInfo={props.userInfo}
+                        ref={tinymce} 
+                        placeholder='发表一条友善的评论吧...' 
+                        status={addCommentStatus} 
+                        getContent={(value) => { 
+                            if(value === null || value === '' || value === '<p></p>') {
+                                toast('不能提交空白哦 ⊙﹏⊙∥')
+                                return
+                            }
+                            if(!addCommentStatus) {
+                                setAddCommentStatus(true)
+                                let data = new FormData()
+                                data.append('articleId', articleId)
+                                data.append('content', value)
+                                replyComment({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
+                                    if(resq.code === 200) {
+                                        tinymce.current.clear()
+                                        articleListRef.current.reRequestComment()
+                                    }
+                                    setAddCommentStatus(false)
+                                }).catch(err => {
+                                    setAddCommentStatus(false)
+                                })
+                            }
+                        }}/>
+                </div>
                 <span className={style.article_vistor_title}>评论</span>
                 <ArticleVistorList
                     ref={articleListRef}
@@ -81,62 +70,51 @@ export default function ArticleDetail(props) {
         </div>
     )
 }
-class ArticleInfoTop extends React.Component {
-    state = {
-        articleInstance: ''
-    }
-    componentDidMount(){
-        articleContentGet({ 'articleId': this.props.articleId }).then(resq => {
+const ArticleInfoTop = props => {
+
+    const [articleInstance, setArticleInstance] = useState('')
+
+    const dataGet = useCallback(() => {
+        articleContentGet({ data: { 'articleId': props.articleId }, toast: null }).then(resq => {
             if(resq.code === 200) {
-                this.setState({ articleInstance: resq.data })
-            } else {
-                toast.error(resq.message)
+                setArticleInstance(resq.data)
             }
-        }).catch(err => {
-            toast.error(err.message)
-        })
-    }
-    render() {
-        return (
-            <SwitchTransition mode='out-in'>
-                <CSSTransition key={this.state.articleInstance  === ''} timeout={300} classNames="change" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
-                    {
-                        this.state.articleInstance  === '' ?
-                        <ArticleSkeleton />
-                        :
-                        <ArticleContent 
-                            articleInstance={this.state.articleInstance} 
-                            handleLike={(articleId) => { 
-                                if(!this.props.userInfo) {
-                                    toast('你需要登录才能进行下一步操作哦')
-                                    return
+        }).catch(err => { })
+    }, [props.articleId])
+
+    useEffect(() => {
+        dataGet()
+    }, [dataGet])
+
+    return (
+        <SwitchTransition mode='out-in'>
+            <CSSTransition key={articleInstance  === ''} timeout={300} classNames="change" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
+                {
+                    articleInstance  === '' ?
+                    <ArticleSkeleton />
+                    :
+                    <ArticleContent 
+                        articleInstance={articleInstance} 
+                        handleLike={(articleId) => { 
+                            if(!props.userInfo) {
+                                toast('你需要登录才能进行下一步操作哦')
+                                return
+                            }
+                            let data = new FormData()
+                            data.append('articleId', articleId)
+                            increaseArticleLike({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
+                                if(resq.code === 200) {
+                                    let {...temp} = articleInstance
+                                    temp.hasLike = resq.data.status
+                                    temp.articleLikes = resq.data.likes
+                                    setArticleInstance(temp)
                                 }
-                                const id = toast.loading('提交中...')
-                                let data = new FormData()
-                                data.append('articleId', articleId)
-                                increaseArticleLike(data).then(resq => {
-                                    
-                                    if(resq.code === 200) {
-                                        toast.success(resq.message, { id: id })
-                                        let {...temp} = this.state.articleInstance
-                                        temp.hasLike = resq.data.status
-                                        temp.articleLikes = resq.data.likes
-                                        this.setState({ articleInstance: temp })
-                                    } else if(resq.code === 0) {
-                                        toast(resq.message, { id: id })
-                                    } else {
-                                        toast.error(resq.message, { id: id })
-                                    }
-                                }).catch(err => {
-                                    
-                                    toast.error(err.message, { id: id })
-                                })
-                            }} />
-                    }
-                </CSSTransition>
-            </SwitchTransition>
-        )
-    }
+                            }).catch(err => { })
+                        }} />
+                }
+            </CSSTransition>
+        </SwitchTransition>
+    )
 }
 const ArticleVistorList = forwardRef((props, ref) => {
     //params
@@ -157,15 +135,11 @@ const ArticleVistorList = forwardRef((props, ref) => {
 
     //function
     const commentData = useCallback(instance => {
-        articleCommentGet(instance).then(resq => {
+        articleCommentGet({ data: instance, toast: null }).then(resq => {
             if(resq.code === 200) {
                 setCommentObject(target => { return { ...target, list: resq.data.list, pages: resq.data.pages, current: resq.data.current, total: resq.data.total} })
-            } else {
-                toast.error(resq.message)
             }
-        }).catch(err => {
-            toast.error(err.message)
-        })
+        }).catch(err => { })
     }, [])
     useEffect(() => {
         commentData(requestInstance)
@@ -173,15 +147,11 @@ const ArticleVistorList = forwardRef((props, ref) => {
 
     useImperativeHandle(ref, () => ({
         reRequestComment: () => {
-            articleCommentGet(requestInstance).then(resq => {
+            articleCommentGet({ data: requestInstance, toast: null }).then(resq => {
                 if(resq.code === 200) {
                     setCommentObject(current => { return { ...current, pages: resq.data.pages, list: resq.data.list } })
-                } else {
-                    toast.error(resq.message)
                 }
-            }).catch(err => {
-                toast.error(err.message)
-            })
+            }).catch(err => { })
         }
     }))
     return (
@@ -210,72 +180,46 @@ const ArticleVistorList = forwardRef((props, ref) => {
                                                                 toast('你需要登陆才能继续哦 ⊙﹏⊙∥')
                                                                 return
                                                             }
-                                                            const id = toast.loading('提交中...')
                                                             let data = new FormData()
                                                             data.append('articleId', props.articleId)
                                                             data.append('commentId', item.commentId)
-                                                            likeComment(data).then(resq => {
-                                                                
+                                                            likeComment({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
                                                                 if(resq.code === 200) {
-                                                                    toast.success(resq.message, { id: id })
                                                                     let [...temp] = commentObject.list
                                                                     let index = temp.findIndex(key => key.commentId === item.commentId)
                                                                     temp[index].like = resq.data.status
                                                                     temp[index].likes = resq.data.likes
                                                                     setCommentObject({...commentObject, list: temp})
-                                                                } else if(resq.code === 0) {
-                                                                    toast(resq.message, { id: id })
-                                                                } else {
-                                                                    toast.error(resq.message, { id: id })
                                                                 }
-                                                            }).catch(err => {
-                                                                
-                                                                toast.error(err.message, { id: id })
-                                                            })
+                                                            }).catch(err => { })
                                                         }}
                                                         handleReply={(content) => {
-                                                            const id = toast.loading('提交中...')
                                                             let data = new FormData()
                                                             data.append('articleId', props.articleId)
                                                             data.append('content', content)
                                                             data.append('replyCommentId', item.commentId)
                                                             data.append('replyUserId', item.replyUser.replyUserId)
-                                                            replyComment(data).then(resq => {
+                                                            replyComment({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
                                                                 if(resq.code === 200) {
-                                                                    toast.success(resq.message, { id: id })
                                                                     commentData(requestInstance)
                                                                     setSelectCommentItem(null)
-                                                                } else if (resq.code === 0) {
-                                                                    toast(resq.message, { id: id })
-                                                                } else {
-                                                                    toast.error(resq.message, { id: id })
                                                                 }
                                                                 commentRef.current.changeEditorLoadingStatus(false)
                                                             }).catch(err => {
-                                                                
-                                                                toast.error(err.message, { id: id })
                                                                 commentRef.current.changeEditorLoadingStatus(false)
                                                             })
                                                         }}
                                                         handleDelete={() => {
-                                                            const id = toast.loading('提交中...')
                                                             let data = new FormData()
                                                             data.append('articleId', props.articleId)
                                                             data.append('commentId', item.commentId)
-                                                            deleteComment(data).then(resq => {
-                                                                
+                                                            deleteComment({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
                                                                 if(resq.code === 200) {
-                                                                    toast.success(resq.message, { id: id })
                                                                     setTimeout(() => {
                                                                         commentData(requestInstance)
                                                                     }, 500)
-                                                                } else {
-                                                                    toast.error(resq.message, { id: id })
                                                                 }
-                                                            }).catch(err => {
-                                                                
-                                                                toast.error(err.message, { id: id })
-                                                            })
+                                                            }).catch(err => { })
                                                         }}/>
                                                 </Collapse>
                                             )
@@ -338,25 +282,23 @@ const ArticleContent = (props) => {
     )
 
 }
-class ArticleSkeleton extends React.Component {
-    render() {
-        return (
-            <div className={style.article_skeleton}>
-                <div className={style.article_skeleton_top}>
-                    <Skeleton variant="rectangular" width='100%' height='22rem' />
-                </div>
-                <div className={style.article_skeleton_center}>
-                    <Skeleton variant="text" width='10rem' height='2.5rem' sx={{ fontSize: '1rem' }} />
-                </div>
-                <div className={style.article_skeleton_bottom}>
-                    <Skeleton variant="circular" width='3.4rem' height='3.4rem' />
-                    <div>
-                        <Skeleton variant="text" width='6rem' sx={{ fontSize: '1.25rem' }} />
-                        <Skeleton variant="text" width='4rem' sx={{ fontSize: '1.25rem' }} />
-                    </div>
-                </div>
-                <Skeleton variant="rounded" height='20rem' />
+const ArticleSkeleton = () => {
+    return (
+        <div className={style.article_skeleton}>
+            <div className={style.article_skeleton_top}>
+                <Skeleton variant="rectangular" width='100%' height='22rem' />
             </div>
-        )
-    }
+            <div className={style.article_skeleton_center}>
+                <Skeleton variant="text" width='10rem' height='2.5rem' sx={{ fontSize: '1rem' }} />
+            </div>
+            <div className={style.article_skeleton_bottom}>
+                <Skeleton variant="circular" width='3.4rem' height='3.4rem' />
+                <div>
+                    <Skeleton variant="text" width='6rem' sx={{ fontSize: '1.25rem' }} />
+                    <Skeleton variant="text" width='4rem' sx={{ fontSize: '1.25rem' }} />
+                </div>
+            </div>
+            <Skeleton variant="rounded" height='20rem' />
+        </div>
+    )
 }

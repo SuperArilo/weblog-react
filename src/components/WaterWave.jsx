@@ -3,9 +3,6 @@ import style from '../assets/scss/components/waterWave.module.scss'
 export default function WaterWave(props) {
 
     const instanceRef = useRef(null)
-
-    
-
     const clickFunc = useCallback(e => {
         let x = e.clientX - instanceRef.current.getBoundingClientRect().left
         let y = e.clientY - instanceRef.current.getBoundingClientRect().top

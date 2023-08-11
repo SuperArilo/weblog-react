@@ -1,65 +1,73 @@
 import request from '../util/axios'
 
-export const blogLoginUser = (query) => {
+export const blogLoginUser = ({ data, toast }) => {
     return request({
         url: '/user/login',
         method: 'post',
-        data: parseFormData(query),
+        data: parseFormData(data),
+        toast: toast
     })
 }
-export const blogRegisterUser = (query) => {
+export const blogRegisterUser = ({ data, toast }) => {
     return request({
         url: '/user/register',
         method: 'post',
-        data: query,
+        data: data,
+        toast: toast
     })
 }
-export const blogUserLoginOut = () => {
+export const blogUserLoginOut = ({ data, toast }) => {
     return request({
         url: '/user/login-out',
         method: 'post',
-        data: null
+        data: data,
+        toast: toast
     })
 }
 
-export const blogUserProfiles = (params) => {
+export const blogUserProfiles = ({ data, toast }) => {
     return request({
-        url: '/user/profiles/view/' + params,
-        method: 'get'
+        url: '/user/profiles/view/' + data,
+        method: 'get',
+        toast: toast
     })
 }
-export const blogUserProfilesModify = (query) => {
+export const blogUserProfilesModify = ({ data, toast }) => {
     return request({
         url: '/user/profiles/modify',
         method: 'put',
-        data: parseFormData(query),
+        data: parseFormData(data),
+        toast: toast
     })
 }
 
-export const blogUserProfilesModifyEmail = (query) => {
+export const blogUserProfilesModifyEmail = ({ data, toast }) => {
     return request({
         url: '/user/profiles/modify/email',
         method: 'post',
-        data: parseFormData(query),
+        data: parseFormData(data),
+        toast: toast
     })
 }
-export const findPasswordVerify = query => {
+export const findPasswordVerify = ({ data, toast }) => {
     return request({
         url: '/user/profiles/find-password/verify',
         method: 'post',
-        data: parseFormData(query)
+        data: parseFormData(data),
+        toast: toast
     })
 }
-export const passwordModify = query => {
+export const passwordModify = ({ data, toast }) => {
     return request({
         url: '/user/profiles/modify/password',
         method: 'put',
-        data: parseFormData(query)
+        data: parseFormData(data),
+        toast: toast
     })
 }
 const parseFormData = (obj) => {
     let data = new FormData()
-    if (obj === undefined) return
+    if (obj == null) return
     Object.keys(obj).map(key => {
         data.append(key, obj[key])
         return null

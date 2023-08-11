@@ -7,6 +7,7 @@ import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import { useParams } from "react-router-dom"
 import $ from 'jquery'
 import { blogUserProfiles, blogUserProfilesModify } from '../util/user'
+import { userlikesListGet, targetLikeUser } from '../util/userLike'
 import { modifyEmail } from '../util/mail/mail'
 import toast from 'react-hot-toast'
 //组件
@@ -87,7 +88,7 @@ export default function User(props) {
     const menuLineRef = useRef(null)
 
     const queryProfiles = useCallback(params => {
-        blogUserProfiles(params).then(resq => {
+        blogUserProfiles({ data: params, toast: null }).then(resq => {
             if(resq.code === 200) {
                 setUserProfiles(resq.data)
                 if(resq.data == null) return
@@ -114,13 +115,9 @@ export default function User(props) {
 
     useEffect(() => {
         if(modeInstance.instance === null) return
-        const id = toast.loading('提交中...')
-        blogUserProfilesModify(modeInstance.instance).then(resq => {
+        blogUserProfilesModify({ data: modeInstance.instance, toast: { isShow: true, loadingMessage: '修改中...' } }).then(resq => {
             if(resq.code === 200) {
-                toast.success(resq.message, { id: id })
                 queryProfiles(viewUid)
-            } else {
-                toast.error(resq.message, { id: id })
             }
             setModeInstance(current => ({
                 ...current,
@@ -130,7 +127,6 @@ export default function User(props) {
                 tempAvatar: null
             }))
         }).catch(err => {
-            toast.error(err.message, { id: id })
             setModeInstance(current => ({
                 ...current,
                 loadingStatus: false
@@ -311,9 +307,24 @@ export default function User(props) {
                                 }
                                 {
                                     modeInstance.status === false &&
-                                    <div className={style.likes_box}>
-                                        <i className='asukamis user_like_on' style={{ fontSize: '1.3em' }} />
-                                        <span>114514</span>
+                                    <div
+                                        className={style.likes_box}
+                                        onClick={() => {
+                                            let data = new FormData()
+                                            data.append('targetUid', viewUid)
+                                            targetLikeUser({ data: data, toast: { isShow: true, loadingMessage: '提交请求中...' } }).then(resq => {
+                                                setUserProfiles(current => ({
+                                                    ...current,
+                                                    likeNum: resq.data.status ? userProfiles.likeNum + 1:userProfiles.likeNum - 1,
+                                                    viewerLike: resq.data.status
+                                                }))
+                                            }).catch(() => {})
+                                        }}>
+                                        <i
+                                            className={`asukamis ${userProfiles.viewerLike ? 'user_like_on':'user_like_off'}`}
+                                            style={{ fontSize: '1.3em' }}
+                                            />
+                                        <span>{userProfiles.likeNum}</span>
                                         <WaterWave position='absolute' />
                                     </div>
                                 }
@@ -597,13 +608,11 @@ const AccountInfoView = (props) => {
                                     return
                                 }
                                 if(!requestStatus) {
-                                    const id = toast.loading('提交中...')
                                     setRequestStatus(true)
                                     let data = new FormData()
                                     data.append('email', content)
-                                    modifyEmail(data).then(resq => {
+                                    modifyEmail({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
                                         if(resq.code === 200) {
-                                            toast.success(resq.message, { id: id })
                                             props.setModeInstance(current => ({
                                                 ...current,
                                                 loadingStatus: false,
@@ -611,14 +620,9 @@ const AccountInfoView = (props) => {
                                                 instance: null,
                                                 tempAvatar: null
                                             }))
-                                        } else if(resq.code === 0) {
-                                            toast(resq.message, { id: id })
-                                        } else {
-                                            toast.error(resq.message, { id: id })
                                         }
                                         setRequestStatus(false)
                                     }).catch(err => {
-                                        toast.error(err.message, { id: id })
                                         setRequestStatus(false)
                                     })
                                 }
@@ -736,7 +740,7 @@ const RenderFunctionView = ({ menuIndex, userProfiles, userInfo, viewUid }) => {
         case 1:
             return <Gossip style={{ 'minHeight': 'none' }} userInfo={userInfo} viewUid={viewUid} />
         case 2:
-            return <UserLikeView userProfiles={userProfiles} />
+            return <UserLikeView userProfiles={userProfiles} userInfo={userInfo} />
         case 3:
             break
         default:
@@ -766,20 +770,76 @@ const RenderEditorFunctionView = ({modeInstance ,setModeInstance , userProfiles,
 }
 
 const UserLikeView = (props) => {
+
+    const [requestInstance, setRequestInstance] = useState({
+        pageNum: 1,
+        pageSize: 10,
+        targetUid: props.userProfiles.uid
+    })
+
+    const [dataObject, setDataObject] = useState({
+        total: 0,
+        pages: 1,
+        list: null,
+        current: 0
+    })
+
+    const dataGet = useCallback((instance) => {
+        userlikesListGet({ data: instance, toast: null }).then(resq => {
+            if(resq.code === 200) {
+                setDataObject(current => ({
+                    ...current,
+                    total: resq.data.total,
+                    pages: resq.data.pages,
+                    current: resq.data.current,
+                    list: resq.data.list
+                }))
+            } 
+            console.log(resq)
+        }).catch(err => { })
+    }, [])
+
+    useEffect(() => {
+        dataGet(requestInstance)
+    }, [requestInstance, dataGet])
     return (
         <ul className={style.user_like_view}>
-            <li className={style.like_item}>
-                <div className={style.item_content}>
-                    <Avatar width='3rem' height='3rem' src='https://image.superarilo.icu/d2649d6e-294b-48db-9d3d-7bdc32c4d6fc.png' />
-                    <div className={style.info_box}>
-                        <span>这次换你听歌</span>
-                        <span>在2023-08-07-15:18的时候赞了你</span>
-                    </div>
-                </div>
-                <div className={style.item_content}>
-                    <Icon iconClass='user_like_off' width='2rem' height='2rem' fontSize='1.2rem' />
-                </div>
-            </li>
+            {
+                dataObject.list === null ?
+                ''
+                :
+                <>
+                    {
+                        dataObject.list.map((item, index) => {
+                            return (
+                                <li className={style.like_item} key={item.id}>
+                                    <div className={style.item_content}>
+                                        <Avatar width='3rem' height='3rem' src={item.avatar} />
+                                        <div className={style.info_box}>
+                                            <span>{item.nickName}</span>
+                                            <span>在 {item.createTime} 的时候赞了{props.userProfiles.uid === props.userInfo?.uid ? '你':'TA'}</span>
+                                        </div>
+                                    </div>
+                                    <div className={style.item_content}>
+                                        {
+                                            props.userProfiles.uid === props.userInfo?.uid &&
+                                             <Icon
+                                                iconClass={props.userProfiles.viewerLike ? 'user_like_on':'user_like_off'}
+                                                width='2rem'
+                                                height='2rem'
+                                                fontSize='1.2rem'
+                                                onClick={() => {
+                                                    console.log('可点');
+                                                }}/> 
+                                        }
+                                    </div>
+                                </li>
+                            )
+                        })
+                    }
+                </>
+            }
+            
         </ul>
     )
 } 
@@ -820,5 +880,11 @@ const UserSkeleton = () => {
                 </li>
             </ul>
         </div>
+    )
+}
+
+const UserLikeViewSkeleton = () => {
+    return (
+        <div className={style.user_like_skeleton}></div>
     )
 }

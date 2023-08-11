@@ -59,15 +59,13 @@ export default function App () {
 	useEffect(() => {
 		let token = localStorage.getItem('token')
 		if(token) {
-			blogLoginUser().then(resq => {
+			blogLoginUser({ data: null, toast: null }).then(resq => {
 				if(resq.code === 200) {
 					loginSetUserInfo(resq.data.user)
 				} else {
 					localStorage.removeItem('token')
 				}
-			}).catch(err => {
-				toast(err.message)
-			})
+			}).catch(err => { })
 		}
 	}, [loginSetUserInfo])
 
@@ -299,15 +297,12 @@ const PCheaderNav = (props) => {
 										props.setCreateGossipWindowStatus(true)
 										break
 									case 3:
-										toast.promise(blogUserLoginOut(), {
-											loading: '请求中...',
-											success: resq => {
+										blogUserLoginOut({ data: null, toast: { isShow: true, loadingMessage: '退出中...' } }).then(resq => {
+											if(resq.code === 200) {
 												dispatch({ type: 'userInfo/setInfo', payload: null })
 												localStorage.removeItem('token')
-												return resq.message
-											},
-											error: err => err.message
-										})
+											}
+										}).catch(() => {})
 										break
 									default:
 										break
@@ -502,20 +497,15 @@ const LoginBox = (props) => {
 				toast('输入的邮箱格式不正确')
 				return
 			}
-			const id = toast.loading('提交中...')
 			setLoginStatus(true)
-			blogLoginUser(requestInstance).then(resq => {
+			blogLoginUser({ data: requestInstance, toast: { isShow: true, loadingMessage: '登录中...' } }).then(resq => {
 				if(resq.code === 200) {
 					localStorage.setItem('token', resq.data.token)
 					dispatch({ type: 'userInfo/setInfo', payload: resq.data.user })
-					toast.success(resq.message, { id: id })
 					setTimeout(() => { props.closeBox(false) }, 1000)
-				} else {
-					toast.error(resq.message, { id: id })
 				}
 				setLoginStatus(false)
 			}).catch(err => {
-				toast.error(err.message, { id: id })
 				setLoginStatus(false)
 			})
 		}
@@ -580,20 +570,11 @@ const LoginBox = (props) => {
 							toast('输入的邮箱格式不正确')
 							return
 						}
-						const id = toast.loading('操作中...')
-						findPassword({ email: requestInstance.email }).then(resq => {
-							if(resq.code === 200) {
-								toast.success(resq.message, { id: id })
-							} else {
-								toast.error(resq.message, { id: id })
-							}
-						}).catch(err => {
-							toast.error(err.message, { id: id })
-						})
+						findPassword({ data: { email: requestInstance.email }, toast: { isShow: true, loadingMessage: '操作中...' } }).then(resq => {}).catch(err => {})
 					}}>忘记密码...</span>
 				</div>
 				<button type="button" title="登录" className={signStyle.confirm_button + ' ' + (isMobileStatus ? signStyle.confirm_button_mobile:signStyle.confirm_button_pc)} onClick={() => { loginFunction() }}>
-					{ !loginStatus && userInfo === null ? '登陆':'' }
+					{ !loginStatus && userInfo === null ? '登录':'' }
 					{ loginStatus ? <i className='fas fa-circle-notch fa-spin' />:'' }
 					{ userInfo !== null && !loginStatus ? <i className='fas fa-check' style={{ 'color': '#80e298' }} />:''}
 					<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
@@ -681,12 +662,10 @@ const RegisterBox = (props) => {
 											setRequestStatus({...requestStatus, sendMailStatus: false})
 											return
 										}
-										const id = toast.loading('提交中...')
 										let data = new FormData()
 										data.append('mail', inputInstance.email)
-										regiserMail(data).then(resq => {
+										regiserMail({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
 											if(resq.code === 200) {
-												toast.success(resq.message, { id: id })
 												setRequestStatus({...requestStatus, sendMailStatus: false})
 												intervalID.current = setInterval(() => {
 													if(requestStatus.countDown === 0) {
@@ -698,15 +677,12 @@ const RegisterBox = (props) => {
 													setRequestStatus({...requestStatus, countDown: requestStatus.countDown--})
 												}, 1000)
 											} else if(resq.code === 0) {
-												toast(resq.message, { id: id })
 												setRequestStatus({...requestStatus, sendMailStatus: false})
 											} else {
-												toast(resq.message, { id: id })
 												setRequestStatus({...requestStatus, sendMailStatus: false})
 											}
 										}).catch(err => {
 											setRequestStatus({...requestStatus, sendMailStatus: false})
-											toast.error(err.message, { id: id })
 										})
 									}
 									
@@ -791,31 +767,24 @@ const RegisterBox = (props) => {
 							return
 						}
 						if(!requestStatus.registerStatus) {
-							const id = toast.loading('提交中...')
 							setRequestStatus({...requestStatus, registerStatus: true})
 							let data = new FormData()
 							data.append('email', inputInstance.email)
 							data.append('password', inputInstance.password)
 							data.append('nickName', inputInstance.nickName)
 							data.append('verifyCode', inputInstance.verifyCode)
-							blogRegisterUser(data).then(resq => {
+							blogRegisterUser({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
 								if(resq.code === 200) {
-									toast.success(resq.message, { id: id })
 									setTimeout(() => {
 										clearInterval(intervalID.current)
 										intervalID.current = null
 										props.openLoginBox(true)
 										props.closeBox(false)
 									}, 500)
-								} else if(resq.code === 0) {
-									toast(resq.message, { id: id })
-								} else {
-									toast.error(resq.message, { id: id })
 								}
 								setRequestStatus({...requestStatus, registerStatus: false})
 							}).catch(err => {
 								setRequestStatus({...requestStatus, registerStatus: false})
-								toast.error(err.message, { id: id })
 							})
 						}
 					}}>

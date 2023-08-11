@@ -39,12 +39,8 @@ export default function Friends(props) {
                         list: resq.data.list
                     }
                 })
-            } else {
-                toast.error(resq.message)
             }
-        }).catch(err => {
-            toast.error(err.message)
-        })
+        }).catch(err => {})
     }, [])
 
     useEffect(() => {

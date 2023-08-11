@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField'
 import AsukaButtom from '../components/asukaButton'
 import toast from 'react-hot-toast'
 import { findPasswordVerify, passwordModify } from '../util/user'
-import { useParams, useNavigate, useLocation  } from "react-router-dom"
+import { useNavigate, useLocation  } from "react-router-dom"
 import Icon from '../components/Icon'
 export default function FindPassword(props) {
 
@@ -26,10 +26,8 @@ export default function FindPassword(props) {
         let verifyCode = searchParams.get('verifyCode')
         if(email !== null && verifyCode !== null) {
             if (requstInstance.verifyUUID === '') {
-                const id = toast.loading('验证中...')
-                findPasswordVerify({ email: email, verifyCode: verifyCode }).then(resq => {
+                findPasswordVerify({ data: { email: email, verifyCode: verifyCode }, toast: { isShow: true, loadingMessage: '验证中...' } }).then(resq => {
                     if(resq.code === 200) {
-                        toast.success(resq.message, { id: id })
                         setRequestInstance(target => {
                             return {
                                 ...target,
@@ -37,12 +35,8 @@ export default function FindPassword(props) {
                                 email: email
                             }
                         })
-                    } else {
-                        toast.error(resq.message, { id: id })
                     }
-                }).catch(err => {
-                    toast.error(err.message, { id: id })
-                })
+                }).catch(err => { })
             }
         } else {
             toast.error('获取到的实例参数为空')
@@ -91,18 +85,13 @@ export default function FindPassword(props) {
                                 return
                             }
                             if(!status) {
-                                const id = toast.loading('提交中...')
                                 setStatus(true)
-                                passwordModify(requstInstance).then(resq => {
+                                passwordModify({ data: requstInstance, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
                                     if(resq.code === 200) {
-                                        toast.success(resq.message, { id: id })
                                         redirect()
-                                    } else {
-                                        toast.error(resq.message, { id: id })
                                     }
                                     setStatus(false)
                                 }).catch(err => {
-                                    toast.error(err.message, { id: id })
                                     setStatus(false)
                                 })
                             }

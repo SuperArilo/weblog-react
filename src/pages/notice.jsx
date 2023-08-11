@@ -6,7 +6,6 @@ import '../assets/scss/currencyTransition.scss'
 //方法
 import $ from 'jquery'
 import { noticeGet, readNotice } from '../util/notice'
-import toast from 'react-hot-toast'
 import { useSelector } from 'react-redux'
 import { useNavigate  } from 'react-router-dom'
 import { SwitchTransition, CSSTransition } from 'react-transition-group'
@@ -80,9 +79,7 @@ export default function Notice(props) {
                     size: resq.data.size
                 }))
             }
-        }).catch(err => {
-            toast.error(err.message)
-        })
+        }).catch(err => { })
     }, [])
 
     useEffect(() => {
@@ -104,22 +101,15 @@ export default function Notice(props) {
     }, [navMenuInstance.selectIndex])
 
     const userReadNotice = () => {
-        const id = toast.loading('提交中...')
         let data = new FormData()
         data.append('noticeIds', selectNoticeList)
-        readNotice(data).then(resq => {
+        readNotice({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
             if(resq.code === 200)  {
                 noticeListGet(requestInstance)
-                toast.success(resq.message, { id: id })
                 setSelectNoticeList([])
-            } else {
-                toast.error(resq.message, { id: id })
             }
-        }).catch(err => {
-            toast.error(err.message, { id: id })
-        })
+        }).catch(err => { })
     }
-
     return (
         <div className={style.notice_box}>
             <main className={style.notice_container}>

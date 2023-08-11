@@ -7,10 +7,10 @@ import '../assets/scss/currencyTransition.scss'
 import Avatar from '../components/Avatar'
 import TextField from '@mui/material/TextField'
 import AsukaButton from '../components/asukaButton'
-import { SwitchTransition, CSSTransition, TransitionGroup } from 'react-transition-group'
+import { SwitchTransition, CSSTransition } from 'react-transition-group'
 import Skeleton from '@mui/material/Skeleton'
 //方法
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { friendList, linksApply } from '../util/links'
 import toast from 'react-hot-toast'
 
@@ -50,12 +50,8 @@ export default function Links(props) {
                     current: resq.data.current,
                     list: resq.data.list
                 }))
-            } else {
-                toast.error(resq.message)
             }
-        }).catch(err => {
-            toast.error(err.message)
-        })
+        }).catch(err => {})
     }, [])
 
     useEffect(() => {
@@ -101,7 +97,7 @@ export default function Links(props) {
                                     variant="standard"
                                     size="small"
                                     fullWidth 
-                                    onChange={e => { setBlogInstance({...setBlogInstance, blogAvatar: e.target.value}) }}/>
+                                    onChange={e => { setBlogInstance({...blogInstance, blogAvatar: e.target.value}) }}/>
                             </div>
                             <div className={style.input_item} />
                             <div className={style.input_item}>
@@ -115,17 +111,10 @@ export default function Links(props) {
                                             return
                                         }
                                         if(!applyStatus) {
-                                            const id = toast.loading('提交中...')
                                             setApplyStatus(true)
-                                            linksApply(blogInstance).then(resq => {
-                                                if(resq.code === 200) {
-                                                    toast.success(resq.message, { id: id })
-                                                } else {
-                                                    toast.error(resq.message, { id: id })
-                                                }
+                                            linksApply({ data: blogInstance, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
                                                 setApplyStatus(false)
                                             }).catch(err => {
-                                                toast.error(err.message, { id: id })
                                                 setApplyStatus(false)
                                             })
                                         }

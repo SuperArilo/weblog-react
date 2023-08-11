@@ -48,18 +48,14 @@ export default function GossipContent(props) {
     
     //function
     const commentData = useCallback((instance) => {
-        gossipCommentList(instance).then(resq => {
+        gossipCommentList({ data: instance, toast: null}).then(resq => {
             if(resq.code === 200) {
                 if(props.targetComment) {
                     resq.data.list.splice(resq.data.list.findIndex(item => item.commentId === props.targetComment.commentId), 1)
                 }
                 setCommentObject(target => { return { ...target, list: resq.data.list, total: resq.data.total, pages: resq.data.pages, current: resq.data.current } })
-            } else {
-                toast.error(resq.message)
             }
-        }).catch(err => {
-            toast.error(err.message)
-        })
+        }).catch(err => { })
     }, [props.targetComment])
 
     useEffect(() => {
@@ -98,19 +94,15 @@ export default function GossipContent(props) {
                     onClickItem={(e) => {
                         switch(e) {
                             case 0:
-                                const id = toast.loading('操作中...')
                                 let data = new FormData()
                                 data.append('gossipId', props.data.id)
-                                deleteGossip(data).then(resq => {
+                                deleteGossip({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
+                                    console.log(111)
                                     if(resq.code === 200) {
-                                        toast.success(resq.message, { id: id })
-                                        props.gossipDataGet()
-                                    } else {
-                                        toast.error(resq.message, { id: id })
+                                        console.log(222)
+                                        props.reDataGet()
                                     }
-                                }).catch(err => {
-                                    toast.error(err.message, { id: id })
-                                })
+                                }).catch(err => {})
                             break
                             default:
                                 break
@@ -164,23 +156,17 @@ export default function GossipContent(props) {
                             return
                         }
                         if(!editorSendToServerStatus) {
-                            const id = toast.loading('提交中...')
                             setEditorSendToServerStatus(true)
                             let data = new FormData()
                             data.append('gossipId', props.data.id)
                             data.append('content', value)
-                            replyGossipComment(data).then(resq => {
+                            replyGossipComment({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
                                 if(resq.code === 200) {
                                     tinymce.current.clear()
-                                    toast.success(resq.message, { id: id })
                                     commentData(requestInstance)
-                                } else if(resq.code === 0) {
-                                    toast(resq.message, { id: id })
-                                } else {
-                                    toast.error(resq.message, { id: id })
                                 }
                                 setEditorSendToServerStatus(false)
-                            })
+                            }).catch(() => {})
                         }
                     }}/>
                 <div className={style.gossip_comment_list}>
@@ -201,66 +187,43 @@ export default function GossipContent(props) {
                                             toast('你需要登陆才能继续哦 ⊙﹏⊙∥')
                                             return
                                         }
-                                        const id = toast.loading('提交中...')
                                         let data = new FormData()
                                         data.append('gossipId', props.data.id)
                                         data.append('commentId', props.targetComment.commentId)
-                                        likeGossipComment(data).then(resq => {
+                                        likeGossipComment({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
                                             if(resq.code === 200) {
                                                 props.reSetGossipComment(id, resq.data.likes, resq.data.status)
-                                                toast.success(resq.message, { id: id })
-                                            } else if(resq.code === 0) {
-                                                toast(resq.message, { id: id })
-                                            } else {
-                                                toast.error(resq.message, { id: id })
                                             }
-                                        }).catch(err => {
-                                            toast.error(err.message, { id: id })
-                                        })
+                                        }).catch(err => { })
                                     }}
                                     handleFold={(id) => {
                                         setSelectCommentItem(id === selectCommentItem ? null:id)
                                     }}
                                     handleReply={content => {
-                                        const id = toast.loading('提交中...')
                                         let data = new FormData()
                                         data.append('gossipId', props.data.id)
                                         data.append('content', content)
                                         data.append('replyCommentId', props.targetComment.commentId)
                                         data.append('replyUserId', props.targetComment.replyUser.replyUserId)
-                                        replyGossipComment(data).then(resq => {
+                                        replyGossipComment({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
                                             if(resq.code === 200) {
-                                                toast.success(resq.message, { id: id })
                                                 commentData(requestInstance)
                                                 setSelectCommentItem(null)
-                                            } else if(resq.code === 0) {
-                                                toast(resq.message, { id: id })
-                                            } else {
-                                                toast.error(resq.message, { id: id })
                                             }
                                             commentRef.current.changeEditorLoadingStatus(false)
                                         }).catch(err => {
-                                            toast.error(err.message, { id: id })
                                             commentRef.current.changeEditorLoadingStatus(false)
                                         })
                                     }}
                                     handleDelete={() => {
-                                        const id = toast.loading('提交中...')
                                         let data = new FormData()
                                         data.append('gossipId', props.data.id)
                                         data.append('commentId', props.targetComment.commentId)
-                                        deleteGossipComment(data).then(resq => {
+                                        deleteGossipComment({ data: data, toast: { isShow: true, loadingMessage: '删除中...' } }).then(resq => {
                                             if(resq.code === 200) {
-                                                toast.success(resq.message, { id: id })
                                                 commentData(requestInstance)
-                                            } else if(resq.code === 0) {
-                                                toast(resq.message, { id: id })
-                                            } else {
-                                                toast.error(resq.message, { id: id })
                                             }
-                                        }).catch(err => {
-                                            toast.error(err.message, { id: id })
-                                        })
+                                        }).catch(err => { })
                                     }}/>
                             }
                             <SwitchTransition mode='out-in'>
@@ -284,67 +247,44 @@ export default function GossipContent(props) {
                                                                         toast('你需要登陆才能继续哦 ⊙﹏⊙∥')
                                                                         return
                                                                     }
-                                                                    const id = toast.loading('提交中...')
                                                                     let data = new FormData()
                                                                     data.append('gossipId', props.data.id)
                                                                     data.append('commentId', item.commentId)
-                                                                    likeGossipComment(data).then(resq => {
+                                                                    likeGossipComment({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
                                                                         if(resq.code === 200) {
-                                                                            toast.success(resq.message, { id: id })
                                                                             let [...temp] = commentObject.list
                                                                             let index = temp.findIndex(key => key.commentId === item.commentId)
                                                                             temp[index].like = resq.data.status
                                                                             temp[index].likes = resq.data.likes
                                                                             setCommentObject({...commentObject, list: temp})
-                                                                        } else if(resq.code === 0) {
-                                                                            toast(resq.message, { id: id })
-                                                                        } else {
-                                                                            toast.error(resq.message, { id: id })
                                                                         }
-                                                                    }).catch(err => {
-                                                                        toast.error(err.message, { id: id })
-                                                                    })
+                                                                    }).catch(err => {})
                                                                 }}
                                                                 handleReply={content => {
-                                                                    const id = toast.loading('提交中...')
                                                                     let data = new FormData()
                                                                     data.append('gossipId', props.data.id)
                                                                     data.append('content', content)
                                                                     data.append('replyCommentId', item.commentId)
                                                                     data.append('replyUserId', item.replyUser.replyUserId)
-                                                                    replyGossipComment(data).then(resq => {
+                                                                    replyGossipComment({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
                                                                         if(resq.code === 200) {
-                                                                            toast.success(resq.message, { id: id })
                                                                             commentData(requestInstance)
                                                                             setSelectCommentItem(null)
-                                                                        } else if(resq.code === 0) {
-                                                                            toast(resq.message, { id: id })
-                                                                        } else {
-                                                                            toast.error(resq.message, { id: id })
                                                                         }
                                                                         commentRef.current.changeEditorLoadingStatus(false)
                                                                     }).catch(err => {
-                                                                        toast.error(err.message, { id: id })
                                                                         commentRef.current.changeEditorLoadingStatus(false)
                                                                     })
                                                                 }}
                                                                 handleDelete={() => {
-                                                                    const id = toast.loading('提交中...')
                                                                     let data = new FormData()
                                                                     data.append('gossipId', props.data.id)
                                                                     data.append('commentId', item.commentId)
-                                                                    deleteGossipComment(data).then(resq => {
+                                                                    deleteGossipComment({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
                                                                         if(resq.code === 200) {
-                                                                            toast.success(resq.message, { id: id })
                                                                             commentData(requestInstance)
-                                                                        } else if(resq.code === 0) {
-                                                                            toast(resq.message, { id: id })
-                                                                        } else {
-                                                                            toast.error(resq.message, { id: id })
                                                                         }
-                                                                    }).catch(err => {
-                                                                        toast.error(err.message, { id: id })
-                                                                    })
+                                                                    }).catch(err => {})
                                                                 }}/>
                                                         </Collapse>
                                                     )
@@ -373,5 +313,8 @@ export default function GossipContent(props) {
 }
 GossipContent.defaultProps = {
     foldStatus: false,
-    targetComment: null
+    targetComment: null,
+    reDataGet: () => {
+        return null
+    }
 }

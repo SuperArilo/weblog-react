@@ -1,24 +1,27 @@
 import request from '../axios'
 
-export const regiserMail = (query) => {
+export const regiserMail = ({ data, toast }) => {
     return request({
         url: '/mail/register',
         method: 'post',
-        data: query,
+        data: data,
+        toast: toast
     })
 }
-export const modifyEmail = (query) => {
+export const modifyEmail = ({ data, toast }) => {
     return request({
         url: '/mail/modify/email',
         method: 'post',
-        data: query
+        data: data,
+        toast: toast
     })
 }
-export const findPassword = query => {
+export const findPassword = ({ data, toast }) => {
     return request({
         url: '/mail/find-password',
         method: 'post',
-        data: parseFormData(query)
+        data: parseFormData(data),
+        toast: toast
     })
 }
 const parseFormData = (obj) => {
