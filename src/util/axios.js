@@ -21,13 +21,10 @@ service.interceptors.request.use( config => {
 service.interceptors.response.use( response => {
     if(response.config.toast?.isShow) {
         if(response.data.code === 200) {
-            console.log(1)
             toast.success(response.data.message, { id: response.config.toastId })
         } else if(response.data.code === 0) {
-            console.log(2)
             toast(response.data.message, { id: response.config.toastId })
         } else {
-            console.log(3)
             toast.error(response.data.message, { id: response.config.toastId })
         }
     }
