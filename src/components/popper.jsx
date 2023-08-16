@@ -11,7 +11,7 @@ const AsukaPopper = (props) => {
             anchorEl={props.target}
             placement={props.placement}
             transition
-            style={{zIndex: 10}}>
+            style={{zIndex: 1301}}>
             {({ TransitionProps }) => (
                 <Fade {...TransitionProps} timeout={350}>
                     <div className={style.popper_box}>
