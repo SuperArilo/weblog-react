@@ -13,6 +13,7 @@ import GossipSkeleton from '../components/GossipSkeleton'
 import Skeleton from '@mui/material/Skeleton'
 import { SwitchTransition, CSSTransition } from 'react-transition-group'
 import Pagination from '../components/Pagination'
+import Friends from './Friends'
 //hook
 import { articleListGet } from '../util/article'
 import { useNavigate } from "react-router-dom"
@@ -236,6 +237,8 @@ export default function IndexPage(props) {
                             }
                         </CSSTransition>
                     </SwitchTransition>
+                    <span className={style.public_sub_content_header}>最近访客</span>
+                    <Friends columns='1fr 1fr 1fr' defaultHeight={false}/>
                 </div>
             </section>
         </div>
@@ -251,7 +254,7 @@ const SiderItem = (props) => {
                 <p>{props.object.articleTitle}</p>
                 <AsukaButton text='开始阅读' class='read' onClick={() => { 
                     navigate('detail?threadId=' + props.object.id)
-                    $('#react-by-asukamis').children().stop().animate({'scrollTop': 0})
+                    $('#react-by-asukamis').stop().animate({'scrollTop': 0})
                 }}/>
             </div>
         </div>
