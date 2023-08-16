@@ -134,7 +134,6 @@ export default function Gossip(props) {
                                                             userInfo={props.userInfo} 
                                                             data={item}
                                                             reDataGet={() => {
-                                                                console.log(12345678)
                                                                 gossipDataGet()
                                                             }}
                                                             requestInstance={requestInstance}
