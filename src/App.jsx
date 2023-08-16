@@ -12,7 +12,8 @@ import { regiserMail, findPassword } from './util/mail/mail'
 import toast from 'react-hot-toast'
 import WaterWave from './components/WaterWave'
 import Slide from '@mui/material/Slide'
-import Menu from './components/Menu'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
 import ArticleDetail from './pages/articleDetail'
 import Gossip from './pages/gossip'
 import IndexPage from './pages/index'
@@ -100,7 +101,7 @@ export default function App () {
 					<CSSTransition key={location.pathname} timeout={300} classNames="change" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
 						<Routes location={location}>
 							<Route index path='/' element={<IndexPage isMobile={ isMobileStatus } userInfo={userInfo} />} />
-							<Route path='/detail' element={<ArticleDetail userInfo={userInfo} isMobile={ isMobileStatus } />} />
+							<Route path='/detail' element={<ArticleDetail userInfo={userInfo} />} />
 							<Route path='/gossip' element={<Gossip userInfo={userInfo}/>} />
 							<Route path='/guestbook' element={<Guestbook />} />
 							<Route path='/user/:viewUid' element={<User />} />
@@ -284,34 +285,60 @@ const PCheaderNav = (props) => {
 								setUserNavInstance({...userNavInstance, popperStatus: true, popperTarget: e.target})
 							}}/>
 						<Menu
+							anchorEl={userNavInstance.popperTarget}
 							open={userNavInstance.popperStatus}
-							targetElement={userNavInstance.popperTarget}
-							renderObject={userNavInstance.myMenuList}
-							onClickItem={id => {
-								switch(id) {
-									case 0:
-									case 2:
-										navigate(`/user/${props.userInfo.uid}`)
-										break
-									case 1:
-										props.setCreateGossipWindowStatus(true)
-										break
-									case 3:
-										blogUserLoginOut({ data: null, toast: { isShow: true, loadingMessage: '退出中...' } }).then(resq => {
-											if(resq.code === 200) {
-												dispatch({ type: 'userInfo/setInfo', payload: null })
-												localStorage.removeItem('token')
-											}
-										}).catch(() => {})
-										break
-									default:
-										break
-								}
-								setUserNavInstance({...userNavInstance, popperStatus: false, popperTarget: null})
-							}}
-							onClose={status => {
-								setUserNavInstance({...userNavInstance, popperStatus: status})
-							}}/>
+							autoFocus={false}
+							onClose={() => { setUserNavInstance({...userNavInstance, popperStatus: false}) }}>
+							<MenuItem
+								disableGutters={false}
+								onClick={() => {
+									navigate(`/user/${props.userInfo.uid}`)
+									setUserNavInstance({...userNavInstance, popperStatus: false, popperTarget: null})
+								}}>
+								<Icon iconClass='avatar' />
+								<span className='menu_font'>
+									我的账号
+								</span>
+							</MenuItem>
+							<MenuItem
+								disableGutters={false}
+								onClick={() => {
+									props.setCreateGossipWindowStatus(true)
+									setUserNavInstance({...userNavInstance, popperStatus: false, popperTarget: null})
+								}}>
+								<Icon iconClass='gossip' />
+								<span className='menu_font'>
+									发表碎语
+								</span>
+							</MenuItem>
+							<MenuItem
+								disableGutters={false}
+								onClick={() => {
+									navigate(`/user/${props.userInfo.uid}`)
+									setUserNavInstance({...userNavInstance, popperStatus: false, popperTarget: null})
+								}}>
+								<Icon iconClass='setting' />
+								<span className='menu_font'>
+									设置
+								</span>
+							</MenuItem>
+							<MenuItem
+								disableGutters={false}
+								onClick={() => {
+									setUserNavInstance({...userNavInstance, popperStatus: false, popperTarget: null})
+									blogUserLoginOut({ data: null, toast: { isShow: true, loadingMessage: '退出中...' } }).then(resq => {
+										if(resq.code === 200) {
+											dispatch({ type: 'userInfo/setInfo', payload: null })
+											localStorage.removeItem('token')
+										}
+									}).catch(() => {})
+								}}>
+								<Icon iconClass='signout' />
+								<span className='menu_font'>
+									退出
+								</span>
+							</MenuItem>
+						</Menu>
 					</div>
 				}
 			</div>

@@ -13,8 +13,11 @@ import Comment from './comment'
 import CommentSkeleton from './CommentSkeleton'
 import { SwitchTransition, CSSTransition, TransitionGroup } from 'react-transition-group'
 import toast from 'react-hot-toast'
-import Menu from './Menu'
 import PreviewImage from './PreviewImage'
+import Pagination from '../components/Pagination'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
+import AsukaPoppor from './popper'
 //方法
 
 import { useNavigate } from 'react-router-dom'
@@ -25,6 +28,10 @@ export default function GossipContent(props) {
     //ref
     const renderContentRef = useRef(null)
     //params
+    const [popperInstance, setPopperInstance] = useState({
+        status: false,
+        target: null
+    })
     const [requestInstance, setRequestInstance] = useState({
         pageNum: 1,
         pageSize: 10,
@@ -63,6 +70,15 @@ export default function GossipContent(props) {
         commentData(requestInstance)
     }, [commentData, requestInstance, props.foldStatus])
 
+    const popperChange = (event) => {
+        setPopperInstance(
+            {
+                ...popperInstance,
+                status: !popperInstance.status,
+                target: event ? event.target:null
+            }
+        )
+    }
     return (
         <div className={style.gossip_box}>
             <header className={style.gossip_box_title}>
@@ -82,35 +98,36 @@ export default function GossipContent(props) {
                         <span className={style.info_autograph}>{props.data.categoryName}</span>
                     </div>
                 </div>
-                {
-                    props.userInfo?.uid === props.data.author &&
-                    <div ref={gossipFunctionMenuRef} className={style.right_function} onClick={() => { setGossipFunctionMenuStatus(true) }}>
-                        <WaterWave color="rgba(0, 0, 0, 0.7)" duration={1} />
-                        <i className='fas fa-ellipsis-v' />
-                    </div>
-                }
-                <Menu 
+                <div ref={gossipFunctionMenuRef} className={style.right_function} onClick={() => { setGossipFunctionMenuStatus(true) }}>
+                    <WaterWave color="rgba(0, 0, 0, 0.7)" duration={1} />
+                    <i className='fas fa-ellipsis-v' />
+                </div>
+                <Menu
+                    anchorEl={gossipFunctionMenuRef.current}
                     open={gossipFunctionMenuStatus}
-                    targetElement={gossipFunctionMenuRef.current}
-                    renderObject={[{ id: 0, title: '删除' }]}
-                    onClickItem={(e) => {
-                        switch(e) {
-                            case 0:
-                                let data = new FormData()
-                                data.append('gossipId', props.data.id)
-                                deleteGossip({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
-                                    console.log(111)
-                                    if(resq.code === 200) {
-                                        console.log(222)
-                                        props.reDataGet()
-                                    }
-                                }).catch(err => {})
-                            break
-                            default:
-                                break
+                    autoFocus={false}
+                    onClose={() => { setGossipFunctionMenuStatus(false) }}>
+                        {
+                            props.userInfo?.uid === props.data.author &&
+                            <MenuItem
+                                disableGutters={false}
+                                onClick={e => {
+                                    popperChange(e)
+                                    }}>
+                                <span className={style.menu_font}>
+                                    删除
+                                </span>
+                            </MenuItem>
                         }
-                    }}
-                    onClose={() => { setGossipFunctionMenuStatus(false) }}/>
+                    
+                    <MenuItem
+                        disableGutters={false}
+                        onClick={() => {  }}>
+                        <span className={style.menu_font}>
+                            举报
+                        </span>
+                    </MenuItem>
+                </Menu>
             </header>
             <div
                 ref={renderContentRef}
@@ -297,19 +314,36 @@ export default function GossipContent(props) {
                                 </CSSTransition>
                             </SwitchTransition>
                         </>
-                        
                     }
-                    {/* {
+                    {
                         commentObject.pages === 0 || commentObject.pages === 1 ? '':
                         <Pagination 
-                            total={commentObject.total}
-                            current={commentObject.current}
+                            count={commentObject.pages}
+                            page={commentObject.current}
                             onPageChange={e => { setRequestInstance({...requestInstance, pageNum: e}) }}/>
-                    } */}
+                    }
                 </div>
             </Collapse>
             <PreviewImage 
                 current={renderContentRef}/>
+            <AsukaPoppor 
+                open={popperInstance.status} 
+                title='确定要删除碎语吗？ (/▽＼)' 
+                target={popperInstance.target} 
+                placement='bottom' 
+                onConfirm={() => { 
+                    let data = new FormData()
+                    data.append('gossipId', props.data.id)
+                    deleteGossip({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
+                        if(resq.code === 200) {
+                            popperChange(null)
+                            setGossipFunctionMenuStatus(false)
+                            props.reDataGet()
+                            
+                        }
+                    }).catch(err => {})
+                }} 
+                onCancel={() => { popperChange(null) }}/>
         </div>
     )
 }
