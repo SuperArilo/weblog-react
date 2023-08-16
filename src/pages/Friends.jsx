@@ -8,9 +8,8 @@ import { SwitchTransition, CSSTransition, TransitionGroup } from 'react-transiti
 import style from '../assets/scss/friends.module.scss'
 import '../assets/scss/currencyTransition.scss'
 import { friendGet } from '../util/friend'
-import toast from 'react-hot-toast'
 
-export default function Friends(props) {
+export default function Friends({ columns, defaultHeight }) {
 
     //hook
     const navigate = useNavigate()
@@ -47,8 +46,8 @@ export default function Friends(props) {
         friendsListGet(requestInstance)
     }, [requestInstance, friendsListGet])
     return (
-        <div className={style.friends_box}>
-            <div className={style.friends_list}>
+        <div className={style.friends_box} style={defaultHeight ? { minHeight: '83vh' }:{}}>
+            <div className={style.friends_list} style={{ gridTemplateColumns: columns }}>
                 <SwitchTransition mode='out-in'>
                     <CSSTransition key={dataInstance.list === null} classNames='change' timeout={300} nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
                         {
@@ -93,4 +92,7 @@ const FriendsSkeleton = () => {
             <Skeleton variant="text" width='6rem' height='1rem' />
         </div>
     )
+}
+Friends.defaultProps = {
+    defaultHeight: true
 }
