@@ -29,8 +29,6 @@ export const deleteGossip = ({ data, toast }) => {
 }
 //喜欢某条碎语
 export const likeGossip = ({ data, toast }) => {
-    console.log(data)
-    console.log(toast)
     return request({
         url: '/gossip/like',
         method: 'put',
