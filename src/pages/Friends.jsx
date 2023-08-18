@@ -26,7 +26,7 @@ export default function Friends({ columns, defaultHeight }) {
     })
 
     const friendsListGet = useCallback(instance => {
-        friendGet(instance).then(resq => {
+        friendGet({ data: instance, toast: null }).then(resq => {
             if(resq.code === 200) {
                 setDataInstance(target => {
                     return {
