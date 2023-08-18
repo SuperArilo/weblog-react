@@ -108,7 +108,7 @@ export default function GossipContent(props) {
                     autoFocus={false}
                     onClose={() => { setGossipFunctionMenuStatus(false) }}>
                         {
-                            props.userInfo?.uid === props.data.author &&
+                            props.userInfo?.uid === props.data.author ?
                             <MenuItem
                                 disableGutters={false}
                                 onClick={e => {
@@ -118,15 +118,15 @@ export default function GossipContent(props) {
                                     删除
                                 </span>
                             </MenuItem>
+                            :
+                            <MenuItem
+                                disableGutters={false}
+                                onClick={() => {  }}>
+                                <span className={style.menu_font}>
+                                    举报
+                                </span>
+                            </MenuItem>
                         }
-                    
-                    <MenuItem
-                        disableGutters={false}
-                        onClick={() => {  }}>
-                        <span className={style.menu_font}>
-                            举报
-                        </span>
-                    </MenuItem>
                 </Menu>
             </header>
             <div
