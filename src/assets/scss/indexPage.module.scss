@@ -249,7 +249,8 @@
                         .right_article_data div
                         {
                             margin: 0 0.2rem;
-                            padding: 0.2rem 0.5rem;
+                            padding: 0 0.5rem;
+                            height: 1.5rem;
                             border-radius: 0.3rem;
                             overflow: hidden;
                             cursor: pointer;
@@ -257,13 +258,11 @@
                             {
                                 color: red !important;
                             }
-                            i
+                            svg
                             {
-                                color: rgb(115, 115, 115);
                                 transition: transform 0.25s;
-                                font-size: 1rem;
                             }
-                            i:hover
+                            svg:hover
                             {
                                 transform: scale(1.1);
                             }
@@ -272,7 +271,14 @@
                                 color: rgb(115, 115, 115);
                                 font-size: 0.8rem;
                                 margin-left: 0.4rem;
+                                height: inherit;
+                                line-height: 1.5rem;
+                                user-select: none;
                             }
+                        }
+                        .right_article_data div:nth-child(2) svg
+                        {
+                            color: #737373;
                         }
                     }
                 }

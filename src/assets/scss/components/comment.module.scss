@@ -73,13 +73,13 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            i
+            svg
             {
                 color: darkgray;
                 cursor: pointer;
                 transition: transform 0.3s, color 0.3s;
             }
-            i:hover
+            svg:hover
             {
                 
                 transform: scale(1.2);

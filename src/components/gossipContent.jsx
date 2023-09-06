@@ -18,6 +18,7 @@ import Pagination from '../components/Pagination'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import AsukaPoppor from './popper'
+import Svg from 'react-inlinesvg'
 //方法
 
 import { useNavigate } from 'react-router-dom'
@@ -71,17 +72,15 @@ export default function GossipContent(props) {
     }, [commentData, requestInstance, props.foldStatus])
 
     const popperChange = (event) => {
-        setPopperInstance(
-            {
-                ...popperInstance,
-                status: !popperInstance.status,
-                target: event ? event.target:null
-            }
-        )
+        setPopperInstance({
+            ...popperInstance,
+            status: !popperInstance.status,
+            target: event ? event.target:null
+        })
     }
     return (
         <div className={style.gossip_box}>
-            <header className={style.gossip_box_title}>
+            <div className={style.gossip_box_title}>
                 <div className={style.left_info}>
                     <Avatar
                         width='2.8rem'
@@ -100,7 +99,11 @@ export default function GossipContent(props) {
                 </div>
                 <div ref={gossipFunctionMenuRef} className={style.right_function} onClick={() => { setGossipFunctionMenuStatus(true) }}>
                     <WaterWave color="rgba(0, 0, 0, 0.7)" duration={1} />
-                    <i className='fas fa-ellipsis-v' />
+                    <Svg
+                        cacheRequests={true}
+                        src='https://image.superarilo.icu/svg/option.svg'
+                        width='1.1rem'
+                        height='1.1rem'/>
                 </div>
                 <Menu
                     anchorEl={gossipFunctionMenuRef.current}
@@ -128,7 +131,7 @@ export default function GossipContent(props) {
                             </MenuItem>
                         }
                 </Menu>
-            </header>
+            </div>
             <div
                 ref={renderContentRef}
                 className={`${style.gossip_render_content} ${renderHtml.render_html}`}
@@ -141,22 +144,35 @@ export default function GossipContent(props) {
             <div className={style.gossip_button}>
                 <button 
                     type='button' 
-                    className={`${props.data.like ? style.gossip_liked:''}`} 
                     onClick={() => {
                         props.handleLike(props.data.id)
                     }}>
-                    <i className='fas fa-heart' />
+                    <Svg
+                        cacheRequests={true}
+                        src='https://image.superarilo.icu/svg/like.svg'
+                        preProcessor={code => code.replace(/fill=".*?"/g, 'fill="currentColor"')}
+                        className={props.data.like ? style.gossip_liked:''}
+                        width='1.1rem'
+                        height='1.1rem'/>
                     喜欢
                     <WaterWave color="rgba(0, 0, 0, 0.7)" duration={1} />
                 </button>
                 <button type='button' 
                     onClick={() => { props.handleFold(props.data.id) }}>
-                    <i className='fas fa-comment-dots' />
+                    <Svg
+                        cacheRequests={true}
+                        src='https://image.superarilo.icu/svg/comment.svg'
+                        width='1.1rem'
+                        height='1.1rem'/>
                     评论
                     <WaterWave color="rgba(0, 0, 0, 0.7)" duration={1} />
                 </button>
                 <button type='button'>
-                    <i className='fas fa-share-alt' />
+                    <Svg
+                        cacheRequests={true}
+                        src='https://image.superarilo.icu/svg/share.svg'
+                        width='1.1rem'
+                        height='1.1rem'/>
                     分享
                     <WaterWave
                         color="rgba(0, 0, 0, 0.7)"

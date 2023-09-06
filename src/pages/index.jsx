@@ -14,6 +14,7 @@ import Skeleton from '@mui/material/Skeleton'
 import { SwitchTransition, CSSTransition } from 'react-transition-group'
 import Pagination from '../components/Pagination'
 import Friends from './Friends'
+import Svg from 'react-inlinesvg'
 //hook
 import { articleListGet } from '../util/article'
 import { useNavigate } from "react-router-dom"
@@ -118,7 +119,16 @@ export default function IndexPage(props) {
                 <SwitchTransition mode="out-in">
                     <CSSTransition key={hotArticleList.length === 0} classNames='change' timeout={300} nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
                         {
-                            hotArticleList.length === 0 ? <div className={style.loading_sider}><i className={`${'asukamis loading'} ${'rotate'}`} /></div>:
+                            hotArticleList.length === 0 ?
+                            <div className={style.loading_sider}>
+                                <Svg
+                                    cacheRequests={true}
+                                    src='https://image.superarilo.icu/svg/loading.svg'
+                                    className='rotate'
+                                    width='1.5rem'
+                                    height='1.5rem'/>
+                            </div>
+                            :
                             <section className={style.sider_carousel}>
                                 <Slider ref={sliderRef} {...sliderSettings}>
                                     {
@@ -130,7 +140,11 @@ export default function IndexPage(props) {
                                         hotArticleList.map((item, index) => {
                                             return (
                                                 <li key={item.id} onClick={() => { sliderRef.current.slickGoTo(index, false) }}>
-                                                    <i className={`${sliderIndex === index ? 'fas':'far'} fa-circle`} />
+                                                    <Svg
+                                                        cacheRequests={true}
+                                                        src={sliderIndex === index ? 'https://image.superarilo.icu/svg/round_select.svg':'https://image.superarilo.icu/svg/round.svg'}
+                                                        width='1rem'
+                                                        height='1rem'/>
                                                 </li>
                                             )
                                         }) 
@@ -278,17 +292,31 @@ const Article = (props) => {
                      }}/>
                     <div className={style.right_article_data}>
                         <div>
-                            <i className="fas fa-eye"/>
+                            <Svg
+                                cacheRequests={true}
+                                src='https://image.superarilo.icu/svg/view.svg'
+                                width='1.1rem'
+                                height='1.1rem'/>
                             <span>{props.item.articleViews}</span>
                             <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
                         </div>
                         <div onClick={() => { props.handleLike(props.item.id) }}>
-                            <i className={`${'fas fa-heart'} ${props.item.like ? style.article_is_liked:''}`} />
+                            <Svg
+                                cacheRequests={true}
+                                src='https://image.superarilo.icu/svg/like.svg'
+                                preProcessor={code => code.replace(/fill=".*?"/g, 'fill="currentColor"')}
+                                className={props.item.like ? style.article_is_liked:''}
+                                width='1.1rem'
+                                height='1.1rem'/>
                             <span>{props.item.articleLikes}</span>
                             <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
                         </div>
                         <div>
-                            <i className="fas fa-comment-alt"/>
+                            <Svg
+                                src='https://image.superarilo.icu/svg/comment.svg'
+                                width='1.1rem'
+                                height='1.1rem'
+                                style={{ fontSize: '1.1rem' }}/>
                             <span>{props.item.comments}</span>
                             <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
                         </div>

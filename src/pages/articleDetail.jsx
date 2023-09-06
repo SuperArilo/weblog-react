@@ -17,6 +17,7 @@ import Avatar from '../components/Avatar'
 import CommentSkeleton from '../components/CommentSkeleton'
 import PreviewImage from '../components/PreviewImage'
 import Pagination from '../components/Pagination'
+import Svg from 'react-inlinesvg'
 //方法
 import { articleContentGet, articleCommentGet, replyComment, increaseArticleLike, likeComment, deleteComment } from '../util/article'
 
@@ -268,8 +269,25 @@ const ArticleContent = (props) => {
                         </div>
                     </div>
                     <div className={style.article_data_info}>
-                        <div><i className="fas fa-eye"/><span>{props.articleInstance.articleViews}</span></div>
-                        <div onClick={() => { props.handleLike(props.articleInstance.id) }}><i className={`${'fas fa-heart'} ${props.articleInstance.hasLike ? style.article_liked:''}`} /><span>{props.articleInstance.articleLikes}</span><WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } /></div>
+                        <div>
+                            <Svg
+                                cacheRequests={true}
+                                src='https://image.superarilo.icu/svg/view.svg'
+                                width='1.1rem'
+                                height='1.1rem'/>
+                            <span>{props.articleInstance.articleViews}</span>
+                        </div>
+                        <div onClick={() => { props.handleLike(props.articleInstance.id) }}>
+                            <Svg
+                                cacheRequests={true}
+                                src='https://image.superarilo.icu/svg/like.svg'
+                                preProcessor={code => code.replace(/fill=".*?"/g, 'fill="currentColor"')}
+                                className={props.articleInstance.hasLike ? style.article_liked:''}
+                                width='1.1rem'
+                                height='1.1rem'/>
+                            <span>{props.articleInstance.articleLikes}</span>
+                            <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
+                        </div>
                     </div>
                 </div>
             </div>

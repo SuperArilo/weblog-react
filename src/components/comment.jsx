@@ -8,6 +8,7 @@ import AsukaPoppor from './popper'
 import Collapse from '@mui/material/Collapse'
 import Tinymce from './editor'
 import PreviewImage from './PreviewImage'
+import Svg from 'react-inlinesvg'
 //方法
 import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
@@ -67,7 +68,14 @@ const Comment = forwardRef((props, ref) => {
                     </div>
                 </div>
                 <div className={style.comment_top_right}>
-                    <i className={'fas fa-heart ' + (props.data.like ? style.had_liked:'')} onClick={() => { props.handleLike() }} />
+                    <Svg
+                        cacheRequests={true}
+                        src='https://image.superarilo.icu/svg/like.svg'
+                        preProcessor={code => code.replace(/fill=".*?"/g, 'fill="currentColor"')}
+                        className={props.data.like ? style.had_liked:''}
+                        width='1.1rem'
+                        height='1.1rem'
+                        onClick={() => { props.handleLike() }}/>
                     <span>{props.data.likes}</span>
                 </div>
             </div>

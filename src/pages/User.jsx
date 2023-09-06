@@ -22,6 +22,7 @@ import Icon from '../components/Icon'
 import InstantInput from '../components/InstantInput'
 import AvatarCut from '../components/AvatarCut'
 import Skeleton from '@mui/material/Skeleton'
+import Svg from 'react-inlinesvg'
 
 export default function User(props) {
 
@@ -49,22 +50,22 @@ export default function User(props) {
         {
             id: 0,
             title: '资料',
-            icon: 'info'
+            svgSrc: 'https://image.superarilo.icu/svg/info.svg'
         },
         {
             id: 1,
             title: '碎语',
-            icon: 'gossip'
+            svgSrc: 'https://image.superarilo.icu/svg/gossip.svg'
         },
         {
             id: 2,
             title: '点赞',
-            icon: 'ulike'
+            svgSrc: 'https://image.superarilo.icu/svg/ulike.svg'
         },
         {
             id: 3,
             title: '留言',
-            icon: 'contact'
+            svgSrc: 'https://image.superarilo.icu/svg/contact.svg'
         }
     ])
     //editor
@@ -253,8 +254,9 @@ export default function User(props) {
                                             <p className={style.nick_name}>{userProfiles.nickName}</p>
                                             {
                                                 modeInstance.status && <Icon 
-                                                                            iconClass='editor'
-                                                                            fontSize='1.2rem'
+                                                                            src='https://image.superarilo.icu/svg/editor.svg'
+                                                                            width='1.2rem'
+                                                                            height='1.2rem'
                                                                             onClick={e => {
                                                                                 setModeInstance({...modeInstance, editorIndex: $(e.currentTarget).parent().attr('eidtorindex')})
                                                                             }}/>
@@ -291,8 +293,9 @@ export default function User(props) {
                                             <span className={style.autograph}>{userProfiles.autograph}</span>
                                             {
                                                 modeInstance?.status && <Icon 
-                                                                            iconClass='editor'
-                                                                            fontSize='1.2rem'
+                                                                            src='https://image.superarilo.icu/svg/editor.svg'
+                                                                            width='1.2rem'
+                                                                            height='1.2rem'
                                                                             onClick={e => {
                                                                                 setModeInstance({...modeInstance, editorIndex: $(e.currentTarget).parent().attr('eidtorindex')})
                                                                             }}/>
@@ -327,10 +330,13 @@ export default function User(props) {
                                                 }))
                                             }).catch(() => {})
                                         }}>
-                                        <i
-                                            className={`asukamis ${userProfiles.viewerLike ? 'user_like_on':'user_like_off'}`}
-                                            style={{ fontSize: '1.3em' }}
-                                            />
+                                        <Svg
+                                            src='https://image.superarilo.icu/svg/user_like.svg'
+                                            cacheRequests={true}
+                                            preProcessor={code => code.replace(/fill=".*?"/g, 'fill="currentColor"')}
+                                            className={userProfiles.viewerLike ? style.user_like_on:''}
+                                            width='1.2rem'
+                                            height='1.2rem'/>
                                         <span>{userProfiles.likeNum}</span>
                                         <WaterWave position='absolute' />
                                     </div>
@@ -368,7 +374,11 @@ export default function User(props) {
                                                         setModeInstance({...modeInstance, menuIndex: item.id})
                                                         $(menuLineRef.current).css({ left: $($('div[index]')[item.id]).width() * item.id })
                                                     }}>
-                                                    <i className={`${'asukamis'} ${item.icon}`} />
+                                                    <Svg
+                                                        src={item.svgSrc}
+                                                        cacheRequests={true}
+                                                        width='1.2rem'
+                                                        height='1.2rem'/>
                                                     <span>{item.title}</span>
                                                     <WaterWave color="rgb(155, 195, 219)" duration={ 1 } />
                                                 </div>
@@ -407,7 +417,12 @@ const UserInfoView = (props) => {
         <ul className={style.user_info_view}>
             <li>
                 <div className={style.info_title}>
-                    <i className='asukamis ucontact' />
+                    <Svg
+                        src='https://image.superarilo.icu/svg/ucontact.svg'
+                        cacheRequests={true}
+                        width='1.2rem'
+                        height='1.2rem'
+                        />
                     <span>联系方式</span>
                 </div>
                 <div className={style.info_content} editorindex='3'>
@@ -438,12 +453,13 @@ const UserInfoView = (props) => {
                                 props.modeInstance?.status ?
                                 <>
                                     <span>{props.userProfiles.contact}</span>
-                                    <Icon 
-                                        iconClass='editor'
-                                        fontSize='1.2rem'
+                                    <Icon
+                                        src='https://image.superarilo.icu/svg/editor.svg'
+                                        width='1.2rem'
+                                        height='1.2rem'
                                         onClick={e => {
                                             props.setModeInstance({...props.modeInstance, editorIndex: $(e.currentTarget).parent().attr('editorindex')})
-                                        }}/>
+                                        }} />
                                     </>
                                 :
                                 <span>{props.userProfiles.contact}</span>
@@ -454,7 +470,12 @@ const UserInfoView = (props) => {
             </li>
             <li>
                 <div className={style.info_title}>
-                    <i className='asukamis calendar' />
+                    <Svg
+                        src='https://image.superarilo.icu/svg/calendar.svg'
+                        cacheRequests={true}
+                        width='1.2rem'
+                        height='1.2rem'
+                        />
                     <span>注册时间</span>
                 </div>
                 <div className={style.info_content}>
@@ -463,7 +484,12 @@ const UserInfoView = (props) => {
             </li>
             <li>
                 <div className={style.info_title}>
-                    <i className='asukamis identity' />
+                    <Svg
+                        src='https://image.superarilo.icu/svg/identity.svg'
+                        cacheRequests={true}
+                        width='1.2rem'
+                        height='1.2rem'
+                        />
                     <span>身份标签</span>
                 </div>
                 <div className={style.info_content}>
@@ -472,7 +498,11 @@ const UserInfoView = (props) => {
             </li>
             <li>
                 <div className={style.info_title}>
-                    <i className='asukamis age' />
+                    <Svg
+                        src='https://image.superarilo.icu/svg/age.svg'
+                        cacheRequests={true}
+                        width='1.2rem'
+                        height='1.2rem' />
                     <span>年龄</span>
                 </div>
                 <div className={style.info_content} editorindex='4'>
@@ -503,12 +533,13 @@ const UserInfoView = (props) => {
                                 props.modeInstance?.status ?
                                 <>
                                     <span>{props.userProfiles.age}</span>
-                                    <Icon 
-                                            iconClass='editor'
-                                            fontSize='1.2rem'
-                                            onClick={e => {
-                                                props.setModeInstance({...props.modeInstance, editorIndex: $(e.currentTarget).parent().attr('editorindex')})
-                                            }}/>
+                                    <Icon
+                                        src='https://image.superarilo.icu/svg/editor.svg'
+                                        width='1.2rem'
+                                        height='1.2rem'
+                                        onClick={e => {
+                                            props.setModeInstance({...props.modeInstance, editorIndex: $(e.currentTarget).parent().attr('editorindex')})
+                                        }}/>
                                 </>
                                 :
                                 <span>{props.userProfiles.age}</span>
@@ -519,7 +550,11 @@ const UserInfoView = (props) => {
             </li>
             <li>
                 <div className={style.info_title}>
-                    <i className='asukamis sex' />
+                    <Svg
+                        src='https://image.superarilo.icu/svg/sex.svg'
+                        cacheRequests={true}
+                        width='1.2rem'
+                        height='1.2rem' />
                     <span>性别</span>
                 </div>
                 <div className={style.info_content} editorindex='5'>
@@ -552,11 +587,12 @@ const UserInfoView = (props) => {
                                 <>
                                     <span>{props.userProfiles.sex === 0 ? '女':props.userProfiles.sex === 1 ? '男':'未设置'}</span>
                                     <Icon 
-                                            iconClass='editor'
-                                            fontSize='1.2rem'
-                                            onClick={e => {
-                                                props.setModeInstance({...props.modeInstance, editorIndex: $(e.currentTarget).parent().attr('editorindex')})
-                                            }}/>
+                                        src='https://image.superarilo.icu/svg/editor.svg'
+                                        width='1.2rem'
+                                        height='1.2rem'
+                                        onClick={e => {
+                                            props.setModeInstance({...props.modeInstance, editorIndex: $(e.currentTarget).parent().attr('editorindex')})
+                                        }}/>
                                 </>
                                 :
                                 <span>{props.userProfiles.sex === 0 ? '女':props.userProfiles.sex === 1 ? '男':'未设置'}</span>
@@ -568,7 +604,11 @@ const UserInfoView = (props) => {
             </li>
             <li>
                 <div className={style.info_title}>
-                    <i className='asukamis location' />
+                    <Svg
+                        src='https://image.superarilo.icu/svg/location.svg'
+                        cacheRequests={true}
+                        width='1.2rem'
+                        height='1.2rem' />
                     <span>位置</span>
                 </div>
                 <div className={style.info_content}>

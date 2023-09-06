@@ -110,19 +110,21 @@
             color: #777777;
             overflow: hidden;
             transform: rotate(0);
-            i
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            svg
             {
-                font-size: 1rem;
                 margin-right: 0.4rem;
+            }
+            .gossip_liked
+            {
+                color: red !important;
             }
         }
         button:nth-child(2)
         {
             margin: 0 0.4rem;
-        }
-        .gossip_liked i
-        {
-            color: red !important;
         }
     }
     .gossip_comment_list

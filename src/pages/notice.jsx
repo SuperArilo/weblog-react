@@ -11,6 +11,7 @@ import { useNavigate  } from 'react-router-dom'
 import { SwitchTransition, CSSTransition } from 'react-transition-group'
 //组件
 import Icon from '../components/Icon'
+import toast from 'react-hot-toast'
 import WaterWave from '../components/WaterWave'
 import AsukaButton from '../components/asukaButton'
 import { Collapse } from '@mui/material'
@@ -100,16 +101,6 @@ export default function Notice(props) {
         $(lineRef.current).css({ 'left': navMenuInstance.selectIndex * $(lineRef.current).width() })
     }, [navMenuInstance.selectIndex])
 
-    const userReadNotice = () => {
-        let data = new FormData()
-        data.append('noticeIds', selectNoticeList)
-        readNotice({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
-            if(resq.code === 200)  {
-                noticeListGet(requestInstance)
-                setSelectNoticeList([])
-            }
-        }).catch(err => { })
-    }
     return (
         <div className={style.notice_box}>
             <main className={style.notice_container}>
@@ -175,10 +166,11 @@ export default function Notice(props) {
                                                         return (
                                                             <div className={style.notice_data_list_item} key={item.noticeId}>
                                                                 <div className={style.notice_title}>
+
                                                                     <Icon
-                                                                        width='1.7rem'
-                                                                        height='1.7rem'
-                                                                        iconClass={selectNoticeList.indexOf(item.noticeId) === -1 ? 'un_select':'selected'}
+                                                                        width='1rem'
+                                                                        height='1rem'
+                                                                        src={`https://image.superarilo.icu/svg/${selectNoticeList.indexOf(item.noticeId) === -1 ? 'un_select':'selected'}.svg`}
                                                                         onClick={() => {
                                                                             let copy = [...selectNoticeList]
                                                                             let index = copy.indexOf(item.noticeId)
@@ -212,7 +204,10 @@ export default function Notice(props) {
                                             </div>
                                             <div className={style.bottom_function}>
                                                 <div className={style.select_all}>
-                                                    <Icon iconClass={`${selectNoticeList.length === 0 ? 'un_select':''} ${selectNoticeList.length >= 1 && selectNoticeList.length < noticeInstance.list.length ? 'selected_other':''} ${selectNoticeList.length === noticeInstance.list.length ? 'selected':''}`}
+                                                    <Icon
+                                                        src={`https://image.superarilo.icu/svg/${selectNoticeList.length === 0 ? 'un_select':''}${selectNoticeList.length >= 1 && selectNoticeList.length < noticeInstance.list.length ? 'selected_other':''}${selectNoticeList.length === noticeInstance.list.length ? 'selected':''}.svg`}
+                                                        width='1rem'
+                                                        height='1rem'
                                                         onClick={() => {
                                                             if(selectNoticeList.length === noticeInstance.list.length) {
                                                                 setSelectNoticeList([])
@@ -242,7 +237,18 @@ export default function Notice(props) {
                                                         class='read'
                                                         size='small'
                                                         onClick={() => {
-                                                            userReadNotice()
+                                                            if(selectNoticeList === null || selectNoticeList.length === 0) {
+                                                                toast('你还没选择公告哦')
+                                                                return
+                                                            }
+                                                            let data = new FormData()
+                                                            data.append('noticeIds', selectNoticeList)
+                                                            readNotice({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
+                                                                if(resq.code === 200){
+                                                                    noticeListGet(requestInstance)
+                                                                    setSelectNoticeList([])
+                                                                }
+                                                            }).catch(err => {})
                                                         }}/>
                                                 </div>
                                             </div>
