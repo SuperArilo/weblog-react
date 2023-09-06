@@ -8,7 +8,10 @@ import { useSelector, useDispatch } from 'react-redux'
 //axios
 import { blogLoginUser, blogRegisterUser, blogUserLoginOut } from './util/user'
 import { regiserMail, findPassword } from './util/mail/mail'
+import { userCreateGossip } from './util/gossip'
+
 //组件
+import Svg from 'react-inlinesvg'
 import toast from 'react-hot-toast'
 import WaterWave from './components/WaterWave'
 import Slide from '@mui/material/Slide'
@@ -27,12 +30,12 @@ import NotFound from './pages/NotFound'
 import User from './pages/User'
 import VerifyEmailPage from './pages/VerifyEmailPage'
 import FindPassword from './pages/FindPassword'
-import CreateGossipWindow from './components/CreateGossipWindow'
+import CreateWindow from './components/CreateWindow'
 import Notice from './pages/notice'
 import Icon from './components/Icon'
+import Tinymce from './components/editor'
 //样式
 import './assets/scss/currencyTransition.scss'
-import './assets/css/iconfont.css'
 
 export default function App () {
 	//hook
@@ -43,7 +46,11 @@ export default function App () {
 	//param
 	const [loginBoxStatus, setLoginBoxStatus] = useState(false)
 	const [registerBoxStatus, setRegisterBoxStatus] = useState(false)
-	const [createGossipWindowStatus, setCreateGossipWindowStatus] = useState(false)
+	const [createGossip, setCreateGossip] = useState(false)
+	//创建碎语请求状态
+	const [gossipInstance, setGossipInstance] = useState({
+        status: false,
+    })
 	//function
 	const checkIsMobile = useCallback((value) => {
 		dispatch({ type: 'isMobile/setStatus', payload: value < 1080 })
@@ -84,14 +91,14 @@ export default function App () {
 				isMobileStatus ? 
 				<MobileHeaderNav
 					userInfo={userInfo}
-					setCreateGossipWindowStatus={setCreateGossipWindowStatus}
+					setCreateGossip={setCreateGossip}
 					openLoginBox={(status) => {
 						setLoginBoxStatus(status)
 					}} />
 				:
 				<PCheaderNav
 					userInfo={userInfo}
-					setCreateGossipWindowStatus={setCreateGossipWindowStatus}
+					setCreateGossip={setCreateGossip}
 					openLoginBox={e => {
 						setLoginBoxStatus(e)
 					}}/>
@@ -118,31 +125,45 @@ export default function App () {
 				</SwitchTransition>
 			</div>
 			<About />
-			<CSSTransition in={loginBoxStatus} timeout={300} classNames="mask-fade" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
-				<div className={signStyle.funtion_mask}>
-					<LoginBox
-						status={loginBoxStatus}
-						openRegisterBox={(e) => {setRegisterBoxStatus(e)}}
-						closeBox={(e) => {setLoginBoxStatus(e)}} />
-				</div>
-			</CSSTransition>
-			<CSSTransition in={registerBoxStatus} timeout={300} classNames="mask-fade" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
-				<div className={signStyle.funtion_mask}>
-					<RegisterBox
-						status={registerBoxStatus}
-						isMobile={isMobileStatus}
-						openLoginBox={(e) => { setLoginBoxStatus(e) }}
-						closeBox={(e) => {setRegisterBoxStatus(e)}} />
-				</div>
-			</CSSTransition>
-			<CSSTransition in={createGossipWindowStatus} timeout={300} classNames="mask-fade" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
-				<div className={signStyle.funtion_mask}>
-					<CreateGossipWindow
-						status={createGossipWindowStatus}
-						userInfo={userInfo}
-						setCreateGossipWindowStatus={setCreateGossipWindowStatus}/>
-				</div>
-			</CSSTransition>
+			<CreateWindow width='24rem' status={loginBoxStatus} onClose={status => { setTimeout(() => { setLoginBoxStatus(status) }, 500) }}>
+				<LoginBox
+					status={loginBoxStatus}
+					openRegisterBox={(e) => {setRegisterBoxStatus(e)}}
+					closeBox={(e) => {setLoginBoxStatus(e)}} />
+			</CreateWindow>
+			<CreateWindow width='24rem' status={registerBoxStatus} onClose={status => { setTimeout(() => { setRegisterBoxStatus(status) }, 500) }}>
+				<RegisterBox
+					status={registerBoxStatus}
+					isMobile={isMobileStatus}
+					openLoginBox={(e) => { setLoginBoxStatus(e) }}
+					closeBox={(e) => {setRegisterBoxStatus(e)}} />
+			</CreateWindow>
+			<CreateWindow status={createGossip} onClose={status => { setTimeout(() => { setCreateGossip(status) }, 500) }}>
+				<p className={signStyle.window_header_p}>发表碎语</p>
+				<Tinymce
+					userInfo={userInfo}
+					placeholder='在这里输入内容哦'
+					getContent={content => {
+						if(!gossipInstance.status) {
+							if(content === '<p></p>' || content === null || content === '') {
+								toast('内容不能为空哦！')
+								return
+							}
+							setGossipInstance({...gossipInstance, status: true})
+							let data = new FormData()
+							data.append('content', content)
+							userCreateGossip({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
+								if(resq.code === 200) {
+									setCreateGossip(false)
+								}
+								setGossipInstance({...gossipInstance, status: false})
+							}).catch(err => {
+								setGossipInstance({...gossipInstance, status: false})
+								props.setCreateWindowStatus(false)
+							})
+						}
+					}}/>
+			</CreateWindow>
 		</div>
 	)
 }
@@ -272,10 +293,9 @@ const PCheaderNav = (props) => {
 					:
 					<div className='logged-box'>
 						<Icon
-							iconClass='notice'
-							width='2rem'
-							height='2rem'
-							fontSize='1.5rem'
+							src='https://image.superarilo.icu/svg/notice.svg'
+							width='1.5rem'
+							height='1.5rem'
 							onClick={() => { navigate('/notice') }}/>
 						<Avatar
 							src={props.userInfo.avatar}
@@ -295,7 +315,11 @@ const PCheaderNav = (props) => {
 									navigate(`/user/${props.userInfo.uid}`)
 									setUserNavInstance({...userNavInstance, popperStatus: false, popperTarget: null})
 								}}>
-								<Icon iconClass='avatar' />
+								<Svg
+									cacheRequests={true}
+									src='https://image.superarilo.icu/svg/avatar.svg'
+									width='1.3rem'
+									height='1.2rem'/>
 								<span className='menu_font'>
 									我的账号
 								</span>
@@ -303,10 +327,14 @@ const PCheaderNav = (props) => {
 							<MenuItem
 								disableGutters={false}
 								onClick={() => {
-									props.setCreateGossipWindowStatus(true)
+									props.setCreateGossip(true)
 									setUserNavInstance({...userNavInstance, popperStatus: false, popperTarget: null})
 								}}>
-								<Icon iconClass='gossip' />
+								<Svg
+									cacheRequests={true}
+									src='https://image.superarilo.icu/svg/gossip.svg'
+									width='1.3rem'
+									height='1.3rem'/>
 								<span className='menu_font'>
 									发表碎语
 								</span>
@@ -317,7 +345,11 @@ const PCheaderNav = (props) => {
 									navigate(`/user/${props.userInfo.uid}`)
 									setUserNavInstance({...userNavInstance, popperStatus: false, popperTarget: null})
 								}}>
-								<Icon iconClass='setting' />
+								<Svg
+									cacheRequests={true}
+									src='https://image.superarilo.icu/svg/setting.svg'
+									width='1.3rem'
+									height='1rem'/>
 								<span className='menu_font'>
 									设置
 								</span>
@@ -333,7 +365,11 @@ const PCheaderNav = (props) => {
 										}
 									}).catch(() => {})
 								}}>
-								<Icon iconClass='signout' />
+								<Svg
+									cacheRequests={true}
+									src='https://image.superarilo.icu/svg/signout.svg'
+									width='1.3rem'
+									height='1rem'/>
 								<span className='menu_font'>
 									退出
 								</span>
@@ -356,31 +392,31 @@ const MobileHeaderNav = (props) => {
 			id: 0,
 			title: '首页',
 			path: '/',
-			iconClass: 'fa-home'
+			svgSrc: 'https://image.superarilo.icu/svg/home.svg'
 		},
 		{
 			id: 1,
 			title: '碎语',
 			path: '/gossip',
-			iconClass: 'fa-feather-alt'
+			svgSrc: 'https://image.superarilo.icu/svg/gossip.svg'
 		},
 		{
 			id: 2,
 			title: '留言',
 			path: '/guestbook',
-			iconClass: 'fa-comment-alt'
+			svgSrc: 'https://image.superarilo.icu/svg/guestbook.svg'
 		},
 		{
 			id: 3,
 			title: '友邻',
 			path: '/links',
-			iconClass: 'fa-user-friends'
+			svgSrc: 'https://image.superarilo.icu/svg/link.svg'
 		},
 		{
 			id: 4,
 			title: '圈子',
 			path: '/friends',
-			iconClass: 'fa-paw'
+			svgSrc: 'https://image.superarilo.icu/svg/friend.svg'
 		}
 	])
 	return (
@@ -391,40 +427,51 @@ const MobileHeaderNav = (props) => {
 						props.userInfo !== null &&
 						<>
 							<Icon
-								width='2.5rem'
-								height='2.5rem'
-								fontSize='1.3rem'
-								iconClass='gossip'
-								onClick={() => { props.setCreateGossipWindowStatus(true) }}/>
+								width='2rem'
+								height='2rem'
+								src='https://image.superarilo.icu/svg/gossip.svg'
+								onClick={() => { props.setCreateGossip(true) }}/>
 							<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
 						</>
 					}
 				</div>
 				<span className='left-webside-icon'>Arilo</span>
 				<div className='right-mobile-bar' onClick={() => { setDrawerStatus(true) }}>
-					<i className="fas fa-bars"/>
+					<Svg
+						cacheRequests={true}
+						src='https://image.superarilo.icu/svg/menu.svg'
+						width='1.5rem'
+						height='1.5rem'/>
 					<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
 				</div>
 			</nav>
 			<CSSTransition in={drawerStatus} timeout={300} classNames="mask-fade" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
-				<div className={signStyle.funtion_mask} functionkey='mask' onClick={(e) => { 
-					if(e.target.attributes.functionkey) {
-						setDrawerStatus(false)
-					} else {
-						e.stopPropagation()
-					}
-				 }}>
+				<div
+					className={signStyle.function_mask}
+					functionkey='mask'
+					onClick={(e) => { 
+						if(e.target.attributes.functionkey) {
+							setDrawerStatus(false)
+						} else {
+							e.stopPropagation()
+						}
+					}}>
 					<Slide direction="right" in={drawerStatus} mountOnEnter unmountOnExit>
 						<div className={signStyle.slide_box}>
 							<header className={signStyle.header_function}>
-								<i className='fas fa-bell' onClick={() => {
-										navigate('/notice')
-										setTimeout(() => {
-											setDrawerStatus(false)
-										}, 500)
-									}}>
-									<WaterWave color="rgba(255, 255, 255, 0.7)" duration={ 1 } />
-								</i>
+								{
+									props.userInfo != null &&
+									<Icon
+										width='2rem'
+										height='2rem'
+										src='https://image.superarilo.icu/svg/notice.svg'
+										onClick={() => {
+											navigate('/notice')
+											setTimeout(() => {
+												setDrawerStatus(false)
+											}, 500)
+										}}/>
+								}
 							</header>
 							<div className={signStyle.user_info_box}>
 								<img src={props.userInfo ? props.userInfo.avatar:''} alt={props.userInfo ? props.userInfo.nickName:''} title={props.userInfo ? props.userInfo.nickName:''} />
@@ -440,7 +487,11 @@ const MobileHeaderNav = (props) => {
 													setDrawerStatus(false)
 												}, 500)
 											 }}>
-												<i className={`${'fas'} ${item.iconClass}`} />
+												<Svg
+													cacheRequests={true}
+													src={item.svgSrc}
+													width='1.5rem'
+													height='1.5rem'/>
 												<span>{item.title}</span>
 												<WaterWave color='rgba(255, 255, 255, 0.7)' duration={ 1 } />
 											</li>
@@ -460,7 +511,11 @@ const MobileHeaderNav = (props) => {
 													setDrawerStatus(false)
 												}, 500)
 											}}>
-											<i className='asukamis setting' />
+											<Svg
+												cacheRequests={true}
+												src='https://image.superarilo.icu/svg/setting.svg'
+												width='1.1rem'
+												height='1.1rem'/>
 											<span>设置</span>
 											<WaterWave color="rgba(255, 255, 255, 0.7)" duration={ 1 } />
 										</div>
@@ -478,7 +533,11 @@ const MobileHeaderNav = (props) => {
 													error: err => err.message
 												})
 											}}>
-											<i className='asukamis signout' />
+											<Svg
+												cacheRequests={true}
+												src='https://image.superarilo.icu/svg/signout.svg'
+												width='1.1rem'
+												height='1.1rem'/>
 											<span>注销</span>
 											<WaterWave color="rgba(255, 255, 255, 0.7)" duration={ 1 } />
 										</div>
@@ -537,84 +596,79 @@ const LoginBox = (props) => {
 			})
 		}
 	}
+
 	return (
-		<Slide direction="up" in={props.status} mountOnEnter unmountOnExit>
-			<div className={`${signStyle.login_box} ${isMobileStatus? signStyle.box_mobile:signStyle.box_pc}`}>
-				<header className={signStyle.public_title}>
-					<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
-					<i className="far fa-arrow-alt-circle-left" onClick={() => { setTimeout(() => {props.closeBox(false)}, 300) }}/>
-				</header>
-				<div className={signStyle.top_tips}>
-					<span className={signStyle.left_span}>欢迎回来,</span>
-					<button type="button" className={signStyle.right_register} onClick={() => {
-						props.openRegisterBox(true)
-						props.closeBox(false)
-					}}>
-						注册
-					</button>
-				</div>
-				<p className={signStyle.top_tips_line}>请填写以下信息进行登录</p>
-				<div className={signStyle.input_list}>
-					<label className={signStyle.input_item}>
-						<div className={signStyle.input_top_div}>
-							<span>邮箱</span>
-							<span>*</span>
-						</div>
-						<input
-							type="text"
-							placeholder="请输入邮箱"
-							onChange={(e) => {
-								setRequestInstance({
-									...requestInstance,
-									email: e.target.value
-								})
-							}} />
-						<div className={signStyle.input_tips_div}>
-							<span></span>
-						</div>
-					</label>
-					<label className={signStyle.input_password}>
-						<div className={signStyle.input_top_div}>
-							<span>密码</span>
-							<span>*</span>
-						</div>
-						<div className={signStyle.input_password_label}>
-							<input type={isShowPassword ? 'text':'password'} maxLength="16" placeholder="请输入密码" autoComplete="off" onChange={(e) => { setRequestInstance({ ...requestInstance, password: e.target.value }) }} />
-							<i className={'far ' + signStyle.input_show_password + ' ' + (isShowPassword ? 'fa-eye-slash':'fa-eye')} onClick={() => { setIsShowPassword(!isShowPassword) }} />
-						</div>
-						<div className={signStyle.input_tips_div}>
-							<span></span>
-						</div>
-					</label>
-				</div>
-				<div className={signStyle.find_password_box}>
-					<span onClick={() => {
-						if(requestInstance.email === '' || requestInstance.email === null) {
-							toast('输入邮箱后再点击此处哦')
-							return
-						}
-						if(!emailMatchRule.test(requestInstance.email)) {
-							toast('输入的邮箱格式不正确')
-							return
-						}
-						findPassword({ data: { email: requestInstance.email }, toast: { isShow: true, loadingMessage: '操作中...' } }).then(resq => {}).catch(err => {})
-					}}>忘记密码...</span>
-				</div>
-				<button type="button" title="登录" className={signStyle.confirm_button + ' ' + (isMobileStatus ? signStyle.confirm_button_mobile:signStyle.confirm_button_pc)} onClick={() => { loginFunction() }}>
-					{ !loginStatus && userInfo === null ? '登录':'' }
-					{ loginStatus ? <i className='fas fa-circle-notch fa-spin' />:'' }
-					{ userInfo !== null && !loginStatus ? <i className='fas fa-check' style={{ 'color': '#80e298' }} />:''}
-					<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
+		<div className={`${signStyle.login_box} ${isMobileStatus? signStyle.box_mobile:signStyle.box_pc}`}>
+			<div className={signStyle.top_tips}>
+				<span className={signStyle.left_span}>欢迎回来,</span>
+				<button type="button" className={signStyle.right_register} onClick={() => {
+					props.openRegisterBox(true)
+					props.closeBox(false)
+				}}>
+					注册
 				</button>
-				{/* <span className={signStyle.other_login_tips}>其他登录方式</span>
-				<div className={signStyle.other_login_list}>
-					<i className="fab fa-qq"/>
-					<i className="fab fa-github"/>
-					<i className="fab fa-google"/>
-					<i className="fab fa-xbox"/>
-				</div> */}
 			</div>
-		</Slide>
+			<p className={signStyle.top_tips_line}>请填写以下信息进行登录</p>
+			<div className={signStyle.input_list}>
+				<label className={signStyle.input_item}>
+					<div className={signStyle.input_top_div}>
+						<span>邮箱</span>
+						<span>*</span>
+					</div>
+					<input
+						type="text"
+						placeholder="请输入邮箱"
+						onChange={(e) => {
+							setRequestInstance({
+								...requestInstance,
+								email: e.target.value
+							})
+						}} />
+					<div className={signStyle.input_tips_div}>
+						<span></span>
+					</div>
+				</label>
+				<label className={signStyle.input_password}>
+					<div className={signStyle.input_top_div}>
+						<span>密码</span>
+						<span>*</span>
+					</div>
+					<div className={signStyle.input_password_label}>
+						<input type={isShowPassword ? 'text':'password'} maxLength="16" placeholder="请输入密码" autoComplete="off" onChange={(e) => { setRequestInstance({ ...requestInstance, password: e.target.value }) }} />
+						<i className={'far ' + signStyle.input_show_password + ' ' + (isShowPassword ? 'fa-eye-slash':'fa-eye')} onClick={() => { setIsShowPassword(!isShowPassword) }} />
+					</div>
+					<div className={signStyle.input_tips_div}>
+						<span></span>
+					</div>
+				</label>
+			</div>
+			<div className={signStyle.find_password_box}>
+				<span onClick={() => {
+					if(requestInstance.email === '' || requestInstance.email === null) {
+						toast('输入邮箱后再点击此处哦')
+						return
+					}
+					if(!emailMatchRule.test(requestInstance.email)) {
+						toast('输入的邮箱格式不正确')
+						return
+					}
+					findPassword({ data: { email: requestInstance.email }, toast: { isShow: true, loadingMessage: '操作中...' } }).then(resq => {}).catch(err => {})
+				}}>忘记密码...</span>
+			</div>
+			<button type="button" title="登录" className={signStyle.confirm_button + ' ' + (isMobileStatus ? signStyle.confirm_button_mobile:signStyle.confirm_button_pc)} onClick={() => { loginFunction() }}>
+				{ !loginStatus && userInfo === null ? '登录':'' }
+				{ loginStatus ? <i className='fas fa-circle-notch fa-spin' />:'' }
+				{ userInfo !== null && !loginStatus ? <i className='fas fa-check' style={{ 'color': '#80e298' }} />:''}
+				<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
+			</button>
+			{/* <span className={signStyle.other_login_tips}>其他登录方式</span>
+			<div className={signStyle.other_login_list}>
+				<i className="fab fa-qq"/>
+				<i className="fab fa-github"/>
+				<i className="fab fa-google"/>
+				<i className="fab fa-xbox"/>
+			</div> */}
+		</div>
 	)
 }
 const RegisterBox = (props) => {
@@ -641,10 +695,6 @@ const RegisterBox = (props) => {
 	return(
 		<Slide direction="up" in={props.status} mountOnEnter unmountOnExit>
 			<div className={`${signStyle.register_box} ${props.isMobile ? signStyle.box_mobile:signStyle.box_pc}`}>
-				<header className={signStyle.public_title}>
-					<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
-					<i className="far fa-arrow-alt-circle-left" onClick={() => { setTimeout(() => {props.closeBox(false)}, 300) }}/>
-				</header>
 				<div className={signStyle.top_tips}>
 					<span className={signStyle.left_span}>欢迎您,</span>
 					<button type="button" className={signStyle.right_register} onClick={() => { 
