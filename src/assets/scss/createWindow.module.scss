@@ -1,0 +1,61 @@
+.function_mask
+{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .create_window
+    {
+        background-color: #ffffff;
+        border-radius: 0.3rem;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        .window_header
+        {
+            width: 3.3rem;
+            height: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.4rem;
+            cursor: pointer;
+            border-radius: 0.3rem;
+            overflow: hidden;
+        }
+    }
+}
+.rotate
+{
+    animation: rotate 3s linear infinite;
+    display: block;
+}
+@keyframes rotate {
+    from
+    {
+        transform: rotate(0deg);
+    }
+    to
+    {
+        transform: rotate(360deg);
+    }
+}
+@media screen and (max-width: 1080px)
+{
+    .function_mask .create_window
+    {
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+        > div
+        {
+            width: 100% !important;
+        }
+    }
+}
