@@ -47,11 +47,6 @@ const Tinymce = forwardRef((props, ref) => {
         toolbar_mode: 'sliding',
         content_style: 'body { font-size: 10.5pt }',
         font_size_formats: '8pt 8.5pt 9pt 9.5pt 10pt 10.5pt 11pt 11.5pt 12pt 13pt 15pt 18pt 24pt',
-        setup: editor => {
-            setTimeout(() => {
-                setInstance(editor)
-            }, 500)
-        },
         images_upload_handler: (blobInfo, success) => new Promise((resolve, reject) => {
             let data = new FormData()
             data.append('file', blobInfo.blob())
@@ -84,7 +79,11 @@ const Tinymce = forwardRef((props, ref) => {
                     <div className={style.editor_tinymce} style={{ display: instance ? 'flex':'none' }}>
                         <Editor
                             tinymceScriptSrc={ process.env.PUBLIC_URL + '/tinymce/tinymce.min.js' }
-                            initialValue={initialValue} init={config}
+                            initialValue={initialValue}
+                            onInit={(event, instance) => {
+                                setInstance(instance)
+                            }}
+                            init={config}
                             onChange={(event, editor) => {
                                 setModelValue(editor.getContent())
                             }} />
