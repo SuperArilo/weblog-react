@@ -25,7 +25,10 @@ export default function WaterWave(props) {
         const instance = instanceRef.current
         instance.parentElement.style.position = props.position
         instance.parentElement.addEventListener('click',  clickFunc)
-        return () => instance.parentElement.removeEventListener('click', clickFunc)
+        return () => {
+            if(instance.parentElement == null) return
+            instance.parentElement.removeEventListener('click', clickFunc)
+        }
     }, [clickFunc, props.position])
 
     return <aside className={style.wave_aside} ref={instanceRef}/>
