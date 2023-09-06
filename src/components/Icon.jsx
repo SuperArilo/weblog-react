@@ -2,20 +2,24 @@
 import WaterWave from './WaterWave'
 //样式
 import style from '../assets/scss/components/Icon.module.scss'
+import Svg from 'react-inlinesvg'
 export default function Icon(props) {
     return (
-        <i 
-            style={{ width: props.width, height: props.height, fontSize: props.fontSize }}
-            className={`${style.asukamis_icon} ${'asukamis'} ${props.iconClass}`}
-            onClick={props.onClick}>
-                <WaterWave color="rgb(155, 195, 219)" duration={ 1 } />
-            </i>
+        <div className={style.icon_box} onClick={e => { props.onClick(e) }}>
+            <WaterWave color="rgb(155, 195, 219)" duration={ 1 } />
+            <Svg
+                cacheRequests={true}
+                src={props.src}
+                width={props.width}
+                height={props.height}
+                fontSize={props.fontSize}/>
+        </div>
     )
 }
 Icon.defaultProps = {
-    width: '1.6rem',
-    height: '1.6rem',
+    width: '1.5rem',
+    height: '1.5rem',
     fontSize: '1rem',
-    iconClass: '',
+    src: 'https://cdn.svgporn.com/logos/firefox.svg',
     onClick: () => { return null }
 }
