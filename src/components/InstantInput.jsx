@@ -77,11 +77,15 @@ const InstantInput = forwardRef((props, ref) => {
                         </FormControl>
                 }
                 <div ref={iconDivRef} className={style.function_handle}>
-                    <Icon iconClass='close' onClick={() => { props.handleClose() }}>
-                        <WaterWave color="rgb(155, 195, 219)" duration={ 1 } />
-                    </Icon>
                     <Icon
-                        iconClass='save'
+                        width='1rem'
+                        height='1rem'
+                        src='https://image.superarilo.icu/svg/close.svg'
+                        onClick={() => { props.handleClose() }} />
+                    <Icon
+                        width='1rem'
+                        height='1rem'
+                        src='https://image.superarilo.icu/svg/save.svg'
                         onClick={() => {
                             if(inputConetnt === '' || inputConetnt === null) {
                                 toast('必须要填写内容哦')
@@ -89,7 +93,6 @@ const InstantInput = forwardRef((props, ref) => {
                             }
                             props.handleSave(inputConetnt)
                         }}>
-                        <WaterWave color="rgb(155, 195, 219)" duration={ 1 } />
                     </Icon>
                 </div>
             </div>
