@@ -183,16 +183,13 @@
             display: flex;
             .input_show_password
             {
-                min-width: 2.5rem;
-                flex: 1;
-                margin-left: 0.5rem;
+                width: 3rem;
+                height: 2.4rem;
                 margin-top: 0.5rem;
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 cursor: pointer;
-                border-radius: 0.6rem;
-                transition: color 0.3s;
             }
             input[type="password"]::-ms-reveal
             {

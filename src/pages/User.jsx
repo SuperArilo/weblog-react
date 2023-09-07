@@ -627,7 +627,11 @@ const AccountInfoView = (props) => {
         <ul className={style.user_info_view}>
             <li>
                 <div className={style.info_title}>
-                    <i className='asukamis uid' />
+                    <Svg
+                        src='https://image.superarilo.icu/svg/uid.svg'
+                        cacheRequests={true}
+                        width='1.2rem'
+                        height='1.2rem' />
                     <span>UID</span>
                 </div>
                 <div className={style.info_content}>
@@ -636,6 +640,11 @@ const AccountInfoView = (props) => {
             </li>
             <li>
                 <div className={style.info_title}>
+                    <Svg
+                        src='https://image.superarilo.icu/svg/account.svg'
+                        cacheRequests={true}
+                        width='1.2rem'
+                        height='1.2rem' />
                     <i className='asukamis account'/>
                     <span>用户名</span>
                 </div>
@@ -680,12 +689,13 @@ const AccountInfoView = (props) => {
                                 props.modeInstance?.status ?
                                 <>
                                     <span>{props.userProfiles.email}</span>
-                                    <Icon 
-                                        iconClass='editor'
-                                        fontSize='1.2rem'
+                                    <Icon
+                                        src='https://image.superarilo.icu/svg/editor.svg'
+                                        width='1.2rem'
+                                        height='1.2rem'
                                         onClick={e => {
                                             props.setModeInstance({...props.modeInstance, editorIndex: $(e.currentTarget).parent().attr('editorindex')})
-                                        }}/>
+                                        }} />
                                     </>
                                 :
                                 <span>{props.userProfiles.email}</span>
@@ -697,7 +707,11 @@ const AccountInfoView = (props) => {
             </li>
             <li>
                 <div className={style.info_title}>
-                    <i className='asukamis password' />
+                    <Svg
+                        src='https://image.superarilo.icu/svg/password.svg'
+                        cacheRequests={true}
+                        width='1.2rem'
+                        height='1.2rem' />
                     <span>密码</span>
                 </div>
                 <div className={style.info_content} editorindex='9'>
@@ -729,12 +743,13 @@ const AccountInfoView = (props) => {
                                 props.modeInstance?.status ?
                                     <>
                                         <span>点击修改</span>
-                                        <Icon 
-                                            iconClass='editor'
-                                            fontSize='1.2rem'
+                                        <Icon
+                                            src='https://image.superarilo.icu/svg/editor.svg'
+                                            width='1.2rem'
+                                            height='1.2rem'
                                             onClick={e => {
                                                 props.setModeInstance({...props.modeInstance, editorIndex: $(e.currentTarget).parent().attr('editorindex')})
-                                            }}/>
+                                            }} />
                                     </>
                                     :
                                     <span>点击修改</span>
