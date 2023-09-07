@@ -138,7 +138,7 @@ export default function App () {
 					openLoginBox={(e) => { setLoginBoxStatus(e) }}
 					closeBox={(e) => {setRegisterBoxStatus(e)}} />
 			</CreateWindow>
-			<CreateWindow status={createGossip} onClose={status => { setTimeout(() => { setCreateGossip(status) }, 500) }}>
+			<CreateWindow width='24rem' status={createGossip} onClose={status => { setTimeout(() => { setCreateGossip(status) }, 500) }}>
 				<p className={signStyle.window_header_p}>发表碎语</p>
 				<Tinymce
 					userInfo={userInfo}
@@ -635,7 +635,12 @@ const LoginBox = (props) => {
 					</div>
 					<div className={signStyle.input_password_label}>
 						<input type={isShowPassword ? 'text':'password'} maxLength="16" placeholder="请输入密码" autoComplete="off" onChange={(e) => { setRequestInstance({ ...requestInstance, password: e.target.value }) }} />
-						<i className={'far ' + signStyle.input_show_password + ' ' + (isShowPassword ? 'fa-eye-slash':'fa-eye')} onClick={() => { setIsShowPassword(!isShowPassword) }} />
+						<div className={signStyle.input_show_password} onClick={() => { setIsShowPassword(!isShowPassword) }}>
+							<Svg
+								width='1.5rem'
+								height='1.5rem'
+								src={`https://image.superarilo.icu/svg/${isShowPassword ? 'password_hide':'password_show'}.svg`} />
+						</div>
 					</div>
 					<div className={signStyle.input_tips_div}>
 						<span></span>
@@ -657,17 +662,10 @@ const LoginBox = (props) => {
 			</div>
 			<button type="button" title="登录" className={signStyle.confirm_button + ' ' + (isMobileStatus ? signStyle.confirm_button_mobile:signStyle.confirm_button_pc)} onClick={() => { loginFunction() }}>
 				{ !loginStatus && userInfo === null ? '登录':'' }
-				{ loginStatus ? <i className='fas fa-circle-notch fa-spin' />:'' }
-				{ userInfo !== null && !loginStatus ? <i className='fas fa-check' style={{ 'color': '#80e298' }} />:''}
+				{ loginStatus ? <Svg width='1.5rem' height='1.5rem' className='rotate' src='https://image.superarilo.icu/svg/loading.svg' /> : '' }
+				{ userInfo !== null && !loginStatus ? <Svg width='1.5rem' height='1.5rem' src='https://image.superarilo.icu/svg/success.svg' /> : '' }
 				<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
 			</button>
-			{/* <span className={signStyle.other_login_tips}>其他登录方式</span>
-			<div className={signStyle.other_login_list}>
-				<i className="fab fa-qq"/>
-				<i className="fab fa-github"/>
-				<i className="fab fa-google"/>
-				<i className="fab fa-xbox"/>
-			</div> */}
 		</div>
 	)
 }
@@ -791,7 +789,13 @@ const RegisterBox = (props) => {
 								onChange={e => {
 									setInputInstance({...inputInstance, password: e.target.value})
 								}} />
-							<i className={`${'far'} ${signStyle.input_show_password} ${isShowPassword ? 'fa-eye-slash':'fa-eye'}`} onClick={() => { setIsShowPassword(!isShowPassword) }} />
+							<div className={signStyle.input_show_password} onClick={() => { setIsShowPassword(!isShowPassword) }}>
+								<Svg
+									width='1.5rem'
+									height='1.5rem'
+									src={`https://image.superarilo.icu/svg/${isShowPassword ? 'password_hide':'password_show'}.svg`} />
+							</div>
+							
 						</div>
 						<div className={signStyle.input_tips_div}>
 							<span></span>
@@ -811,7 +815,12 @@ const RegisterBox = (props) => {
 								onChange={e => {
 									setAgainPassword({...againPassword, content: e.target.value})
 								}} />
-							<i className={`${'far'} ${signStyle.input_show_password} ${againPassword.show ? 'fa-eye-slash':'fa-eye'}`} onClick={() => { setAgainPassword({...againPassword, show: !againPassword.show}) }} />
+							<div className={signStyle.input_show_password} onClick={() => { setAgainPassword({...againPassword, show: !againPassword.show}) }}>
+								<Svg
+									width='1.5rem'
+									height='1.5rem'
+									src={`https://image.superarilo.icu/svg/${againPassword.show ? 'password_hide':'password_show'}.svg`} />
+							</div>
 						</div>
 						<div className={signStyle.input_tips_div}>
 							<span></span>
