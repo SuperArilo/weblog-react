@@ -1,4 +1,4 @@
-import React, { useState, useRef, useImperativeHandle, forwardRef } from 'react'
+import React, { useState, useRef } from 'react'
 //样式
 import style from '../assets/scss/components/comment.module.scss'
 import renderHtml from '../assets/scss/renderHtml.module.scss'
@@ -13,7 +13,7 @@ import Svg from 'react-inlinesvg'
 import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 
-const Comment = forwardRef((props, ref) => {
+const Comment = (props) => {
     //hook
     const navigate = useNavigate()
     //params
@@ -21,7 +21,6 @@ const Comment = forwardRef((props, ref) => {
         status: false,
         target: null
     })
-    const [editorLoadingStatus, setEditorLoadingStatus] = useState(false)
     const renderContentRef = useRef(null)
     //function
 
@@ -34,12 +33,6 @@ const Comment = forwardRef((props, ref) => {
             }
         )
     }
-
-    useImperativeHandle(ref, () => ({
-        changeEditorLoadingStatus: (status) => {
-            setEditorLoadingStatus(status)
-        }
-    }))
     return (
         <div className={style.comment_box} id={`${props.data?.replyUser?.replyUserId.toString() + props.data.commentId.toString()}`}>
             <div className={style.comment_top}>
@@ -103,20 +96,18 @@ const Comment = forwardRef((props, ref) => {
                 <Tinymce
                     userInfo={props.userInfo}
                     placeholder={`${'回复'}${' @' + props.data?.replyUser?.replyNickName}`} 
-                    status={editorLoadingStatus} 
                     getContent={(content) => { 
                         if(content === null || content === undefined || content === '' || content === '<p></p>') {
                             toast('回复的内容不能为空白哦 (ง •_•)ง')
                             return
                         }
                         props.handleReply(content)
-                        setEditorLoadingStatus(true)
                     }}/>
             </Collapse>
             <PreviewImage current={renderContentRef} />
         </div>
     )
-})
+}
 Comment.defaultProps = {
     foldStatus: false,
     commentId: null

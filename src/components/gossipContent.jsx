@@ -48,7 +48,6 @@ export default function GossipContent(props) {
 
     //编辑器ref
     const tinymce = useRef(null)
-    const commentRef = useRef(null)
     const gossipFunctionMenuRef = useRef(null)
 
     const [gossipFunctionMenuStatus, setGossipFunctionMenuStatus] = useState(false)
@@ -212,7 +211,6 @@ export default function GossipContent(props) {
                                 props.targetComment !== null
                                 &&
                                 <Comment
-                                    ref={commentRef}
                                     targetId={props.targetComment.commentId}
                                     userInfo={props.userInfo}
                                     foldStatus={selectCommentItem === props.targetComment.commentId}
@@ -245,10 +243,7 @@ export default function GossipContent(props) {
                                                 commentData(requestInstance)
                                                 setSelectCommentItem(null)
                                             }
-                                            commentRef.current.changeEditorLoadingStatus(false)
-                                        }).catch(err => {
-                                            commentRef.current.changeEditorLoadingStatus(false)
-                                        })
+                                        }).catch(err => {})
                                     }}
                                     handleDelete={() => {
                                         let data = new FormData()
@@ -271,7 +266,6 @@ export default function GossipContent(props) {
                                                     return (
                                                         <Collapse key={item.commentId}>
                                                             <Comment
-                                                                ref={commentRef}
                                                                 userInfo={props.userInfo} 
                                                                 key={item.commentId} 
                                                                 data={item}
@@ -306,10 +300,7 @@ export default function GossipContent(props) {
                                                                             commentData(requestInstance)
                                                                             setSelectCommentItem(null)
                                                                         }
-                                                                        commentRef.current.changeEditorLoadingStatus(false)
-                                                                    }).catch(err => {
-                                                                        commentRef.current.changeEditorLoadingStatus(false)
-                                                                    })
+                                                                    }).catch(err => {})
                                                                 }}
                                                                 handleDelete={() => {
                                                                     let data = new FormData()

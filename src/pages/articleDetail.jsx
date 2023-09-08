@@ -132,7 +132,6 @@ const ArticleVistorList = forwardRef((props, ref) => {
     })
     const [selectCommentItem, setSelectCommentItem] = useState(null)
 
-    const commentRef = useRef(null)
 
     //function
     const commentData = useCallback(instance => {
@@ -170,7 +169,6 @@ const ArticleVistorList = forwardRef((props, ref) => {
                                             return (
                                                 <Collapse key={item.commentId}>
                                                     <Comment
-                                                        ref={commentRef}
                                                         userInfo={props.userInfo}
                                                         key={item.commentId}
                                                         foldStatus={selectCommentItem === item.commentId}
@@ -205,10 +203,7 @@ const ArticleVistorList = forwardRef((props, ref) => {
                                                                     commentData(requestInstance)
                                                                     setSelectCommentItem(null)
                                                                 }
-                                                                commentRef.current.changeEditorLoadingStatus(false)
-                                                            }).catch(err => {
-                                                                commentRef.current.changeEditorLoadingStatus(false)
-                                                            })
+                                                            }).catch(err => {})
                                                         }}
                                                         handleDelete={() => {
                                                             let data = new FormData()
