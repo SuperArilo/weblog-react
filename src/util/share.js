@@ -8,6 +8,5 @@ const share = ({ title, prefx, text }, callBack) => {
         url: `http://192.168.1.2/${prefx}`,
         text: text
     })
-    callBack('成功')
 }
 export default share

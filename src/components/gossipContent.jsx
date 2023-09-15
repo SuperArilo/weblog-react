@@ -20,7 +20,7 @@ import MenuItem from '@mui/material/MenuItem'
 import AsukaPoppor from './popper'
 import Svg from 'react-inlinesvg'
 //方法
-
+import share from '../util/share'
 import { useNavigate } from 'react-router-dom'
 import { gossipCommentList, replyGossipComment, likeGossipComment, deleteGossipComment, deleteGossip } from '../util/gossip.js'
 export default function GossipContent(props) {
@@ -166,7 +166,15 @@ export default function GossipContent(props) {
                     评论
                     <WaterWave color="rgba(0, 0, 0, 0.7)" duration={1} />
                 </button>
-                <button type='button'>
+                <button
+                    type='button'
+                    onClick={() => {
+                        share({
+                            title: `${props.data.nickName}的碎语`,
+                            prefx: `gossip?targetId=${props.data.id}`,
+                            text: props.data.content
+                        })
+                    }}>
                     <Svg
                         cacheRequests={true}
                         src='https://image.superarilo.icu/svg/share.svg'
@@ -178,7 +186,7 @@ export default function GossipContent(props) {
                         duration={1}/>
                 </button>
             </div>
-            <Collapse in={props.foldStatus} mountOnEnter unmountOnExit>
+            <Collapse in={props.foldStatus} mountOnEnter unmountOnExit timeout={500}>
                 <Tinymce
                     userInfo={props.userInfo} 
                     ref={tinymce}
