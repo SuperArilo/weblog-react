@@ -86,7 +86,7 @@ export default function Gossip(props) {
                                                 gossipDataGet()
                                             }}
                                             requestInstance={requestInstance}
-                                            foldStatus={selectGossipItem === gossipObject.targetGossip.id}
+                                            foldStatus={(selectGossipItem === gossipObject.targetGossip.id) && gossipObject.targetComment !== null}
                                             targetComment={gossipObject.targetComment}
                                             handleFold={id => {
                                                 console.log(id)
