@@ -186,7 +186,7 @@ export default function GossipContent(props) {
                         duration={1}/>
                 </button>
             </div>
-            <Collapse in={props.foldStatus} mountOnEnter unmountOnExit timeout={500}>
+            <Collapse in={props.foldStatus} mountOnEnter unmountOnExit timeout={300}>
                 <Tinymce
                     userInfo={props.userInfo} 
                     ref={tinymce}
