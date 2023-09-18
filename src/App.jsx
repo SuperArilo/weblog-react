@@ -762,13 +762,13 @@ const RegisterBox = (props) => {
 										(requestStatus.countDown === 60 && !requestStatus.sendMailStatus) && '获取验证码'
 									}
 									{
-										requestStatus.sendMailStatus && <i className={`${'asukamis loading'} ${signStyle.rotate}`} />
+										requestStatus.sendMailStatus && <Svg width='1.5rem' height='1.5rem' className='rotate' src='https://image.superarilo.icu/svg/loading.svg' />
 									}
 									{
 										requestStatus.countDown < 60 && requestStatus.countDown
 									}
 									<WaterWave color='rgb(228, 177, 177)' duration={ 1 } />
-									</button>
+								</button>
 						</div>
 					</label>
 					<form className={signStyle.input_password}>
@@ -871,7 +871,7 @@ const RegisterBox = (props) => {
 						}
 					}}>
 					{
-						requestStatus.registerStatus ? <i className='fas fa-circle-notch fa-spin' />:'注册'
+						requestStatus.registerStatus ? <Svg width='1.5rem' height='1.5rem' className='rotate' src='https://image.superarilo.icu/svg/loading.svg' />:'注册'
 					}
 					<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
 				</button>
