@@ -125,20 +125,20 @@ export default function App () {
 				</SwitchTransition>
 			</div>
 			<About />
-			<CreateWindow width='24rem' status={loginBoxStatus} onClose={status => { setTimeout(() => { setLoginBoxStatus(status) }, 500) }}>
+			<CreateWindow width={isMobileStatus ? '100%':'24rem'} status={loginBoxStatus} onClose={status => { setTimeout(() => { setLoginBoxStatus(status) }, 500) }}>
 				<LoginBox
 					status={loginBoxStatus}
 					openRegisterBox={(e) => {setRegisterBoxStatus(e)}}
 					closeBox={(e) => {setLoginBoxStatus(e)}} />
 			</CreateWindow>
-			<CreateWindow width='24rem' status={registerBoxStatus} onClose={status => { setTimeout(() => { setRegisterBoxStatus(status) }, 500) }}>
+			<CreateWindow width={isMobileStatus ? '100%':'24rem'} status={registerBoxStatus} onClose={status => { setTimeout(() => { setRegisterBoxStatus(status) }, 500) }}>
 				<RegisterBox
 					status={registerBoxStatus}
 					isMobile={isMobileStatus}
 					openLoginBox={(e) => { setLoginBoxStatus(e) }}
 					closeBox={(e) => {setRegisterBoxStatus(e)}} />
 			</CreateWindow>
-			<CreateWindow width='24rem' status={createGossip} onClose={status => { setTimeout(() => { setCreateGossip(status) }, 500) }}>
+			<CreateWindow width={isMobileStatus ? '100%':'24rem'} status={createGossip} onClose={status => { setTimeout(() => { setCreateGossip(status) }, 500) }}>
 				<p className={signStyle.window_header_p}>发表碎语</p>
 				<Tinymce
 					userInfo={userInfo}
@@ -522,16 +522,12 @@ const MobileHeaderNav = (props) => {
 										<div 
 											className={signStyle.function_box}
 											onClick={() => {
-												toast.promise(blogUserLoginOut(), {
-													loading: '提交中...',
-													success: resq => {
+												blogUserLoginOut({ data: null, toast: { isShow: true, loadingMessage: '退出中...' } }).then(resq => {
+													if(resq.code === 200) {
 														dispatch({ type: 'userInfo/setInfo', payload: null })
 														localStorage.removeItem('token')
-														setDrawerStatus(false)
-														return resq.message
-													},
-													error: err => err.message
-												})
+													}
+												}).catch(() => {})
 											}}>
 											<Svg
 												cacheRequests={true}
