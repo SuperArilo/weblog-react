@@ -9,12 +9,11 @@ export default function CreateWindow(props) {
             <div className={style.function_mask}>
                 <Slide direction="up" in={props.status} mountOnEnter unmountOnExit>
                     <div className={style.create_window}>
-                        <div className={style.window_header}>
+                        <div className={style.window_header} onClick={() => { props.onClose(false) }}>
                             <Svg
                                 width='1.5rem'
                                 height='1.5rem'
-                                src='https://image.superarilo.icu/svg/back.svg'
-                                onClick={() => { props.onClose(false) }}/>
+                                src='https://image.superarilo.icu/svg/back.svg'/>
                                 <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
                         </div>
                         
