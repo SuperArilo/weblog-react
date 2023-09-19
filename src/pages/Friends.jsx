@@ -66,6 +66,8 @@ export default function Friends({ columns, defaultHeight }) {
                                                     src={item.avatar}
                                                     width='3rem'
                                                     height='3rem'
+                                                    title={item.nickName}
+                                                    alt='用户头像'
                                                     onClick={() => {
                                                         navigate('/user/' + item.uid)
                                                     }}
