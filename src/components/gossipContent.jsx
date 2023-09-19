@@ -150,7 +150,7 @@ export default function GossipContent(props) {
                         cacheRequests={true}
                         src='https://image.superarilo.icu/svg/like.svg'
                         preProcessor={code => code.replace(/fill=".*?"/g, 'fill="currentColor"')}
-                        className={props.data.like ? style.gossip_liked:''}
+                        className={props.data.like === true && props.userInfo !== null ? style.gossip_liked:''}
                         width='1.1rem'
                         height='1.1rem'/>
                     喜欢
