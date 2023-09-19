@@ -36,6 +36,8 @@ export default function Gossip(props) {
         targetComment: null
     })
 
+    const [targetGossipFoldStatus, setTargetGossipFoldStatus] = useState(false)
+
     const [selectGossipItem, setSelectGossipItem] = useState(null)
 
     const gossipDataGet = useCallback(instance => {
@@ -64,6 +66,10 @@ export default function Gossip(props) {
         gossipDataGet(requestInstance)        
     }, [requestInstance, gossipDataGet])
 
+    useEffect(() => {
+        console.log(gossipObject.instance)
+    }, [gossipObject.instance])
+
     return (
         <div className={style.gossip_page} style={{ paddingTop: requestInstance.viewUid ? null:'1rem', minHeight: requestInstance.viewUid ? null:'83vh' }}>
             <SwitchTransition mode='out-in'>
@@ -86,10 +92,14 @@ export default function Gossip(props) {
                                                 gossipDataGet()
                                             }}
                                             requestInstance={requestInstance}
-                                            foldStatus={(selectGossipItem === gossipObject.targetGossip.id) && gossipObject.targetComment !== null}
+                                            foldStatus={targetGossipFoldStatus}
                                             targetComment={gossipObject.targetComment}
                                             handleFold={id => {
-                                                console.log(id)
+                                                if(gossipObject.targetGossip.id === id && targetGossipFoldStatus) {
+                                                    setTargetGossipFoldStatus(false)
+                                                } else {
+                                                    setTargetGossipFoldStatus(true)
+                                                }
                                                 setSelectGossipItem(selectGossipItem === id ? null:id)
                                             }}
                                             handleLike={gossipId => {
@@ -101,13 +111,16 @@ export default function Gossip(props) {
                                                 data.append('gossipId', gossipId)
                                                 likeGossip({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
                                                     if(resq.code === 200) {
-                                                        let [...temp] = gossipObject.instance.list
-                                                        let index = temp.findIndex(item => item.id === gossipId)
-                                                        temp[index].like = resq.data.status
-                                                        temp[index].likes = resq.data.likes
-                                                        setGossipObject({...gossipObject, list: temp})
+                                                        setGossipObject(target => ({
+                                                            ...target,
+                                                            targetGossip: {
+                                                                ...target.targetGossip,
+                                                                likes: resq.data.likes,
+                                                                like: resq.data.status
+                                                            }
+                                                        }))
                                                     }
-                                                }).catch(err => { })
+                                                }).catch(err => { console.log(err) })
                                             }}
                                             handleGossipList={() => {
                                                 gossipData(gossipRequestInstance)
