@@ -73,17 +73,17 @@ export default function User(props) {
         {
             id: 0,
             title: '资料',
-            icon: 'info'
+            icon: 'https://image.superarilo.icu/svg/info.svg'
         },
         {
             id: 1,
             title: '账号',
-            icon: 'avatar'
+            icon: 'https://image.superarilo.icu/svg/avatar.svg'
         },
         {
             id: 2,
             title: '设置',
-            icon: 'setting'
+            icon: 'https://image.superarilo.icu/svg/setting.svg'
         }
     ])
 
@@ -357,7 +357,11 @@ export default function User(props) {
                                                         setModeInstance({...modeInstance, menuIndex: item.id})
                                                         $(menuLineRef.current).css({ left: $($('div[index]')[item.id]).width() * item.id })
                                                     }}>
-                                                    <i className={`${'asukamis'} ${item.icon}`} />
+                                                    <Svg
+                                                        src={item.icon}
+                                                        cacheRequests={true}
+                                                        width='1.2rem'
+                                                        height='1.2rem' />
                                                     <span>{item.title}</span>
                                                     <WaterWave color="rgb(155, 195, 219)" duration={ 1 } />
                                                 </div>
@@ -645,7 +649,6 @@ const AccountInfoView = (props) => {
                         cacheRequests={true}
                         width='1.2rem'
                         height='1.2rem' />
-                    <i className='asukamis account'/>
                     <span>用户名</span>
                 </div>
                 <div className={style.info_content} editorindex='8'>
