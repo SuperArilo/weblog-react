@@ -146,11 +146,11 @@
             .select_function_box
             {
                 margin-top: 1rem;
-                background-color: #ffffff;
                 border-radius: 0.3rem;
                 overflow: hidden;
                 .user_like_view , .user_info_view
                 {
+                    background-color: #ffffff;
                     display: flex;
                     flex-direction: column;
                 }
