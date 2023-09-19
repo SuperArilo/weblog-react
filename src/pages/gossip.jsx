@@ -66,10 +66,6 @@ export default function Gossip(props) {
         gossipDataGet(requestInstance)        
     }, [requestInstance, gossipDataGet])
 
-    useEffect(() => {
-        console.log(gossipObject.instance)
-    }, [gossipObject.instance])
-
     return (
         <div className={style.gossip_page} style={{ paddingTop: requestInstance.viewUid ? null:'1rem', minHeight: requestInstance.viewUid ? null:'83vh' }}>
             <SwitchTransition mode='out-in'>
@@ -120,7 +116,7 @@ export default function Gossip(props) {
                                                             }
                                                         }))
                                                     }
-                                                }).catch(err => { console.log(err) })
+                                                }).catch(err => {  })
                                             }}
                                             handleGossipList={() => {
                                                 gossipData(gossipRequestInstance)
