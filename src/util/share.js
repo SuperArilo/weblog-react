@@ -1,9 +1,11 @@
-const share = ({ title, prefx, text }, callBack) => {
-    if(navigator.share === undefined) {
-        callBack('浏览器不支持此组件API')
+import toast from 'react-hot-toast'
+
+const share = ({ title, prefx, text }) => {
+    if(window.navigator.share === undefined) {
+        toast('当前浏览器不支持此API')
         return
     }
-    navigator.share({
+    window.navigator.share({
         title: title,
         url: `http://192.168.1.2/${prefx}`,
         text: text
