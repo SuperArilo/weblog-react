@@ -254,6 +254,7 @@ const ArticleContent = (props) => {
                         <Avatar
                             width='3.4rem'
                             height='3.4rem'
+                            shadow={true}
                             src={props.articleInstance.avatar}
                             title={props.articleInstance.nickName}
                             alt={props.articleInstance.nickName}
