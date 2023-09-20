@@ -20,7 +20,7 @@ import MenuItem from '@mui/material/MenuItem'
 import AsukaPoppor from './popper'
 import Svg from 'react-inlinesvg'
 //方法
-import share from '../util/share'
+import share from '../util/share/share'
 import { useNavigate } from 'react-router-dom'
 import { gossipCommentList, replyGossipComment, likeGossipComment, deleteGossipComment, deleteGossip } from '../util/gossip.js'
 export default function GossipContent(props) {
@@ -171,8 +171,9 @@ export default function GossipContent(props) {
                     onClick={() => {
                         share({
                             title: `${props.data.nickName}的碎语`,
-                            prefx: `gossip?targetId=${props.data.id}`,
-                            text: props.data.content
+                            desc: '来自Arilo博客的碎语',
+                            link: `http://139.155.94.20:19198/gossip?targetId=${props.data.id}`,
+                            icon: props.data.avatar
                         })
                     }}>
                     <Svg
