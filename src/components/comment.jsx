@@ -34,7 +34,7 @@ const Comment = (props) => {
         )
     }
     return (
-        <div className={style.comment_box} id={`${props.data?.replyUser?.replyUserId.toString() + props.data.commentId.toString()}`}>
+        <div className={style.comment_box}>
             <div className={style.comment_top}>
                 <div className={style.comment_top_left}>
                     <Avatar
