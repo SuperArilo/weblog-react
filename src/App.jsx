@@ -267,12 +267,6 @@ const PCheaderNav = (props) => {
 			}
 		})
 	}, [])
-
-	const menuNavFunction = (object) => {
-		if(menuInstance.index === object.id) return
-		navigate(object.path)
-		$('#react-by-asukamis').children().stop().animate({'scrollTop': 0})
-	}
 	return (
 		<nav className='header-nav header-nav-default' ref={navInstance}>
 			<span className='left-webside-icon' onClick={() => { navigate('/') }}>
@@ -282,7 +276,16 @@ const PCheaderNav = (props) => {
 			<ul className='nav-menu-list'>
 				{
 					menuInstance.list.map(item => {
-						return <li className={menuInstance.index === item.id ? 'active':''} onClick={() => { menuNavFunction(item) }} key={item.id}>{item.title}</li>
+						return <li
+								className={menuInstance.index === item.id ? 'active':''}
+								onClick={() => {
+									if(menuInstance.index === item.id) return
+									navigate(item.path)
+									$('#react-by-asukamis').stop().animate({'scrollTop': 0})
+								}}
+								key={item.id}>
+									{item.title}
+								</li>
 					})
 				}
 			</ul>
