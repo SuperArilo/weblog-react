@@ -102,7 +102,7 @@
         }
         .article_skeleton
         {
-            display: block;
+            padding-bottom: 1rem;
             .article_skeleton_top
             {
                 border-radius: 10px 10px 0 0;
@@ -135,7 +135,6 @@
         }
         .article_vistor_title
         {
-            display: block;
             height: 4rem;
             margin-top: 1rem;
             font-size: 1.1rem;
@@ -147,12 +146,10 @@
         }
         .article_vistor_list
         {
-            display: block;
             padding: 1rem;
             border-top: solid 1px #eee;
             .empty_skeleton
             {
-                display: block;
                 .skeleton_top
                 {
                     height: 3.2rem;
