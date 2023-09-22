@@ -25,11 +25,11 @@ export default function ArticleDetail(props) {
     //hook
     const [searchParams, setSearchParams] = useSearchParams()
     const articleId = searchParams.get('threadId')
+    const targetCommentId = searchParams.get('commentId')
     //Params
     const [addCommentStatus, setAddCommentStatus] = useState(false)
     const articleListRef = useRef(null)
     const tinymce = useRef(null)
-    //function
     return (
         <div className={style.article_detail}>
             <div className={style.article_detail_content}>
@@ -66,6 +66,7 @@ export default function ArticleDetail(props) {
                 <ArticleVistorList
                     ref={articleListRef}
                     articleId={articleId}
+                    targetCommentId={targetCommentId}
                     userInfo={props.userInfo}/>
             </div>
         </div>
@@ -131,7 +132,6 @@ const ArticleVistorList = forwardRef((props, ref) => {
         list: null
     })
     const [selectCommentItem, setSelectCommentItem] = useState(null)
-
 
     //function
     const commentData = useCallback(instance => {
