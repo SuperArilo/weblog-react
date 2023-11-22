@@ -200,17 +200,19 @@ export default function User(props) {
                                                         status={modeInstance.loadingStatus}
                                                         text='提交'
                                                         onClick={() => {
-                                                            avatarCutRef.current.getImage().current.getImageScaledToCanvas().toBlob((blob) => {
-                                                                setModeInstance(current => ({
-                                                                    ...current,
-                                                                    loadingStatus: true,
-                                                                    instance: {
-                                                                        ...current.instance,
-                                                                        avatar: new File([blob], 'transform.png')
-                                                                    }
-                                                                }))
-                                                                return
-                                                            })
+                                                            if(!modeInstance.loadingStatus) {
+                                                                avatarCutRef.current.getImage().current.getImageScaledToCanvas().toBlob((blob) => {
+                                                                    setModeInstance(current => ({
+                                                                        ...current,
+                                                                        loadingStatus: true,
+                                                                        instance: {
+                                                                            ...current.instance,
+                                                                            avatar: new File([blob], 'transform.png')
+                                                                        }
+                                                                    }))
+                                                                    return
+                                                                })
+                                                            }
                                                         }}/>
                                                     <AsukaButton
                                                         text='退出'

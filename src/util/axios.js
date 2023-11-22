@@ -3,7 +3,6 @@ import toast from 'react-hot-toast'
 axios.defaults.withCredentials = true
 const service = axios.create({
     baseURL: 'http://115.159.224.22:19198/api',
-    // baseURL: 'https://blog.superarilo.icu/api',
     timeout: 60000
 })
 service.interceptors.request.use( config => {
