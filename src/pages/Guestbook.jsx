@@ -9,6 +9,7 @@ import Collapse from '@mui/material/Collapse'
 import AsukaPoppor from '../components/popper'
 import PreviewImage from '../components/PreviewImage'
 import Pagination from '../components/Pagination'
+import Svg from '../components/Icon'
 //样式
 import style from '../assets/scss/guestbook.module.scss'
 import renderHtml from '../assets/scss/renderHtml.module.scss'
@@ -143,12 +144,14 @@ const GuestbookCommentItem = (props) => {
                     </div>
                     {
                         props.userInfo === null || props.userInfo.uid !== props.item.publisher ? '':
-                        <i className='fas fa-trash' 
-                            onClick={(e) => {
-                                setPopporObject({...popporObject, open: true, target: e.target})
-                            }}>
+                        <div className={style.delete_icon} onClick={(e) => { setPopporObject({...popporObject, open: true, target: e.target}) }}>
+                            <Svg
+                                cacheRequests={true}
+                                src='https://image.superarilo.icu/svg/delete.svg'
+                                width='1.1rem'
+                                height='1.1rem'/>
                             <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
-                        </i>
+                        </div>
                     }
                 </header>
                 <div
