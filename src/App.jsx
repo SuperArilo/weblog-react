@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { blogLoginUser, blogRegisterUser, blogUserLoginOut } from './util/user'
 import { regiserMail, findPassword } from './util/mail/mail'
 import { userCreateGossip } from './util/gossip'
+import { verifyEmail } from './util/Captcha'
 
 //组件
 import Svg from 'react-inlinesvg'
@@ -565,6 +566,12 @@ const LoginBox = (props) => {
 		password: ''
 	})
 
+	const [captchaInstance, setCaptchaInstance] = useState(({
+		image: null,
+		pass: false,
+		verify: false,
+	}))
+
 	const [isShowPassword, setIsShowPassword] = useState(false)
 	const [emailMatchRule] = useState(/^(\w+([-.][A-Za-z0-9]+)*){3,18}@\w+([-.][A-Za-z0-9]+)*\.\w+([-.][A-Za-z0-9]+)*$/)
 	const [loginStatus, setLoginStatus] = useState(false)
@@ -608,7 +615,7 @@ const LoginBox = (props) => {
 				</button>
 			</div>
 			<p className={signStyle.top_tips_line}>请填写以下信息进行登录</p>
-			<div className={signStyle.input_list}>
+			<form className={signStyle.input_list}>
 				<label className={signStyle.input_item}>
 					<div className={signStyle.input_top_div}>
 						<span>邮箱</span>
@@ -622,7 +629,22 @@ const LoginBox = (props) => {
 								...requestInstance,
 								email: e.target.value
 							})
-						}} />
+						}}
+						onBlur={e => {
+							if(e.target.value === '') return
+							verifyEmail({ data: { email: e.target.value } }).then(resp => {
+								if(resp.code === 200) {
+									setCaptchaInstance({
+										...captchaInstance,
+										image: resp.data.codeImage,
+										verify: resp.data.verify,
+										pass: resp.data.pass
+									})
+								} else {
+									toast.error(resp.message)
+								}
+							}).catch(err => {})
+						}}/>
 					<div className={signStyle.input_tips_div}>
 						<span></span>
 					</div>
@@ -645,8 +667,21 @@ const LoginBox = (props) => {
 						<span></span>
 					</div>
 				</label>
-			</div>
+			</form>
 			<div className={signStyle.find_password_box}>
+				<div className={signStyle.captcha_box}>
+					{
+						(captchaInstance.image !== null && captchaInstance.image !== undefined) && 
+						<>
+							<img src={captchaInstance.image} title='' alt='' />
+							<input
+								type="text"
+								placeholder=""
+								onChange={(e) => {
+								}} />
+						</>
+					}
+				</div>
 				<span onClick={() => {
 					if(requestInstance.email === '' || requestInstance.email === null) {
 						toast('输入邮箱后再点击此处哦')

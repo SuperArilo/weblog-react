@@ -54,7 +54,31 @@
     .find_password_box
     {
         display: flex;
-        justify-content: flex-end;
+        justify-content: space-between;
+        align-items: flex-end;
+        .captcha_box {
+            display: flex;
+            input {
+                margin-left: 1rem;
+                background-color: #f3f3f4;
+                transition: all 0.3s;
+                border-radius: 0.3rem;
+                outline: none;
+                height: 2rem;
+                padding: 0 0.8rem;
+                border: solid 1px transparent;
+                width: 4rem;
+            }
+            input:hover , input:focus
+            {
+                box-shadow: 0 0 0.3rem rgb(147, 182, 211);
+                border: solid 1px rgb(89, 164, 240);
+            }
+            img {
+                cursor: pointer;
+                height: 100%;
+            }
+        }
         span
         {
             font-size: 0.56rem;
