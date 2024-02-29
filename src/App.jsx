@@ -604,9 +604,6 @@ const LoginBox = (props) => {
 		}
 	}
 
-	useEffect(() => {
-	}, [])
-
 	return (
 		<div className={`${signStyle.login_box} ${isMobileStatus? signStyle.box_mobile:signStyle.box_pc}`}>
 			<div className={signStyle.top_tips}>
