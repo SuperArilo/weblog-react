@@ -172,7 +172,7 @@ export default function GossipContent(props) {
                         share({
                             title: `${props.data.nickName}的碎语`,
                             desc: '来自Arilo博客的碎语',
-                            link: `http://139.155.94.20:19198/gossip?targetId=${props.data.id}`,
+                            link: `${window.location.protocol}//${window.location.hostname}/gossip?targetId=${props.data.id}`,
                             icon: props.data.avatar
                         })
                     }}>
