@@ -9,7 +9,6 @@ import { useSelector, useDispatch } from 'react-redux'
 import { blogLoginUser, blogRegisterUser, blogUserLoginOut } from './util/user'
 import { regiserMail, findPassword } from './util/mail/mail'
 import { userCreateGossip } from './util/gossip'
-import { verifyEmail } from './util/Captcha'
 
 //组件
 import Svg from 'react-inlinesvg'
@@ -563,15 +562,13 @@ const LoginBox = (props) => {
 
 	const [requestInstance, setRequestInstance] = useState({
 		email: '',
-		password: ''
+		password: '',
+		code: ''
 	})
 
-	const [captchaInstance, setCaptchaInstance] = useState(({
-		image: null,
-		pass: false,
-		verify: false,
-	}))
 
+	//验证码随机数，点击刷新判断
+	const [random, setRandom] = useState(Math.random())
 	const [isShowPassword, setIsShowPassword] = useState(false)
 	const [emailMatchRule] = useState(/^(\w+([-.][A-Za-z0-9]+)*){3,18}@\w+([-.][A-Za-z0-9]+)*\.\w+([-.][A-Za-z0-9]+)*$/)
 	const [loginStatus, setLoginStatus] = useState(false)
@@ -591,10 +588,14 @@ const LoginBox = (props) => {
 			}
 			setLoginStatus(true)
 			blogLoginUser({ data: requestInstance, toast: { isShow: true, loadingMessage: '登录中...' } }).then(resq => {
-				if(resq.code === 200) {
+				if(resq.code === 200 && resq.data !== true) {
+					console.log(1)
 					localStorage.setItem('token', resq.data.token)
 					dispatch({ type: 'userInfo/setInfo', payload: resq.data.user })
 					setTimeout(() => { props.closeBox(false) }, 1000)
+				} else {
+					console.log(2)
+					setRandom(Math.random())
 				}
 				setLoginStatus(false)
 			}).catch(err => {
@@ -602,6 +603,9 @@ const LoginBox = (props) => {
 			})
 		}
 	}
+
+	useEffect(() => {
+	}, [])
 
 	return (
 		<div className={`${signStyle.login_box} ${isMobileStatus? signStyle.box_mobile:signStyle.box_pc}`}>
@@ -623,28 +627,14 @@ const LoginBox = (props) => {
 					</div>
 					<input
 						type="text"
+						name='LoginEmail'
 						placeholder="请输入邮箱"
 						onChange={(e) => {
 							setRequestInstance({
 								...requestInstance,
 								email: e.target.value
 							})
-						}}
-						onBlur={e => {
-							if(e.target.value === '') return
-							verifyEmail({ data: { email: e.target.value } }).then(resp => {
-								if(resp.code === 200) {
-									setCaptchaInstance({
-										...captchaInstance,
-										image: resp.data.codeImage,
-										verify: resp.data.verify,
-										pass: resp.data.pass
-									})
-								} else {
-									toast.error(resp.message)
-								}
-							}).catch(err => {})
-						}}/>
+						}} />
 					<div className={signStyle.input_tips_div}>
 						<span></span>
 					</div>
@@ -655,7 +645,7 @@ const LoginBox = (props) => {
 						<span>*</span>
 					</div>
 					<div className={signStyle.input_password_label}>
-						<input type={isShowPassword ? 'text':'password'} maxLength="16" placeholder="请输入密码" autoComplete="off" onChange={(e) => { setRequestInstance({ ...requestInstance, password: e.target.value }) }} />
+						<input name='LoginPassword' type={isShowPassword ? 'text':'password'} maxLength="16" placeholder="请输入密码" autoComplete="off" onChange={(e) => { setRequestInstance({ ...requestInstance, password: e.target.value }) }} />
 						<div className={signStyle.input_show_password} onClick={() => { setIsShowPassword(!isShowPassword) }}>
 							<Svg
 								width='1.5rem'
@@ -671,13 +661,23 @@ const LoginBox = (props) => {
 			<div className={signStyle.find_password_box}>
 				<div className={signStyle.captcha_box}>
 					{
-						(captchaInstance.image !== null && captchaInstance.image !== undefined) && 
+						emailMatchRule.test(requestInstance.email) && 
 						<>
-							<img src={captchaInstance.image} title='' alt='' />
+							<img
+								src={`${window.location.protocol}//${window.location.hostname}/api/captcha/image?target=${requestInstance.email}&type=login&random=${random}`}
+								title='点击刷新'
+								alt='verify code'
+								onClick={() => {
+									setRandom(Math.random())
+								}}/>
 							<input
+								name='verifyCode'
 								type="text"
-								placeholder=""
-								onChange={(e) => {
+								onChange={e => {
+									setRequestInstance({
+										...requestInstance,
+										code: e.target.value
+									})
 								}} />
 						</>
 					}
@@ -743,7 +743,7 @@ const RegisterBox = (props) => {
 							<span>邮箱</span>
 							<span>*</span>
 						</div>
-						<input type="text" placeholder="请输入邮箱" onChange={e => { setInputInstance({...inputInstance, email: e.target.value}) }} />
+						<input name='RegisterEmail' type="text" placeholder="请输入邮箱" onChange={e => { setInputInstance({...inputInstance, email: e.target.value}) }} />
 						<div className={signStyle.input_tips_div}>
 							<span></span>
 						</div>
@@ -755,6 +755,7 @@ const RegisterBox = (props) => {
 						</div>
 						<div className={signStyle.custom_email_style}>
 							<input
+								name='RegisterEmailCode'
 								type="text"
 								value={inputInstance.verifyCode}
 								placeholder="验证码"
@@ -816,6 +817,7 @@ const RegisterBox = (props) => {
 						</div>
 						<div className={signStyle.input_password_label}>
 							<input
+								name='RegisterPassword'
 								type={isShowPassword ? 'text':'password'}
 								maxLength="16"
 								placeholder="请输入密码"
@@ -842,6 +844,7 @@ const RegisterBox = (props) => {
 						</div>
 						<div className={signStyle.input_password_label}>
 							<input
+								name='RegisterPasswordAgain'
 								type={againPassword.show ? 'text':'password'}
 								maxLength="16"
 								placeholder="请输入确认密码"
@@ -866,6 +869,7 @@ const RegisterBox = (props) => {
 							<span>*</span>
 						</div>
 						<input
+							name='RegisterNickName'
 							type="text"
 							placeholder="请输入昵称"
 							onChange={e => {
