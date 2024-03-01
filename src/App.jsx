@@ -88,90 +88,92 @@ export default function App () {
 	}, [userInfo])
 
 	useEffect(() => {
-		new SakanaWidget().mount('#sakana-widget');
+		new SakanaWidget().mount('#sakana-widget')
 	}, [])
 
 	return (
-		<div className='render-content'>
-			{
-				isMobileStatus ? 
-				<MobileHeaderNav
-					userInfo={userInfo}
-					setCreateGossip={setCreateGossip}
-					openLoginBox={(status) => {
-						setLoginBoxStatus(status)
-					}} />
-				:
-				<PCheaderNav
-					userInfo={userInfo}
-					setCreateGossip={setCreateGossip}
-					openLoginBox={e => {
-						setLoginBoxStatus(e)
-					}}/>
-			}
-			<div className={`${'router-render'} ${isMobileStatus ? 'router-render-mobile':''}`}>
-				<SwitchTransition mode="out-in">
-					<CSSTransition key={location.pathname} timeout={300} classNames="change" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
-						<Routes location={location}>
-							<Route index path='/' element={<IndexPage isMobile={ isMobileStatus } userInfo={userInfo} />} />
-							<Route path='/detail' element={<ArticleDetail userInfo={userInfo} />} />
-							<Route path='/gossip' element={<Gossip userInfo={userInfo}/>} />
-							<Route path='/guestbook' element={<Guestbook />} />
-							<Route path='/user/:viewUid' element={<User />} />
-							<Route path='/user/verify' element={<VerifyEmailPage />} />
-							<Route path='/user/find-password' element={<FindPassword />} />
-							<Route path='/notice' element={<Notice />} />
-							<Route path='/links' element={<Links />} />
-							<Route path='/friends' element={<Friends /> } />
-							<Route path='/notfound' element={<NotFound /> } />
-							<Route path='/error' element={<NotFound /> } />
-							<Route path='*' element={<Navigate to='/notfound' />} />
-						</Routes>
-					</CSSTransition>
-				</SwitchTransition>
-			</div>
-			<About />
-			<CreateWindow width={isMobileStatus ? '100%':'24rem'} status={loginBoxStatus} onClose={status => { setTimeout(() => { setLoginBoxStatus(status) }, 500) }}>
-				<LoginBox
-					status={loginBoxStatus}
-					openRegisterBox={(e) => {setRegisterBoxStatus(e)}}
-					closeBox={(e) => {setLoginBoxStatus(e)}} />
-			</CreateWindow>
-			<CreateWindow width={isMobileStatus ? '100%':'24rem'} status={registerBoxStatus} onClose={status => { setTimeout(() => { setRegisterBoxStatus(status) }, 500) }}>
-				<RegisterBox
-					status={registerBoxStatus}
-					isMobile={isMobileStatus}
-					openLoginBox={(e) => { setLoginBoxStatus(e) }}
-					closeBox={(e) => {setRegisterBoxStatus(e)}} />
-			</CreateWindow>
-			<CreateWindow width={isMobileStatus ? '100%':'24rem'} status={createGossip} onClose={status => { setTimeout(() => { setCreateGossip(status) }, 500) }}>
-				<p className={signStyle.window_header_p}>发表碎语</p>
-				<Tinymce
-					userInfo={userInfo}
-					placeholder='在这里输入内容哦'
-					getContent={content => {
-						if(!gossipInstance.status) {
-							if(content === '<p></p>' || content === null || content === '') {
-								toast('内容不能为空哦！')
-								return
-							}
-							setGossipInstance({...gossipInstance, status: true})
-							let data = new FormData()
-							data.append('content', content)
-							userCreateGossip({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
-								if(resq.code === 200) {
-									setCreateGossip(false)
+		<>
+			<div className='render-content'>
+				{
+					isMobileStatus ? 
+					<MobileHeaderNav
+						userInfo={userInfo}
+						setCreateGossip={setCreateGossip}
+						openLoginBox={(status) => {
+							setLoginBoxStatus(status)
+						}} />
+					:
+					<PCheaderNav
+						userInfo={userInfo}
+						setCreateGossip={setCreateGossip}
+						openLoginBox={e => {
+							setLoginBoxStatus(e)
+						}}/>
+				}
+				<div className={`${'router-render'} ${isMobileStatus ? 'router-render-mobile':''}`}>
+					<SwitchTransition mode="out-in">
+						<CSSTransition key={location.pathname} timeout={300} classNames="change" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
+							<Routes location={location}>
+								<Route index path='/' element={<IndexPage isMobile={ isMobileStatus } userInfo={userInfo} />} />
+								<Route path='/detail' element={<ArticleDetail userInfo={userInfo} />} />
+								<Route path='/gossip' element={<Gossip userInfo={userInfo}/>} />
+								<Route path='/guestbook' element={<Guestbook />} />
+								<Route path='/user/:viewUid' element={<User />} />
+								<Route path='/user/verify' element={<VerifyEmailPage />} />
+								<Route path='/user/find-password' element={<FindPassword />} />
+								<Route path='/notice' element={<Notice />} />
+								<Route path='/links' element={<Links />} />
+								<Route path='/friends' element={<Friends /> } />
+								<Route path='/notfound' element={<NotFound /> } />
+								<Route path='/error' element={<NotFound /> } />
+								<Route path='*' element={<Navigate to='/notfound' />} />
+							</Routes>
+						</CSSTransition>
+					</SwitchTransition>
+				</div>
+				<About />
+				<CreateWindow width={isMobileStatus ? '100%':'24rem'} status={loginBoxStatus} onClose={status => { setTimeout(() => { setLoginBoxStatus(status) }, 500) }}>
+					<LoginBox
+						status={loginBoxStatus}
+						openRegisterBox={(e) => {setRegisterBoxStatus(e)}}
+						closeBox={(e) => {setLoginBoxStatus(e)}} />
+				</CreateWindow>
+				<CreateWindow width={isMobileStatus ? '100%':'24rem'} status={registerBoxStatus} onClose={status => { setTimeout(() => { setRegisterBoxStatus(status) }, 500) }}>
+					<RegisterBox
+						status={registerBoxStatus}
+						isMobile={isMobileStatus}
+						openLoginBox={(e) => { setLoginBoxStatus(e) }}
+						closeBox={(e) => {setRegisterBoxStatus(e)}} />
+				</CreateWindow>
+				<CreateWindow width={isMobileStatus ? '100%':'24rem'} status={createGossip} onClose={status => { setTimeout(() => { setCreateGossip(status) }, 500) }}>
+					<p className={signStyle.window_header_p}>发表碎语</p>
+					<Tinymce
+						userInfo={userInfo}
+						placeholder='在这里输入内容哦'
+						getContent={content => {
+							if(!gossipInstance.status) {
+								if(content === '<p></p>' || content === null || content === '') {
+									toast('内容不能为空哦！')
+									return
 								}
-								setGossipInstance({...gossipInstance, status: false})
-							}).catch(err => {
-								setGossipInstance({...gossipInstance, status: false})
-								props.setCreateWindowStatus(false)
-							})
-						}
-					}}/>
-			</CreateWindow>
+								setGossipInstance({...gossipInstance, status: true})
+								let data = new FormData()
+								data.append('content', content)
+								userCreateGossip({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
+									if(resq.code === 200) {
+										setCreateGossip(false)
+									}
+									setGossipInstance({...gossipInstance, status: false})
+								}).catch(err => {
+									setGossipInstance({...gossipInstance, status: false})
+									props.setCreateWindowStatus(false)
+								})
+							}
+						}}/>
+				</CreateWindow>
+			</div>
 			<div id='sakana-widget'></div>
-		</div>
+		</>
 	)
 }
 const PCheaderNav = (props) => {

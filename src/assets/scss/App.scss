@@ -65,6 +65,11 @@ ul , li
     background-position: center;
     overflow-y: overlay;
     overflow-x: hidden;
+    #sakana-widget {
+        position: fixed;
+        right: 0;
+        bottom: 5%;
+    }
     .render-content
     {
         .header-nav , .mobile-header-nav
@@ -189,11 +194,6 @@ ul , li
         .router-render-mobile
         {
             padding: 3rem 1rem 0 1rem;
-        }
-        #sakana-widget {
-            position: fixed;
-            right: 0;
-            bottom: 5%;
         }
     }
 }
