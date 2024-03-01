@@ -2,7 +2,7 @@ import axios from 'axios'
 import toast from 'react-hot-toast'
 axios.defaults.withCredentials = true
 const service = axios.create({
-    baseURL: process.env.NODE_ENV === "development" ? 'http://127.0.0.1/api':'https://blog.superarilo.icu/api',
+    baseURL: process.env.NODE_ENV === "development" ? `${window.location.protocol}//${window.location.hostname}/api`:'https://blog.superarilo.icu/api',
     timeout: 60000
 })
 service.interceptors.request.use( config => {
