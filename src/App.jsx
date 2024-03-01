@@ -562,9 +562,9 @@ const LoginBox = (props) => {
 
 	const [requestInstance, setRequestInstance] = useState({
 		email: '',
-		password: '',
-		code: ''
+		password: ''
 	})
+	const [authenticationCode, setAuthenticationCode] = useState('')
 
 
 	//验证码随机数，点击刷新判断
@@ -587,18 +587,19 @@ const LoginBox = (props) => {
 				return
 			}
 			setLoginStatus(true)
-			blogLoginUser({ data: requestInstance, toast: { isShow: true, loadingMessage: '登录中...' } }).then(resq => {
-				if(resq.code === 200 && resq.data !== true) {
-					console.log(1)
+			blogLoginUser({ data: requestInstance, toast: { isShow: true, loadingMessage: '登录中...' } }, { 'authentication-code': authenticationCode }).then(resq => {
+				if(resq.code === 200) {
 					localStorage.setItem('token', resq.data.token)
 					dispatch({ type: 'userInfo/setInfo', payload: resq.data.user })
 					setTimeout(() => { props.closeBox(false) }, 1000)
 				} else {
-					console.log(2)
 					setRandom(Math.random())
 				}
+				setAuthenticationCode('')
 				setLoginStatus(false)
 			}).catch(err => {
+				setRandom(Math.random())
+				setAuthenticationCode('')
 				setLoginStatus(false)
 			})
 		}
@@ -661,7 +662,7 @@ const LoginBox = (props) => {
 						emailMatchRule.test(requestInstance.email) && 
 						<>
 							<img
-								src={`${window.location.protocol}//${window.location.hostname}/api/captcha/image?target=${requestInstance.email}&type=login&random=${random}`}
+								src={`${window.location.protocol}//${window.location.hostname}/api/captcha/image?type=login&random=${random}`}
 								title='点击刷新'
 								alt='verify code'
 								onClick={() => {
@@ -670,11 +671,10 @@ const LoginBox = (props) => {
 							<input
 								name='verifyCode'
 								type="text"
+								maxLength={4}
+								value={authenticationCode}
 								onChange={e => {
-									setRequestInstance({
-										...requestInstance,
-										code: e.target.value
-									})
+									setAuthenticationCode(e.target.value)
 								}} />
 						</>
 					}
