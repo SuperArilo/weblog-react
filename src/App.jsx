@@ -36,7 +36,9 @@ import Icon from './components/Icon'
 import Tinymce from './components/editor'
 //样式
 import './assets/scss/currencyTransition.scss'
-
+//小东西
+import 'sakana-widget/lib/index.css'
+import SakanaWidget from 'sakana-widget'
 export default function App () {
 	//hook
 	const location = useLocation()
@@ -84,6 +86,10 @@ export default function App () {
 			$('#react-by-asukamis').css({ 'backgroundImage': 'url(https://image.superarilo.icu/defalut_bg.jpg)' })
 		}
 	}, [userInfo])
+
+	useEffect(() => {
+		new SakanaWidget().mount('#sakana-widget');
+	}, [])
 
 	return (
 		<div className='render-content'>
@@ -164,6 +170,7 @@ export default function App () {
 						}
 					}}/>
 			</CreateWindow>
+			<div id='sakana-widget'></div>
 		</div>
 	)
 }
