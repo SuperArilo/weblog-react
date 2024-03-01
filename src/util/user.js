@@ -1,9 +1,11 @@
 import request from '../util/axios'
+import { parseFormData } from './PublicFunction'
 
-export const blogLoginUser = ({ data, toast }) => {
+export const blogLoginUser = ({ data, toast }, customHeader) => {
     return request({
         url: '/user/login',
         method: 'post',
+        headers: customHeader,
         data: parseFormData(data),
         toast: toast
     })
@@ -64,13 +66,4 @@ export const passwordModify = ({ data, toast }) => {
         data: parseFormData(data),
         toast: toast
     })
-}
-const parseFormData = (obj) => {
-    let data = new FormData()
-    if (obj == null) return
-    Object.keys(obj).map(key => {
-        data.append(key, obj[key])
-        return null
-    })
-    return data
 }
