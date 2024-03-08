@@ -31,7 +31,7 @@ const Tinymce = forwardRef((props, ref) => {
         ],
         toolbar: [
             { name: 'styles', items: [ 'styles', 'fontsize', 'image' ] },
-            { name: 'formatting', items: [ 'forecolor', 'bold', 'italic', 'lineheight', 'removeformat', 'hr'] },
+            { name: 'formatting', items: ['forecolor', 'bold', 'italic', 'lineheight', 'removeformat', 'hr'] },
             { name: 'alignment', items: [ 'alignleft', 'aligncenter', 'alignright', 'alignjustify' ] },
             { name: 'indentation', items: [ 'bullist', 'numlist', 'outdent', 'indent', 'table' ] },
             { name: 'history', items: [ 'undo', 'redo' ] }

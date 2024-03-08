@@ -36,9 +36,13 @@ import Icon from './components/Icon'
 import Tinymce from './components/editor'
 //样式
 import './assets/scss/currencyTransition.scss'
+import './assets/css/emojiBox.css'
 //小东西
 import 'sakana-widget/lib/index.css'
 import SakanaWidget from 'sakana-widget'
+
+
+import NoticeSocket from './pages/NoticeSocket'
 export default function App () {
 	//hook
 	const location = useLocation()
@@ -173,6 +177,7 @@ export default function App () {
 				</CreateWindow>
 			</div>
 			<div id='sakana-widget'></div>
+			<NoticeSocket token={localStorage.getItem('token')} />
 		</>
 	)
 }
@@ -596,7 +601,7 @@ const LoginBox = (props) => {
 				return
 			}
 			setLoginStatus(true)
-			blogLoginUser({ data: requestInstance, toast: { isShow: true, loadingMessage: '登录中...' } }, { 'authentication-code': authenticationCode }).then(resq => {
+			blogLoginUser({ data: requestInstance, toast: { isShow: true, loadingMessage: '登录中...' } }, { 'Authentication-Code': authenticationCode, 'Authentication-Type': 'Login' }).then(resq => {
 				if(resq.code === 200) {
 					localStorage.setItem('token', resq.data.token)
 					dispatch({ type: 'userInfo/setInfo', payload: resq.data.user })
