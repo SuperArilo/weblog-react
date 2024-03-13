@@ -177,7 +177,10 @@ export default function App () {
 				</CreateWindow>
 			</div>
 			<div id='sakana-widget'></div>
-			<NoticeSocket token={localStorage.getItem('token')} />
+			{
+				(localStorage.getItem('token') && userInfo !== null) && <NoticeSocket token={localStorage.getItem('token')} />
+			}
+			
 		</>
 	)
 }
@@ -255,6 +258,8 @@ const PCheaderNav = (props) => {
 		]
 	})
 
+	const pushNotice = useSelector((state) => state.pushNotice.instance)
+	const [noticeCount, setNoticeCount] = useState(0)
 	//路由变化匹配
 	useEffect(() => {
 		let index = menuInstance.list.findIndex(item => item.path === location.pathname)
@@ -281,6 +286,17 @@ const PCheaderNav = (props) => {
 			}
 		})
 	}, [])
+
+	useEffect(() => {
+		if(pushNotice.length === 0) {
+			setNoticeCount(0)
+			return
+		}
+		pushNotice.forEach((e, i) => {
+			setNoticeCount(n => n + e.count)
+		})
+	}, [pushNotice, setNoticeCount])
+
 	return (
 		<nav className='header-nav header-nav-default' ref={navInstance}>
 			<span className='left-webside-icon' onClick={() => { navigate('/') }}>
@@ -313,6 +329,7 @@ const PCheaderNav = (props) => {
 							src='https://image.superarilo.icu/svg/notice.svg'
 							width='1.5rem'
 							height='1.5rem'
+							count={noticeCount === 0 ? '':noticeCount}
 							onClick={() => { navigate('/notice') }}/>
 						<Avatar
 							src={props.userInfo.avatar}

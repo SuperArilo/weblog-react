@@ -33,10 +33,21 @@ const userInfo = createSlice({
             } else {
                 state.info.background = action.payload
             }
+        },
+    }
+})
+const pushNotice = createSlice({
+    name: 'pushNotice',
+    initialState: {
+        instance: []
+    },
+    reducers: {
+        setPushNotice: (state, action) => {
+            state.instance = action.payload
         }
     }
 })
 const store = configureStore(
-    { reducer: { isMobile: isMobile.reducer, userInfo: userInfo.reducer } }
+    { reducer: { isMobile: isMobile.reducer, userInfo: userInfo.reducer, pushNotice: pushNotice.reducer } }
 )
 export default store

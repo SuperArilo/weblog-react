@@ -1,24 +1,20 @@
-import React, { useState, useCallback, useEffect } from 'react'
-import useWebSocket, { ReadyState } from 'react-use-websocket'
+import { useCallback, useEffect } from 'react'
+import useWebSocket from 'react-use-websocket'
+import { useDispatch } from 'react-redux'
 
 const NoticeSocket = props => {
 
-    const { sendMessage, lastMessage, readyState } = useWebSocket('ws://localhost/ws/notice', { protocols: [props.token] })
-    const connectionStatus = {
-        [ReadyState.CONNECTING]: 'Connecting',
-        [ReadyState.OPEN]: 'Open',
-        [ReadyState.CLOSING]: 'Closing',
-        [ReadyState.CLOSED]: 'Closed',
-        [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
-    }[readyState]
+    const { lastMessage } = useWebSocket('ws://localhost/ws/notice', { protocols: [props.token] })
 
+    const dispatch = useDispatch()
+    const setInstance = useCallback(value => {
+        dispatch({ type: 'pushNotice/setPushNotice', payload: value })
+    }, [dispatch])
     useEffect(() => {
-        if(readyState === ReadyState.OPEN) {
-            sendMessage('hello')
-        } else {
-            console.log(readyState)
+        if(lastMessage !== null) {
+            setInstance(JSON.parse(lastMessage.data))
         }
-    }, [readyState, sendMessage])
+    }, [lastMessage, setInstance])
 
     return null
 }

@@ -13,6 +13,9 @@ export default function Icon(props) {
                 width={props.width}
                 height={props.height}
                 fontSize={props.fontSize}/>
+            {
+                props.count !== '' ? <span className={style.count}>{ props.count >= 100 ? '99+':props.count }</span>:''
+            }
         </div>
     )
 }
@@ -21,5 +24,6 @@ Icon.defaultProps = {
     height: '1.5rem',
     fontSize: '1rem',
     src: 'https://cdn.svgporn.com/logos/firefox.svg',
-    onClick: () => { return null }
+    onClick: () => { return null },
+    count: ''
 }

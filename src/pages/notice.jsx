@@ -68,6 +68,8 @@ export default function Notice(props) {
 
     const [selectNoticeList, setSelectNoticeList] = useState([])
 
+    const pushNotice = useSelector((state) => state.pushNotice.instance)
+
     const noticeListGet = useCallback(instance => {
         noticeGet({ data: instance, toast: null }).then(resq => {
             if(resq.code === 200) {
