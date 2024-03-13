@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 
 const NoticeSocket = props => {
 
-    const { lastMessage } = useWebSocket('ws://localhost/ws/notice', { protocols: [props.token] })
+    const { lastMessage } = useWebSocket(`${process.env.NODE_ENV === "development" ? 'ws':'wss'}://${window.location.hostname}/ws/notice`, { protocols: [props.token] })
 
     const dispatch = useDispatch()
     const setInstance = useCallback(value => {
