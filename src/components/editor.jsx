@@ -78,7 +78,7 @@ const Tinymce = forwardRef((props, ref) => {
                     { instance ? '':<EditorSkeleton /> }
                     <div className={style.editor_tinymce} style={{ display: instance ? 'flex':'none' }}>
                         <Editor
-                            tinymceScriptSrc={ process.env.PUBLIC_URL + '/tinymce/tinymce.min.js' }
+                            tinymceScriptSrc='/tinymce/tinymce.min.js'
                             initialValue={initialValue}
                             onInit={(event, instance) => {
                                 setInstance(instance)
