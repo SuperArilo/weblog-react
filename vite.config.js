@@ -9,28 +9,32 @@ export default defineConfig({
         viteCompression({
             verbose: true,
             disable: false,
-            threshold: 512,
+            threshold: 10240,
             algorithm: 'gzip',
             ext: '.gz',
             deleteOriginFile: false
-        })
+        }),
     ],
     server: {
-        port: 3333
+        port: 3333,
+        https: true
+    },
+    build: {
+        minify: "terser",
+        rollupOptions: {
+            output: {
+                manualChunks: id => {
+                    if (id.includes('node_modules')) {
+                        return 'vendor'
+                    }
+                }
+            },
+        }
     },
     terserOptions: {
         compress: {
-            drop_console: true,
-            drop_debugger: true
-        }
-    },
-    build: {
-        rollupOptions: {
-          output: {
-            chunkFileNames: 'js/[name].js',
-            entryFileNames: 'js/[name].js',
-            assetFileNames: '[ext]/[name]-[hash].[ext]',
-          }
+            drop_console: process.env.NODE_ENV === 'production',
+            drop_debugger: process.env.NODE_ENV === 'production'
         }
     }
 })
