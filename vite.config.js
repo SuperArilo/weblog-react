@@ -17,7 +17,7 @@ export default defineConfig({
     ],
     server: {
         port: 3333,
-        https: true
+        https: false
     },
     build: {
         minify: "terser",
