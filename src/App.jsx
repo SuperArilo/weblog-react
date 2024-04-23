@@ -38,8 +38,7 @@ import Tinymce from './components/editor'
 import './assets/scss/currencyTransition.scss'
 import './assets/css/emojiBox.css'
 //小东西
-import 'sakana-widget/lib/index.css'
-import SakanaWidget from 'sakana-widget'
+import { loadOml2d } from 'oh-my-live2d'
 
 
 import NoticeSocket from './pages/NoticeSocket'
@@ -92,7 +91,15 @@ export default function App () {
 	}, [userInfo])
 
 	useEffect(() => {
-		new SakanaWidget().mount('#sakana-widget')
+		loadOml2d({
+			models: [
+				{
+					path: 'https://imuncle.github.io/live2d/model/katou_01/katou_01.model.json',
+					scale: 0.15,
+					position: [0, -80]
+				}
+			]
+		})
 	}, [])
 
 	return (
