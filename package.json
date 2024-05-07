@@ -19,7 +19,6 @@
     "axios": "^1.6.8",
     "jquery": "^3.7.1",
     "nativeshare": "^2.1.5",
-    "oh-my-live2d": "^0.16.1",
     "query-string": "^9.0.0",
     "react": "^18.2.0",
     "react-avatar-editor": "^13.0.2",

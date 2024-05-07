@@ -37,11 +37,9 @@ import Tinymce from './components/editor'
 //样式
 import './assets/scss/currencyTransition.scss'
 import './assets/css/emojiBox.css'
-//小东西
-import { loadOml2d } from 'oh-my-live2d'
-
 
 import NoticeSocket from './pages/NoticeSocket'
+
 export default function App () {
 	//hook
 	const location = useLocation()
@@ -89,19 +87,6 @@ export default function App () {
 			$('#react-by-asukamis').css({ 'backgroundImage': 'url(https://image.superarilo.icu/defalut_bg.jpg)' })
 		}
 	}, [userInfo])
-
-	useEffect(() => {
-		loadOml2d({
-			models: [
-				{
-					path: 'https://imuncle.github.io/live2d/model/katou_01/katou_01.model.json',
-					scale: 0.15,
-					position: [0, -80]
-				}
-			]
-		})
-	}, [])
-
 	return (
 		<>
 			<div className='render-content'>
