@@ -9,16 +9,16 @@ import Skeleton from '@mui/material/Skeleton'
 import { customUploadImage } from '../util/upload'
 
 
-const Tinymce = forwardRef((props, ref) => {
+const Tinymce = forwardRef(({ userInfo = null, placeholder = '在这设置占位符', initialValue,  getContent = () => null }, ref) => {
 
-    const [initialValue, setInitialValue] = useState(props.initialValue)
+    const [edValue, setedValue] = useState(initialValue)
     const [modelValue, setModelValue] = useState(null)
     const [instance, setInstance] = useState(null)
 
     const [config, setConfing] = useState({
         height: 260,
         skin: 'oxide',
-        placeholder: props.placeholder,
+        placeholder: placeholder,
         content_css: 'default',
         menubar: false,
         branding: false,
@@ -73,13 +73,13 @@ const Tinymce = forwardRef((props, ref) => {
 
     return <>
             {
-                props.userInfo !== null ?
+                userInfo !== null ?
                 <>
                     { instance ? '':<EditorSkeleton /> }
                     <div className={style.editor_tinymce} style={{ display: instance ? 'flex':'none' }}>
                         <Editor
                             tinymceScriptSrc='/tinymce/tinymce.min.js'
-                            initialValue={initialValue}
+                            initialValue={edValue}
                             onInit={(event, instance) => {
                                 setInstance(instance)
                             }}
@@ -93,7 +93,7 @@ const Tinymce = forwardRef((props, ref) => {
                             <AsukaButton
                                 text='提交'
                                 onClick={() => {
-                                    props.getContent(modelValue)
+                                    getContent(modelValue)
                                 }}/>
                         </div>
                     </div>
@@ -103,14 +103,6 @@ const Tinymce = forwardRef((props, ref) => {
             }
         </>
 })
-Tinymce.defaultProps = {
-    userInfo: null,
-    placeholder: '在这设置占位符',
-    initialValue: '',
-    getContent: () => {
-        return null
-    }
-}
 export default Tinymce
 const EditorSkeleton = () => {
     return <div className={style.editor_skeleton}>

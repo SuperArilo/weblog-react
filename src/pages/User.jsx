@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 //样式
 import style from '../assets/scss/user.module.scss'
-import '../assets/scss/currencyTransition.scss'
 //方法
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
-import { Route, Routes, useLocation, useNavigate, Navigate  } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useParams } from "react-router-dom"
 import $ from 'jquery'
 import { blogUserProfiles, blogUserProfilesModify } from '../util/user'
@@ -12,7 +11,7 @@ import { userlikesListGet, targetLikeUser } from '../util/userLike'
 import { modifyEmail } from '../util/mail/mail'
 import toast from 'react-hot-toast'
 //组件
-import { SwitchTransition, CSSTransition, TransitionGroup } from 'react-transition-group'
+import { CTransitionFade, CTransitionGroup } from '../components/Transition'
 import Gossip from './gossip'
 import Collapse from '@mui/material/Collapse'
 import Avatar from '../components/Avatar'
@@ -163,257 +162,255 @@ export default function User(props) {
 
     return (
         <div className={style.user_info}>
-            <SwitchTransition mode='out-in'>
-                <CSSTransition key={userProfiles === null} classNames='change' timeout={300} nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
-                    {
-                        userProfiles === null ? <UserSkeleton />:
-                        <div className={style.info_box}>
-                            <div className={style.user_head_box}>
-                                <div className={style.user_avatar_box}>
-                                    {
-                                        modeInstance.tempAvatar !== null ?
-                                        <AvatarCut
-                                            ref={avatarCutRef}
-                                            image={modeInstance.tempAvatar}/>
-                                        :
-                                        <Avatar
-                                            width='3.8rem'
-                                            height='3.8rem'
-                                            src={userProfiles.avatar}
-                                            title={userProfiles.nickName}
-                                            alt={userProfiles.nickName}/>
-                                    }
-                                    {
-                                        modeInstance.status ?
-                                        <>
-                                            <div className={style.avatar_box_button}>
-                                            <AsukaButton
-                                                class='file'
-                                                text='上传头像'
-                                                getFile={file => {
-                                                    setModeInstance({...modeInstance, tempAvatar: file})
-                                                }}/>
-                                            {
-                                                modeInstance.tempAvatar !== null ? 
-                                                <>
-                                                    <AsukaButton
-                                                        status={modeInstance.loadingStatus}
-                                                        text='提交'
-                                                        onClick={() => {
-                                                            if(!modeInstance.loadingStatus) {
-                                                                avatarCutRef.current.getImage().current.getImageScaledToCanvas().toBlob((blob) => {
-                                                                    setModeInstance(current => ({
-                                                                        ...current,
-                                                                        loadingStatus: true,
-                                                                        instance: {
-                                                                            ...current.instance,
-                                                                            avatar: new File([blob], 'transform.png')
-                                                                        }
-                                                                    }))
-                                                                    return
-                                                                })
-                                                            }
-                                                        }}/>
-                                                    <AsukaButton
-                                                        text='退出'
-                                                        class='danger'
-                                                        onClick={() => {
-                                                            setModeInstance({...modeInstance, tempAvatar: null})
-                                                        }}/>
-                                                </>
-                                                : null
-                                            }
-                                            
-                                        </div>
-                                        </>
-                                        : ''
-                                    }
-                                    
-                                </div>
-                                <div className={style.public_info_item} eidtorindex='0'>
-                                    {
-                                        modeInstance.editorIndex === '0' ?
-                                        <InstantInput
-                                            label='昵称'
-                                            onErrorMessage='必填项'
-                                            handleClose={() => { setModeInstance({...modeInstance, editorIndex: null}) }}
-                                            value={userProfiles.nickName}
-                                            loadingStatus={modeInstance.loadingStatus}
-                                            handleSave={content => {
-                                                if(!modeInstance.loadingStatus) {
-                                                    setModeInstance(current => ({
-                                                        ...current,
-                                                        loadingStatus: true,
-                                                        instance: {
-                                                            ...current.instance,
-                                                            nickName: content
-                                                        }
-                                                    }))
-                                                }
-                                            }}/>
-                                        :
-                                        <>
-                                            <p className={style.nick_name}>{userProfiles.nickName}</p>
-                                            {
-                                                modeInstance.status && <Icon 
-                                                                            src='https://image.superarilo.icu/svg/editor.svg'
-                                                                            width='1.2rem'
-                                                                            height='1.2rem'
-                                                                            onClick={e => {
-                                                                                setModeInstance({...modeInstance, editorIndex: $(e.currentTarget).parent().attr('eidtorindex')})
-                                                                            }}/>
-                                            }
-                                        </>
-                                    }
-                                    
-                                </div>
-                                <div className={style.public_info_item} eidtorindex='1'>
-                                    {
-                                        modeInstance.editorIndex === '1' ?
-                                        <InstantInput
-                                            width='18rem'
-                                            mode='textarea'
-                                            label='个性签名'
-                                            onErrorMessage='必填项'
-                                            value={userProfiles.autograph}
-                                            loadingStatus={modeInstance.loadingStatus}
-                                            handleClose={() => { setModeInstance({...modeInstance, editorIndex: null}) }}
-                                            handleSave={content => {
-                                                if(!modeInstance.loadingStatus) {
-                                                    setModeInstance(current => ({
-                                                        ...current,
-                                                        loadingStatus: true,
-                                                        instance: {
-                                                            ...current.instance,
-                                                            autograph: content
-                                                        }
-                                                    }))
-                                                }
-                                            }}/>
-                                        :
-                                        <>
-                                            <span className={style.autograph}>{userProfiles.autograph}</span>
-                                            {
-                                                modeInstance?.status && <Icon 
-                                                                            src='https://image.superarilo.icu/svg/editor.svg'
-                                                                            width='1.2rem'
-                                                                            height='1.2rem'
-                                                                            onClick={e => {
-                                                                                setModeInstance({...modeInstance, editorIndex: $(e.currentTarget).parent().attr('eidtorindex')})
-                                                                            }}/>
-                                            }
-                                        </>
-                                    }
-                                </div>
+            <CTransitionFade
+                keyS={userProfiles === null}
+                left={<UserSkeleton />}
+                right={
+                    <div className={style.info_box}>
+                        <div className={style.user_head_box}>
+                            <div className={style.user_avatar_box}>
                                 {
-                                    userInfo?.uid !== parseInt(viewUid) ?
-                                    null
+                                    modeInstance.tempAvatar !== null ?
+                                    <AvatarCut
+                                        ref={avatarCutRef}
+                                        image={modeInstance.tempAvatar}/>
                                     :
-                                    <AsukaButton 
-                                        text={modeInstance.status ? '退出编辑模式':'编辑个人资料'}
-                                        class={modeInstance.status ? 'danger':'normal'}
-                                        onClick={() => {
-                                            setModeInstance({...modeInstance, status: !modeInstance.status, editorIndex: null, menuIndex: 0})
-                                            $(menuLineRef.current).css({ left: 0 })
-                                        }}/>
+                                    <Avatar
+                                        width='3.8rem'
+                                        height='3.8rem'
+                                        src={userProfiles?.avatar}
+                                        title={userProfiles?.nickName}
+                                        alt={userProfiles?.nickName}/>
                                 }
                                 {
-                                    modeInstance.status === false &&
-                                    <div
-                                        className={style.likes_box}
-                                        onClick={() => {
-                                            let data = new FormData()
-                                            data.append('targetUid', viewUid)
-                                            targetLikeUser({ data: data, toast: { isShow: true, loadingMessage: '提交请求中...' } }).then(resq => {
-                                                setUserProfiles(current => ({
-                                                    ...current,
-                                                    likeNum: resq.data.status ? userProfiles.likeNum + 1:userProfiles.likeNum - 1,
-                                                    viewerLike: resq.data.status
-                                                }))
-                                            }).catch(() => {})
-                                        }}>
-                                        <Svg
-                                            src='https://image.superarilo.icu/svg/user_like.svg'
-                                            cacheRequests={true}
-                                            preProcessor={code => code.replace(/fill=".*?"/g, 'fill="currentColor"')}
-                                            className={userProfiles.viewerLike ? style.user_like_on:''}
-                                            width='1.2rem'
-                                            height='1.2rem'/>
-                                        <span>{userProfiles.likeNum}</span>
-                                        <WaterWave position='absolute' />
+                                    modeInstance.status ?
+                                    <>
+                                        <div className={style.avatar_box_button}>
+                                        <AsukaButton
+                                            clazz='file'
+                                            text='上传头像'
+                                            getFile={file => {
+                                                setModeInstance({...modeInstance, tempAvatar: file})
+                                            }}/>
+                                        {
+                                            modeInstance.tempAvatar !== null ? 
+                                            <>
+                                                <AsukaButton
+                                                    status={modeInstance.loadingStatus}
+                                                    text='提交'
+                                                    onClick={() => {
+                                                        if(!modeInstance.loadingStatus) {
+                                                            avatarCutRef.current.getImage().current.getImageScaledToCanvas().toBlob((blob) => {
+                                                                setModeInstance(current => ({
+                                                                    ...current,
+                                                                    loadingStatus: true,
+                                                                    instance: {
+                                                                        ...current.instance,
+                                                                        avatar: new File([blob], 'transform.png')
+                                                                    }
+                                                                }))
+                                                                return
+                                                            })
+                                                        }
+                                                    }}/>
+                                                <AsukaButton
+                                                    text='退出'
+                                                    clazz='danger'
+                                                    onClick={() => {
+                                                        setModeInstance({...modeInstance, tempAvatar: null})
+                                                    }}/>
+                                            </>
+                                            : null
+                                        }
+                                        
                                     </div>
+                                    </>
+                                    : ''
+                                }
+                                
+                            </div>
+                            <div className={style.public_info_item} eidtorindex='0'>
+                                {
+                                    modeInstance.editorIndex === '0' ?
+                                    <InstantInput
+                                        label='昵称'
+                                        onErrorMessage='必填项'
+                                        handleClose={() => { setModeInstance({...modeInstance, editorIndex: null}) }}
+                                        value={userProfiles.nickName}
+                                        loadingStatus={modeInstance.loadingStatus}
+                                        handleSave={content => {
+                                            if(!modeInstance.loadingStatus) {
+                                                setModeInstance(current => ({
+                                                    ...current,
+                                                    loadingStatus: true,
+                                                    instance: {
+                                                        ...current.instance,
+                                                        nickName: content
+                                                    }
+                                                }))
+                                            }
+                                        }}/>
+                                    :
+                                    <>
+                                        <p className={style.nick_name}>{userProfiles?.nickName}</p>
+                                        {
+                                            modeInstance.status && <Icon 
+                                                                        src='https://image.superarilo.icu/svg/editor.svg'
+                                                                        width='1.2rem'
+                                                                        height='1.2rem'
+                                                                        onClick={e => {
+                                                                            setModeInstance({...modeInstance, editorIndex: $(e.currentTarget).parent().attr('eidtorindex')})
+                                                                        }}/>
+                                        }
+                                    </>
+                                }
+                                
+                            </div>
+                            <div className={style.public_info_item} eidtorindex='1'>
+                                {
+                                    modeInstance.editorIndex === '1' ?
+                                    <InstantInput
+                                        width='18rem'
+                                        mode='textarea'
+                                        label='个性签名'
+                                        onErrorMessage='必填项'
+                                        value={userProfiles.autograph}
+                                        loadingStatus={modeInstance.loadingStatus}
+                                        handleClose={() => { setModeInstance({...modeInstance, editorIndex: null}) }}
+                                        handleSave={content => {
+                                            if(!modeInstance.loadingStatus) {
+                                                setModeInstance(current => ({
+                                                    ...current,
+                                                    loadingStatus: true,
+                                                    instance: {
+                                                        ...current.instance,
+                                                        autograph: content
+                                                    }
+                                                }))
+                                            }
+                                        }}/>
+                                    :
+                                    <>
+                                        <span className={style.autograph}>{userProfiles?.autograph}</span>
+                                        {
+                                            modeInstance?.status && <Icon 
+                                                                        src='https://image.superarilo.icu/svg/editor.svg'
+                                                                        width='1.2rem'
+                                                                        height='1.2rem'
+                                                                        onClick={e => {
+                                                                            setModeInstance({...modeInstance, editorIndex: $(e.currentTarget).parent().attr('eidtorindex')})
+                                                                        }}/>
+                                        }
+                                    </>
                                 }
                             </div>
-                            <div className={style.function_box}>
-                                <header className={style.select_title}>
-                                    <div ref={menuLineRef} className={style.select_line} style={{ width: 'calc(100% / ' + (modeInstance.status ? editorMenuList.length:infoMenuList.length) + ')' }} type='line' />
-                                    {
-                                        modeInstance.status ?
-                                        editorMenuList.map(item => {
-                                            return (
-                                                <div
-                                                    className={`${style.select_title_item} ${modeInstance.menuIndex === item.id ? style.select_title_item_active:''}`}
-                                                    index={item.id}
-                                                    key={item.id}
-                                                    onClick={() => {
-                                                        setModeInstance({...modeInstance, menuIndex: item.id})
-                                                        $(menuLineRef.current).css({ left: $($('div[index]')[item.id]).width() * item.id })
-                                                    }}>
-                                                    <Svg
-                                                        src={item.icon}
-                                                        cacheRequests={true}
-                                                        width='1.2rem'
-                                                        height='1.2rem' />
-                                                    <span>{item.title}</span>
-                                                    <WaterWave color="rgb(155, 195, 219)" duration={ 1 } />
-                                                </div>
-                                            )
-                                        })
-                                        :
-                                        infoMenuList.map(item => {
-                                            return (
-                                                <div
-                                                    className={`${style.select_title_item} ${modeInstance.menuIndex === item.id ? style.select_title_item_active:''}`}
-                                                    index={item.id}
-                                                    key={item.id}
-                                                    onClick={() => {
-                                                        setModeInstance({...modeInstance, menuIndex: item.id})
-                                                        $(menuLineRef.current).css({ left: $($('div[index]')[item.id]).width() * item.id })
-                                                    }}>
-                                                    <Svg
-                                                        src={item.svgSrc}
-                                                        cacheRequests={true}
-                                                        width='1.2rem'
-                                                        height='1.2rem'/>
-                                                    <span>{item.title}</span>
-                                                    <WaterWave color="rgb(155, 195, 219)" duration={ 1 } />
-                                                </div>
-                                            )
-                                        })
-                                    }
-                                </header>
-                                <div className={style.select_function_box}>
-                                    {
-                                        modeInstance.status ? 
-                                        <RenderEditorFunctionView
-                                            modeInstance={modeInstance}
-                                            setModeInstance={setModeInstance}
-                                            userProfiles={userProfiles}
-                                            userInfo={userInfo}
-                                            viewUid={viewUid} />
-                                        :
-                                        <RenderFunctionView
-                                            menuIndex={modeInstance.menuIndex}
-                                            userProfiles={userProfiles}
-                                            userInfo={userInfo}
-                                            viewUid={viewUid} />
-                                    }
+                            {
+                                userInfo?.uid !== parseInt(viewUid) ?
+                                null
+                                :
+                                <AsukaButton 
+                                    text={modeInstance.status ? '退出编辑模式':'编辑个人资料'}
+                                    clazz={modeInstance.status ? 'danger':'normal'}
+                                    onClick={() => {
+                                        setModeInstance({...modeInstance, status: !modeInstance.status, editorIndex: null, menuIndex: 0})
+                                        $(menuLineRef.current).css({ left: 0 })
+                                    }}/>
+                            }
+                            {
+                                modeInstance.status === false &&
+                                <div
+                                    className={style.likes_box}
+                                    onClick={() => {
+                                        let data = new FormData()
+                                        data.append('targetUid', viewUid)
+                                        targetLikeUser({ data: data, toast: { isShow: true, loadingMessage: '提交请求中...' } }).then(resq => {
+                                            setUserProfiles(current => ({
+                                                ...current,
+                                                likeNum: resq.data.status ? userProfiles.likeNum + 1:userProfiles.likeNum - 1,
+                                                viewerLike: resq.data.status
+                                            }))
+                                        }).catch(() => {})
+                                    }}>
+                                    <Svg
+                                        src='https://image.superarilo.icu/svg/user_like.svg'
+                                        cacheRequests={true}
+                                        preProcessor={code => code.replace(/fill=".*?"/g, 'fill="currentColor"')}
+                                        className={userProfiles?.viewerLike ? style.user_like_on:''}
+                                        width='1.2rem'
+                                        height='1.2rem'/>
+                                    <span>{userProfiles?.likeNum}</span>
+                                    <WaterWave position='absolute' />
                                 </div>
+                            }
+                        </div>
+                        <div className={style.function_box}>
+                            <header className={style.select_title}>
+                                <div ref={menuLineRef} className={style.select_line} style={{ width: 'calc(100% / ' + (modeInstance.status ? editorMenuList.length:infoMenuList.length) + ')' }} type='line' />
+                                {
+                                    modeInstance.status ?
+                                    editorMenuList.map(item => {
+                                        return (
+                                            <div
+                                                className={`${style.select_title_item} ${modeInstance.menuIndex === item.id ? style.select_title_item_active:''}`}
+                                                index={item.id}
+                                                key={item.id}
+                                                onClick={() => {
+                                                    setModeInstance({...modeInstance, menuIndex: item.id})
+                                                    $(menuLineRef.current).css({ left: $($('div[index]')[item.id]).width() * item.id })
+                                                }}>
+                                                <Svg
+                                                    src={item.icon}
+                                                    cacheRequests={true}
+                                                    width='1.2rem'
+                                                    height='1.2rem' />
+                                                <span>{item.title}</span>
+                                                <WaterWave color="rgb(155, 195, 219)" duration={ 1 } />
+                                            </div>
+                                        )
+                                    })
+                                    :
+                                    infoMenuList.map(item => {
+                                        return (
+                                            <div
+                                                className={`${style.select_title_item} ${modeInstance.menuIndex === item.id ? style.select_title_item_active:''}`}
+                                                index={item.id}
+                                                key={item.id}
+                                                onClick={() => {
+                                                    setModeInstance({...modeInstance, menuIndex: item.id})
+                                                    $(menuLineRef.current).css({ left: $($('div[index]')[item.id]).width() * item.id })
+                                                }}>
+                                                <Svg
+                                                    src={item.svgSrc}
+                                                    cacheRequests={true}
+                                                    width='1.2rem'
+                                                    height='1.2rem'/>
+                                                <span>{item.title}</span>
+                                                <WaterWave color="rgb(155, 195, 219)" duration={ 1 } />
+                                            </div>
+                                        )
+                                    })
+                                }
+                            </header>
+                            <div className={style.select_function_box}>
+                                {
+                                    modeInstance.status ? 
+                                    <RenderEditorFunctionView
+                                        modeInstance={modeInstance}
+                                        setModeInstance={setModeInstance}
+                                        userProfiles={userProfiles}
+                                        userInfo={userInfo}
+                                        viewUid={viewUid} />
+                                    :
+                                    <RenderFunctionView
+                                        menuIndex={modeInstance.menuIndex}
+                                        userProfiles={userProfiles}
+                                        userInfo={userInfo}
+                                        viewUid={viewUid} />
+                                }
                             </div>
                         </div>
-                    }
-                </CSSTransition>
-            </SwitchTransition>
+                    </div>
+                } />
         </div>
     )
 }
@@ -874,53 +871,45 @@ const UserLikeView = (props) => {
 
     return (
         <div className={style.user_like_view}>
-            <SwitchTransition mode='out-in'>
-                <CSSTransition key={dataObject.list === null} classNames='change' timeout={300} nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
-                    {
-                        dataObject.list === null ?
-                        <UserLikeViewSkeleton />
-                        :
-                        <SwitchTransition mode='out-in'>
-                            <CSSTransition key={dataObject.list.length === 0} classNames='change' timeout={300} nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
-                                {
-                                    dataObject.list.length === 0 ? 
-                                    <span className={style.info_empty}>TA暂时还没有被点赞哦</span>
-                                    :
-                                    <>
-                                        <TransitionGroup>
-                                            {
-                                                dataObject.list.map(item => {
-                                                    return (
-                                                        <Collapse key={item.id}>
-                                                            <div className={style.like_item}>
-                                                                <div className={style.item_content}>
-                                                                    <Avatar
-                                                                        width='3rem'
-                                                                        height='3rem'
-                                                                        title={item.nickName}
-                                                                        alt={item.nickName}
-                                                                        src={item.avatar}
-                                                                        onClick={() => {
-                                                                            navigate(`/user/${item.uid}`)
-                                                                        }}/>
-                                                                    <div className={style.info_box}>
-                                                                        <span>{item.nickName}</span>
-                                                                        <span>在 {item.createTime} 的时候赞了{props.userProfiles.uid === props.userInfo?.uid ? '你':'TA'}</span>
-                                                                    </div>
-                                                                </div>
+            <CTransitionFade
+                keyS={dataObject.list === null}
+                left={<UserLikeViewSkeleton />}
+                right={
+                    <CTransitionFade
+                        keyS={dataObject.list?.length === 0}
+                        left={<span className={style.info_empty}>TA暂时还没有被点赞哦</span>}
+                        right={
+                            <>
+                                <CTransitionGroup>
+                                    {
+                                        dataObject.list?.map(item => {
+                                            return (
+                                                <Collapse key={item.id}>
+                                                    <div className={style.like_item}>
+                                                        <div className={style.item_content}>
+                                                            <Avatar
+                                                                width='3rem'
+                                                                height='3rem'
+                                                                title={item.nickName}
+                                                                alt={item.nickName}
+                                                                src={item.avatar}
+                                                                onClick={() => {
+                                                                    navigate(`/user/${item.uid}`)
+                                                                }}/>
+                                                            <div className={style.info_box}>
+                                                                <span>{item.nickName}</span>
+                                                                <span>在 {item.createTime} 的时候赞了{props.userProfiles.uid === props.userInfo?.uid ? '你':'TA'}</span>
                                                             </div>
-                                                        </Collapse>
-                                                    )
-                                                })
-                                            }
-                                        </TransitionGroup>
-                                    </>
-                                }
-                            </CSSTransition>
-                        </SwitchTransition>
-                    }
-                </CSSTransition>
-            </SwitchTransition>
+                                                        </div>
+                                                    </div>
+                                                </Collapse>
+                                            )
+                                        })
+                                    }
+                                </CTransitionGroup>
+                            </>
+                        } />
+                } />
         </div>
     )
 } 

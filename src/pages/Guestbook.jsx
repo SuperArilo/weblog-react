@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react'
 import Tinymce from '../components/editor'
 import Avatar from '../components/Avatar'
 import WaterWave from '../components/WaterWave'
-import { SwitchTransition, CSSTransition, TransitionGroup } from 'react-transition-group'
+import { CTransitionFade, CTransitionGroup } from '../components/Transition'
 import Skeleton from '@mui/material/Skeleton'
 import Collapse from '@mui/material/Collapse'
 import AsukaPoppor from '../components/popper'
@@ -74,33 +74,31 @@ export default function Guestbook() {
                     
                 }}/>
             <div className={style.guestbook_comment_list}>
-                <SwitchTransition mode='out-in'>
-                    <CSSTransition key={dataObject.list === null} classNames='change' timeout={300} nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
-                        {
-                            dataObject.list === null ? <GuestbookSkeleton />:
-                            <>
-                                {
-                                    dataObject.list.length === 0 ? <div className={style.empty_box}>当前没有留言，赶快来评论吧 ψ(｀∇´)ψ</div>:
-                                    <TransitionGroup>
-                                        {
-                                            dataObject.list.map(item => {
-                                                return (
-                                                    <Collapse key={item.guestbookId}>
-                                                        <GuestbookCommentItem
-                                                            dataListGet={dataListGet}
-                                                            requestInstance={requestInstance}
-                                                            userInfo={userInfo}
-                                                            item={item}/>
-                                                    </Collapse>
-                                                )
-                                            })
-                                        }
-                                    </TransitionGroup>
-                                }
-                            </>
-                        }
-                    </CSSTransition>
-                </SwitchTransition>
+                <CTransitionFade
+                    keyS={dataObject.list === null}
+                    left={<GuestbookSkeleton />}
+                    right={
+                        <>
+                            {
+                                dataObject.list?.length === 0 ? <div className={style.empty_box}>当前没有留言，赶快来评论吧 ψ(｀∇´)ψ</div>:
+                                <CTransitionGroup>
+                                    {
+                                        dataObject.list?.map(item => {
+                                            return (
+                                                <Collapse key={item.guestbookId}>
+                                                    <GuestbookCommentItem
+                                                        dataListGet={dataListGet}
+                                                        requestInstance={requestInstance}
+                                                        userInfo={userInfo}
+                                                        item={item}/>
+                                                </Collapse>
+                                            )
+                                        })
+                                    }
+                                </CTransitionGroup>
+                            }
+                        </>
+                    } />
             </div>
             {
                 dataObject.pages === 0 || dataObject.pages === 1 ? '':

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 //样式
 import style from '../assets/scss/links.module.scss'
 import renderHtml from '../assets/scss/renderHtml.module.scss'
@@ -7,7 +7,7 @@ import '../assets/scss/currencyTransition.scss'
 import Avatar from '../components/Avatar'
 import TextField from '@mui/material/TextField'
 import AsukaButton from '../components/asukaButton'
-import { SwitchTransition, CSSTransition } from 'react-transition-group'
+import { CTransitionFade } from '../components/Transition'
 import Skeleton from '@mui/material/Skeleton'
 //方法
 import { useSelector } from 'react-redux'
@@ -127,39 +127,34 @@ export default function Links(props) {
             <div className={style.friends_content}>
                 <p className={style.function_title}>朋友们 (默认按添加时间排序)</p>
                 <div className={style.friends_list}>
-                    <SwitchTransition mode='out-in'>
-                        <CSSTransition key={dataInstance.list === null} classNames='change' timeout={300} nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
-                            {
-                                dataInstance.list === null ?
-                                <LinksSkeleton />
-                                :
-                                <>
-                                    {
-                                        dataInstance.list.length === 0 ?
-                                        <div className={style.friends_list_item_skeleton}>
-                                            <span className={style.empty_box}>一个朋友都没有 o(TヘTo)</span>
-                                        </div>
-                                        :
-                                        dataInstance.list.map(item => {
-                                            return (
-                                                <div className={style.friends_list_item} key={item.id}>
-                                                    <Avatar 
-                                                        width='3.2rem'
-                                                        height='3.2rem'
-                                                        src={item.friendAvatar}/>
-                                                    <div className={style.friends_info}>
-                                                        <span className={style.friends_name}>{item.friendName}</span>
-                                                        <p className={style.friends_describe}>{item.friendIntroduction}</p>
-                                                    </div>
+                    <CTransitionFade
+                        keyS={dataInstance.list === null}
+                        left={<LinksSkeleton />}
+                        right={
+                            <>
+                                {
+                                    dataInstance.list.length === 0 ?
+                                    <div className={style.friends_list_item_skeleton}>
+                                        <span className={style.empty_box}>一个朋友都没有 o(TヘTo)</span>
+                                    </div>
+                                    :
+                                    dataInstance.list.map(item => {
+                                        return (
+                                            <div className={style.friends_list_item} key={item.id}>
+                                                <Avatar 
+                                                    width='3.2rem'
+                                                    height='3.2rem'
+                                                    src={item.friendAvatar}/>
+                                                <div className={style.friends_info}>
+                                                    <span className={style.friends_name}>{item.friendName}</span>
+                                                    <p className={style.friends_describe}>{item.friendIntroduction}</p>
                                                 </div>
-                                            )
-                                        })
-                                    }
-                                </>
-                            }
-                        </CSSTransition>
-                    </SwitchTransition>
-                    
+                                            </div>
+                                        )
+                                    })
+                                }
+                            </>
+                        } />
                 </div>
             </div>
         </div>

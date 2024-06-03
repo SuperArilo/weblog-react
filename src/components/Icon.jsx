@@ -3,27 +3,25 @@ import WaterWave from './WaterWave'
 //样式
 import style from '../assets/scss/components/Icon.module.scss'
 import Svg from 'react-inlinesvg'
-export default function Icon(props) {
+export default function Icon({
+    width = '1.5rem',
+    height = '1.5rem',
+    fontSize = '1rem',
+    src = 'https://cdn.svgporn.com/logos/firefox.svg',
+    count = '',
+    onClick = () => null }) {
     return (
-        <div className={style.icon_box} onClick={e => { props.onClick(e) }}>
+        <div className={style.icon_box} onClick={e => { onClick(e) }}>
             <WaterWave color="rgb(155, 195, 219)" duration={ 1 } />
             <Svg
                 cacheRequests={true}
-                src={props.src}
-                width={props.width}
-                height={props.height}
-                fontSize={props.fontSize}/>
+                src={src}
+                width={width}
+                height={height}
+                fontSize={fontSize}/>
             {
-                props.count !== '' ? <span className={style.count}>{ props.count >= 100 ? '99+':props.count }</span>:''
+                count !== '' ? <span className={style.count}>{ count >= 100 ? '99+':count }</span>:''
             }
         </div>
     )
-}
-Icon.defaultProps = {
-    width: '1.5rem',
-    height: '1.5rem',
-    fontSize: '1rem',
-    src: 'https://cdn.svgporn.com/logos/firefox.svg',
-    onClick: () => { return null },
-    count: ''
 }

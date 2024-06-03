@@ -2,14 +2,12 @@ import React, { useState, useEffect, useCallback, useRef } from 'react'
 //样式
 import style from '../assets/scss/notice.module.scss'
 import renderHtml from '../assets/scss/renderHtml.module.scss'
-import '../assets/scss/currencyTransition.scss'
 //方法
 import $ from 'jquery'
 import { noticeGet, readNotice } from '../util/notice'
 import { useSelector } from 'react-redux'
 import { useNavigate  } from 'react-router-dom'
-import { SwitchTransition, CSSTransition } from 'react-transition-group'
-//组件
+import { CTransitionFade } from '../components/Transition'
 import Icon from '../components/Icon'
 import toast from 'react-hot-toast'
 import WaterWave from '../components/WaterWave'
@@ -143,123 +141,121 @@ export default function Notice(props) {
                     <div ref={lineRef} className={style.scroll_line}></div>
                 </nav>
                 <div className={style.notice_function}>
-                    <SwitchTransition mode='out-in'>
-                        <CSSTransition key={noticeInstance.list === null} timeout={300} classNames="change" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
-                            {
-                                noticeInstance.list === null ?
-                                <div className={style.notice_data_skeleton}>
-                                    <Stack spacing={1}>
-                                        <Skeleton variant="rounded" width='100%' height='2rem' />
-                                        <Skeleton variant="rounded" width='100%' height='2rem' />
-                                        <Skeleton variant="rounded" width='100%' height='2rem' />
-                                    </Stack>
-                                    
-                                </div>
-                                :
-                                <>
-                                    {
-                                        noticeInstance.list.length === 0 ?
-                                        <span className={style.notice_data_empty}>当前没有任何通知哦</span>
-                                        :
-                                        <>
-                                            <div className={style.notice_data_list}>
-                                                {
-                                                    noticeInstance.list.map((item, index, array) => {
-                                                        return (
-                                                            <div className={style.notice_data_list_item} key={item.noticeId}>
-                                                                <div className={style.notice_title}>
+                    <CTransitionFade
+                        keyS={noticeInstance.list === null}
+                        left={
+                            <div className={style.notice_data_skeleton}>
+                                <Stack spacing={1}>
+                                    <Skeleton variant="rounded" width='100%' height='2rem' />
+                                    <Skeleton variant="rounded" width='100%' height='2rem' />
+                                    <Skeleton variant="rounded" width='100%' height='2rem' />
+                                </Stack>
+                                
+                            </div>
+                        }
+                        right={
+                            <>
+                                {
+                                    noticeInstance.list?.length === 0 ?
+                                    <span className={style.notice_data_empty}>当前没有任何通知哦</span>
+                                    :
+                                    <>
+                                        <div className={style.notice_data_list}>
+                                            {
+                                                noticeInstance.list?.map((item, index, array) => {
+                                                    return (
+                                                        <div className={style.notice_data_list_item} key={item.noticeId}>
+                                                            <div className={style.notice_title}>
 
-                                                                    <Icon
-                                                                        width='1rem'
-                                                                        height='1rem'
-                                                                        src={`https://image.superarilo.icu/svg/${selectNoticeList.indexOf(item.noticeId) === -1 ? 'un_select':'selected'}.svg`}
-                                                                        onClick={() => {
-                                                                            let copy = [...selectNoticeList]
-                                                                            let index = copy.indexOf(item.noticeId)
-                                                                            if(index === -1) {
-                                                                                copy.push(item.noticeId)
-                                                                            } else {
-                                                                                copy.splice(index, 1)
-                                                                            }
-                                                                            setSelectNoticeList(copy)
-                                                                        }}/>
-                                                                    <span
-                                                                        onClick={() => {
-                                                                            setNavMenuInstance({
-                                                                                ...navMenuInstance,
-                                                                                selectItemIndex: navMenuInstance.selectItemIndex === item.noticeId ? null:item.noticeId
-                                                                            })
-                                                                        }}>{item.title}</span>
-                                                                </div>
-                                                                <Collapse in={navMenuInstance.selectItemIndex === item.noticeId} mountOnEnter unmountOnExit>
-                                                                    <div className={style.notice_content}>
-                                                                        <span className={style.notice_send_time}>时间：{item.createTime}</span>
-                                                                        <div
-                                                                            className={`${style.notice_render} ${renderHtml.render_html}`}
-                                                                            dangerouslySetInnerHTML={{ __html: item.content }}/>
-                                                                    </div>
-                                                                </Collapse>
+                                                                <Icon
+                                                                    width='1rem'
+                                                                    height='1rem'
+                                                                    src={`https://image.superarilo.icu/svg/${selectNoticeList.indexOf(item.noticeId) === -1 ? 'un_select':'selected'}.svg`}
+                                                                    onClick={() => {
+                                                                        let copy = [...selectNoticeList]
+                                                                        let index = copy.indexOf(item.noticeId)
+                                                                        if(index === -1) {
+                                                                            copy.push(item.noticeId)
+                                                                        } else {
+                                                                            copy.splice(index, 1)
+                                                                        }
+                                                                        setSelectNoticeList(copy)
+                                                                    }}/>
+                                                                <span
+                                                                    onClick={() => {
+                                                                        setNavMenuInstance({
+                                                                            ...navMenuInstance,
+                                                                            selectItemIndex: navMenuInstance.selectItemIndex === item.noticeId ? null:item.noticeId
+                                                                        })
+                                                                    }}>{item.title}</span>
                                                             </div>
-                                                        )
-                                                    })
+                                                            <Collapse in={navMenuInstance.selectItemIndex === item.noticeId} mountOnEnter unmountOnExit>
+                                                                <div className={style.notice_content}>
+                                                                    <span className={style.notice_send_time}>时间：{item.createTime}</span>
+                                                                    <div
+                                                                        className={`${style.notice_render} ${renderHtml.render_html}`}
+                                                                        dangerouslySetInnerHTML={{ __html: item.content }}/>
+                                                                </div>
+                                                            </Collapse>
+                                                        </div>
+                                                    )
+                                                })
+                                            }
+                                        </div>
+                                        <div className={style.bottom_function}>
+                                            <div className={style.select_all}>
+                                                <Icon
+                                                    src={`https://image.superarilo.icu/svg/${selectNoticeList.length === 0 ? 'un_select':''}${selectNoticeList.length >= 1 && selectNoticeList.length < noticeInstance.list?.length ? 'selected_other':''}${selectNoticeList.length === noticeInstance.list?.length ? 'selected':''}.svg`}
+                                                    width='1rem'
+                                                    height='1rem'
+                                                    onClick={() => {
+                                                        if(selectNoticeList.length === noticeInstance.list.length) {
+                                                            setSelectNoticeList([])
+                                                            return
+                                                        }
+                                                        let [...list] = selectNoticeList
+                                                        noticeInstance.list.forEach(key => {
+                                                            if(selectNoticeList.indexOf(key.noticeId) === -1) {
+                                                                list.push(key.noticeId)
+                                                            }
+                                                        })
+                                                        setSelectNoticeList(list)
+                                                    }}/>
+                                                <span>全选</span>
+                                            </div>
+                                            <div>
+                                                {
+                                                    noticeInstance.list?.length !== 0 &&
+                                                    <Pagination
+                                                        position='right'
+                                                        count={noticeInstance.pages}
+                                                        page={noticeInstance.current}
+                                                        onPageChange={e => { setRequestInstance({...requestInstance, pageNum: e}) }}/>
                                                 }
-                                            </div>
-                                            <div className={style.bottom_function}>
-                                                <div className={style.select_all}>
-                                                    <Icon
-                                                        src={`https://image.superarilo.icu/svg/${selectNoticeList.length === 0 ? 'un_select':''}${selectNoticeList.length >= 1 && selectNoticeList.length < noticeInstance.list.length ? 'selected_other':''}${selectNoticeList.length === noticeInstance.list.length ? 'selected':''}.svg`}
-                                                        width='1rem'
-                                                        height='1rem'
-                                                        onClick={() => {
-                                                            if(selectNoticeList.length === noticeInstance.list.length) {
+                                                <AsukaButton 
+                                                    text='删除'
+                                                    clazz='read'
+                                                    size='small'
+                                                    onClick={() => {
+                                                        if(selectNoticeList === null || selectNoticeList.length === 0) {
+                                                            toast('你还没选择公告哦')
+                                                            return
+                                                        }
+                                                        let data = new FormData()
+                                                        data.append('noticeIds', selectNoticeList)
+                                                        readNotice({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
+                                                            if(resq.code === 200){
+                                                                noticeListGet(requestInstance)
                                                                 setSelectNoticeList([])
-                                                                return
                                                             }
-                                                            let [...list] = selectNoticeList
-                                                            noticeInstance.list.forEach(key => {
-                                                                if(selectNoticeList.indexOf(key.noticeId) === -1) {
-                                                                    list.push(key.noticeId)
-                                                                }
-                                                            })
-                                                            setSelectNoticeList(list)
-                                                        }}/>
-                                                    <span>全选</span>
-                                                </div>
-                                                <div>
-                                                    {
-                                                        noticeInstance.list.length !== 0 &&
-                                                        <Pagination
-                                                            position='right'
-                                                            count={noticeInstance.pages}
-                                                            page={noticeInstance.current}
-                                                            onPageChange={e => { setRequestInstance({...requestInstance, pageNum: e}) }}/>
-                                                    }
-                                                    <AsukaButton 
-                                                        text='删除'
-                                                        class='read'
-                                                        size='small'
-                                                        onClick={() => {
-                                                            if(selectNoticeList === null || selectNoticeList.length === 0) {
-                                                                toast('你还没选择公告哦')
-                                                                return
-                                                            }
-                                                            let data = new FormData()
-                                                            data.append('noticeIds', selectNoticeList)
-                                                            readNotice({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
-                                                                if(resq.code === 200){
-                                                                    noticeListGet(requestInstance)
-                                                                    setSelectNoticeList([])
-                                                                }
-                                                            }).catch(err => {})
-                                                        }}/>
-                                                </div>
+                                                        }).catch(err => {})
+                                                    }}/>
                                             </div>
-                                        </>
-                                    }
-                                </>
-                            }
-                        </CSSTransition>
-                    </SwitchTransition>   
+                                        </div>
+                                    </>
+                                }
+                            </>
+                        } />
                 </div>
             </main>
         </div>

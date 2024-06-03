@@ -5,7 +5,6 @@ import style from '../assets/scss/components/instantInput.module.scss'
 import $ from 'jquery'
 import toast from 'react-hot-toast'
 //组件
-import WaterWave from './WaterWave'
 import TextField from '@mui/material/TextField'
 import Icon from './Icon'
 import Select from '@mui/material/Select'
@@ -13,11 +12,11 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 
-const InstantInput = forwardRef((props, ref) => {
+const InstantInput = forwardRef(({ label = '未设置', type = 'text', value = '未设置', mode = 'input', width = null, placeholder = '未设置', onErrorMessage, renderObject = [{ id: 0, title: '未设置' }], handleClose = () => null, handleSave = () => null }, ref) => {
 
     const mainRef = useRef(null)
     const iconDivRef = useRef(null)
-    const [inputConetnt, setInputContent] = useState(props.value)
+    const [inputConetnt, setInputContent] = useState(value)
 
 
     useEffect(() => {
@@ -31,12 +30,12 @@ const InstantInput = forwardRef((props, ref) => {
         <div className={`${style.instant_input}`}>
             <div ref={mainRef} className={style.main_content}>
                 {
-                    props.mode === 'input' &&
+                    mode === 'input' &&
                     <TextField
-                        type={props.type}
-                        style={{width: props.width}}
-                        label={props.label}
-                        defaultValue={props.value}
+                        type={type}
+                        style={{width: width}}
+                        label={label}
+                        defaultValue={value}
                         variant="filled"
                         onChange={e => {
                             setInputContent(e.target.value)
@@ -44,15 +43,15 @@ const InstantInput = forwardRef((props, ref) => {
                     
                 }
                 {
-                    props.mode === 'textarea' &&
+                    mode === 'textarea' &&
                     <TextField
                         fullWidth
-                        type={props.type}
-                        style={{width: props.width}}
+                        type={type}
+                        style={{width: width}}
                         hiddenLabel
-                        placeholder={props.placeholder}
+                        placeholder={placeholder}
                         error={inputConetnt === '' || inputConetnt === null}
-                        defaultValue={props.value}
+                        defaultValue={value}
                         variant="filled"
                         onChange={e => {
                             setInputContent(e.target.value)
@@ -60,16 +59,16 @@ const InstantInput = forwardRef((props, ref) => {
                     />
                 }
                 {
-                    props.mode === 'select' &&
+                    mode === 'select' &&
                         <FormControl variant="filled" sx={{width: '6rem'}}>
-                            <InputLabel>{props.label}</InputLabel>
+                            <InputLabel>{label}</InputLabel>
                             <Select
                                 value={inputConetnt}
                                 onChange={e => { 
                                     setInputContent(e.target.value)
                                 }}>
                                 {
-                                    props.renderObject.map(item => {
+                                    renderObject.map(item => {
                                         return <MenuItem key={item.id} value={item.id}>{item.title}</MenuItem>
                                     })
                                 }
@@ -81,7 +80,7 @@ const InstantInput = forwardRef((props, ref) => {
                         width='1rem'
                         height='1rem'
                         src='https://image.superarilo.icu/svg/close.svg'
-                        onClick={() => { props.handleClose() }} />
+                        onClick={() => { handleClose() }} />
                     <Icon
                         width='1rem'
                         height='1rem'
@@ -91,33 +90,16 @@ const InstantInput = forwardRef((props, ref) => {
                                 toast('必须要填写内容哦')
                                 return
                             }
-                            props.handleSave(inputConetnt)
+                            handleSave(inputConetnt)
                         }}>
                     </Icon>
                 </div>
             </div>
             {
-                props.onErrorMessage && <span className={`${style.error_message} ${(inputConetnt === '' || inputConetnt === null) && style.error_message_active}`}>{props.onErrorMessage}</span>
+                onErrorMessage && <span className={`${style.error_message} ${(inputConetnt === '' || inputConetnt === null) && style.error_message_active}`}>{onErrorMessage}</span>
             }
             
         </div>
     )
 })
-InstantInput.defaultProps = {
-    label: '未设置',
-    type: 'text',
-    value: '未设置',
-    mode: 'input',
-    width: null,
-    placeholder: '未设置',
-    renderObject: [
-        {
-            id: 0,
-            title: '未设置'
-        }
-    ],
-    handleClose: () => { return null },
-    handleSave: () => { return null }
-
-}
 export default InstantInput

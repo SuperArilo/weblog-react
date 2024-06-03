@@ -11,10 +11,11 @@ import GossipContent from '../components/gossipContent'
 import Slider from "react-slick"
 import GossipSkeleton from '../components/GossipSkeleton'
 import Skeleton from '@mui/material/Skeleton'
-import { SwitchTransition, CSSTransition } from 'react-transition-group'
+
 import Pagination from '../components/Pagination'
 import Friends from './Friends'
 import Svg from 'react-inlinesvg'
+import { CTransitionFade } from '../components/Transition'
 //hook
 import { articleListGet } from '../util/article'
 import { useNavigate } from "react-router-dom"
@@ -89,6 +90,9 @@ export default function IndexPage(props) {
             }
         }).catch(() => {})
     }, [])
+    //css ref
+    const loadingSider = useRef(null)
+    const siderCarousel = useRef(null)
 
     //顶部
     useEffect(() => {
@@ -116,11 +120,11 @@ export default function IndexPage(props) {
                     }} />
                     <span className={style.auto_play_span}>自动播放</span>
                 </header>
-                <SwitchTransition mode="out-in">
-                    <CSSTransition key={hotArticleList.length === 0} classNames='change' timeout={300} nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
-                        {
-                            hotArticleList.length === 0 ?
-                            <div className={style.loading_sider}>
+                <div className={style.sider_change_content}>
+                    <CTransitionFade
+                        keyS={hotArticleList.length === 0}
+                        left={
+                            <div ref={loadingSider} className={style.loading_sider}>
                                 <Svg
                                     cacheRequests={true}
                                     src='https://image.superarilo.icu/svg/loading.svg'
@@ -128,8 +132,9 @@ export default function IndexPage(props) {
                                     width='1.5rem'
                                     height='1.5rem'/>
                             </div>
-                            :
-                            <section className={style.sider_carousel}>
+                        }
+                        right={
+                            <section ref={siderCarousel} className={style.sider_carousel}>
                                 <Slider ref={sliderRef} {...sliderSettings}>
                                     {
                                         hotArticleList.map(item => { return <SiderItem key={item.id} object={item} /> })
@@ -151,18 +156,17 @@ export default function IndexPage(props) {
                                     }
                                 </ul>
                             </section>
-                        }
-                    </CSSTransition>
-                </SwitchTransition>
+                        } />
+                </div>
             </div>
             <section className={style.index_section}>
                 <div className={style.public_sub_content}>
                     <span className={style.public_sub_content_header}>全部文章</span>
-                    <SwitchTransition mode='out-in'>
-                        <CSSTransition classNames='change' key={articleObject.list.length === 0} timeout={300} mountOnEnter={true} unmountOnExit={true}>
-                            {
-                                articleObject.list.length === 0 ? <ArticleSkeleton />:
-                                <ul className={style.article_list}>
+                    <CTransitionFade
+                        keyS={articleObject.list.length === 0} 
+                        left={<ArticleSkeleton />}
+                        right={
+                            <ul className={style.article_list}>
                                     {
                                         articleObject.list.map(item => {
                                             return <Article 
@@ -188,10 +192,8 @@ export default function IndexPage(props) {
                                                     />
                                         })
                                     }
-                                </ul>
-                            }
-                        </CSSTransition>
-                    </SwitchTransition>
+                            </ul>
+                        }/>
                     {
                         articleObject.pages === 0 || articleObject.pages === 1 ? '':
                         <Pagination
@@ -203,54 +205,52 @@ export default function IndexPage(props) {
                 </div>
                 <div className={style.public_sub_content}>
                     <span className={style.public_sub_content_header}>最近碎语</span>
-                    <SwitchTransition mode='out-in'>
-                        <CSSTransition key={gossipList.length === 0} classNames='change' timeout={300} nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
-                            {
-                                gossipList.length === 0 ? <GossipSkeleton />:
-                                <div className={style.gossip_list}>
-                                    {
-                                        gossipList.map(item => {
-                                            return <GossipContent
-                                                        key={item.id} 
-                                                        data={item} 
-                                                        userInfo={props.userInfo}
-                                                        foldStatus={selectGossipItem === item.id}
-                                                        handleFold={id => { setSelectGossipItem(selectGossipItem === id ? null:id) }}
-                                                        handleLike={(gossipId) => {
-                                                            if(props.userInfo === null) {
-                                                                toast('你需要登录哦 (￣y▽,￣)╭ ')
-                                                                return
-                                                            }
-                                                            let data = new FormData()
-                                                            data.append('gossipId', gossipId)
-                                                            likeGossip({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
-                                                                if(resq.code === 200) {
-                                                                    let temp = [...gossipList]
-                                                                    let index = temp.findIndex(item => item.id === gossipId)
-                                                                    if(resq.data.status) {
-                                                                        temp[index].likes++
-                                                                    } else {
-                                                                        if(temp[index].likes >= 0) {
-                                                                            temp[index].likes--
-                                                                        }
+                    <CTransitionFade
+                        keyS={gossipList.length === 0}
+                        left={<GossipSkeleton />}
+                        right={
+                            <div className={style.gossip_list}>
+                                {
+                                    gossipList.map(item => {
+                                        return <GossipContent
+                                                    key={item.id} 
+                                                    data={item} 
+                                                    userInfo={props.userInfo}
+                                                    foldStatus={selectGossipItem === item.id}
+                                                    handleFold={id => { setSelectGossipItem(selectGossipItem === id ? null:id) }}
+                                                    handleLike={(gossipId) => {
+                                                        if(props.userInfo === null) {
+                                                            toast('你需要登录哦 (￣y▽,￣)╭ ')
+                                                            return
+                                                        }
+                                                        let data = new FormData()
+                                                        data.append('gossipId', gossipId)
+                                                        likeGossip({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
+                                                            if(resq.code === 200) {
+                                                                let temp = [...gossipList]
+                                                                let index = temp.findIndex(item => item.id === gossipId)
+                                                                if(resq.data.status) {
+                                                                    temp[index].likes++
+                                                                } else {
+                                                                    if(temp[index].likes >= 0) {
+                                                                        temp[index].likes--
                                                                     }
-                                                                    temp[index].like = resq.data.status
-                                                                    setGossipList(temp)
                                                                 }
-                                                            }).catch(err => {})
-                                                        }}
-                                                        gossipDataGet={() => {
-                                                            gossipData(gossipRequestInstance)
-                                                        }}
-                                                        handleGossipList={() => {
-                                                            gossipData(gossipRequestInstance)
-                                                        }}/>
-                                        })
-                                    }
-                                </div>
-                            }
-                        </CSSTransition>
-                    </SwitchTransition>
+                                                                temp[index].like = resq.data.status
+                                                                setGossipList(temp)
+                                                            }
+                                                        }).catch(err => {})
+                                                    }}
+                                                    gossipDataGet={() => {
+                                                        gossipData(gossipRequestInstance)
+                                                    }}
+                                                    handleGossipList={() => {
+                                                        gossipData(gossipRequestInstance)
+                                                    }}/>
+                                    })
+                                }
+                            </div>
+                        } />
                     <span className={style.public_sub_content_header}>最近访客</span>
                     <Friends columns='1fr 1fr 1fr' defaultHeight={false}/>
                 </div>
@@ -266,7 +266,7 @@ const SiderItem = (props) => {
             <img src={props.object.articlePicture} alt='' title=''/>
             <div className={style.article_info}>
                 <p>{props.object.articleTitle}</p>
-                <AsukaButton text='开始阅读' class='read' onClick={() => { 
+                <AsukaButton text='开始阅读' clazz='read' onClick={() => { 
                     navigate('detail?threadId=' + props.object.id)
                     $('#react-by-asukamis').stop().animate({'scrollTop': 0})
                 }}/>
@@ -286,7 +286,7 @@ const Article = (props) => {
                 <span className={style.article_time}>{props.item.createTime}</span>
                 <p className={style.article_introduce}>{props.item.articleIntroduction}</p>
                 <div className={style.article_bottom_function}>
-                    <AsukaButton text='开始阅读' class='read' onClick={() => { 
+                    <AsukaButton text='开始阅读' clazz='read' onClick={() => { 
                         navigate('detail?threadId=' + props.item.id)
                         $('#react-by-asukamis').stop().animate({'scrollTop': 0})
                      }}/>

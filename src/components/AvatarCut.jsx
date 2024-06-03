@@ -5,7 +5,7 @@ import AvatarEditor from 'react-avatar-editor'
 //样式
 import style from '../assets/scss/components/avatarCut.module.scss'
 
-const AvatarCut = forwardRef((props, ref) => {
+const AvatarCut = forwardRef(({ image }, ref) => {
 
     const avatarEditorRef = useRef(null)
 
@@ -19,7 +19,7 @@ const AvatarCut = forwardRef((props, ref) => {
         <AvatarEditor
             className={style.avatar_cut}
             ref={avatarEditorRef}
-            image={props.image}
+            image={image}
             width={120}
             height={120}
             border={0}
@@ -31,7 +31,3 @@ const AvatarCut = forwardRef((props, ref) => {
     )
 })
 export default AvatarCut
-
-AvatarCut.defaultProps = {
-    image: null
-}

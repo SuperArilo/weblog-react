@@ -1,15 +1,14 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import Avatar from '../components/Avatar'
 import Skeleton from '@mui/material/Skeleton'
-import { SwitchTransition, CSSTransition, TransitionGroup } from 'react-transition-group'
+import { CTransitionFade } from '../components/Transition'
 
 import style from '../assets/scss/friends.module.scss'
-import '../assets/scss/currencyTransition.scss'
 import { friendGet } from '../util/friend'
 
-export default function Friends({ columns, defaultHeight }) {
+export default function Friends({ columns, defaultHeight = true }) {
 
     //hook
     const navigate = useNavigate()
@@ -47,42 +46,36 @@ export default function Friends({ columns, defaultHeight }) {
     }, [requestInstance, friendsListGet])
     return (
         <div className={style.friends_box} style={defaultHeight ? { minHeight: '83vh' }:{}}>
-            <div className={style.friends_list} style={{ gridTemplateColumns: columns }}>
-                <SwitchTransition mode='out-in'>
-                    <CSSTransition key={dataInstance.list === null} classNames='change' timeout={300} nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
-                        {
-                            dataInstance.list === null ?
-                            <FriendsSkeleton />
-                            :
-                            <>
-                                {
-                                    dataInstance.list.length === 0 ?
-                                    <span>没有数据</span>
-                                    :
-                                    dataInstance.list.map(item => {
-                                        return (
-                                            <div className={style.friends_list_item} key={item.id}>
-                                                <Avatar
-                                                    src={item.avatar}
-                                                    width='3rem'
-                                                    height='3rem'
-                                                    title={item.nickName}
-                                                    alt='用户头像'
-                                                    onClick={() => {
-                                                        navigate('/user/' + item.uid)
-                                                    }}
-                                                    />
-                                                <span className={style.friend_name}>{item.nickName}</span>
-                                                <span className={style.time_ago}>{item.visitTimeFormat}来过</span>
-                                            </div>
-                                        )
-                                    })
-                                }
-                            </>
-                        }
-                    </CSSTransition>
-                </SwitchTransition>
-            </div>
+            <CTransitionFade
+                    keyS={dataInstance.list === null}
+                    left={<FriendsSkeleton />}
+                    right={
+                        <div className={style.friends_list} style={{ gridTemplateColumns: columns }}>
+                            {
+                                dataInstance.list?.length === 0 ?
+                                <span>没有数据</span>
+                                :
+                                dataInstance.list?.map(item => {
+                                    return (
+                                        <div className={style.friends_list_item} key={item.id}>
+                                            <Avatar
+                                                src={item.avatar}
+                                                width='3rem'
+                                                height='3rem'
+                                                title={item.nickName}
+                                                alt='用户头像'
+                                                onClick={() => {
+                                                    navigate('/user/' + item.uid)
+                                                }}
+                                                />
+                                            <span className={style.friend_name}>{item.nickName}</span>
+                                            <span className={style.time_ago}>{item.visitTimeFormat}来过</span>
+                                        </div>
+                                    )
+                                })
+                            }
+                        </div>
+                    } />
         </div>
     )
 }
@@ -94,7 +87,4 @@ const FriendsSkeleton = () => {
             <Skeleton variant="text" width='6rem' height='1rem' />
         </div>
     )
-}
-Friends.defaultProps = {
-    defaultHeight: true
 }

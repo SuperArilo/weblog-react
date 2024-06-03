@@ -1,4 +1,4 @@
-import { TransitionGroup, SwitchTransition, CSSTransition } from 'react-transition-group'
+import { CTransitionFade, CTransitionGroup } from '../components/Transition'
 //hook
 import React, { useEffect, useState, useRef, useCallback, forwardRef, useImperativeHandle } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
@@ -89,33 +89,29 @@ const ArticleInfoTop = props => {
     }, [dataGet])
 
     return (
-        <SwitchTransition mode='out-in'>
-            <CSSTransition key={articleInstance  === ''} timeout={300} classNames="change" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
-                {
-                    articleInstance  === '' ?
-                    <ArticleSkeleton />
-                    :
-                    <ArticleContent 
-                        articleInstance={articleInstance} 
-                        handleLike={(articleId) => { 
-                            if(!props.userInfo) {
-                                toast('你需要登录才能进行下一步操作哦')
-                                return
+        <CTransitionFade
+            keyS={articleInstance  === ''}
+            left={<ArticleSkeleton />}
+            right={
+                <ArticleContent 
+                    articleInstance={articleInstance} 
+                    handleLike={(articleId) => { 
+                        if(!props.userInfo) {
+                            toast('你需要登录才能进行下一步操作哦')
+                            return
+                        }
+                        let data = new FormData()
+                        data.append('articleId', articleId)
+                        increaseArticleLike({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
+                            if(resq.code === 200) {
+                                let {...temp} = articleInstance
+                                temp.hasLike = resq.data.status
+                                temp.articleLikes = resq.data.likes
+                                setArticleInstance(temp)
                             }
-                            let data = new FormData()
-                            data.append('articleId', articleId)
-                            increaseArticleLike({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
-                                if(resq.code === 200) {
-                                    let {...temp} = articleInstance
-                                    temp.hasLike = resq.data.status
-                                    temp.articleLikes = resq.data.likes
-                                    setArticleInstance(temp)
-                                }
-                            }).catch(err => { })
-                        }} />
-                }
-            </CSSTransition>
-        </SwitchTransition>
+                        }).catch(err => { })
+                    }} />
+            } />
     )
 }
 const ArticleVistorList = forwardRef((props, ref) => {
@@ -159,72 +155,70 @@ const ArticleVistorList = forwardRef((props, ref) => {
             <div className={style.article_vistor_list}>
                 {
                     commentObject.list ===  null ? <CommentSkeleton />:
-                    <SwitchTransition mode="out-in">
-                        <CSSTransition key={commentObject.list.length === 0} classNames='change' timeout={300} nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
-                            {
-                                commentObject.list.length === 0 ? <div className={style.empty_box}>当前没有评论，赶快来评论吧 ψ(｀∇´)ψ</div>:
-                                <TransitionGroup>
-                                    {
-                                        commentObject.list.map(item => {
-                                            return (
-                                                <Collapse key={item.commentId}>
-                                                    <Comment
-                                                        userInfo={props.userInfo}
-                                                        key={item.commentId}
-                                                        foldStatus={selectCommentItem === item.commentId}
-                                                        data={item}
-                                                        handleFold={(id) => { setSelectCommentItem(id === selectCommentItem ? null:id) }}
-                                                        handleLike={() => { 
-                                                            if(props.userInfo === null) {
-                                                                toast('你需要登陆才能继续哦 ⊙﹏⊙∥')
-                                                                return
+                    <CTransitionFade
+                        keyS={commentObject.list.length === 0}
+                        left={<div className={style.empty_box}>当前没有评论，赶快来评论吧 ψ(｀∇´)ψ</div>}
+                        right={
+                            <CTransitionGroup>
+                                {
+                                    commentObject.list.map(item => {
+                                        return (
+                                            <Collapse key={item.commentId}>
+                                                <Comment
+                                                    userInfo={props.userInfo}
+                                                    key={item.commentId}
+                                                    foldStatus={selectCommentItem === item.commentId}
+                                                    data={item}
+                                                    handleFold={(id) => { setSelectCommentItem(id === selectCommentItem ? null:id) }}
+                                                    handleLike={() => { 
+                                                        if(props.userInfo === null) {
+                                                            toast('你需要登陆才能继续哦 ⊙﹏⊙∥')
+                                                            return
+                                                        }
+                                                        let data = new FormData()
+                                                        data.append('articleId', props.articleId)
+                                                        data.append('commentId', item.commentId)
+                                                        likeComment({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
+                                                            if(resq.code === 200) {
+                                                                let [...temp] = commentObject.list
+                                                                let index = temp.findIndex(key => key.commentId === item.commentId)
+                                                                temp[index].like = resq.data.status
+                                                                temp[index].likes = resq.data.likes
+                                                                setCommentObject({...commentObject, list: temp})
                                                             }
-                                                            let data = new FormData()
-                                                            data.append('articleId', props.articleId)
-                                                            data.append('commentId', item.commentId)
-                                                            likeComment({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
-                                                                if(resq.code === 200) {
-                                                                    let [...temp] = commentObject.list
-                                                                    let index = temp.findIndex(key => key.commentId === item.commentId)
-                                                                    temp[index].like = resq.data.status
-                                                                    temp[index].likes = resq.data.likes
-                                                                    setCommentObject({...commentObject, list: temp})
-                                                                }
-                                                            }).catch(err => { })
-                                                        }}
-                                                        handleReply={(content) => {
-                                                            let data = new FormData()
-                                                            data.append('articleId', props.articleId)
-                                                            data.append('content', content)
-                                                            data.append('replyCommentId', item.commentId)
-                                                            data.append('replyUserId', item.replyUser.replyUserId)
-                                                            replyComment({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
-                                                                if(resq.code === 200) {
+                                                        }).catch(err => { })
+                                                    }}
+                                                    handleReply={(content) => {
+                                                        let data = new FormData()
+                                                        data.append('articleId', props.articleId)
+                                                        data.append('content', content)
+                                                        data.append('replyCommentId', item.commentId)
+                                                        data.append('replyUserId', item.replyUser.replyUserId)
+                                                        replyComment({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
+                                                            if(resq.code === 200) {
+                                                                commentData(requestInstance)
+                                                                setSelectCommentItem(null)
+                                                            }
+                                                        }).catch(err => {})
+                                                    }}
+                                                    handleDelete={() => {
+                                                        let data = new FormData()
+                                                        data.append('articleId', props.articleId)
+                                                        data.append('commentId', item.commentId)
+                                                        deleteComment({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
+                                                            if(resq.code === 200) {
+                                                                setTimeout(() => {
                                                                     commentData(requestInstance)
-                                                                    setSelectCommentItem(null)
-                                                                }
-                                                            }).catch(err => {})
-                                                        }}
-                                                        handleDelete={() => {
-                                                            let data = new FormData()
-                                                            data.append('articleId', props.articleId)
-                                                            data.append('commentId', item.commentId)
-                                                            deleteComment({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
-                                                                if(resq.code === 200) {
-                                                                    setTimeout(() => {
-                                                                        commentData(requestInstance)
-                                                                    }, 500)
-                                                                }
-                                                            }).catch(err => { })
-                                                        }}/>
-                                                </Collapse>
-                                            )
-                                        })
-                                    }
-                                </TransitionGroup>
-                            }
-                        </CSSTransition>
-                    </SwitchTransition>
+                                                                }, 500)
+                                                            }
+                                                        }).catch(err => { })
+                                                    }}/>
+                                            </Collapse>
+                                        )
+                                    })
+                                }
+                            </CTransitionGroup>
+                        } />
                 }
             </div>
             {

@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback, useRef } from 'react'
 //样式
 import style from '../assets/scss/components/gossipContent.module.scss'
 import renderHtml from '../assets/scss/renderHtml.module.scss'
-import '../assets/scss/currencyTransition.scss'
 
 //组件
 import Avatar from '../components/Avatar'
@@ -11,7 +10,7 @@ import Tinymce from './editor'
 import Collapse from '@mui/material/Collapse'
 import Comment from './comment'
 import CommentSkeleton from './CommentSkeleton'
-import { SwitchTransition, CSSTransition, TransitionGroup } from 'react-transition-group'
+import { CTransitionFade, CTransitionGroup } from '../components/Transition.jsx'
 import toast from 'react-hot-toast'
 import PreviewImage from './PreviewImage'
 import Pagination from '../components/Pagination'
@@ -23,7 +22,7 @@ import Svg from 'react-inlinesvg'
 import share from '../util/share/share'
 import { useNavigate } from 'react-router-dom'
 import { gossipCommentList, replyGossipComment, likeGossipComment, deleteGossipComment, deleteGossip } from '../util/gossip.js'
-export default function GossipContent(props) {
+export default function GossipContent({ foldStatus = false, targetComment = null, data, userInfo,  reDataGet = () => null, handleLike = () => null, handleFold = () => null, reSetGossipComment = () => null }) {
     //hook
     const navigate = useNavigate()
     //ref
@@ -36,7 +35,7 @@ export default function GossipContent(props) {
     const [requestInstance, setRequestInstance] = useState({
         pageNum: 1,
         pageSize: 10,
-        gossipId: props.data.id
+        gossipId: data.id
     })
     const [commentObject, setCommentObject] = useState({
         pages: 0,
@@ -57,18 +56,18 @@ export default function GossipContent(props) {
     const commentData = useCallback((instance) => {
         gossipCommentList({ data: instance, toast: null}).then(resq => {
             if(resq.code === 200) {
-                if(props.targetComment) {
-                    resq.data.list.splice(resq.data.list.findIndex(item => item.commentId === props.targetComment.commentId), 1)
+                if(targetComment) {
+                    resq.data.list.splice(resq.data.list.findIndex(item => item.commentId === targetComment.commentId), 1)
                 }
                 setCommentObject(target => { return { ...target, list: resq.data.list, total: resq.data.total, pages: resq.data.pages, current: resq.data.current } })
             }
         }).catch(err => { })
-    }, [props.targetComment])
+    }, [targetComment])
 
     useEffect(() => {
-        if(!props.foldStatus) return
+        if(!foldStatus) return
         commentData(requestInstance)
-    }, [commentData, requestInstance, props.foldStatus])
+    }, [commentData, requestInstance, foldStatus])
 
     const popperChange = (event) => {
         setPopperInstance({
@@ -84,16 +83,16 @@ export default function GossipContent(props) {
                     <Avatar
                         width='2.8rem'
                         height='2.8rem'
-                        src={props.data.avatar}
-                        onClick={() => { navigate(`/user/${props.data.author}`) }}
-                        title={props.data.nickName}
-                        alt={props.data.nickName}/>
+                        src={data.avatar}
+                        onClick={() => { navigate(`/user/${data.author}`) }}
+                        title={data.nickName}
+                        alt={data.nickName}/>
                     <div className={style.info_content}>
                         <div className={style.info_about_user}>
-                            <span>{props.data.nickName}</span>
-                            <span>{props.data.createTimeFormat}</span>
+                            <span>{data.nickName}</span>
+                            <span>{data.createTimeFormat}</span>
                         </div>
-                        <span className={style.info_autograph}>{props.data.categoryName}</span>
+                        <span className={style.info_autograph}>{data.categoryName}</span>
                     </div>
                 </div>
                 <div ref={gossipFunctionMenuRef} className={style.right_function} onClick={() => { setGossipFunctionMenuStatus(true) }}>
@@ -110,7 +109,7 @@ export default function GossipContent(props) {
                     autoFocus={false}
                     onClose={() => { setGossipFunctionMenuStatus(false) }}>
                         {
-                            props.userInfo?.uid === props.data.author ?
+                            userInfo?.uid === data.author ?
                             <MenuItem
                                 disableGutters={false}
                                 onClick={e => {
@@ -134,30 +133,30 @@ export default function GossipContent(props) {
             <div
                 ref={renderContentRef}
                 className={`${style.gossip_render_content} ${renderHtml.render_html}`}
-                dangerouslySetInnerHTML={{ __html: props.data.content}}/>
+                dangerouslySetInnerHTML={{ __html: data.content}}/>
             <div className={style.gossip_state}>
-                <span>{props.data.likes} 个喜欢</span>
+                <span>{data.likes} 个喜欢</span>
                 <span>|</span>
-                <span>{commentObject.list ? commentObject.total:props.data.comments} 条评论</span>
+                <span>{commentObject.list ? commentObject.total:data.comments} 条评论</span>
             </div>
             <div className={style.gossip_button}>
                 <button 
                     type='button' 
                     onClick={() => {
-                        props.handleLike(props.data.id)
+                        handleLike(data.id)
                     }}>
                     <Svg
                         cacheRequests={true}
                         src='https://image.superarilo.icu/svg/like.svg'
                         preProcessor={code => code.replace(/fill=".*?"/g, 'fill="currentColor"')}
-                        className={props.data.like === true && props.userInfo !== null ? style.gossip_liked:''}
+                        className={data.like === true && userInfo !== null ? style.gossip_liked:''}
                         width='1.1rem'
                         height='1.1rem'/>
                     喜欢
                     <WaterWave color="rgba(0, 0, 0, 0.7)" duration={1} />
                 </button>
                 <button type='button' 
-                    onClick={() => { props.handleFold(props.data.id) }}>
+                    onClick={() => { handleFold(data.id) }}>
                     <Svg
                         cacheRequests={true}
                         src='https://image.superarilo.icu/svg/comment.svg'
@@ -170,10 +169,10 @@ export default function GossipContent(props) {
                     type='button'
                     onClick={() => {
                         share({
-                            title: `${props.data.nickName}的碎语`,
+                            title: `${data.nickName}的碎语`,
                             desc: '来自Arilo博客的碎语',
-                            link: `${window.location.protocol}//${window.location.hostname}/gossip?targetId=${props.data.id}`,
-                            icon: props.data.avatar
+                            link: `${window.location.protocol}//${window.location.hostname}/gossip?targetId=${data.id}`,
+                            icon: data.avatar
                         })
                     }}>
                     <Svg
@@ -187,9 +186,9 @@ export default function GossipContent(props) {
                         duration={1}/>
                 </button>
             </div>
-            <Collapse in={props.foldStatus} mountOnEnter unmountOnExit timeout={300}>
+            <Collapse in={foldStatus} mountOnEnter unmountOnExit timeout={300}>
                 <Tinymce
-                    userInfo={props.userInfo} 
+                    userInfo={userInfo} 
                     ref={tinymce}
                     placeholder='发表一条友善的评论吧...'
                     status={editorSendToServerStatus}
@@ -201,7 +200,7 @@ export default function GossipContent(props) {
                         if(!editorSendToServerStatus) {
                             setEditorSendToServerStatus(true)
                             let data = new FormData()
-                            data.append('gossipId', props.data.id)
+                            data.append('gossipId', data.id)
                             data.append('content', value)
                             replyGossipComment({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
                                 if(resq.code === 200) {
@@ -217,24 +216,24 @@ export default function GossipContent(props) {
                         commentObject.list === null ? <CommentSkeleton />:
                         <>
                             {
-                                props.targetComment !== null
+                                targetComment !== null
                                 &&
                                 <Comment
-                                    targetId={props.targetComment.commentId}
-                                    userInfo={props.userInfo}
-                                    foldStatus={selectCommentItem === props.targetComment.commentId}
-                                    data={props.targetComment}
+                                    targetId={targetComment.commentId}
+                                    userInfo={userInfo}
+                                    foldStatus={selectCommentItem === targetComment.commentId}
+                                    data={targetComment}
                                     handleLike={() => { 
-                                        if(props.userInfo === null) {
+                                        if(userInfo === null) {
                                             toast('你需要登陆才能继续哦 ⊙﹏⊙∥')
                                             return
                                         }
                                         let data = new FormData()
-                                        data.append('gossipId', props.data.id)
-                                        data.append('commentId', props.targetComment.commentId)
+                                        data.append('gossipId', data.id)
+                                        data.append('commentId', targetComment.commentId)
                                         likeGossipComment({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
                                             if(resq.code === 200) {
-                                                props.reSetGossipComment(id, resq.data.likes, resq.data.status)
+                                                reSetGossipComment(id, resq.data.likes, resq.data.status)
                                             }
                                         }).catch(err => { })
                                     }}
@@ -243,10 +242,10 @@ export default function GossipContent(props) {
                                     }}
                                     handleReply={content => {
                                         let data = new FormData()
-                                        data.append('gossipId', props.data.id)
+                                        data.append('gossipId', data.id)
                                         data.append('content', content)
-                                        data.append('replyCommentId', props.targetComment.commentId)
-                                        data.append('replyUserId', props.targetComment.replyUser.replyUserId)
+                                        data.append('replyCommentId', targetComment.commentId)
+                                        data.append('replyUserId', targetComment.replyUser.replyUserId)
                                         replyGossipComment({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
                                             if(resq.code === 200) {
                                                 commentData(requestInstance)
@@ -256,8 +255,8 @@ export default function GossipContent(props) {
                                     }}
                                     handleDelete={() => {
                                         let data = new FormData()
-                                        data.append('gossipId', props.data.id)
-                                        data.append('commentId', props.targetComment.commentId)
+                                        data.append('gossipId', data.id)
+                                        data.append('commentId', targetComment.commentId)
                                         deleteGossipComment({ data: data, toast: { isShow: true, loadingMessage: '删除中...' } }).then(resq => {
                                             if(resq.code === 200) {
                                                 commentData(requestInstance)
@@ -265,70 +264,68 @@ export default function GossipContent(props) {
                                         }).catch(err => { })
                                     }}/>
                             }
-                            <SwitchTransition mode='out-in'>
-                                <CSSTransition key={commentObject.list.length === 0} classNames='change' timeout={300} nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
-                                    {
-                                        commentObject.list.length === 0 ? <div className={style.empty_box}>当前没有评论，赶快来评论吧 ψ(｀∇´)ψ</div>:
-                                        <TransitionGroup>
-                                            {
-                                                commentObject.list.map(item => {
-                                                    return (
-                                                        <Collapse key={item.commentId}>
-                                                            <Comment
-                                                                userInfo={props.userInfo} 
-                                                                key={item.commentId} 
-                                                                data={item}
-                                                                foldStatus={selectCommentItem === item.commentId}
-                                                                handleFold={(id) => { setSelectCommentItem(id === selectCommentItem ? null:id) }}
-                                                                handleLike={() => { 
-                                                                    if(props.userInfo === null) {
-                                                                        toast('你需要登陆才能继续哦 ⊙﹏⊙∥')
-                                                                        return
+                            <CTransitionFade
+                                keyS={commentObject.list.length === 0}
+                                left={<div className={style.empty_box}>当前没有评论，赶快来评论吧 ψ(｀∇´)ψ</div>}
+                                right={
+                                    <CTransitionGroup>
+                                        {
+                                            commentObject.list.map(item => {
+                                                return (
+                                                    <Collapse key={item.commentId}>
+                                                        <Comment
+                                                            userInfo={userInfo} 
+                                                            key={item.commentId} 
+                                                            data={item}
+                                                            foldStatus={selectCommentItem === item.commentId}
+                                                            handleFold={(id) => { setSelectCommentItem(id === selectCommentItem ? null:id) }}
+                                                            handleLike={() => { 
+                                                                if(userInfo === null) {
+                                                                    toast('你需要登陆才能继续哦 ⊙﹏⊙∥')
+                                                                    return
+                                                                }
+                                                                let data = new FormData()
+                                                                data.append('gossipId', data.id)
+                                                                data.append('commentId', item.commentId)
+                                                                likeGossipComment({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
+                                                                    if(resq.code === 200) {
+                                                                        let [...temp] = commentObject.list
+                                                                        let index = temp.findIndex(key => key.commentId === item.commentId)
+                                                                        temp[index].like = resq.data.status
+                                                                        temp[index].likes = resq.data.likes
+                                                                        setCommentObject({...commentObject, list: temp})
                                                                     }
-                                                                    let data = new FormData()
-                                                                    data.append('gossipId', props.data.id)
-                                                                    data.append('commentId', item.commentId)
-                                                                    likeGossipComment({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
-                                                                        if(resq.code === 200) {
-                                                                            let [...temp] = commentObject.list
-                                                                            let index = temp.findIndex(key => key.commentId === item.commentId)
-                                                                            temp[index].like = resq.data.status
-                                                                            temp[index].likes = resq.data.likes
-                                                                            setCommentObject({...commentObject, list: temp})
-                                                                        }
-                                                                    }).catch(err => {})
-                                                                }}
-                                                                handleReply={content => {
-                                                                    let data = new FormData()
-                                                                    data.append('gossipId', props.data.id)
-                                                                    data.append('content', content)
-                                                                    data.append('replyCommentId', item.commentId)
-                                                                    data.append('replyUserId', item.replyUser.replyUserId)
-                                                                    replyGossipComment({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
-                                                                        if(resq.code === 200) {
-                                                                            commentData(requestInstance)
-                                                                            setSelectCommentItem(null)
-                                                                        }
-                                                                    }).catch(err => {})
-                                                                }}
-                                                                handleDelete={() => {
-                                                                    let data = new FormData()
-                                                                    data.append('gossipId', props.data.id)
-                                                                    data.append('commentId', item.commentId)
-                                                                    deleteGossipComment({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
-                                                                        if(resq.code === 200) {
-                                                                            commentData(requestInstance)
-                                                                        }
-                                                                    }).catch(err => {})
-                                                                }}/>
-                                                        </Collapse>
-                                                    )
-                                                })
-                                            }
-                                        </TransitionGroup>
-                                    }
-                                </CSSTransition>
-                            </SwitchTransition>
+                                                                }).catch(err => {})
+                                                            }}
+                                                            handleReply={content => {
+                                                                let data = new FormData()
+                                                                data.append('gossipId', data.id)
+                                                                data.append('content', content)
+                                                                data.append('replyCommentId', item.commentId)
+                                                                data.append('replyUserId', item.replyUser.replyUserId)
+                                                                replyGossipComment({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
+                                                                    if(resq.code === 200) {
+                                                                        commentData(requestInstance)
+                                                                        setSelectCommentItem(null)
+                                                                    }
+                                                                }).catch(err => {})
+                                                            }}
+                                                            handleDelete={() => {
+                                                                let data = new FormData()
+                                                                data.append('gossipId', data.id)
+                                                                data.append('commentId', item.commentId)
+                                                                deleteGossipComment({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
+                                                                    if(resq.code === 200) {
+                                                                        commentData(requestInstance)
+                                                                    }
+                                                                }).catch(err => {})
+                                                            }}/>
+                                                    </Collapse>
+                                                )
+                                            })
+                                        }
+                                    </CTransitionGroup>
+                                } />
                         </>
                     }
                     {
@@ -349,12 +346,12 @@ export default function GossipContent(props) {
                 placement='bottom' 
                 onConfirm={() => { 
                     let data = new FormData()
-                    data.append('gossipId', props.data.id)
+                    data.append('gossipId', data.id)
                     deleteGossip({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
                         if(resq.code === 200) {
                             popperChange(null)
                             setGossipFunctionMenuStatus(false)
-                            props.reDataGet()
+                            reDataGet()
                             
                         }
                     }).catch(err => {})
@@ -362,11 +359,4 @@ export default function GossipContent(props) {
                 onCancel={() => { popperChange(null) }}/>
         </div>
     )
-}
-GossipContent.defaultProps = {
-    foldStatus: false,
-    targetComment: null,
-    reDataGet: () => {
-        return null
-    }
 }

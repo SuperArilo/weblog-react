@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react'
 //样式
 import style from '../assets/scss/gossip.module.scss'
-import '../assets/scss/currencyTransition.scss'
 //组件
-import { SwitchTransition, CSSTransition, TransitionGroup } from 'react-transition-group'
+import { CTransitionFade, CTransitionGroup } from '../components/Transition'
 import Collapse from '@mui/material/Collapse'
 import GossipContent from '../components/gossipContent'
 import GossipSkeleton from '../components/GossipSkeleton'
@@ -68,120 +67,116 @@ export default function Gossip(props) {
 
     return (
         <div className={style.gossip_page} style={{ paddingTop: requestInstance.viewUid ? null:'1rem', minHeight: requestInstance.viewUid ? null:'83vh' }}>
-            <SwitchTransition mode='out-in'>
-                <CSSTransition key={gossipObject.instance === null} classNames='change' timeout={300} nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
-                    {
-                        gossipObject.instance === null ?
-                        <GossipSkeleton viewUid={requestInstance.viewUid}/>
-                        :
-                        <>
-                            {
-                                gossipObject.instance.list.length === 0 ? <span className={style.gossip_empty}>TA还没有写过碎语</span>:
-                                <>
-                                    {
-                                        gossipObject.targetGossip !== null
-                                        &&
-                                        <GossipContent
-                                            userInfo={props.userInfo} 
-                                            data={gossipObject.targetGossip}
-                                            reDataGet={() => {
-                                                gossipDataGet()
-                                            }}
-                                            requestInstance={requestInstance}
-                                            foldStatus={targetGossipFoldStatus}
-                                            targetComment={gossipObject.targetComment}
-                                            handleFold={id => {
-                                                if(gossipObject.targetGossip.id === id && targetGossipFoldStatus) {
-                                                    setTargetGossipFoldStatus(false)
-                                                } else {
-                                                    setTargetGossipFoldStatus(true)
-                                                }
-                                                setSelectGossipItem(selectGossipItem === id ? null:id)
-                                            }}
-                                            handleLike={gossipId => {
-                                                if(props.userInfo === null) {
-                                                    toast('你需要登录哦 (￣y▽,￣)╭ ')
-                                                    return
-                                                }
-                                                let data = new FormData()
-                                                data.append('gossipId', gossipId)
-                                                likeGossip({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
-                                                    if(resq.code === 200) {
-                                                        setGossipObject(target => ({
-                                                            ...target,
-                                                            targetGossip: {
-                                                                ...target.targetGossip,
-                                                                likes: resq.data.likes,
-                                                                like: resq.data.status
-                                                            }
-                                                        }))
-                                                    }
-                                                }).catch(err => {  })
-                                            }}
-                                            handleGossipList={() => {
-                                                gossipData(gossipRequestInstance)
-                                            }}
-                                            reSetGossipComment={(id, num, status) => {
-                                                setGossipObject(target => {
-                                                    return {
+            <CTransitionFade
+                keyS={gossipObject.instance === null}
+                left={<GossipSkeleton viewUid={requestInstance.viewUid}/>}
+                right={
+                    <>
+                        {
+                            gossipObject.instance?.list.length === 0 ? <span className={style.gossip_empty}>TA还没有写过碎语</span>:
+                            <>
+                                {
+                                    gossipObject.targetGossip !== null
+                                    &&
+                                    <GossipContent
+                                        userInfo={props.userInfo} 
+                                        data={gossipObject.targetGossip}
+                                        reDataGet={() => {
+                                            gossipDataGet()
+                                        }}
+                                        requestInstance={requestInstance}
+                                        foldStatus={targetGossipFoldStatus}
+                                        targetComment={gossipObject.targetComment}
+                                        handleFold={id => {
+                                            if(gossipObject.targetGossip.id === id && targetGossipFoldStatus) {
+                                                setTargetGossipFoldStatus(false)
+                                            } else {
+                                                setTargetGossipFoldStatus(true)
+                                            }
+                                            setSelectGossipItem(selectGossipItem === id ? null:id)
+                                        }}
+                                        handleLike={gossipId => {
+                                            if(props.userInfo === null) {
+                                                toast('你需要登录哦 (￣y▽,￣)╭ ')
+                                                return
+                                            }
+                                            let data = new FormData()
+                                            data.append('gossipId', gossipId)
+                                            likeGossip({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
+                                                if(resq.code === 200) {
+                                                    setGossipObject(target => ({
                                                         ...target,
-                                                        targetComment: {
-                                                            ...target.targetComment,
-                                                            like: status,
-                                                            likes: num
+                                                        targetGossip: {
+                                                            ...target.targetGossip,
+                                                            likes: resq.data.likes,
+                                                            like: resq.data.status
                                                         }
+                                                    }))
+                                                }
+                                            }).catch(err => {  })
+                                        }}
+                                        handleGossipList={() => {
+                                            gossipData(gossipRequestInstance)
+                                        }}
+                                        reSetGossipComment={(id, num, status) => {
+                                            setGossipObject(target => {
+                                                return {
+                                                    ...target,
+                                                    targetComment: {
+                                                        ...target.targetComment,
+                                                        like: status,
+                                                        likes: num
                                                     }
-                                                })
-                                            }}/>
-                                    }
-                                    <TransitionGroup>
-                                        {
-                                            gossipObject.instance.list.map(item => {
-                                                return (
-                                                    <Collapse key={item.id}>
-                                                        <GossipContent
-                                                            userInfo={props.userInfo} 
-                                                            data={item}
-                                                            reDataGet={() => {
-                                                                gossipDataGet()
-                                                            }}
-                                                            requestInstance={requestInstance}
-                                                            foldStatus={selectGossipItem === item.id}
-                                                            handleFold={id => {
-                                                                setSelectGossipItem(selectGossipItem === id ? null:id)
-                                                            }}
-                                                            handleLike={(gossipId) => {
-                                                                if(props.userInfo === null) {
-                                                                    toast('你需要登录哦 (￣y▽,￣)╭ ')
-                                                                    return
-                                                                }
-                                                                let data = new FormData()
-                                                                data.append('gossipId', gossipId)
-                                                                likeGossip({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
-                                                                    if(resq.code === 200) {
-                                                                        let [...temp] = gossipObject.instance.list
-                                                                        let index = temp.findIndex(item => item.id === gossipId)
-                                                                        temp[index].like = resq.data.status
-                                                                        temp[index].likes = resq.data.likes
-                                                                        setGossipObject({...gossipObject, list: temp})
-                                                                    }
-                                                                }).catch(err => { })
-                                                            }}
-                                                            handleGossipList={() => {
-                                                                gossipData(gossipRequestInstance)
-                                                            }}/>
-                                                    </Collapse>
-                                                )
+                                                }
                                             })
-                                        }
-                                    </TransitionGroup>
-                                </>
-                                
-                            }
-                        </>
-                    }
-                </CSSTransition>
-            </SwitchTransition>
+                                        }}/>
+                                }
+                                <CTransitionGroup>
+                                    {
+                                        gossipObject.instance?.list.map(item => {
+                                            return (
+                                                <Collapse key={item.id}>
+                                                    <GossipContent
+                                                        userInfo={props.userInfo} 
+                                                        data={item}
+                                                        reDataGet={() => {
+                                                            gossipDataGet()
+                                                        }}
+                                                        requestInstance={requestInstance}
+                                                        foldStatus={selectGossipItem === item.id}
+                                                        handleFold={id => {
+                                                            setSelectGossipItem(selectGossipItem === id ? null:id)
+                                                        }}
+                                                        handleLike={(gossipId) => {
+                                                            if(props.userInfo === null) {
+                                                                toast('你需要登录哦 (￣y▽,￣)╭ ')
+                                                                return
+                                                            }
+                                                            let data = new FormData()
+                                                            data.append('gossipId', gossipId)
+                                                            likeGossip({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
+                                                                if(resq.code === 200) {
+                                                                    let [...temp] = gossipObject.instance.list
+                                                                    let index = temp.findIndex(item => item.id === gossipId)
+                                                                    temp[index].like = resq.data.status
+                                                                    temp[index].likes = resq.data.likes
+                                                                    setGossipObject({...gossipObject, list: temp})
+                                                                }
+                                                            }).catch(err => { })
+                                                        }}
+                                                        handleGossipList={() => {
+                                                            gossipData(gossipRequestInstance)
+                                                        }}/>
+                                                </Collapse>
+                                            )
+                                        })
+                                    }
+                                </CTransitionGroup>
+                            </>
+                            
+                        }
+                    </>
+                } />
         </div>
     )
 }

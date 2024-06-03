@@ -13,7 +13,15 @@ import Svg from 'react-inlinesvg'
 import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 
-const Comment = (props) => {
+const Comment = ({
+    foldStatus = false,
+    data,
+    targetId,
+    userInfo,
+    handleFold = () => null,
+    handleLike = () => null,
+    handleDelete = () => null,
+    handleReply = () => null }) => {
     //hook
     const navigate = useNavigate()
     //params
@@ -38,26 +46,26 @@ const Comment = (props) => {
             <div className={style.comment_top}>
                 <div className={style.comment_top_left}>
                     <Avatar
-                        src={props.data?.replyUser?.replyAvatar}
-                        title={props.data?.replyUser?.replyNickName}
-                        alt={props.data?.replyUser?.replyNickName}
-                        onClick={() => { navigate(`/user/${props.data?.replyUser?.replyUserId}`) }}/>
+                        src={data?.replyUser?.replyAvatar}
+                        title={data?.replyUser?.replyNickName}
+                        alt={data?.replyUser?.replyNickName}
+                        onClick={() => { navigate(`/user/${data?.replyUser?.replyUserId}`) }}/>
                     <div className={style.vistor_info}>
                         <div>
-                            <span className={props.targetId === props.data.commentId ? style.change_color_style:''}>{props.data?.replyUser?.replyNickName}</span>
+                            <span className={targetId === data.commentId ? style.change_color_style:''}>{data?.replyUser?.replyNickName}</span>
                             { 
-                                props.userInfo && props.userInfo.uid !== props.data.replyUser.replyUserId ?
+                                userInfo && userInfo.uid !== data.replyUser.replyUserId ?
                                 <button 
                                     className={style.relply_button} 
                                     onClick={() => {
-                                        props.handleFold(props.data.commentId)
+                                        handleFold(data.commentId)
                                     }} type="button">回复</button>
                                 :
                                 null
                             }
-                            { props.userInfo && props.data?.replyUser?.replyUserId === props.userInfo.uid ? <button className={style.delete_button} type="button" onClick={(event) => { popperChange(event) }}>删除</button>:'' }
+                            { userInfo && data?.replyUser?.replyUserId === userInfo.uid ? <button className={style.delete_button} type="button" onClick={(event) => { popperChange(event) }}>删除</button>:'' }
                         </div>
-                        <span className={style.vistor_info_time}>{props.data.createTimeFormat}</span>
+                        <span className={style.vistor_info_time}>{data.createTimeFormat}</span>
                     </div>
                 </div>
                 <div className={style.comment_top_right}>
@@ -65,11 +73,11 @@ const Comment = (props) => {
                         cacheRequests={true}
                         src='https://image.superarilo.icu/svg/like.svg'
                         preProcessor={code => code.replace(/fill=".*?"/g, 'fill="currentColor"')}
-                        className={props.data.like ? style.had_liked:''}
+                        className={data.like ? style.had_liked:''}
                         width='1.1rem'
                         height='1.1rem'
-                        onClick={() => { props.handleLike() }}/>
-                    <span>{props.data.likes}</span>
+                        onClick={() => { handleLike() }}/>
+                    <span>{data.likes}</span>
                 </div>
             </div>
             <div 
@@ -77,9 +85,9 @@ const Comment = (props) => {
                 className={`${style.comment_conten_render} ${renderHtml.render_html}`}
                 dangerouslySetInnerHTML={
                     { 
-                        __html: props.data.byReplyUser ? 
-                            '<blockquote><p><span style="color: rgb(53, 152, 219);" data-mce-style="color: rgb(53, 152, 219);">' + props.data.byReplyUser.byReplyNickName + '</span></p></blockquote>' + props.data.content
-                            :props.data.content
+                        __html: data.byReplyUser ? 
+                            '<blockquote><p><span style="color: rgb(53, 152, 219);" data-mce-style="color: rgb(53, 152, 219);">' + data.byReplyUser.byReplyNickName + '</span></p></blockquote>' + data.content
+                            :data.content
                     }
                 } />
             <AsukaPoppor 
@@ -89,27 +97,23 @@ const Comment = (props) => {
                 placement='bottom' 
                 onConfirm={() => { 
                     popperChange(null)
-                    props.handleDelete()
+                    handleDelete()
                 }} 
                 onCancel={() => { popperChange(null) }}/>
-            <Collapse in={props.foldStatus} mountOnEnter unmountOnExit>
+            <Collapse in={foldStatus} mountOnEnter unmountOnExit>
                 <Tinymce
-                    userInfo={props.userInfo}
-                    placeholder={`${'回复'}${' @' + props.data?.replyUser?.replyNickName}`} 
+                    userInfo={userInfo}
+                    placeholder={`${'回复'}${' @' + data?.replyUser?.replyNickName}`} 
                     getContent={(content) => { 
                         if(content === null || content === undefined || content === '' || content === '<p></p>') {
                             toast('回复的内容不能为空白哦 (ง •_•)ง')
                             return
                         }
-                        props.handleReply(content)
+                        handleReply(content)
                     }}/>
             </Collapse>
             <PreviewImage current={renderContentRef} />
         </div>
     )
-}
-Comment.defaultProps = {
-    foldStatus: false,
-    commentId: null
 }
 export default Comment

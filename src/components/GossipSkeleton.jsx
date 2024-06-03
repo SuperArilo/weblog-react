@@ -4,12 +4,12 @@ import style from '../assets/scss/components/gossipSkeleton.module.scss'
 //组件
 import Skeleton from '@mui/material/Skeleton'
 
-export default function GossipSkeleton(props) {
+export default function GossipSkeleton({ viewUid = null }) {
     return (
         <div className={style.gossip_skeleton_list}>
             <GossipSkeletonItem />
             {
-                props.viewUid === null &&
+                viewUid === null &&
                 <>
                     <GossipSkeletonItem />
                     <GossipSkeletonItem />
@@ -43,7 +43,4 @@ const GossipSkeletonItem = () => {
                 </div>
             </div>
     )
-}
-GossipSkeleton.defaultProps = {
-    viewUid: null
 }

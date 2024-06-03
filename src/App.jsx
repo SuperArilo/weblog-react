@@ -34,8 +34,8 @@ import CreateWindow from './components/CreateWindow'
 import Notice from './pages/notice'
 import Icon from './components/Icon'
 import Tinymce from './components/editor'
+import { CTransitionFade, CTransitionGroup } from './components/Transition'
 //样式
-import './assets/scss/currencyTransition.scss'
 import './assets/css/emojiBox.css'
 
 import NoticeSocket from './pages/NoticeSocket'
@@ -107,8 +107,9 @@ export default function App () {
 						}}/>
 				}
 				<div className={`${'router-render'} ${isMobileStatus ? 'router-render-mobile':''}`}>
-					<SwitchTransition mode="out-in">
-						<CSSTransition key={location.pathname} timeout={300} classNames="change" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
+					<CTransitionFade
+						keyS={location.pathname}
+						left={
 							<Routes location={location}>
 								<Route index path='/' element={<IndexPage isMobile={ isMobileStatus } userInfo={userInfo} />} />
 								<Route path='/detail' element={<ArticleDetail userInfo={userInfo} />} />
@@ -124,8 +125,7 @@ export default function App () {
 								<Route path='/error' element={<NotFound /> } />
 								<Route path='*' element={<Navigate to='/notfound' />} />
 							</Routes>
-						</CSSTransition>
-					</SwitchTransition>
+						} />
 				</div>
 				<About />
 				<CreateWindow width={isMobileStatus ? '100%':'24rem'} status={loginBoxStatus} onClose={status => { setTimeout(() => { setLoginBoxStatus(status) }, 500) }}>
@@ -168,11 +168,9 @@ export default function App () {
 						}}/>
 				</CreateWindow>
 			</div>
-			<div id='sakana-widget'></div>
 			{
 				(localStorage.getItem('token') && userInfo !== null) && <NoticeSocket token={localStorage.getItem('token')} />
 			}
-			
 		</>
 	)
 }
