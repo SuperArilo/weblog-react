@@ -37,9 +37,17 @@
                 letter-spacing: 0.15rem;
             }
         }
+        .sider_change_content {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            > div {
+                height: 100%;
+            }
+        }
         .sider_carousel , .loading_sider
         {
-            flex: 1 0 1px;
+            height: 100%;
             border-radius: 1rem;
             -webkit-transform: rotate(0deg);
             transform: rotate(0deg);
