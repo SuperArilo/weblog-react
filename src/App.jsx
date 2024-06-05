@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import AsukaButton from './components/asukaButton'
-import { SwitchTransition, CSSTransition } from 'react-transition-group'
 import signStyle from './assets/scss/sign.module.scss'
 //hook
 import { Route, Routes, useLocation, useNavigate, Navigate  } from 'react-router-dom'
@@ -34,7 +33,7 @@ import CreateWindow from './components/CreateWindow'
 import Notice from './pages/notice'
 import Icon from './components/Icon'
 import Tinymce from './components/editor'
-import { CTransitionFade, CTransitionGroup } from './components/Transition'
+import { CTransitionFade, CTransitionGroup, CCSSTransition } from './components/Transition'
 //样式
 import './assets/css/emojiBox.css'
 
@@ -469,7 +468,7 @@ const MobileHeaderNav = (props) => {
 					<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
 				</div>
 			</nav>
-			<CSSTransition in={drawerStatus} timeout={300} classNames="mask-fade" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
+			<CCSSTransition status={drawerStatus}>
 				<div
 					className={signStyle.function_mask}
 					functionkey='mask'
@@ -570,7 +569,7 @@ const MobileHeaderNav = (props) => {
 						</div>
 					</Slide>
 				</div>
-			</CSSTransition>
+			</CCSSTransition>
 		</>
 	)
 }

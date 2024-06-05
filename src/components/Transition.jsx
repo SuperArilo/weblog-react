@@ -29,3 +29,13 @@ export function CTransitionGroup({ children }) {
         </TransitionGroup>
     )
 }
+export function CCSSTransition({ children, status }) {
+    const ref = useRef(children)
+    return (
+        <CSSTransition in={status} timeout={300} classNames="mask-fade" nodeRef={null} mountOnEnter={true} unmountOnExit={true}>
+            <div>
+            {children}
+            </div>
+        </CSSTransition>
+    )
+}

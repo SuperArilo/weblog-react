@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react'
 //样式
 import style from '../assets/scss/links.module.scss'
 import renderHtml from '../assets/scss/renderHtml.module.scss'
-import '../assets/scss/currencyTransition.scss'
 //组件
 import Avatar from '../components/Avatar'
 import TextField from '@mui/material/TextField'

@@ -5,7 +5,6 @@ import { useSearchParams, useNavigate } from 'react-router-dom'
 //样式
 import style from '../assets/scss/articleDetail.module.scss'
 import renderHtml from '../assets/scss/renderHtml.module.scss'
-import '../assets/scss/currencyTransition.scss'
 //组件
 import Tinymce from '../components/editor'
 import toast from 'react-hot-toast'

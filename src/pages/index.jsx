@@ -1,6 +1,5 @@
 //样式
 import style from '../assets/scss/indexPage.module.scss'
-import '../assets/scss/currencyTransition.scss'
 import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
 //组件

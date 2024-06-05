@@ -13,7 +13,6 @@ import Svg from '../components/Icon'
 //样式
 import style from '../assets/scss/guestbook.module.scss'
 import renderHtml from '../assets/scss/renderHtml.module.scss'
-import '../assets/scss/currencyTransition.scss'
 //方法
 import { useSelector } from 'react-redux'
 import { guestbookList, addGuestbook, deleteGuestbook } from '../util/guestbook'
