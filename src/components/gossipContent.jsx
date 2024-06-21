@@ -199,16 +199,18 @@ export default function GossipContent({ foldStatus = false, targetComment = null
                         }
                         if(!editorSendToServerStatus) {
                             setEditorSendToServerStatus(true)
-                            let data = new FormData()
-                            data.append('gossipId', data.id)
-                            data.append('content', value)
-                            replyGossipComment({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
+                            let d = new FormData()
+                            d.append('gossipId', data.id)
+                            d.append('content', value)
+                            replyGossipComment({ data: d, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
                                 if(resq.code === 200) {
                                     tinymce.current.clear()
                                     commentData(requestInstance)
                                 }
                                 setEditorSendToServerStatus(false)
-                            }).catch(() => {})
+                            }).catch(() => {
+                                setEditorSendToServerStatus(false)
+                            })
                         }
                     }}/>
                 <div className={style.gossip_comment_list}>
@@ -228,10 +230,10 @@ export default function GossipContent({ foldStatus = false, targetComment = null
                                             toast('你需要登陆才能继续哦 ⊙﹏⊙∥')
                                             return
                                         }
-                                        let data = new FormData()
-                                        data.append('gossipId', data.id)
-                                        data.append('commentId', targetComment.commentId)
-                                        likeGossipComment({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
+                                        let d = new FormData()
+                                        d.append('gossipId', data.id)
+                                        d.append('commentId', targetComment.commentId)
+                                        likeGossipComment({ data: d, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
                                             if(resq.code === 200) {
                                                 reSetGossipComment(id, resq.data.likes, resq.data.status)
                                             }
@@ -241,12 +243,12 @@ export default function GossipContent({ foldStatus = false, targetComment = null
                                         setSelectCommentItem(id === selectCommentItem ? null:id)
                                     }}
                                     handleReply={content => {
-                                        let data = new FormData()
-                                        data.append('gossipId', data.id)
-                                        data.append('content', content)
-                                        data.append('replyCommentId', targetComment.commentId)
-                                        data.append('replyUserId', targetComment.replyUser.replyUserId)
-                                        replyGossipComment({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
+                                        let d = new FormData()
+                                        d.append('gossipId', data.id)
+                                        d.append('content', content)
+                                        d.append('replyCommentId', targetComment.commentId)
+                                        d.append('replyUserId', targetComment.replyUser.replyUserId)
+                                        replyGossipComment({ data: d, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
                                             if(resq.code === 200) {
                                                 commentData(requestInstance)
                                                 setSelectCommentItem(null)
@@ -254,10 +256,10 @@ export default function GossipContent({ foldStatus = false, targetComment = null
                                         }).catch(err => {})
                                     }}
                                     handleDelete={() => {
-                                        let data = new FormData()
-                                        data.append('gossipId', data.id)
-                                        data.append('commentId', targetComment.commentId)
-                                        deleteGossipComment({ data: data, toast: { isShow: true, loadingMessage: '删除中...' } }).then(resq => {
+                                        let d = new FormData()
+                                        d.append('gossipId', data.id)
+                                        d.append('commentId', targetComment.commentId)
+                                        deleteGossipComment({ data: d, toast: { isShow: true, loadingMessage: '删除中...' } }).then(resq => {
                                             if(resq.code === 200) {
                                                 commentData(requestInstance)
                                             }
@@ -284,10 +286,10 @@ export default function GossipContent({ foldStatus = false, targetComment = null
                                                                     toast('你需要登陆才能继续哦 ⊙﹏⊙∥')
                                                                     return
                                                                 }
-                                                                let data = new FormData()
-                                                                data.append('gossipId', data.id)
-                                                                data.append('commentId', item.commentId)
-                                                                likeGossipComment({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
+                                                                let d = new FormData()
+                                                                d.append('gossipId', data.id)
+                                                                d.append('commentId', item.commentId)
+                                                                likeGossipComment({ data: d, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
                                                                     if(resq.code === 200) {
                                                                         let [...temp] = commentObject.list
                                                                         let index = temp.findIndex(key => key.commentId === item.commentId)
@@ -298,23 +300,25 @@ export default function GossipContent({ foldStatus = false, targetComment = null
                                                                 }).catch(err => {})
                                                             }}
                                                             handleReply={content => {
-                                                                let data = new FormData()
-                                                                data.append('gossipId', data.id)
-                                                                data.append('content', content)
-                                                                data.append('replyCommentId', item.commentId)
-                                                                data.append('replyUserId', item.replyUser.replyUserId)
-                                                                replyGossipComment({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
+                                                                let d = new FormData()
+                                                                d.append('gossipId', data.id)
+                                                                d.append('content', content)
+                                                                d.append('replyCommentId', item.commentId)
+                                                                d.append('replyUserId', item.replyUser.replyUserId)
+                                                                replyGossipComment({ data: d, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
                                                                     if(resq.code === 200) {
                                                                         commentData(requestInstance)
                                                                         setSelectCommentItem(null)
                                                                     }
-                                                                }).catch(err => {})
+                                                                }).catch(err => {
+                                                                    setSelectCommentItem(null)
+                                                                })
                                                             }}
                                                             handleDelete={() => {
-                                                                let data = new FormData()
-                                                                data.append('gossipId', data.id)
-                                                                data.append('commentId', item.commentId)
-                                                                deleteGossipComment({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
+                                                                let d = new FormData()
+                                                                d.append('gossipId', data.id)
+                                                                d.append('commentId', item.commentId)
+                                                                deleteGossipComment({ data: d, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
                                                                     if(resq.code === 200) {
                                                                         commentData(requestInstance)
                                                                     }

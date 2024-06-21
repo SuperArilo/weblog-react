@@ -5,7 +5,7 @@ import signStyle from './assets/scss/sign.module.scss'
 import { Route, Routes, useLocation, useNavigate, Navigate  } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 //axios
-import { blogLoginUser, blogRegisterUser, blogUserLoginOut } from './util/user'
+import { blogLoginUser, blogRegisterUser, blogUserLoginOut, blogLoginUserToken } from './util/user'
 import { regiserMail, findPassword } from './util/mail/mail'
 import { userCreateGossip } from './util/gossip'
 
@@ -69,7 +69,7 @@ export default function App () {
 	useEffect(() => {
 		let token = localStorage.getItem('token')
 		if(token) {
-			blogLoginUser({ data: null, toast: null }).then(resq => {
+			blogLoginUserToken({ data: null, toast: null }, { 'token': token }).then(resq => {
 				if(resq.code === 200) {
 					loginSetUserInfo(resq.data.user)
 				} else {

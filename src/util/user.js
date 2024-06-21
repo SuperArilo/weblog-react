@@ -10,6 +10,13 @@ export const blogLoginUser = ({ data, toast }, customHeader) => {
         toast: toast
     })
 }
+export const blogLoginUserToken = ({ }, customHeader) => {
+    return request({
+        url: '/user/token',
+        method: 'post',
+        headers: customHeader
+    })
+}
 export const blogRegisterUser = ({ data, toast }) => {
     return request({
         url: '/user/register',
