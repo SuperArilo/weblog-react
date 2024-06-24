@@ -42,6 +42,7 @@ export default function Links(props) {
     const friendListGet = useCallback(instance => {
         friendList(instance).then(resq => {
             if(resq.code === 200) {
+                console.log(resq)
                 setDataInstance(current => ({
                     ...current,
                     pages: resq.data.pages,
@@ -132,12 +133,12 @@ export default function Links(props) {
                         right={
                             <>
                                 {
-                                    dataInstance.list.length === 0 ?
+                                    dataInstance.list?.length === 0 ?
                                     <div className={style.friends_list_item_skeleton}>
                                         <span className={style.empty_box}>一个朋友都没有 o(TヘTo)</span>
                                     </div>
                                     :
-                                    dataInstance.list.map(item => {
+                                    dataInstance.list?.map(item => {
                                         return (
                                             <div className={style.friends_list_item} key={item.id}>
                                                 <Avatar 

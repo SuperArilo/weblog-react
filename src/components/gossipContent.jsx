@@ -349,9 +349,9 @@ export default function GossipContent({ foldStatus = false, targetComment = null
                 target={popperInstance.target} 
                 placement='bottom' 
                 onConfirm={() => { 
-                    let data = new FormData()
-                    data.append('gossipId', data.id)
-                    deleteGossip({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
+                    let d = new FormData()
+                    d.append('gossipId', data.id)
+                    deleteGossip({ data: d, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
                         if(resq.code === 200) {
                             popperChange(null)
                             setGossipFunctionMenuStatus(false)

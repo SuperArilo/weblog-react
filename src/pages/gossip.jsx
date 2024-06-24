@@ -100,9 +100,9 @@ export default function Gossip(props) {
                                                 toast('你需要登录哦 (￣y▽,￣)╭ ')
                                                 return
                                             }
-                                            let data = new FormData()
-                                            data.append('gossipId', gossipId)
-                                            likeGossip({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
+                                            let d = new FormData()
+                                            d.append('gossipId', gossipId)
+                                            likeGossip({ data: d, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
                                                 if(resq.code === 200) {
                                                     setGossipObject(target => ({
                                                         ...target,
@@ -152,9 +152,9 @@ export default function Gossip(props) {
                                                                 toast('你需要登录哦 (￣y▽,￣)╭ ')
                                                                 return
                                                             }
-                                                            let data = new FormData()
-                                                            data.append('gossipId', gossipId)
-                                                            likeGossip({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
+                                                            let d = new FormData()
+                                                            d.append('gossipId', gossipId)
+                                                            likeGossip({ data: d, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
                                                                 if(resq.code === 200) {
                                                                     let [...temp] = gossipObject.instance.list
                                                                     let index = temp.findIndex(item => item.id === gossipId)
