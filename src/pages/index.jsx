@@ -251,7 +251,7 @@ export default function IndexPage(props) {
                             </div>
                         } />
                     <span className={style.public_sub_content_header}>最近访客</span>
-                    <Friends columns='1fr 1fr 1fr' defaultHeight={false}/>
+                    <Friends columns='1fr 1fr 1fr' />
                 </div>
             </section>
         </div>

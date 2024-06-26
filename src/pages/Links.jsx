@@ -42,7 +42,6 @@ export default function Links(props) {
     const friendListGet = useCallback(instance => {
         friendList(instance).then(resq => {
             if(resq.code === 200) {
-                console.log(resq)
                 setDataInstance(current => ({
                     ...current,
                     pages: resq.data.pages,
@@ -126,48 +125,71 @@ export default function Links(props) {
             }
             <div className={style.friends_content}>
                 <p className={style.function_title}>朋友们 (默认按添加时间排序)</p>
-                <div className={style.friends_list}>
-                    <CTransitionFade
-                        keyS={dataInstance.list === null}
-                        left={<LinksSkeleton />}
-                        right={
-                            <>
-                                {
-                                    dataInstance.list?.length === 0 ?
-                                    <div className={style.friends_list_item_skeleton}>
-                                        <span className={style.empty_box}>一个朋友都没有 o(TヘTo)</span>
-                                    </div>
-                                    :
-                                    dataInstance.list?.map(item => {
-                                        return (
-                                            <div className={style.friends_list_item} key={item.id}>
-                                                <Avatar 
-                                                    width='3.2rem'
-                                                    height='3.2rem'
-                                                    src={item.friendAvatar}/>
-                                                <div className={style.friends_info}>
-                                                    <span className={style.friends_name}>{item.friendName}</span>
-                                                    <p className={style.friends_describe}>{item.friendIntroduction}</p>
-                                                </div>
+                <CTransitionFade
+                    keyS={dataInstance.list === null}
+                    left={<LinksSkeleton />}
+                    right={
+                        <div className={style.friends_list}>
+                            {
+                                dataInstance.list?.length === 0 ?
+                                <div className={style.friends_list_item_skeleton}>
+                                    <span className={style.empty_box}>一个朋友都没有 o(TヘTo)</span>
+                                </div>
+                                :
+                                dataInstance.list?.map(item => {
+                                    return (
+                                        <div className={style.friends_list_item} key={item.id}>
+                                            <Avatar 
+                                                width='3.2rem'
+                                                height='3.2rem'
+                                                src={item.friendAvatar}/>
+                                            <div className={style.friends_info}>
+                                                <span className={style.friends_name}>{item.friendName}</span>
+                                                <p className={style.friends_describe}>{item.friendIntroduction}</p>
                                             </div>
-                                        )
-                                    })
-                                }
-                            </>
-                        } />
-                </div>
+                                        </div>
+                                    )
+                                })
+                            }
+                        </div>
+                    } />
+                
             </div>
         </div>
     )
 }
 const LinksSkeleton = () => {
     return (
-        <div className={style.friends_list_item_skeleton}>
-            <Skeleton variant="circular" width='3.2rem' height='3.2rem' />
-            <div className={style.friends_info}>
-                <Skeleton variant="text" width='90%' sx={{ fontSize: '1.25rem' }} />
-                <Skeleton variant="text" width='50%' sx={{ fontSize: '1.25rem' }} />
+        <div className={style.friends_list}>
+            <div className={style.friends_list_item_skeleton}>
+                <Skeleton variant="circular" width='3.2rem' height='3.2rem' />
+                <div className={style.friends_info}>
+                    <Skeleton variant="text" width='90%' sx={{ fontSize: '1.25rem' }} />
+                    <Skeleton variant="text" width='50%' sx={{ fontSize: '1.25rem' }} />
+                </div>
+            </div>
+            <div className={style.friends_list_item_skeleton}>
+                <Skeleton variant="circular" width='3.2rem' height='3.2rem' />
+                <div className={style.friends_info}>
+                    <Skeleton variant="text" width='90%' sx={{ fontSize: '1.25rem' }} />
+                    <Skeleton variant="text" width='50%' sx={{ fontSize: '1.25rem' }} />
+                </div>
+            </div>
+            <div className={style.friends_list_item_skeleton}>
+                <Skeleton variant="circular" width='3.2rem' height='3.2rem' />
+                <div className={style.friends_info}>
+                    <Skeleton variant="text" width='90%' sx={{ fontSize: '1.25rem' }} />
+                    <Skeleton variant="text" width='50%' sx={{ fontSize: '1.25rem' }} />
+                </div>
+            </div>
+            <div className={style.friends_list_item_skeleton}>
+                <Skeleton variant="circular" width='3.2rem' height='3.2rem' />
+                <div className={style.friends_info}>
+                    <Skeleton variant="text" width='90%' sx={{ fontSize: '1.25rem' }} />
+                    <Skeleton variant="text" width='50%' sx={{ fontSize: '1.25rem' }} />
+                </div>
             </div>
         </div>
+        
     )
 }

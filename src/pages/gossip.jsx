@@ -66,7 +66,7 @@ export default function Gossip(props) {
     }, [requestInstance, gossipDataGet])
 
     return (
-        <div className={style.gossip_page} style={{ paddingTop: requestInstance.viewUid ? null:'1rem', minHeight: requestInstance.viewUid ? null:'83vh' }}>
+        <div className={style.gossip_page} style={{ paddingTop: requestInstance.viewUid ? null:'1rem'}}>
             <CTransitionFade
                 keyS={gossipObject.instance === null}
                 left={<GossipSkeleton viewUid={requestInstance.viewUid}/>}

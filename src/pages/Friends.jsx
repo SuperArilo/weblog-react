@@ -8,7 +8,7 @@ import { CTransitionFade } from '../components/Transition'
 import style from '../assets/scss/friends.module.scss'
 import { friendGet } from '../util/friend'
 
-export default function Friends({ columns, defaultHeight = true }) {
+export default function Friends({ columns }) {
 
     //hook
     const navigate = useNavigate()
@@ -45,7 +45,7 @@ export default function Friends({ columns, defaultHeight = true }) {
         friendsListGet(requestInstance)
     }, [requestInstance, friendsListGet])
     return (
-        <div className={style.friends_box} style={defaultHeight ? { minHeight: '83vh' }:{}}>
+        <div className={style.friends_box}>
             <CTransitionFade
                     keyS={dataInstance.list === null}
                     left={<FriendsSkeleton />}
@@ -81,10 +81,28 @@ export default function Friends({ columns, defaultHeight = true }) {
 }
 const FriendsSkeleton = () => {
     return (
-        <div className={style.skeleton_item}>
-            <Skeleton variant="circular" width='3rem' height='3rem' />
-            <Skeleton variant="text" width='6rem' height='1.2rem' />
-            <Skeleton variant="text" width='6rem' height='1rem' />
+        <div className={style.friends_list}>
+            <div className={style.skeleton_item}>
+                <Skeleton variant="circular" width='3rem' height='3rem' />
+                <Skeleton variant="text" width='6rem' height='1.2rem' />
+                <Skeleton variant="text" width='6rem' height='1rem' />
+            </div>
+            <div className={style.skeleton_item}>
+                <Skeleton variant="circular" width='3rem' height='3rem' />
+                <Skeleton variant="text" width='6rem' height='1.2rem' />
+                <Skeleton variant="text" width='6rem' height='1rem' />
+            </div>
+            <div className={style.skeleton_item}>
+                <Skeleton variant="circular" width='3rem' height='3rem' />
+                <Skeleton variant="text" width='6rem' height='1.2rem' />
+                <Skeleton variant="text" width='6rem' height='1rem' />
+            </div>
+            <div className={style.skeleton_item}>
+                <Skeleton variant="circular" width='3rem' height='3rem' />
+                <Skeleton variant="text" width='6rem' height='1.2rem' />
+                <Skeleton variant="text" width='6rem' height='1rem' />
+            </div>
         </div>
+        
     )
 }

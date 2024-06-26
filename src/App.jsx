@@ -33,7 +33,7 @@ import CreateWindow from './components/CreateWindow'
 import Notice from './pages/notice'
 import Icon from './components/Icon'
 import Tinymce from './components/editor'
-import { CTransitionFade, CTransitionGroup, CCSSTransition } from './components/Transition'
+import { CTransitionFade, CCSSTransition } from './components/Transition'
 //样式
 import './assets/css/emojiBox.css'
 
@@ -497,7 +497,7 @@ const MobileHeaderNav = (props) => {
 								}
 							</header>
 							<div className={signStyle.user_info_box}>
-								<img src={props.userInfo ? props.userInfo.avatar:''} alt={props.userInfo ? props.userInfo.nickName:''} title={props.userInfo ? props.userInfo.nickName:''} />
+								<img src={props.userInfo ? props.userInfo.avatar:'https://image.superarilo.icu/default_head.png'} alt={props.userInfo ? props.userInfo.nickName:''} title={props.userInfo ? props.userInfo.nickName:''} />
 								<p>{props.userInfo ? props.userInfo.nickName:'未登录'}</p>
 							</div>
 							<ul className={signStyle.slide_center_menu}>
@@ -509,7 +509,7 @@ const MobileHeaderNav = (props) => {
 												setTimeout(() => {
 													setDrawerStatus(false)
 												}, 500)
-											 }}>
+											}}>
 												<Svg
 													cacheRequests={true}
 													src={item.svgSrc}

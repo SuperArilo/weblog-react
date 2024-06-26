@@ -305,7 +305,7 @@ export default function User(props) {
                                 }
                             </div>
                             {
-                                userInfo?.uid !== parseInt(viewUid) ?
+                                parseInt(userInfo?.uid) !== parseInt(viewUid) ?
                                 null
                                 :
                                 <AsukaButton 
@@ -852,7 +852,7 @@ const UserLikeView = (props) => {
     })
 
     const dataGet = useCallback((instance) => {
-        userlikesListGet({ data: instance, toast: null }).then(resq => {
+        userlikesListGet({ data: instance, toast: { isShow: false } }).then(resq => {
             if(resq.code === 200) {
                 setDataObject(current => ({
                     ...current,

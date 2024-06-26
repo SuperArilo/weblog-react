@@ -65,13 +65,11 @@ ul , li
     background-position: center;
     overflow-y: overlay;
     overflow-x: hidden;
-    #sakana-widget {
-        position: fixed;
-        right: 0;
-        bottom: 5%;
-    }
     .render-content
     {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
         .header-nav , .mobile-header-nav
         {
             width: 100%;
@@ -94,7 +92,6 @@ ul , li
         }
         .header-nav
         {
-            
             justify-content: space-around;
             user-select: none;
             transition: background-color 0.25s linear;
@@ -190,6 +187,7 @@ ul , li
         .router-render
         {
             padding-top: 3rem;
+            flex: 1;
         }
         .router-render-mobile
         {
