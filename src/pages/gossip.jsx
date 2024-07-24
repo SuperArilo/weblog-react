@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react'
 //样式
-import style from '../assets/scss/gossip.module.scss'
+import style from './Gossip.module.scss'
 //组件
 import { CTransitionFade, CTransitionGroup } from '../components/Transition'
 import Collapse from '@mui/material/Collapse'
-import GossipContent from '../components/gossipContent'
+import GossipContent from '../components/GossipContent'
 import GossipSkeleton from '../components/GossipSkeleton'
 //方法
 import { gossipListRequest , likeGossip } from '../util/gossip'

@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react'
 //样式
-import style from '../assets/scss/links.module.scss'
-import renderHtml from '../assets/scss/renderHtml.module.scss'
+import style from './Links.module.scss'
+import renderHtml from '../assets/scss/RenderHtml.module.scss'
 //组件
 import Avatar from '../components/Avatar'
 import TextField from '@mui/material/TextField'
-import AsukaButton from '../components/asukaButton'
+import Button from '../components/Button'
 import { CTransitionFade } from '../components/Transition'
 import Skeleton from '@mui/material/Skeleton'
 //方法
@@ -100,7 +100,7 @@ export default function Links(props) {
                             </div>
                             <div className={style.input_item} />
                             <div className={style.input_item}>
-                                <AsukaButton
+                                <Button
                                     text='提交'
                                     status={applyStatus}
                                     size='small'

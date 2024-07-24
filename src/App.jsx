@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
-import AsukaButton from './components/asukaButton'
+import Button from './components/Button'
 import signStyle from './assets/scss/sign.module.scss'
 //hook
 import { Route, Routes, useLocation, useNavigate, Navigate  } from 'react-router-dom'
@@ -16,9 +16,9 @@ import WaterWave from './components/WaterWave'
 import Slide from '@mui/material/Slide'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
-import ArticleDetail from './pages/articleDetail'
-import Gossip from './pages/gossip'
-import IndexPage from './pages/index'
+import ArticleDetail from './pages/ArticleDetail'
+import Gossip from './pages/Gossip'
+import IndexPage from './pages/Index'
 import $ from 'jquery'
 import Avatar from './components/Avatar'
 import About from './components/About'
@@ -30,9 +30,9 @@ import User from './pages/User'
 import VerifyEmailPage from './pages/VerifyEmailPage'
 import FindPassword from './pages/FindPassword'
 import CreateWindow from './components/CreateWindow'
-import Notice from './pages/notice'
+import Notice from './pages/Notice'
 import Icon from './components/Icon'
-import Tinymce from './components/editor'
+import Tinymce from './components/Editor'
 import { CTransitionFade, CCSSTransition } from './components/Transition'
 //样式
 import './assets/css/emojiBox.css'
@@ -311,7 +311,7 @@ const PCheaderNav = (props) => {
 			<div className='right-some-function'>
 				{
 					props.userInfo === null ? 
-					<AsukaButton text='登录' onClick={() => { props.openLoginBox(true) }}/>
+					<Button text='登录' onClick={() => { props.openLoginBox(true) }}/>
 					:
 					<div className='logged-box'>
 						<Icon
@@ -562,7 +562,7 @@ const MobileHeaderNav = (props) => {
 										</div>
 									</>
 									:
-									<AsukaButton text='登录' size='big' onClick={() => { props.openLoginBox(true) }} />
+									<Button text='登录' size='big' onClick={() => { props.openLoginBox(true) }} />
 								}
 								
 							</div>

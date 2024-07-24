@@ -1,6 +1,6 @@
 import React from 'react'
 //样式
-import style from '../assets/scss/components/gossipSkeleton.module.scss'
+import style from './GossipSkeleton.module.scss'
 //组件
 import Skeleton from '@mui/material/Skeleton'
 

@@ -1,9 +1,9 @@
 //组件
 import Popper from '@mui/material/Popper'
 import Fade from '@mui/material/Fade'
-import AsukaButton from './asukaButton'
+import Button from './Button'
 //样式
-import style from '../assets/scss/components/popper.module.scss'
+import style from './Popper.module.scss'
 const AsukaPopper = ({ title = '未设置', open = false, status = false, placement = 'bottom', target = null, onConfirm = () => null, onCancel = () => null }) => {
     return (
         <Popper
@@ -17,8 +17,8 @@ const AsukaPopper = ({ title = '未设置', open = false, status = false, placem
                     <div className={style.popper_box}>
                         <p>{title}</p>
                         <div>
-                            <AsukaButton text='确定' size='small' onClick={ () => onConfirm() } />
-                            <AsukaButton text='取消' clazz='danger' size='small' onClick={ () => onCancel() }/>
+                            <Button text='确定' size='small' onClick={ () => onConfirm() } />
+                            <Button text='取消' clazz='danger' size='small' onClick={ () => onCancel() }/>
                         </div>
                     </div>
                 </Fade>

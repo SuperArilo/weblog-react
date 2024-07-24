@@ -1,7 +1,7 @@
 //组件
 import WaterWave from './WaterWave'
 //样式
-import style from '../assets/scss/components/Icon.module.scss'
+import style from './Icon.module.scss'
 import Svg from 'react-inlinesvg'
 export default function Icon({
     width = '1.5rem',

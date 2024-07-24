@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import style from '../assets/scss/verifyPage.module.scss'
+import style from './VerifyPage.module.scss'
 import { useNavigate, useLocation  } from "react-router-dom"
 import { blogUserProfilesModifyEmail } from '../util/user'
 import toast from 'react-hot-toast'

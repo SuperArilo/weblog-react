@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 //组件
-import Tinymce from '../components/editor'
+import Tinymce from '../components/Editor'
 import Avatar from '../components/Avatar'
 import WaterWave from '../components/WaterWave'
 import { CTransitionFade, CTransitionGroup } from '../components/Transition'
@@ -11,8 +11,8 @@ import PreviewImage from '../components/PreviewImage'
 import Pagination from '../components/Pagination'
 import Svg from '../components/Icon'
 //样式
-import style from '../assets/scss/guestbook.module.scss'
-import renderHtml from '../assets/scss/renderHtml.module.scss'
+import style from './Guestbook.module.scss'
+import renderHtml from '../assets/scss/RenderHtml.module.scss'
 //方法
 import { useSelector } from 'react-redux'
 import { guestbookList, addGuestbook, deleteGuestbook } from '../util/guestbook'

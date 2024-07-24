@@ -1,7 +1,7 @@
 import React from 'react'
 import WaterWave from './WaterWave'
-import style from '../assets/scss/components/button.module.scss'
-export default function AsukaButton({text = '未设置', clazz = 'normal', size = 'normal', getFile = () => null, onClick = () => null}) {
+import style from './Button.module.scss'
+export default function Button({text = '未设置', clazz = 'normal', size = 'normal', getFile = () => null, onClick = () => null}) {
     return (
         <button
             onClick={onClick}

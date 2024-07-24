@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 //样式
-import style from '../assets/scss/user.module.scss'
+import style from './User.module.scss'
 //方法
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -12,11 +12,11 @@ import { modifyEmail } from '../util/mail/mail'
 import toast from 'react-hot-toast'
 //组件
 import { CTransitionFade, CTransitionGroup } from '../components/Transition'
-import Gossip from './gossip'
+import Gossip from './Gossip'
 import Collapse from '@mui/material/Collapse'
 import Avatar from '../components/Avatar'
 import WaterWave from '../components/WaterWave'
-import AsukaButton from '../components/asukaButton'
+import Button from '../components/Button'
 import Icon from '../components/Icon'
 import InstantInput from '../components/InstantInput'
 import AvatarCut from '../components/AvatarCut'
@@ -186,7 +186,7 @@ export default function User(props) {
                                     modeInstance.status ?
                                     <>
                                         <div className={style.avatar_box_button}>
-                                        <AsukaButton
+                                        <Button
                                             clazz='file'
                                             text='上传头像'
                                             getFile={file => {
@@ -195,7 +195,7 @@ export default function User(props) {
                                         {
                                             modeInstance.tempAvatar !== null ? 
                                             <>
-                                                <AsukaButton
+                                                <Button
                                                     status={modeInstance.loadingStatus}
                                                     text='提交'
                                                     onClick={() => {
@@ -213,7 +213,7 @@ export default function User(props) {
                                                             })
                                                         }
                                                     }}/>
-                                                <AsukaButton
+                                                <Button
                                                     text='退出'
                                                     clazz='danger'
                                                     onClick={() => {
@@ -308,7 +308,7 @@ export default function User(props) {
                                 parseInt(userInfo?.uid) !== parseInt(viewUid) ?
                                 null
                                 :
-                                <AsukaButton 
+                                <Button 
                                     text={modeInstance.status ? '退出编辑模式':'编辑个人资料'}
                                     clazz={modeInstance.status ? 'danger':'normal'}
                                     onClick={() => {

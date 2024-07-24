@@ -1,5 +1,5 @@
 //样式
-import style from '../assets/scss/components/avatar.module.scss'
+import style from './Avatar.module.scss'
 export default function Avatar({ width = '2.5rem', height = '2.5rem', src = undefined, shadow = false, title = '未设置', alt = '未设置', onClick = () => null }) {
     return (
         <div

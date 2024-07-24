@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback, useRef, useMemo, forwardRef, useImperativeHandle } from 'react'
+import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react'
 //样式
-import style from '../assets/scss/components/instantInput.module.scss'
+import style from './InstantInput.module.scss'
 //方法
 import $ from 'jquery'
 import toast from 'react-hot-toast'

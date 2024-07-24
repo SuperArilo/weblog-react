@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import style from '../assets/scss/findPassword.module.scss'
+import style from './FindPassword.module.scss'
 import TextField from '@mui/material/TextField'
-import AsukaButtom from '../components/asukaButton'
+import AsukaButtom from '../components/Button'
 import toast from 'react-hot-toast'
 import { findPasswordVerify, passwordModify } from '../util/user'
 import { useNavigate, useLocation  } from "react-router-dom"

@@ -1,9 +1,9 @@
-import React, { useEffect, useState, forwardRef, useImperativeHandle, useRef } from 'react'
+import React, { useState, forwardRef, useImperativeHandle } from 'react'
 import { Editor } from '@tinymce/tinymce-react'
 //样式
-import style from '../assets/scss/components/editor.module.scss'
+import style from './Editor.module.scss'
 //组件
-import AsukaButton from './asukaButton'
+import Button from './Button'
 import Skeleton from '@mui/material/Skeleton'
 //方法
 import { customUploadImage } from '../util/upload'
@@ -90,7 +90,7 @@ const Tinymce = forwardRef(({ userInfo = null, placeholder = '在这设置占位
                         <div className={style.editor_bottom}>
                             <div className={style.left_user_info}>
                             </div>
-                            <AsukaButton
+                            <Button
                                 text='提交'
                                 onClick={() => {
                                     getContent(modelValue)

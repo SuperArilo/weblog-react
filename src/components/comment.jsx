@@ -1,12 +1,12 @@
 import React, { useState, useRef } from 'react'
 //样式
-import style from '../assets/scss/components/comment.module.scss'
-import renderHtml from '../assets/scss/renderHtml.module.scss'
+import style from './Comment.module.scss'
+import renderHtml from '../assets/scss/RenderHtml.module.scss'
 //组件
 import Avatar from './Avatar'
 import AsukaPoppor from './popper'
 import Collapse from '@mui/material/Collapse'
-import Tinymce from './editor'
+import Tinymce from './Editor'
 import PreviewImage from './PreviewImage'
 import Svg from 'react-inlinesvg'
 //方法

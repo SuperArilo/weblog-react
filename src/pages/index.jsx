@@ -1,12 +1,12 @@
 //样式
-import style from '../assets/scss/indexPage.module.scss'
+import style from './IndexPage.module.scss'
 import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
 //组件
 import Switch from '@mui/material/Switch'
-import AsukaButton from '../components/asukaButton'
+import Button from '../components/Button'
 import WaterWave from '../components/WaterWave'
-import GossipContent from '../components/gossipContent'
+import GossipContent from '../components/GossipContent'
 import Slider from "react-slick"
 import GossipSkeleton from '../components/GossipSkeleton'
 import Skeleton from '@mui/material/Skeleton'
@@ -265,7 +265,7 @@ const SiderItem = (props) => {
             <img src={props.object.articlePicture} alt='' title=''/>
             <div className={style.article_info}>
                 <p>{props.object.articleTitle}</p>
-                <AsukaButton text='开始阅读' clazz='read' onClick={() => { 
+                <Button text='开始阅读' clazz='read' onClick={() => { 
                     navigate('detail?threadId=' + props.object.id)
                     $('#react-by-asukamis').stop().animate({'scrollTop': 0})
                 }}/>
@@ -285,7 +285,7 @@ const Article = (props) => {
                 <span className={style.article_time}>{props.item.createTime}</span>
                 <p className={style.article_introduce}>{props.item.articleIntroduction}</p>
                 <div className={style.article_bottom_function}>
-                    <AsukaButton text='开始阅读' clazz='read' onClick={() => { 
+                    <Button text='开始阅读' clazz='read' onClick={() => { 
                         navigate('detail?threadId=' + props.item.id)
                         $('#react-by-asukamis').stop().animate({'scrollTop': 0})
                      }}/>

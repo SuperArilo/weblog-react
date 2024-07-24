@@ -1,6 +1,6 @@
 import React from 'react'
 //样式
-import style from '../assets/scss/components/commentSkeleton.module.scss'
+import style from './CommentSkeleton.module.scss'
 //组件
 import Skeleton from '@mui/material/Skeleton'
 export default class CommentSkeleton extends React.Component {

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from "react"
-import style from '../assets/scss/components/waterWave.module.scss'
+import style from './WaterWave.module.scss'
 export default function WaterWave({ color = 'rgba(0, 0, 0, 0.7)', duration = 1, position = 'relative' }) {
 
     const instanceRef = useRef(null)

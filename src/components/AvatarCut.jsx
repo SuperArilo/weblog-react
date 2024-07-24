@@ -3,7 +3,7 @@ import { forwardRef, useImperativeHandle, useRef } from 'react'
 //组件
 import AvatarEditor from 'react-avatar-editor'
 //样式
-import style from '../assets/scss/components/avatarCut.module.scss'
+import style from './AvatarCut.module.scss'
 
 const AvatarCut = forwardRef(({ image }, ref) => {
 

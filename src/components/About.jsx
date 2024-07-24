@@ -1,6 +1,6 @@
 import React from 'react'
 //样式
-import style from '../assets/scss/about.module.scss'
+import style from './About.module.scss'
 
 export default function About(props) {
     return (

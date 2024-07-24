@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 //样式
-import style from '../assets/scss/notice.module.scss'
-import renderHtml from '../assets/scss/renderHtml.module.scss'
+import style from './Notice.module.scss'
+import renderHtml from '../assets/scss/RenderHtml.module.scss'
 //方法
 import $ from 'jquery'
 import { noticeGet, readNotice } from '../util/notice'
@@ -11,7 +11,7 @@ import { CTransitionFade } from '../components/Transition'
 import Icon from '../components/Icon'
 import toast from 'react-hot-toast'
 import WaterWave from '../components/WaterWave'
-import AsukaButton from '../components/asukaButton'
+import Button from '../components/Button'
 import { Collapse } from '@mui/material'
 import Skeleton from '@mui/material/Skeleton'
 import Stack from '@mui/material/Stack'
@@ -232,7 +232,7 @@ export default function Notice(props) {
                                                         page={noticeInstance.current}
                                                         onPageChange={e => { setRequestInstance({...requestInstance, pageNum: e}) }}/>
                                                 }
-                                                <AsukaButton 
+                                                <Button 
                                                     text='删除'
                                                     clazz='read'
                                                     size='small'

@@ -5,7 +5,7 @@ import Avatar from '../components/Avatar'
 import Skeleton from '@mui/material/Skeleton'
 import { CTransitionFade } from '../components/Transition'
 
-import style from '../assets/scss/friends.module.scss'
+import style from './Friends.module.scss'
 import { friendGet } from '../util/friend'
 
 export default function Friends({ columns }) {
