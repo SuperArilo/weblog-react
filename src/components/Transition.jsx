@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { SwitchTransition, CSSTransition, TransitionGroup } from 'react-transition-group'
-import '../assets/scss/currencyTransition.scss'
+import './Transition.scss'
 
 export function CTransitionFade({ keyS, timeout = 300, left, right }) {
     const leftRef = useRef(null)
