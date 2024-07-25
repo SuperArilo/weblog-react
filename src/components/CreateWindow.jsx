@@ -1,7 +1,7 @@
 import Slide from '@mui/material/Slide'
 import WaterWave from './WaterWave'
 import { CSSTransition } from 'react-transition-group'
-import style from '../assets/scss/createWindow.module.scss'
+import style from './CreateWindow.module.scss'
 import Svg from 'react-inlinesvg'
 import { useRef } from 'react'
 export default function CreateWindow({ status = false, onClose = () => null, width, children }) {

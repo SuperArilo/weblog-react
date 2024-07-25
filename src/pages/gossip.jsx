@@ -7,7 +7,7 @@ import Collapse from '@mui/material/Collapse'
 import GossipContent from '../components/GossipContent'
 import GossipSkeleton from '../components/GossipSkeleton'
 //方法
-import { gossipListRequest , likeGossip } from '../util/gossip'
+import { gossipListRequest , likeGossip } from '../api/Gossip'
 import toast from 'react-hot-toast'
 //hook
 import { useLocation  } from "react-router-dom"

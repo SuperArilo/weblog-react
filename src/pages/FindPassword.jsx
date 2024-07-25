@@ -3,7 +3,7 @@ import style from './FindPassword.module.scss'
 import TextField from '@mui/material/TextField'
 import AsukaButtom from '../components/Button'
 import toast from 'react-hot-toast'
-import { findPasswordVerify, passwordModify } from '../util/user'
+import { findPasswordVerify, passwordModify } from '../api/User'
 import { useNavigate, useLocation  } from "react-router-dom"
 import Icon from '../components/Icon'
 export default function FindPassword(props) {

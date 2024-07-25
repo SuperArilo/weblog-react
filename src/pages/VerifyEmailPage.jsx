@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import style from './VerifyPage.module.scss'
 import { useNavigate, useLocation  } from "react-router-dom"
-import { blogUserProfilesModifyEmail } from '../util/user'
+import { blogUserProfilesModifyEmail } from '../api/User'
 import toast from 'react-hot-toast'
 import Icon from '../components/Icon'
 export default function VerifyPage(props) {

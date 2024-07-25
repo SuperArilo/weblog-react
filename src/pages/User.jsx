@@ -6,9 +6,9 @@ import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { useParams } from "react-router-dom"
 import $ from 'jquery'
-import { blogUserProfiles, blogUserProfilesModify } from '../util/user'
-import { userlikesListGet, targetLikeUser } from '../util/userLike'
-import { modifyEmail } from '../util/mail/mail'
+import { blogUserProfiles, blogUserProfilesModify } from '../api/User.js'
+import { userlikesListGet, targetLikeUser } from '../api/UserLike.js'
+import { modifyEmail } from '../api/Mail.js'
 import toast from 'react-hot-toast'
 //组件
 import { CTransitionFade, CTransitionGroup } from '../components/Transition'

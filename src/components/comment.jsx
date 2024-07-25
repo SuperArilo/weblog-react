@@ -4,7 +4,7 @@ import style from './Comment.module.scss'
 import renderHtml from '../assets/scss/RenderHtml.module.scss'
 //组件
 import Avatar from './Avatar'
-import AsukaPoppor from './popper'
+import AsukaPoppor from './Popper'
 import Collapse from '@mui/material/Collapse'
 import Tinymce from './Editor'
 import PreviewImage from './PreviewImage'

@@ -4,7 +4,7 @@ import style from './Notice.module.scss'
 import renderHtml from '../assets/scss/RenderHtml.module.scss'
 //方法
 import $ from 'jquery'
-import { noticeGet, readNotice } from '../util/notice'
+import { noticeGet, readNotice } from '../api/Notice'
 import { useSelector } from 'react-redux'
 import { useNavigate  } from 'react-router-dom'
 import { CTransitionFade } from '../components/Transition'

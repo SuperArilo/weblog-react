@@ -1,4 +1,4 @@
-import request from '../axios'
+import request from '../util/axios'
 
 export const regiserMail = ({ data, toast }) => {
     return request({

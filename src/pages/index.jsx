@@ -16,12 +16,11 @@ import Friends from './Friends'
 import Svg from 'react-inlinesvg'
 import { CTransitionFade } from '../components/Transition'
 //hook
-import { articleListGet } from '../util/article'
 import { useNavigate } from "react-router-dom"
 import React, { useState, useRef, useEffect, useCallback } from 'react'
 //方法
-import { gossipListRequest, likeGossip } from '../util/gossip'
-import { increaseArticleLike } from '../util/article'
+import { gossipListRequest, likeGossip } from '../api/Gossip'
+import { increaseArticleLike, articleListGet } from '../api/Article'
 import toast from 'react-hot-toast'
 import $ from 'jquery'
 export default function IndexPage(props) {

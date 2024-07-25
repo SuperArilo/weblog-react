@@ -10,7 +10,7 @@ import { CTransitionFade } from '../components/Transition'
 import Skeleton from '@mui/material/Skeleton'
 //方法
 import { useSelector } from 'react-redux'
-import { friendList, linksApply } from '../util/links'
+import { friendList, linksApply } from '../api/Links'
 import toast from 'react-hot-toast'
 
 export default function Links(props) {

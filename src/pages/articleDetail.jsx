@@ -18,7 +18,7 @@ import PreviewImage from '../components/PreviewImage'
 import Pagination from '../components/Pagination'
 import Svg from 'react-inlinesvg'
 //方法
-import { articleContentGet, articleCommentGet, replyComment, increaseArticleLike, likeComment, deleteComment } from '../util/article'
+import { articleContentGet, articleCommentGet, replyComment, increaseArticleLike, likeComment, deleteComment } from '../api/Article'
 
 export default function ArticleDetail(props) {
     //hook

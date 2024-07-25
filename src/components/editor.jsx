@@ -6,7 +6,7 @@ import style from './Editor.module.scss'
 import Button from './Button'
 import Skeleton from '@mui/material/Skeleton'
 //方法
-import { customUploadImage } from '../util/upload'
+import { customUploadImage } from '../api/Upload'
 
 
 const Tinymce = forwardRef(({ userInfo = null, placeholder = '在这设置占位符', initialValue,  getContent = () => null }, ref) => {

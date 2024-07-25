@@ -16,12 +16,13 @@ import PreviewImage from './PreviewImage.jsx'
 import Pagination from './Pagination.jsx'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
-import AsukaPoppor from './popper.jsx'
+import AsukaPoppor from './Popper'
 import Svg from 'react-inlinesvg'
+
 //方法
-import share from '../util/share/share.js'
+import share from '../util/Share.js'
 import { useNavigate } from 'react-router-dom'
-import { gossipCommentList, replyGossipComment, likeGossipComment, deleteGossipComment, deleteGossip } from '../util/gossip.js'
+import { gossipCommentList, replyGossipComment, likeGossipComment, deleteGossipComment, deleteGossip } from '../api/Gossip'
 export default function GossipContent({ foldStatus = false, targetComment = null, data, userInfo,  reDataGet = () => null, handleLike = () => null, handleFold = () => null, reSetGossipComment = () => null }) {
     //hook
     const navigate = useNavigate()

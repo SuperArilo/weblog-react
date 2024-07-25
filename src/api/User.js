@@ -1,5 +1,5 @@
 import request from '../util/axios'
-import { parseFormData } from './PublicFunction'
+import { parseFormData } from '../util/PublicFunction'
 
 export const blogLoginUser = ({ data, toast }, customHeader) => {
     return request({

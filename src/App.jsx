@@ -5,9 +5,9 @@ import signStyle from './assets/scss/sign.module.scss'
 import { Route, Routes, useLocation, useNavigate, Navigate  } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 //axios
-import { blogLoginUser, blogRegisterUser, blogUserLoginOut, blogLoginUserToken } from './util/user'
-import { regiserMail, findPassword } from './util/mail/mail'
-import { userCreateGossip } from './util/gossip'
+import { blogLoginUser, blogRegisterUser, blogUserLoginOut, blogLoginUserToken } from './api/User'
+import { regiserMail, findPassword } from './api/Mail'
+import { userCreateGossip } from './api/Gossip'
 
 //组件
 import Svg from 'react-inlinesvg'
@@ -38,6 +38,9 @@ import { CTransitionFade, CCSSTransition } from './components/Transition'
 import './assets/css/emojiBox.css'
 
 import NoticeSocket from './pages/NoticeSocket'
+
+
+import Test from './pages/Test'
 
 export default function App () {
 	//hook
@@ -122,6 +125,7 @@ export default function App () {
 								<Route path='/friends' element={<Friends /> } />
 								<Route path='/notfound' element={<NotFound /> } />
 								<Route path='/error' element={<NotFound /> } />
+								<Route path='/test' element={<Test /> } />
 								<Route path='*' element={<Navigate to='/notfound' />} />
 							</Routes>
 						} />
