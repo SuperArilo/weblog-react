@@ -40,8 +40,6 @@ import './assets/css/emojiBox.css'
 import NoticeSocket from './pages/NoticeSocket'
 
 
-import Test from './pages/Test'
-
 export default function App () {
 	//hook
 	const location = useLocation()
@@ -125,7 +123,6 @@ export default function App () {
 								<Route path='/friends' element={<Friends /> } />
 								<Route path='/notfound' element={<NotFound /> } />
 								<Route path='/error' element={<NotFound /> } />
-								<Route path='/test' element={<Test /> } />
 								<Route path='*' element={<Navigate to='/notfound' />} />
 							</Routes>
 						} />
