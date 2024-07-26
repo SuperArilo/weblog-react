@@ -294,7 +294,7 @@ const PCheaderNav = (props) => {
 				{
 					menuInstance.list.map(item => {
 						return <li
-								className={menuInstance.index === item.id ? 'active':''}
+								className={menuInstance.index === item.id && style.active}
 								onClick={() => {
 									if(menuInstance.index === item.id) return
 									navigate(item.path)
