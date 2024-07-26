@@ -5,8 +5,7 @@ import App from './App.jsx'
 import store from './store/index.js'
 import { BrowserRouter } from "react-router-dom"
 import { Toaster } from 'react-hot-toast'
-import './App.scss'
-
+import './assets/scss/Pre.scss'
 ReactDOM.createRoot(document.getElementById('react-by-asukamis')).render(
     <Provider store={store}>
         <BrowserRouter>

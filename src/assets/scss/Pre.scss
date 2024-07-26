@@ -1,0 +1,117 @@
+#react-by-asukamis
+{
+    width: 100%;
+    height: 100%;
+    transition: background-image 0.25s linear;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    overflow-y: overlay;
+    overflow-x: hidden;
+}
+img
+{
+    -webkit-user-drag: none;
+    max-width: 100%;
+}
+.slick-slider , .slick-list , .slick-track
+{
+    height: 100%;
+    .slick-slide > div
+    {
+        height: 100%;
+    }
+}
+body, html
+{
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    font-family: "Roboto","Helvetica","Arial",sans-serif;
+}
+button
+{
+    border: none;
+    outline: none;
+    cursor: pointer;
+    letter-spacing: 0.08rem;
+    background-color: transparent;
+}
+*
+{
+    box-sizing: border-box;
+}
+a
+{
+    text-decoration: none;
+}
+::-webkit-scrollbar
+{
+    width: 0.4rem;
+}
+::-webkit-scrollbar-thumb
+{
+    background-color: rgb(79, 130, 241);
+    border-radius: 0.2rem;
+}
+ul , li
+{
+    margin: 0;
+    padding: 0;
+}
+@media screen and (min-width: 3840px) {
+    html
+    {
+        font-size: 24px;
+    }
+}
+@media screen and (max-width: 3839px) and (min-width: 2561px)
+{
+    html
+    {
+        font-size: 20px;
+    }
+}
+@media screen and (max-width: 2560px) and (min-width: 1921px)
+{
+    html
+    {
+        font-size: 18px;
+    }
+}
+@media screen and (max-width: 1920px) and (min-width: 1281px)
+{
+    html
+    {
+        font-size: 18px;
+    }
+}
+@media screen and (max-width: 1280px) and (min-width: 937px)
+{
+    html
+    {
+        font-size: 16px;
+    }
+}
+@media screen and (max-width: 936px) and (min-width: 721px)
+{
+    html
+    {
+        font-size: 16px;
+    }
+}
+@media screen and (max-width: 720px) and (min-width: 541px)
+{
+    html
+    {
+        font-size: 16px;
+    }
+}
+@media screen and (max-width: 540px)
+{
+    html
+    {
+        font-size: 15px;
+    }
+}

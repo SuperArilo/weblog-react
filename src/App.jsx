@@ -37,7 +37,8 @@ import Tinymce from './components/Editor'
 import { CTransitionFade, CCSSTransition } from './components/Transition'
 //样式
 import './assets/css/emojiBox.css'
-
+import Theme from './assets/scss/Theme.module.scss'
+import style from './App.module.scss'
 import NoticeSocket from './pages/NoticeSocket'
 
 import Test from './pages/Test'
@@ -70,6 +71,7 @@ export default function App () {
 		dispatch({ type: 'userInfo/setInfo', payload: value })
 	}, [dispatch])
 	useEffect(() => {
+		console.log(style)
 		let token = localStorage.getItem('token')
 		if(token) {
 			blogLoginUserToken({ data: null, toast: null }, { 'token': token }).then(resq => {
@@ -83,7 +85,7 @@ export default function App () {
 	}, [loginSetUserInfo])
 	return (
 		<>
-			<div className='render-content'>
+			<div className={style.render_content}>
 				{
 					isMobileStatus ? 
 					<MobileHeaderNav
@@ -100,7 +102,7 @@ export default function App () {
 							setLoginBoxStatus(e)
 						}}/>
 				}
-				<div className={`${'router-render'} ${isMobileStatus ? 'router-render-mobile':''}`}>
+				<div className={`${style.router_render} ${isMobileStatus && style.router_render_mobile}`}>
 					<CTransitionFade
 						keyS={location.pathname}
 						left={
@@ -283,12 +285,12 @@ const PCheaderNav = (props) => {
 	}, [pushNotice, setNoticeCount])
 
 	return (
-		<nav className='header-nav header-nav-default' ref={navInstance}>
-			<span className='left-webside-icon' onClick={() => { navigate('/') }}>
+		<nav className={`${style.header_nav} ${style.header_nav_default}`} ref={navInstance}>
+			<span className={style.left_webside_icon} onClick={() => { navigate('/') }}>
 				Arilo
 				<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
 			</span>
-			<ul className='nav-menu-list'>
+			<ul className={style.nav_menu_list}>
 				{
 					menuInstance.list.map(item => {
 						return <li
@@ -304,12 +306,12 @@ const PCheaderNav = (props) => {
 					})
 				}
 			</ul>
-			<div className='right-some-function'>
+			<div className={style.right_some_function}>
 				{
 					props.userInfo === null ? 
 					<Button text='登录' onClick={() => { props.openLoginBox(true) }}/>
 					:
-					<div className='logged-box'>
+					<div className={style.logged_box}>
 						<Icon
 							src='https://image.superarilo.icu/svg/notice.svg'
 							width='1.5rem'
@@ -339,7 +341,7 @@ const PCheaderNav = (props) => {
 									src='https://image.superarilo.icu/svg/avatar.svg'
 									width='1.3rem'
 									height='1.2rem'/>
-								<span className='menu_font'>
+								<span className={style.menu_font}>
 									我的账号
 								</span>
 							</MenuItem>
@@ -354,7 +356,7 @@ const PCheaderNav = (props) => {
 									src='https://image.superarilo.icu/svg/gossip.svg'
 									width='1.3rem'
 									height='1.3rem'/>
-								<span className='menu_font'>
+								<span className={style.menu_font}>
 									发表碎语
 								</span>
 							</MenuItem>
@@ -369,7 +371,7 @@ const PCheaderNav = (props) => {
 									src='https://image.superarilo.icu/svg/setting.svg'
 									width='1.3rem'
 									height='1rem'/>
-								<span className='menu_font'>
+								<span className={style.menu_font}>
 									设置
 								</span>
 							</MenuItem>
@@ -389,7 +391,7 @@ const PCheaderNav = (props) => {
 									src='https://image.superarilo.icu/svg/signout.svg'
 									width='1.3rem'
 									height='1rem'/>
-								<span className='menu_font'>
+								<span className={style.menu_font}>
 									退出
 								</span>
 							</MenuItem>
@@ -440,8 +442,8 @@ const MobileHeaderNav = (props) => {
 	])
 	return (
 		<>
-			<nav className='mobile-header-nav'>
-				<div className='left-mobile-bar'>
+			<nav className={style.mobile_header_nav}>
+				<div className={style.left_mobile_bar}>
 					{
 						props.userInfo !== null &&
 						<>
@@ -454,8 +456,8 @@ const MobileHeaderNav = (props) => {
 						</>
 					}
 				</div>
-				<span className='left-webside-icon'>Arilo</span>
-				<div className='right-mobile-bar' onClick={() => { setDrawerStatus(true) }}>
+				<span className={style.left_webside_icon}>Arilo</span>
+				<div className={style.right_mobile_bar} onClick={() => { setDrawerStatus(true) }}>
 					<Svg
 						cacheRequests={true}
 						src='https://image.superarilo.icu/svg/menu.svg'
@@ -709,7 +711,7 @@ const LoginBox = (props) => {
 			</div>
 			<button type="button" title="登录" className={signStyle.confirm_button + ' ' + (isMobileStatus ? signStyle.confirm_button_mobile:signStyle.confirm_button_pc)} onClick={() => { loginFunction() }}>
 				{ !loginStatus && userInfo === null ? '登录':'' }
-				{ loginStatus ? <Svg width='1.5rem' height='1.5rem' className='rotate' src='https://image.superarilo.icu/svg/loading.svg' /> : '' }
+				{ loginStatus ? <Svg width='1.5rem' height='1.5rem' className={style.rotate} src='https://image.superarilo.icu/svg/loading.svg' /> : '' }
 				{ userInfo !== null && !loginStatus ? <Svg width='1.5rem' height='1.5rem' src='https://image.superarilo.icu/svg/success.svg' /> : '' }
 				<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
 			</button>
@@ -814,7 +816,7 @@ const RegisterBox = (props) => {
 										(requestStatus.countDown === 60 && !requestStatus.sendMailStatus) && '获取验证码'
 									}
 									{
-										requestStatus.sendMailStatus && <Svg width='1.5rem' height='1.5rem' className='rotate' src='https://image.superarilo.icu/svg/loading.svg' />
+										requestStatus.sendMailStatus && <Svg width='1.5rem' height='1.5rem' className={style.rotate} src='https://image.superarilo.icu/svg/loading.svg' />
 									}
 									{
 										requestStatus.countDown < 60 && requestStatus.countDown
@@ -921,7 +923,7 @@ const RegisterBox = (props) => {
 						}
 					}}>
 					{
-						requestStatus.registerStatus ? <Svg width='1.5rem' height='1.5rem' className='rotate' src='https://image.superarilo.icu/svg/loading.svg' />:'注册'
+						requestStatus.registerStatus ? <Svg width='1.5rem' height='1.5rem' className={style.rotate} src='https://image.superarilo.icu/svg/loading.svg' />:'注册'
 					}
 					<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
 				</button>
