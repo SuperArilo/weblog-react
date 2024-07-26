@@ -46,32 +46,35 @@ export default function Guestbook() {
     }, [requestInstance, dataListGet])
     return (
         <div className={style.guestbook}>
-            <Tinymce
-                userInfo={userInfo}
-                ref={tinymceRef}
-                placeholder='在这里留下你想说的话吧...'
-                status={addGuestbookStatus}
-                getContent={(content) => {
-                    if(content === null || content === undefined || content === '' || content === '<p></p>') {
-                        toast('回复的内容不能为空白哦 (ง •_•)ง')
-                        return
-                    }
-                    if(!addGuestbookStatus) {
-                        setAddGuestbookStatus(true)
-                        let data = new FormData()
-                        data.append('content', content)
-                        addGuestbook({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
-                            if(resq.code === 200) {
-                                tinymceRef.current.clear()
-                                dataListGet(requestInstance)
-                            }
-                            setAddGuestbookStatus(false)
-                        }).catch(err => {
-                            setAddGuestbookStatus(false)
-                        })
-                    }
-                    
-                }}/>
+            <div className={style.guestbook_editor_content}>
+                <Tinymce
+                    userInfo={userInfo}
+                    ref={tinymceRef}
+                    placeholder='在这里留下你想说的话吧...'
+                    status={addGuestbookStatus}
+                    getContent={(content) => {
+                        if(content === null || content === undefined || content === '' || content === '<p></p>') {
+                            toast('回复的内容不能为空白哦 (ง •_•)ง')
+                            return
+                        }
+                        if(!addGuestbookStatus) {
+                            setAddGuestbookStatus(true)
+                            let data = new FormData()
+                            data.append('content', content)
+                            addGuestbook({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
+                                if(resq.code === 200) {
+                                    tinymceRef.current.clear()
+                                    dataListGet(requestInstance)
+                                }
+                                setAddGuestbookStatus(false)
+                            }).catch(err => {
+                                setAddGuestbookStatus(false)
+                            })
+                        }
+                        
+                    }}/>
+            </div>
+            
             <div className={style.guestbook_comment_list}>
                 <CTransitionFade
                     keyS={dataObject.list === null}

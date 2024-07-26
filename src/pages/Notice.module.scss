@@ -1,7 +1,6 @@
 .notice_box
 {
     max-width: 768px;
-    min-height: 83vh;
     padding-top: 1rem;
     margin: 0 auto;
     .notice_container
@@ -10,8 +9,7 @@
         flex-direction: column;
         border-radius: 0.3rem;
         overflow: hidden;
-        -webkit-transform: rotate(0deg);
-        transform: rotate(0deg);
+        box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.2);
         .notice_container_nav
         {
             height: 2.5rem;

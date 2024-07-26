@@ -61,67 +61,70 @@ export default function Links(props) {
         <div className={style.link_page}>
             {
                 userInfo !== null &&
-                <div className={style.apply_content}>
+                <>
                     <p className={style.function_title}>申请规则</p>
-                    <div className={`${style.apply_html} ${renderHtml.render_html}`} dangerouslySetInnerHTML={{ __html: tempContent }} />
-                    <div className={style.apply_info}>
-                        <div className={style.apply_input_list}>
-                            <div className={style.input_item}>
-                                <TextField
-                                    label="博客名字"
-                                    variant="standard"
-                                    size="small"
-                                    fullWidth 
-                                    onChange={e => { setBlogInstance({...blogInstance, blogName: e.target.value}) }}/>
-                            </div>
-                            <div className={style.input_item}>
-                                <TextField
-                                    label="博客地址"
-                                    variant="standard"
-                                    size="small"
-                                    fullWidth 
-                                    onChange={e => { setBlogInstance({...blogInstance, blogLocation: e.target.value}) }}/>
-                            </div>
-                            <div className={style.input_item}>
-                                <TextField
-                                    label="博客简介"
-                                    variant="standard"
-                                    size="small"
-                                    fullWidth
-                                    onChange={e => { setBlogInstance({...blogInstance, blogIntroduction: e.target.value}) }}/>
-                            </div>
-                            <div className={style.input_item}>
-                                <TextField
-                                    label="博客头像"
-                                    variant="standard"
-                                    size="small"
-                                    fullWidth 
-                                    onChange={e => { setBlogInstance({...blogInstance, blogAvatar: e.target.value}) }}/>
-                            </div>
-                            <div className={style.input_item} />
-                            <div className={style.input_item}>
-                                <Button
-                                    text='提交'
-                                    status={applyStatus}
-                                    size='small'
-                                    onClick={() => {
-                                        if(blogInstance.blogAvatar === '' || blogInstance.blogIntroduction === '' || blogInstance.blogLocation === '' || blogInstance.blogName === '') {
-                                            toast('填写的信息为空哦')
-                                            return
-                                        }
-                                        if(!applyStatus) {
-                                            setApplyStatus(true)
-                                            linksApply({ data: blogInstance, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
-                                                setApplyStatus(false)
-                                            }).catch(err => {
-                                                setApplyStatus(false)
-                                            })
-                                        }
-                                    }}/>
+                    <div className={style.apply_content}>
+                        <div className={`${style.apply_html} ${renderHtml.render_html}`} dangerouslySetInnerHTML={{ __html: tempContent }} />
+                        <div className={style.apply_info}>
+                            <div className={style.apply_input_list}>
+                                <div className={style.input_item}>
+                                    <TextField
+                                        label="博客名字"
+                                        variant="standard"
+                                        size="small"
+                                        fullWidth 
+                                        onChange={e => { setBlogInstance({...blogInstance, blogName: e.target.value}) }}/>
+                                </div>
+                                <div className={style.input_item}>
+                                    <TextField
+                                        label="博客地址"
+                                        variant="standard"
+                                        size="small"
+                                        fullWidth 
+                                        onChange={e => { setBlogInstance({...blogInstance, blogLocation: e.target.value}) }}/>
+                                </div>
+                                <div className={style.input_item}>
+                                    <TextField
+                                        label="博客简介"
+                                        variant="standard"
+                                        size="small"
+                                        fullWidth
+                                        onChange={e => { setBlogInstance({...blogInstance, blogIntroduction: e.target.value}) }}/>
+                                </div>
+                                <div className={style.input_item}>
+                                    <TextField
+                                        label="博客头像"
+                                        variant="standard"
+                                        size="small"
+                                        fullWidth 
+                                        onChange={e => { setBlogInstance({...blogInstance, blogAvatar: e.target.value}) }}/>
+                                </div>
+                                <div className={style.input_item} />
+                                <div className={style.input_item}>
+                                    <Button
+                                        text='提交'
+                                        status={applyStatus}
+                                        size='small'
+                                        onClick={() => {
+                                            if(blogInstance.blogAvatar === '' || blogInstance.blogIntroduction === '' || blogInstance.blogLocation === '' || blogInstance.blogName === '') {
+                                                toast('填写的信息为空哦')
+                                                return
+                                            }
+                                            if(!applyStatus) {
+                                                setApplyStatus(true)
+                                                linksApply({ data: blogInstance, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
+                                                    setApplyStatus(false)
+                                                }).catch(err => {
+                                                    setApplyStatus(false)
+                                                })
+                                            }
+                                        }}/>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </>
+                
             }
             <div className={style.friends_content}>
                 <p className={style.function_title}>朋友们 (默认按添加时间排序)</p>

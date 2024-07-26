@@ -17,6 +17,7 @@
             align-items: center;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.2);
             .user_avatar_box
             {
                 display: flex;
@@ -107,6 +108,7 @@
                 overflow: hidden;
                 position: relative;
                 display: flex;
+                box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.2);
                 .select_line
                 {
                     height: 2px;
@@ -147,6 +149,7 @@
                 margin-top: 1rem;
                 border-radius: 0.3rem;
                 overflow: hidden;
+                box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.2);
                 .user_like_view , .user_info_view
                 {
                     background-color: #ffffff;
@@ -294,6 +297,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.2);
         }
         .center_menu
         {
@@ -303,6 +307,7 @@
             border-radius: 0.3rem;
             overflow: hidden;
             transform: rotate(0);
+            box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.2);
         }
         .bottom_list
         {
@@ -310,6 +315,7 @@
             border-radius: 0.3rem;
             overflow: hidden;
             transform: rotate(0);
+            box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.2);
             li
             {
                 padding: 0 1rem;

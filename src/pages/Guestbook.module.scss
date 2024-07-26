@@ -2,12 +2,18 @@
 {
     padding-top: 1rem;
     margin: 0 auto;
+    .guestbook_editor_content {
+        box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+        border-radius: 0.3rem;
+    }
     .guestbook_comment_list
     {
         margin-top: 1rem;
         background-color: #ffffff;
         border-radius: 0.3rem;
         overflow: hidden;
+        box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.2);
         .guestbook_comment_item
         {
             padding: 0.5rem;
