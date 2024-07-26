@@ -192,7 +192,6 @@ export default function GossipContent({ foldStatus = false, targetComment = null
                     userInfo={userInfo} 
                     ref={tinymce}
                     placeholder='发表一条友善的评论吧...'
-                    status={editorSendToServerStatus}
                     getContent={value => {
                         if(value === null || value === '' || value === '<p></p>') {
                             toast('不能提交空白哦 ⊙﹏⊙∥')

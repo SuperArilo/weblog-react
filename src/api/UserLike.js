@@ -1,4 +1,4 @@
-import request from '../util/axios'
+import request from '../util/Request'
 
 //查看点赞列表
 export const userlikesListGet = ({ data, toast }) => {

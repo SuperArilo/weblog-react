@@ -1,4 +1,4 @@
-import request from '../util/axios'
+import request from '../util/Request'
 
 export const noticeGet = ({ data, toast }) => {
     return request({

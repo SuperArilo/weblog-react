@@ -4,6 +4,7 @@ import signStyle from './assets/scss/sign.module.scss'
 //hook
 import { Route, Routes, useLocation, useNavigate, Navigate  } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
+import { ConvertToFormData } from './util/PublicFunction'
 //axios
 import { blogLoginUser, blogRegisterUser, blogUserLoginOut, blogLoginUserToken } from './api/User'
 import { regiserMail, findPassword } from './api/Mail'
@@ -39,6 +40,7 @@ import './assets/css/emojiBox.css'
 
 import NoticeSocket from './pages/NoticeSocket'
 
+import Test from './pages/Test'
 
 export default function App () {
 	//hook
@@ -79,14 +81,6 @@ export default function App () {
 			}).catch(err => { })
 		}
 	}, [loginSetUserInfo])
-
-	useEffect(() => {
-		if(userInfo !== null) {
-			$('#react-by-asukamis').css({ 'backgroundImage': 'url(' + userInfo.background + ')' })
-		} else {
-			$('#react-by-asukamis').css({ 'backgroundImage': 'url(https://image.superarilo.icu/defalut_bg.jpg)' })
-		}
-	}, [userInfo])
 	return (
 		<>
 			<div className='render-content'>
@@ -123,6 +117,7 @@ export default function App () {
 								<Route path='/friends' element={<Friends /> } />
 								<Route path='/notfound' element={<NotFound /> } />
 								<Route path='/error' element={<NotFound /> } />
+								<Route path='/test' element={<Test /> } />
 								<Route path='*' element={<Navigate to='/notfound' />} />
 							</Routes>
 						} />
@@ -910,12 +905,7 @@ const RegisterBox = (props) => {
 						}
 						if(!requestStatus.registerStatus) {
 							setRequestStatus({...requestStatus, registerStatus: true})
-							let data = new FormData()
-							data.append('email', inputInstance.email)
-							data.append('password', inputInstance.password)
-							data.append('nickName', inputInstance.nickName)
-							data.append('verifyCode', inputInstance.verifyCode)
-							blogRegisterUser({ data: data, toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
+							blogRegisterUser({ data: ConvertToFormData(inputInstance), toast: { isShow: true, loadingMessage: '提交中...' } }).then(resq => {
 								if(resq.code === 200) {
 									setTimeout(() => {
 										clearInterval(intervalID.current)

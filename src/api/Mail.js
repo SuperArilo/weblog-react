@@ -1,5 +1,5 @@
-import request from '../util/axios'
-
+import request from '../util/Request'
+import { parseFormData } from '../util/PublicFunction'
 export const regiserMail = ({ data, toast }) => {
     return request({
         url: '/mail/register',
@@ -23,12 +23,4 @@ export const findPassword = ({ data, toast }) => {
         data: parseFormData(data),
         toast: toast
     })
-}
-const parseFormData = (obj) => {
-    let data = new FormData()
-    Object.keys(obj).map(key => {
-        data.append(key, obj[key])
-        return null
-    })
-    return data
 }

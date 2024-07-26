@@ -1,4 +1,4 @@
-import request from '../util/axios'
+import request from '../util/Request'
 import Qs from 'query-string'
 
 //友邻列表获取

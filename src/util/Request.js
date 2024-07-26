@@ -5,7 +5,8 @@ const service = axios.create({
     baseURL: `${window.location.protocol}//${window.location.hostname}/api`,
     timeout: 60000
 })
-service.interceptors.request.use( config => {
+service.interceptors.request.use(config => {
+    console.log(config)
     if(config.toast?.isShow) {
         config.toastId = toast.loading(config.toast?.loadingMessage ? config.toast.loadingMessage:'未设置')
     } 

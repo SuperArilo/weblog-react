@@ -1,4 +1,4 @@
-import request from '../util/axios'
+import request from '../util/Request'
 
 //文章管理列表获取
 export const articleListGet = ({ data, toast }) => {

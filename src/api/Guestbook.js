@@ -1,4 +1,4 @@
-import request from '../util/axios'
+import request from '../util/Request'
 //留言列表获取
 export const guestbookList = ({ data, toast }) => {
     return request({

@@ -98,11 +98,11 @@ export default function User(props) {
                     setTimeout(() => {
                         dispatch({ type: 'userInfo/setAvatar', payload: resq.data.avatar })
                     }, 0)
-                    setTimeout(() => {
-                        dispatch({ type: 'userInfo/setBackground', payload: resq.data.background })
-                    }, 0)
+                    // setTimeout(() => {
+                    //     dispatch({ type: 'userInfo/setBackground', payload: resq.data.background })
+                    // }, 0)
                 }
-                $('#react-by-asukamis').css({ 'backgroundImage': 'url(' + resq.data.background + ')' })
+                // $('#react-by-asukamis').css({ 'backgroundImage': 'url(' + resq.data.background + ')' })
             } else {
                 toast.error(resq.message)
             }
@@ -149,16 +149,16 @@ export default function User(props) {
         }
     }, [userInfo])
 
-    //销毁
-    useEffect(() => {
-        return () => {
-            if (userInfo === null) {
-                $('#react-by-asukamis').css({ 'backgroundImage': 'url(https://image.superarilo.icu/defalut_bg.jpg)' })
-            } else {
-                $('#react-by-asukamis').css({ 'backgroundImage': 'url(' + userInfo.background + ')' })
-            }
-        }
-      }, [userInfo])
+    // //销毁
+    // useEffect(() => {
+    //     return () => {
+    //         if (userInfo === null) {
+    //             $('#react-by-asukamis').css({ 'backgroundImage': 'url(https://image.superarilo.icu/defalut_bg.jpg)' })
+    //         } else {
+    //             $('#react-by-asukamis').css({ 'backgroundImage': 'url(' + userInfo.background + ')' })
+    //         }
+    //     }
+    //   }, [userInfo])
 
     return (
         <div className={style.user_info}>
@@ -764,38 +764,38 @@ const AccountInfoView = (props) => {
     )
 }
 
-const SettingInfoView = (props) => {
-    return (
-        <ul className={style.user_info_view}>
-            <li>
-                <div className={style.info_title}>
-                    <i className='asukamis background' />
-                    <span>背景图</span>
-                </div>
-                <div className={style.info_content}>
-                    <div className={style.background_change}>
-                        <input
-                            type='file'
-                            accept="image/*"
-                            onChange={e => {
-                                let files = {...e.target.files}
-                                props.setModeInstance({
-                                    ...props.modeInstance,
-                                    loadingStatus: true,
-                                    instance: {
-                                        ...props.modeInstance.instance,
-                                        background: files[0]
-                                    }
-                                })
-                                e.target.value = ''
-                            }}/>
-                        <span className={style.tips_span}>{props.modeInstance.loadingStatus ? '上传中...':'点击修改'}</span>
-                    </div>
-                </div>
-            </li>
-        </ul>
-    )
-}
+// const SettingInfoView = (props) => {
+//     return (
+//         <ul className={style.user_info_view}>
+//             <li>
+//                 <div className={style.info_title}>
+//                     <i className='asukamis background' />
+//                     <span>背景图</span>
+//                 </div>
+//                 <div className={style.info_content}>
+//                     <div className={style.background_change}>
+//                         <input
+//                             type='file'
+//                             accept="image/*"
+//                             onChange={e => {
+//                                 let files = {...e.target.files}
+//                                 props.setModeInstance({
+//                                     ...props.modeInstance,
+//                                     loadingStatus: true,
+//                                     instance: {
+//                                         ...props.modeInstance.instance,
+//                                         background: files[0]
+//                                     }
+//                                 })
+//                                 e.target.value = ''
+//                             }}/>
+//                         <span className={style.tips_span}>{props.modeInstance.loadingStatus ? '上传中...':'点击修改'}</span>
+//                     </div>
+//                 </div>
+//             </li>
+//         </ul>
+//     )
+// }
 
 const RenderFunctionView = ({ menuIndex, userProfiles, userInfo, viewUid }) => {
     switch(menuIndex) {
@@ -824,11 +824,11 @@ const RenderEditorFunctionView = ({modeInstance ,setModeInstance , userProfiles,
                         modeInstance={modeInstance}
                         setModeInstance={setModeInstance}
                         userProfiles={userProfiles} />
-        case 2:
-            return <SettingInfoView
-                        modeInstance={modeInstance}
-                        setModeInstance={setModeInstance}
-                        userProfiles={userProfiles} />
+        // case 2:
+        //     return <SettingInfoView
+        //                 modeInstance={modeInstance}
+        //                 setModeInstance={setModeInstance}
+        //                 userProfiles={userProfiles} />
         default:
             break
     }
