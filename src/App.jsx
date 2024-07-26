@@ -71,7 +71,6 @@ export default function App () {
 		dispatch({ type: 'userInfo/setInfo', payload: value })
 	}, [dispatch])
 	useEffect(() => {
-		console.log(style)
 		let token = localStorage.getItem('token')
 		if(token) {
 			blogLoginUserToken({ data: null, toast: null }, { 'token': token }).then(resq => {
@@ -294,7 +293,7 @@ const PCheaderNav = (props) => {
 				{
 					menuInstance.list.map(item => {
 						return <li
-								className={menuInstance.index === item.id && style.active}
+								className={menuInstance.index === item.id ? style.active:''}
 								onClick={() => {
 									if(menuInstance.index === item.id) return
 									navigate(item.path)
