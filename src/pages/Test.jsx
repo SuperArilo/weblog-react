@@ -1,9 +1,5 @@
 import { useState } from "react"
-
+import Svg from "../components/Svg"
 export default function Test() {
-    const [status, setStatus] = useState(false)
-    return (
-        <>
-        </>
-    )
+    return 
 }

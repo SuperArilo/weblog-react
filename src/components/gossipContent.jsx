@@ -17,7 +17,7 @@ import Pagination from './Pagination.jsx'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import AsukaPoppor from './Popper.jsx'
-import Svg from 'react-inlinesvg'
+import Svg from '../components/Svg.jsx'
 
 //方法
 import share from '../util/Share.js'
@@ -99,10 +99,12 @@ export default function GossipContent({ foldStatus = false, targetComment = null
                 <div ref={gossipFunctionMenuRef} className={style.right_function} onClick={() => { setGossipFunctionMenuStatus(true) }}>
                     <WaterWave color="rgba(0, 0, 0, 0.7)" duration={1} />
                     <Svg
-                        cacheRequests={true}
-                        src='https://image.superarilo.icu/svg/option.svg'
-                        width='1.1rem'
-                        height='1.1rem'/>
+                        style={{
+                            width: '1.1rem',
+                            height: '1.1rem'
+                        }}
+                        name='Option'
+                        />
                 </div>
                 <Menu
                     anchorEl={gossipFunctionMenuRef.current}
@@ -147,22 +149,24 @@ export default function GossipContent({ foldStatus = false, targetComment = null
                         handleLike(data.id)
                     }}>
                     <Svg
-                        cacheRequests={true}
-                        src='https://image.superarilo.icu/svg/like.svg'
-                        preProcessor={code => code.replace(/fill=".*?"/g, 'fill="currentColor"')}
+                        name='Like'
                         className={data.like === true && userInfo !== null ? style.gossip_liked:''}
-                        width='1.1rem'
-                        height='1.1rem'/>
+                        style={{
+                            width: '1.1rem',
+                            height: '1.1rem'
+                        }}
+                        />
                     喜欢
                     <WaterWave color="rgba(0, 0, 0, 0.7)" duration={1} />
                 </button>
                 <button type='button' 
                     onClick={() => { handleFold(data.id) }}>
                     <Svg
-                        cacheRequests={true}
-                        src='https://image.superarilo.icu/svg/comment.svg'
-                        width='1.1rem'
-                        height='1.1rem'/>
+                        name='Comment'
+                        style={{
+                            width: '1.1rem',
+                            height: '1.1rem'
+                        }}/>
                     评论
                     <WaterWave color="rgba(0, 0, 0, 0.7)" duration={1} />
                 </button>
@@ -177,10 +181,11 @@ export default function GossipContent({ foldStatus = false, targetComment = null
                         })
                     }}>
                     <Svg
-                        cacheRequests={true}
-                        src='https://image.superarilo.icu/svg/share.svg'
-                        width='1.1rem'
-                        height='1.1rem'/>
+                        name='Share'
+                        style={{
+                            width: '1.1rem',
+                            height: '1.1rem'
+                        }}/>
                     分享
                     <WaterWave
                         color="rgba(0, 0, 0, 0.7)"

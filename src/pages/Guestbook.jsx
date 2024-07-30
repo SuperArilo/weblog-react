@@ -146,10 +146,11 @@ const GuestbookCommentItem = (props) => {
                         props.userInfo === null || props.userInfo.uid !== props.item.publisher ? '':
                         <div className={style.delete_icon} onClick={(e) => { setPopporObject({...popporObject, open: true, target: e.target}) }}>
                             <Svg
-                                cacheRequests={true}
-                                src='https://image.superarilo.icu/svg/delete.svg'
-                                width='1.1rem'
-                                height='1.1rem'/>
+                                name='Delete'
+                                style={{
+                                    width: '1.1rem',
+                                    height: '1.1rem'
+                                }}/>
                             <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
                         </div>
                     }

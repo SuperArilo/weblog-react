@@ -1,5 +1,4 @@
 import request from '../util/Request'
-import Qs from 'query-string'
 
 //友邻列表获取
 export const friendList = ({ data, toast }) => {
@@ -15,7 +14,7 @@ export const linksApply = ({ data, toast }) => {
     return request({
         url: '/friend/apply',
         method: 'post',
-        data: Qs.stringify(data),
+        data: data,
         toast: toast
     })
 }

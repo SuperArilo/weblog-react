@@ -16,7 +16,7 @@ import Avatar from '../components/Avatar'
 import CommentSkeleton from '../components/CommentSkeleton'
 import PreviewImage from '../components/PreviewImage'
 import Pagination from '../components/Pagination'
-import Svg from 'react-inlinesvg'
+import Svg from '../components/Svg'
 //方法
 import { articleContentGet, articleCommentGet, replyComment, increaseArticleLike, likeComment, deleteComment } from '../api/Article'
 
@@ -260,20 +260,21 @@ const ArticleContent = (props) => {
                     <div className={style.article_data_info}>
                         <div>
                             <Svg
-                                cacheRequests={true}
-                                src='https://image.superarilo.icu/svg/view.svg'
-                                width='1.1rem'
-                                height='1.1rem'/>
+                                name='View'
+                                style={{
+                                    width: '1.1rem',
+                                    height: '1.1rem'
+                                }} />
                             <span>{props.articleInstance.articleViews}</span>
                         </div>
                         <div onClick={() => { props.handleLike(props.articleInstance.id) }}>
                             <Svg
-                                cacheRequests={true}
-                                src='https://image.superarilo.icu/svg/like.svg'
-                                preProcessor={code => code.replace(/fill=".*?"/g, 'fill="currentColor"')}
+                                name='Like'
                                 className={props.articleInstance.hasLike ? style.article_liked:''}
-                                width='1.1rem'
-                                height='1.1rem'/>
+                                style={{
+                                    width: '1.1rem',
+                                    height: '1.1rem'
+                                }}/>
                             <span>{props.articleInstance.articleLikes}</span>
                             <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
                         </div>

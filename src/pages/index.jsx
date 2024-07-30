@@ -13,7 +13,7 @@ import Skeleton from '@mui/material/Skeleton'
 
 import Pagination from '../components/Pagination'
 import Friends from './Friends'
-import Svg from 'react-inlinesvg'
+import Svg from '../components/Svg'
 import { CTransitionFade } from '../components/Transition'
 //hook
 import { useNavigate } from "react-router-dom"
@@ -124,11 +124,12 @@ export default function IndexPage(props) {
                         left={
                             <div ref={loadingSider} className={style.loading_sider}>
                                 <Svg
-                                    cacheRequests={true}
-                                    src='https://image.superarilo.icu/svg/loading.svg'
+                                    name='Loading'
                                     className='rotate'
-                                    width='1.5rem'
-                                    height='1.5rem'/>
+                                    style={{
+                                        width: '1.5rem',
+                                        height: '1.5rem'
+                                    }} />
                             </div>
                         }
                         right={
@@ -144,10 +145,11 @@ export default function IndexPage(props) {
                                             return (
                                                 <li key={item.id} onClick={() => { sliderRef.current.slickGoTo(index, false) }}>
                                                     <Svg
-                                                        cacheRequests={true}
-                                                        src={sliderIndex === index ? 'https://image.superarilo.icu/svg/round_select.svg':'https://image.superarilo.icu/svg/round.svg'}
-                                                        width='1rem'
-                                                        height='1rem'/>
+                                                        name={sliderIndex === index ? 'Round_select':'Round'}
+                                                        style={{
+                                                            width: '1.5rem',
+                                                            height: '1.5rem'
+                                                        }} />
                                                 </li>
                                             )
                                         }) 
@@ -286,35 +288,37 @@ const Article = (props) => {
                 <div className={style.article_bottom_function}>
                     <Button text='开始阅读' clazz='read' onClick={() => { 
                         navigate('detail?threadId=' + props.item.id)
-                        $('#react-by-asukamis').stop().animate({'scrollTop': 0})
+                        $('#react-by-asukamis').children().stop().animate({'scrollTop': 0})
                      }}/>
                     <div className={style.right_article_data}>
                         <div>
                             <Svg
-                                cacheRequests={true}
-                                src='https://image.superarilo.icu/svg/view.svg'
-                                width='1.1rem'
-                                height='1.1rem'/>
+                                name='View'
+                                style={{
+                                    width: '1.3rem',
+                                    height: '1.3rem'
+                                }} />
                             <span>{props.item.articleViews}</span>
                             <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
                         </div>
                         <div onClick={() => { props.handleLike(props.item.id) }}>
                             <Svg
-                                cacheRequests={true}
-                                src='https://image.superarilo.icu/svg/like.svg'
-                                preProcessor={code => code.replace(/fill=".*?"/g, 'fill="currentColor"')}
+                                name='Like'
                                 className={props.item.like ? style.article_is_liked:''}
-                                width='1.1rem'
-                                height='1.1rem'/>
+                                style={{
+                                    width: '1.3rem',
+                                    height: '1.3rem'
+                                }} />
                             <span>{props.item.articleLikes}</span>
                             <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
                         </div>
                         <div>
                             <Svg
-                                src='https://image.superarilo.icu/svg/comment.svg'
-                                width='1.1rem'
-                                height='1.1rem'
-                                style={{ fontSize: '1.1rem' }}/>
+                                name='Comment'
+                                style={{
+                                    width: '1.3rem',
+                                    height: '1.3rem'
+                                }} />
                             <span>{props.item.comments}</span>
                             <WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
                         </div>

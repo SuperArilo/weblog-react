@@ -47,7 +47,18 @@ const pushNotice = createSlice({
         }
     }
 })
+const Theme = createSlice({
+    name: 'theme',
+    initialState: {
+        isDark: false
+    },
+    reducers: {
+        setTheme: (state, action) => {
+            state.isDark = action.payload
+        }
+    }
+})
 const store = configureStore(
-    { reducer: { isMobile: isMobile.reducer, userInfo: userInfo.reducer, pushNotice: pushNotice.reducer } }
+    { reducer: { isMobile: isMobile.reducer, userInfo: userInfo.reducer, pushNotice: pushNotice.reducer, theme: Theme.reducer } }
 )
 export default store

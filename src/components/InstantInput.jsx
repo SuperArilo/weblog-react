@@ -79,12 +79,12 @@ const InstantInput = forwardRef(({ label = '未设置', type = 'text', value = '
                     <Icon
                         width='1rem'
                         height='1rem'
-                        src='https://image.superarilo.icu/svg/close.svg'
+                        name='Close'
                         onClick={() => { handleClose() }} />
                     <Icon
                         width='1rem'
                         height='1rem'
-                        src='https://image.superarilo.icu/svg/save.svg'
+                        name='Save'
                         onClick={() => {
                             if(inputConetnt === '' || inputConetnt === null) {
                                 toast('必须要填写内容哦')

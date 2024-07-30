@@ -13,8 +13,16 @@ ReactDOM.createRoot(document.getElementById('react-by-asukamis')).render(
             <Toaster
                 position='bottom-right'
                 containerStyle={{
-                    fontSize: '0.8rem'
-                }} />
+                    fontSize: '0.8rem',
+                }}
+                toastOptions={
+                    {
+                        style: {
+                            background: 'rgb(255, 255, 255)',
+                            boxShadow: '0 0.1rem 0.3rem rgba(126, 56, 0, 0.5)'
+                        }
+                    }
+                } />
         </BrowserRouter>
     </Provider>
 )

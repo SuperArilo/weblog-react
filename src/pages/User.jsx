@@ -21,7 +21,7 @@ import Icon from '../components/Icon'
 import InstantInput from '../components/InstantInput'
 import AvatarCut from '../components/AvatarCut'
 import Skeleton from '@mui/material/Skeleton'
-import Svg from 'react-inlinesvg'
+import Svg from '../components/Svg.jsx'
 
 export default function User(props) {
 
@@ -49,22 +49,22 @@ export default function User(props) {
         {
             id: 0,
             title: '资料',
-            svgSrc: 'https://image.superarilo.icu/svg/info.svg'
+            svgSrc: 'Info'
         },
         {
             id: 1,
             title: '碎语',
-            svgSrc: 'https://image.superarilo.icu/svg/gossip.svg'
+            svgSrc: 'Gossip'
         },
         {
             id: 2,
             title: '点赞',
-            svgSrc: 'https://image.superarilo.icu/svg/ulike.svg'
+            svgSrc: 'Ulike'
         },
         {
             id: 3,
             title: '留言',
-            svgSrc: 'https://image.superarilo.icu/svg/contact.svg'
+            svgSrc: 'Contact'
         }
     ])
     //editor
@@ -72,17 +72,17 @@ export default function User(props) {
         {
             id: 0,
             title: '资料',
-            icon: 'https://image.superarilo.icu/svg/info.svg'
+            icon: 'Info'
         },
         {
             id: 1,
             title: '账号',
-            icon: 'https://image.superarilo.icu/svg/avatar.svg'
+            icon: 'Avatar'
         },
         {
             id: 2,
             title: '设置',
-            icon: 'https://image.superarilo.icu/svg/setting.svg'
+            icon: 'Setting'
         }
     ])
 
@@ -255,7 +255,7 @@ export default function User(props) {
                                         <p className={style.nick_name}>{userProfiles?.nickName}</p>
                                         {
                                             modeInstance.status && <Icon 
-                                                                        src='https://image.superarilo.icu/svg/editor.svg'
+                                                                        name='Editor'
                                                                         width='1.2rem'
                                                                         height='1.2rem'
                                                                         onClick={e => {
@@ -294,7 +294,7 @@ export default function User(props) {
                                         <span className={style.autograph}>{userProfiles?.autograph}</span>
                                         {
                                             modeInstance?.status && <Icon 
-                                                                        src='https://image.superarilo.icu/svg/editor.svg'
+                                                                        name='Editor'
                                                                         width='1.2rem'
                                                                         height='1.2rem'
                                                                         onClick={e => {
@@ -321,6 +321,11 @@ export default function User(props) {
                                 <div
                                     className={style.likes_box}
                                     onClick={() => {
+                                        if(userInfo == null) {
+                                            toast('需要登录才能继续！')
+                                            return
+                                        }
+                                        console.log(userProfiles)
                                         let data = new FormData()
                                         data.append('targetUid', viewUid)
                                         targetLikeUser({ data: data, toast: { isShow: true, loadingMessage: '提交请求中...' } }).then(resq => {
@@ -332,12 +337,12 @@ export default function User(props) {
                                         }).catch(() => {})
                                     }}>
                                     <Svg
-                                        src='https://image.superarilo.icu/svg/user_like.svg'
-                                        cacheRequests={true}
-                                        preProcessor={code => code.replace(/fill=".*?"/g, 'fill="currentColor"')}
+                                        name='User_like'
                                         className={userProfiles?.viewerLike ? style.user_like_on:''}
-                                        width='1.2rem'
-                                        height='1.2rem'/>
+                                        style={{
+                                            width: '1.2rem',
+                                            height: '1.2rem'
+                                        }} />
                                     <span>{userProfiles?.likeNum}</span>
                                     <WaterWave position='absolute' />
                                 </div>
@@ -359,10 +364,11 @@ export default function User(props) {
                                                     $(menuLineRef.current).css({ left: $($('div[index]')[item.id]).width() * item.id })
                                                 }}>
                                                 <Svg
-                                                    src={item.icon}
-                                                    cacheRequests={true}
-                                                    width='1.2rem'
-                                                    height='1.2rem' />
+                                                    name={item.icon}
+                                                    style={{
+                                                        width: '1.2rem',
+                                                        height: '1.2rem'
+                                                    }} />
                                                 <span>{item.title}</span>
                                                 <WaterWave color="rgb(155, 195, 219)" duration={ 1 } />
                                             </div>
@@ -380,10 +386,11 @@ export default function User(props) {
                                                     $(menuLineRef.current).css({ left: $($('div[index]')[item.id]).width() * item.id })
                                                 }}>
                                                 <Svg
-                                                    src={item.svgSrc}
-                                                    cacheRequests={true}
-                                                    width='1.2rem'
-                                                    height='1.2rem'/>
+                                                    name={item.svgSrc}
+                                                    style={{
+                                                        width: '1.2rem',
+                                                        height: '1.2rem'
+                                                    }} />
                                                 <span>{item.title}</span>
                                                 <WaterWave color="rgb(155, 195, 219)" duration={ 1 } />
                                             </div>
@@ -421,11 +428,11 @@ const UserInfoView = (props) => {
             <li>
                 <div className={style.info_title}>
                     <Svg
-                        src='https://image.superarilo.icu/svg/ucontact.svg'
-                        cacheRequests={true}
-                        width='1.2rem'
-                        height='1.2rem'
-                        />
+                        name='Ucontact'
+                        style={{
+                            width: '1.2rem',
+                            height: '1.2rem'
+                        }} />
                     <span>联系方式</span>
                 </div>
                 <div className={style.info_content} editorindex='3'>
@@ -457,7 +464,7 @@ const UserInfoView = (props) => {
                                 <>
                                     <span>{props.userProfiles.contact}</span>
                                     <Icon
-                                        src='https://image.superarilo.icu/svg/editor.svg'
+                                        name='Editor'
                                         width='1.2rem'
                                         height='1.2rem'
                                         onClick={e => {
@@ -474,11 +481,11 @@ const UserInfoView = (props) => {
             <li>
                 <div className={style.info_title}>
                     <Svg
-                        src='https://image.superarilo.icu/svg/calendar.svg'
-                        cacheRequests={true}
-                        width='1.2rem'
-                        height='1.2rem'
-                        />
+                        name='Calendar'
+                        style={{
+                            width: '1.2rem',
+                            height: '1.2rem'
+                        }} />
                     <span>注册时间</span>
                 </div>
                 <div className={style.info_content}>
@@ -488,11 +495,11 @@ const UserInfoView = (props) => {
             <li>
                 <div className={style.info_title}>
                     <Svg
-                        src='https://image.superarilo.icu/svg/identity.svg'
-                        cacheRequests={true}
-                        width='1.2rem'
-                        height='1.2rem'
-                        />
+                        name='Identity'
+                        style={{
+                            width: '1.2rem',
+                            height: '1.2rem'
+                        }} />
                     <span>身份标签</span>
                 </div>
                 <div className={style.info_content}>
@@ -502,10 +509,11 @@ const UserInfoView = (props) => {
             <li>
                 <div className={style.info_title}>
                     <Svg
-                        src='https://image.superarilo.icu/svg/age.svg'
-                        cacheRequests={true}
-                        width='1.2rem'
-                        height='1.2rem' />
+                        name='Age'
+                        style={{
+                            width: '1.2rem',
+                            height: '1.2rem'
+                        }} />
                     <span>年龄</span>
                 </div>
                 <div className={style.info_content} editorindex='4'>
@@ -537,7 +545,7 @@ const UserInfoView = (props) => {
                                 <>
                                     <span>{props.userProfiles.age}</span>
                                     <Icon
-                                        src='https://image.superarilo.icu/svg/editor.svg'
+                                        name='Editor'
                                         width='1.2rem'
                                         height='1.2rem'
                                         onClick={e => {
@@ -554,10 +562,11 @@ const UserInfoView = (props) => {
             <li>
                 <div className={style.info_title}>
                     <Svg
-                        src='https://image.superarilo.icu/svg/sex.svg'
-                        cacheRequests={true}
-                        width='1.2rem'
-                        height='1.2rem' />
+                        name='Sex'
+                        style={{
+                            width: '1.2rem',
+                            height: '1.2rem'
+                        }} />
                     <span>性别</span>
                 </div>
                 <div className={style.info_content} editorindex='5'>
@@ -590,7 +599,7 @@ const UserInfoView = (props) => {
                                 <>
                                     <span>{props.userProfiles.sex === 0 ? '女':props.userProfiles.sex === 1 ? '男':'未设置'}</span>
                                     <Icon 
-                                        src='https://image.superarilo.icu/svg/editor.svg'
+                                        name='Editor'
                                         width='1.2rem'
                                         height='1.2rem'
                                         onClick={e => {
@@ -608,10 +617,11 @@ const UserInfoView = (props) => {
             <li>
                 <div className={style.info_title}>
                     <Svg
-                        src='https://image.superarilo.icu/svg/location.svg'
-                        cacheRequests={true}
-                        width='1.2rem'
-                        height='1.2rem' />
+                        name='Location'
+                        style={{
+                            width: '1.2rem',
+                            height: '1.2rem'
+                        }} />
                     <span>位置</span>
                 </div>
                 <div className={style.info_content}>
@@ -631,10 +641,11 @@ const AccountInfoView = (props) => {
             <li>
                 <div className={style.info_title}>
                     <Svg
-                        src='https://image.superarilo.icu/svg/uid.svg'
-                        cacheRequests={true}
-                        width='1.2rem'
-                        height='1.2rem' />
+                        name='Uid'
+                        style={{
+                            width: '1.2rem',
+                            height: '1.2rem'
+                        }} />
                     <span>UID</span>
                 </div>
                 <div className={style.info_content}>
@@ -644,10 +655,11 @@ const AccountInfoView = (props) => {
             <li>
                 <div className={style.info_title}>
                     <Svg
-                        src='https://image.superarilo.icu/svg/account.svg'
-                        cacheRequests={true}
-                        width='1.2rem'
-                        height='1.2rem' />
+                        name='Account'
+                        style={{
+                            width: '1.2rem',
+                            height: '1.2rem'
+                        }} />
                     <span>用户名</span>
                 </div>
                 <div className={style.info_content} editorindex='8'>
@@ -692,7 +704,7 @@ const AccountInfoView = (props) => {
                                 <>
                                     <span>{props.userProfiles.email}</span>
                                     <Icon
-                                        src='https://image.superarilo.icu/svg/editor.svg'
+                                        name='Editor'
                                         width='1.2rem'
                                         height='1.2rem'
                                         onClick={e => {
@@ -710,10 +722,11 @@ const AccountInfoView = (props) => {
             <li>
                 <div className={style.info_title}>
                     <Svg
-                        src='https://image.superarilo.icu/svg/password.svg'
-                        cacheRequests={true}
-                        width='1.2rem'
-                        height='1.2rem' />
+                        name='Password'
+                        style={{
+                            width: '1.2rem',
+                            height: '1.2rem'
+                        }} />
                     <span>密码</span>
                 </div>
                 <div className={style.info_content} editorindex='9'>
@@ -746,7 +759,7 @@ const AccountInfoView = (props) => {
                                     <>
                                         <span>点击修改</span>
                                         <Icon
-                                            src='https://image.superarilo.icu/svg/editor.svg'
+                                            name='Editor'
                                             width='1.2rem'
                                             height='1.2rem'
                                             onClick={e => {

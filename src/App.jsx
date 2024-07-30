@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import Button from './components/Button'
-import signStyle from './assets/scss/sign.module.scss'
+import signStyle from './assets/scss/Sign.module.scss'
 //hook
 import { Route, Routes, useLocation, useNavigate, Navigate  } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
@@ -11,7 +11,7 @@ import { regiserMail, findPassword } from './api/Mail'
 import { userCreateGossip } from './api/Gossip'
 
 //组件
-import Svg from 'react-inlinesvg'
+import Svg from './components/Svg'
 import toast from 'react-hot-toast'
 import WaterWave from './components/WaterWave'
 import Slide from '@mui/material/Slide'
@@ -37,7 +37,8 @@ import Tinymce from './components/Editor'
 import { CTransitionFade, CCSSTransition } from './components/Transition'
 //样式
 import './assets/css/emojiBox.css'
-import Theme from './assets/scss/Theme.module.scss'
+import ThemeLight from './assets/scss/Light.module.scss'
+import ThemeDark from './assets/scss/Dark.module.scss'
 import style from './App.module.scss'
 import NoticeSocket from './pages/NoticeSocket'
 
@@ -49,6 +50,8 @@ export default function App () {
 	const isMobileStatus = useSelector((state) => state.isMobile.status)
 	const dispatch = useDispatch()
 	const userInfo = useSelector((state) => state.userInfo.info)
+	//theme
+	const isDark = useSelector(state => state.theme.isDark)
 	//param
 	const [loginBoxStatus, setLoginBoxStatus] = useState(false)
 	const [registerBoxStatus, setRegisterBoxStatus] = useState(false)
@@ -84,7 +87,7 @@ export default function App () {
 	}, [loginSetUserInfo])
 	return (
 		<>
-			<div className={style.render_content}>
+			<div className={`${style.render_content} ${isDark ? ThemeDark.render_content:ThemeLight.render_content}`}>
 				{
 					isMobileStatus ? 
 					<MobileHeaderNav
@@ -96,10 +99,11 @@ export default function App () {
 					:
 					<PCheaderNav
 						userInfo={userInfo}
+						isDark={isDark}
 						setCreateGossip={setCreateGossip}
 						openLoginBox={e => {
 							setLoginBoxStatus(e)
-						}}/>
+						}} />
 				}
 				<div className={`${style.router_render} ${isMobileStatus && style.router_render_mobile}`}>
 					<CTransitionFade
@@ -284,7 +288,7 @@ const PCheaderNav = (props) => {
 	}, [pushNotice, setNoticeCount])
 
 	return (
-		<nav className={`${style.header_nav} ${style.header_nav_default}`} ref={navInstance}>
+		<nav className={`${style.header_nav} ${style.header_nav_default} ${props.isDark ? ThemeDark.header_nav_default:ThemeLight.header_nav_default}`} ref={navInstance}>
 			<span className={style.left_webside_icon} onClick={() => { navigate('/') }}>
 				Arilo
 				<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
@@ -306,17 +310,27 @@ const PCheaderNav = (props) => {
 				}
 			</ul>
 			<div className={style.right_some_function}>
+				<Icon
+					name={`${props.isDark ? 'Light':'Dark'}`}
+					width='1.5rem'
+					height='1.5rem'
+					onClick={() => {
+						dispatch({ type: 'theme/setTheme', payload: !props.isDark })
+					}}/>
 				{
-					props.userInfo === null ? 
-					<Button text='登录' onClick={() => { props.openLoginBox(true) }}/>
+					props.userInfo === null ?
+					<>
+						<Button text='登录' onClick={() => { props.openLoginBox(true) }} />
+					</>
 					:
 					<div className={style.logged_box}>
-						<Icon
-							src='https://image.superarilo.icu/svg/notice.svg'
-							width='1.5rem'
-							height='1.5rem'
-							count={noticeCount === 0 ? '':noticeCount}
-							onClick={() => { navigate('/notice') }}/>
+						{/* <Icon
+							name="Notice"
+							style={{
+								width: '1.3rem',
+								height: '1.3rem'
+							}}
+							onClick={() => { navigate('/notice') }}/> */}
 						<Avatar
 							src={props.userInfo.avatar}
 							title={props.userInfo.nickName}
@@ -336,10 +350,11 @@ const PCheaderNav = (props) => {
 									setUserNavInstance({...userNavInstance, popperStatus: false, popperTarget: null})
 								}}>
 								<Svg
-									cacheRequests={true}
-									src='https://image.superarilo.icu/svg/avatar.svg'
-									width='1.3rem'
-									height='1.2rem'/>
+									name='Avatar'
+									style={{
+                                        width: '1.3rem',
+                                        height: '1.3rem'
+                                    }}  />
 								<span className={style.menu_font}>
 									我的账号
 								</span>
@@ -351,10 +366,11 @@ const PCheaderNav = (props) => {
 									setUserNavInstance({...userNavInstance, popperStatus: false, popperTarget: null})
 								}}>
 								<Svg
-									cacheRequests={true}
-									src='https://image.superarilo.icu/svg/gossip.svg'
-									width='1.3rem'
-									height='1.3rem'/>
+									name='Gossip'
+									style={{
+                                        width: '1.3rem',
+                                        height: '1.3rem'
+                                    }}  />
 								<span className={style.menu_font}>
 									发表碎语
 								</span>
@@ -366,10 +382,11 @@ const PCheaderNav = (props) => {
 									setUserNavInstance({...userNavInstance, popperStatus: false, popperTarget: null})
 								}}>
 								<Svg
-									cacheRequests={true}
-									src='https://image.superarilo.icu/svg/setting.svg'
-									width='1.3rem'
-									height='1rem'/>
+									name='Setting'
+									style={{
+                                        width: '1.3rem',
+                                        height: '1.3rem'
+                                    }}  />
 								<span className={style.menu_font}>
 									设置
 								</span>
@@ -386,10 +403,11 @@ const PCheaderNav = (props) => {
 									}).catch(() => {})
 								}}>
 								<Svg
-									cacheRequests={true}
-									src='https://image.superarilo.icu/svg/signout.svg'
-									width='1.3rem'
-									height='1rem'/>
+									name='Signout'
+									style={{
+                                        width: '1.3rem',
+                                        height: '1.3rem'
+                                    }}  />
 								<span className={style.menu_font}>
 									退出
 								</span>
@@ -449,7 +467,7 @@ const MobileHeaderNav = (props) => {
 							<Icon
 								width='2rem'
 								height='2rem'
-								src='https://image.superarilo.icu/svg/gossip.svg'
+								name='Gossip'
 								onClick={() => { props.setCreateGossip(true) }}/>
 							<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
 						</>
@@ -458,10 +476,11 @@ const MobileHeaderNav = (props) => {
 				<span className={style.left_webside_icon}>Arilo</span>
 				<div className={style.right_mobile_bar} onClick={() => { setDrawerStatus(true) }}>
 					<Svg
-						cacheRequests={true}
-						src='https://image.superarilo.icu/svg/menu.svg'
-						width='1.5rem'
-						height='1.5rem'/>
+						name='Menu'
+						style={{
+							width: '1.5rem',
+							height: '1.5rem'
+						}}  />
 					<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
 				</div>
 			</nav>
@@ -484,7 +503,7 @@ const MobileHeaderNav = (props) => {
 									<Icon
 										width='2rem'
 										height='2rem'
-										src='https://image.superarilo.icu/svg/notice.svg'
+										name='Notice'
 										onClick={() => {
 											navigate('/notice')
 											setTimeout(() => {
@@ -508,10 +527,11 @@ const MobileHeaderNav = (props) => {
 												}, 500)
 											}}>
 												<Svg
-													cacheRequests={true}
-													src={item.svgSrc}
-													width='1.5rem'
-													height='1.5rem'/>
+													name={item.svgSrc}
+													style={{
+														width: '1.5rem',
+														height: '1.5rem'
+													}} />
 												<span>{item.title}</span>
 												<WaterWave color='rgba(255, 255, 255, 0.7)' duration={ 1 } />
 											</li>
@@ -532,10 +552,11 @@ const MobileHeaderNav = (props) => {
 												}, 500)
 											}}>
 											<Svg
-												cacheRequests={true}
-												src='https://image.superarilo.icu/svg/setting.svg'
-												width='1.1rem'
-												height='1.1rem'/>
+												name='Setting'
+												style={{
+													width: '1.1rem',
+													height: '1.1rem'
+												}}  />
 											<span>设置</span>
 											<WaterWave color="rgba(255, 255, 255, 0.7)" duration={ 1 } />
 										</div>
@@ -550,10 +571,11 @@ const MobileHeaderNav = (props) => {
 												}).catch(() => {})
 											}}>
 											<Svg
-												cacheRequests={true}
-												src='https://image.superarilo.icu/svg/signout.svg'
-												width='1.1rem'
-												height='1.1rem'/>
+												name='Signout'
+												style={{
+													width: '1.1rem',
+													height: '1.1rem'
+												}}  />
 											<span>注销</span>
 											<WaterWave color="rgba(255, 255, 255, 0.7)" duration={ 1 } />
 										</div>
@@ -663,9 +685,11 @@ const LoginBox = (props) => {
 						<input name='LoginPassword' type={isShowPassword ? 'text':'password'} maxLength="16" placeholder="请输入密码" autoComplete="off" onChange={(e) => { setRequestInstance({ ...requestInstance, password: e.target.value }) }} />
 						<div className={signStyle.input_show_password} onClick={() => { setIsShowPassword(!isShowPassword) }}>
 							<Svg
-								width='1.5rem'
-								height='1.5rem'
-								src={`https://image.superarilo.icu/svg/${isShowPassword ? 'password_hide':'password_show'}.svg`} />
+								style={{
+									width: '1.5rem',
+									height: '1.5rem'
+								}}  
+								name={`${isShowPassword ? 'Password_hide':'Password_show'}`} />
 						</div>
 					</div>
 					<div className={signStyle.input_tips_div}>
@@ -710,8 +734,8 @@ const LoginBox = (props) => {
 			</div>
 			<button type="button" title="登录" className={signStyle.confirm_button + ' ' + (isMobileStatus ? signStyle.confirm_button_mobile:signStyle.confirm_button_pc)} onClick={() => { loginFunction() }}>
 				{ !loginStatus && userInfo === null ? '登录':'' }
-				{ loginStatus ? <Svg width='1.5rem' height='1.5rem' className={style.rotate} src='https://image.superarilo.icu/svg/loading.svg' /> : '' }
-				{ userInfo !== null && !loginStatus ? <Svg width='1.5rem' height='1.5rem' src='https://image.superarilo.icu/svg/success.svg' /> : '' }
+				{ loginStatus && <Svg style={{ width: '1.5rem', height: '1.5rem' }} className={style.rotate} name='Loading' /> }
+				{ (userInfo !== null && !loginStatus) && <Svg style={{ width: '1.5rem', height: '1.5rem' }} name='Success' /> }
 				<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
 			</button>
 		</div>
@@ -815,7 +839,7 @@ const RegisterBox = (props) => {
 										(requestStatus.countDown === 60 && !requestStatus.sendMailStatus) && '获取验证码'
 									}
 									{
-										requestStatus.sendMailStatus && <Svg width='1.5rem' height='1.5rem' className={style.rotate} src='https://image.superarilo.icu/svg/loading.svg' />
+										requestStatus.sendMailStatus && <Svg style={{ width: '1.5rem', height: '1.5rem' }} className={style.rotate} name='Loading' />
 									}
 									{
 										requestStatus.countDown < 60 && requestStatus.countDown
@@ -841,9 +865,11 @@ const RegisterBox = (props) => {
 								}} />
 							<div className={signStyle.input_show_password} onClick={() => { setIsShowPassword(!isShowPassword) }}>
 								<Svg
-									width='1.5rem'
-									height='1.5rem'
-									src={`https://image.superarilo.icu/svg/${isShowPassword ? 'password_hide':'password_show'}.svg`} />
+									style={{
+                                        width: '1.5rem',
+                                        height: '1.5rem'
+                                    }}
+									name={`${isShowPassword ? 'Password_hide':'Password_show'}`} />
 							</div>
 							
 						</div>
@@ -868,9 +894,11 @@ const RegisterBox = (props) => {
 								}} />
 							<div className={signStyle.input_show_password} onClick={() => { setAgainPassword({...againPassword, show: !againPassword.show}) }}>
 								<Svg
-									width='1.5rem'
-									height='1.5rem'
-									src={`https://image.superarilo.icu/svg/${againPassword.show ? 'password_hide':'password_show'}.svg`} />
+									style={{
+                                        width: '1.5rem',
+                                        height: '1.5rem'
+                                    }}
+									name={`${againPassword.show ? 'Password_hide':'Password_show'}`} />
 							</div>
 						</div>
 						<div className={signStyle.input_tips_div}>
@@ -922,7 +950,7 @@ const RegisterBox = (props) => {
 						}
 					}}>
 					{
-						requestStatus.registerStatus ? <Svg width='1.5rem' height='1.5rem' className={style.rotate} src='https://image.superarilo.icu/svg/loading.svg' />:'注册'
+						requestStatus.registerStatus ? <Svg style={{ width: '1.5rem', height: '1.5rem' }} className={style.rotate} name='Loading' />:'注册'
 					}
 					<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
 				</button>

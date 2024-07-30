@@ -8,7 +8,7 @@ import AsukaPoppor from './Popper'
 import Collapse from '@mui/material/Collapse'
 import Tinymce from './Editor'
 import PreviewImage from './PreviewImage'
-import Svg from 'react-inlinesvg'
+import Svg from '../components/Svg'
 //方法
 import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
@@ -70,12 +70,12 @@ const Comment = ({
                 </div>
                 <div className={style.comment_top_right}>
                     <Svg
-                        cacheRequests={true}
-                        src='https://image.superarilo.icu/svg/like.svg'
-                        preProcessor={code => code.replace(/fill=".*?"/g, 'fill="currentColor"')}
+                        name='Like'
+                        style={{
+                            width: '1.1rem',
+                            height: '1.1rem'
+                        }}
                         className={data.like ? style.had_liked:''}
-                        width='1.1rem'
-                        height='1.1rem'
                         onClick={() => { handleLike() }}/>
                     <span>{data.likes}</span>
                 </div>
