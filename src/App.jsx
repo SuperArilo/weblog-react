@@ -324,13 +324,13 @@ const PCheaderNav = (props) => {
 					</>
 					:
 					<div className={style.logged_box}>
-						{/* <Icon
+						<Icon
 							name="Notice"
 							style={{
 								width: '1.3rem',
 								height: '1.3rem'
 							}}
-							onClick={() => { navigate('/notice') }}/> */}
+							onClick={() => { navigate('/notice') }}/>
 						<Avatar
 							src={props.userInfo.avatar}
 							title={props.userInfo.nickName}
@@ -430,31 +430,31 @@ const MobileHeaderNav = (props) => {
 			id: 0,
 			title: '首页',
 			path: '/',
-			svgSrc: 'https://image.superarilo.icu/svg/home.svg'
+			svgSrc: 'Home'
 		},
 		{
 			id: 1,
 			title: '碎语',
 			path: '/gossip',
-			svgSrc: 'https://image.superarilo.icu/svg/gossip.svg'
+			svgSrc: 'Gossip'
 		},
 		{
 			id: 2,
 			title: '留言',
 			path: '/guestbook',
-			svgSrc: 'https://image.superarilo.icu/svg/guestbook.svg'
+			svgSrc: 'Guestbook'
 		},
 		{
 			id: 3,
 			title: '友邻',
 			path: '/links',
-			svgSrc: 'https://image.superarilo.icu/svg/link.svg'
+			svgSrc: 'Link'
 		},
 		{
 			id: 4,
 			title: '圈子',
 			path: '/friends',
-			svgSrc: 'https://image.superarilo.icu/svg/friend.svg'
+			svgSrc: 'Friend'
 		}
 	])
 	return (
