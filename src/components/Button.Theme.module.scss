@@ -1,0 +1,36 @@
+.light_button, .as_button {
+    .asuka_button_read {
+        color: #ec558c;
+        background-color: #ffffff;
+    }
+    .asuka_button_normal {
+        background-color: rgb(25, 118, 210);
+        color: #ffffff;
+    }
+    .asuka_button_file {
+        background-color: #f38992;
+        color: #ffffff;
+    }
+    .asuka_button_danger {
+        color: #ffffff;
+        background-color: rgb(241, 86, 86);
+    }
+}
+.dark_button, .as_button {
+    .asuka_button_read {
+        color: #cf8aa3;
+        background-color: #3d3d3d;
+    }
+    .asuka_button_normal {
+        background-color: rgb(17, 78, 139);
+        color: #eeeeee;
+    }
+    .asuka_button_file {
+        background-color: #f38992;
+        color: #ffffff;
+    }
+    .asuka_button_danger {
+        color: #ffffff;
+        background-color: rgb(241, 86, 86);
+    }
+}

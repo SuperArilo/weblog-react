@@ -11,13 +11,13 @@ import { gossipListRequest , likeGossip } from '../api/Gossip'
 import toast from 'react-hot-toast'
 //hook
 import { useLocation  } from "react-router-dom"
+import { useSelector } from 'react-redux'
+
 export default function Gossip(props) {
 
     //hook
     const { search } = useLocation()
-
     let searchParams = new URLSearchParams(search)
-
     //params
     const [requestInstance, setRequestInstance] = useState({
         pageNum: 1,
@@ -34,6 +34,8 @@ export default function Gossip(props) {
         targetGossip: null,
         targetComment: null
     })
+    //theme
+	const isDark = useSelector(state => state.theme.isDark)
 
     const [targetGossipFoldStatus, setTargetGossipFoldStatus] = useState(false)
 
@@ -66,7 +68,7 @@ export default function Gossip(props) {
     }, [requestInstance, gossipDataGet])
 
     return (
-        <div className={style.gossip_page} style={{ paddingTop: requestInstance.viewUid ? null:'1rem'}}>
+        <div className={`${style.gossip_page}`} style={{ paddingTop: requestInstance.viewUid ? null:'1rem'}}>
             <CTransitionFade
                 keyS={gossipObject.instance === null}
                 left={<GossipSkeleton viewUid={requestInstance.viewUid}/>}
@@ -79,6 +81,7 @@ export default function Gossip(props) {
                                     gossipObject.targetGossip !== null
                                     &&
                                     <GossipContent
+                                        isDark={isDark}
                                         userInfo={props.userInfo} 
                                         data={gossipObject.targetGossip}
                                         reDataGet={() => {
@@ -137,6 +140,7 @@ export default function Gossip(props) {
                                             return (
                                                 <Collapse key={item.id}>
                                                     <GossipContent
+                                                        isDark={isDark}
                                                         userInfo={props.userInfo} 
                                                         data={item}
                                                         reDataGet={() => {
@@ -173,7 +177,6 @@ export default function Gossip(props) {
                                     }
                                 </CTransitionGroup>
                             </>
-                            
                         }
                     </>
                 } />

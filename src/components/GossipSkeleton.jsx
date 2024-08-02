@@ -1,12 +1,17 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 //样式
 import style from './GossipSkeleton.module.scss'
+import ThemeStyle from './GossipSkeleton.Theme.module.scss'
 //组件
 import Skeleton from '@mui/material/Skeleton'
 
 export default function GossipSkeleton({ viewUid = null }) {
+    //theme
+	const isDark = useSelector(state => state.theme.isDark)
+
     return (
-        <div className={style.gossip_skeleton_list}>
+        <div className={`${style.gossip_skeleton_list} ${isDark ? ThemeStyle.dark_gossip_skeleton_list:ThemeStyle.light_gossip_skeleton_list}`}>
             <GossipSkeletonItem />
             {
                 viewUid === null &&
@@ -20,7 +25,7 @@ export default function GossipSkeleton({ viewUid = null }) {
 }
 const GossipSkeletonItem = () => {
     return (
-        <div className={style.gossip_skeleton}>
+        <div className={`${style.gossip_skeleton} ${ThemeStyle.gossip_skeleton} `}>
                 <div className={style.gossip_skeleton_top}>
                     <Skeleton variant="circular" width='2.8rem' height='2.8rem' />
                     <div className={style.gossip_skeleton_info}>

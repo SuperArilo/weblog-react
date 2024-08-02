@@ -2,11 +2,11 @@
 {
     .gossip_skeleton
     {
-        background-color: #ffffff;
         padding: 0.5rem 1rem;
         border-radius: 0.3rem;
         margin-bottom: 1rem;
         box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.2);
+        transition: background-color 0.25s;
         .gossip_skeleton_top
         {
             display: flex;

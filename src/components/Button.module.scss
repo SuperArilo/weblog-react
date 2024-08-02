@@ -1,13 +1,10 @@
-.asuka_button
-{
+button {
     overflow: hidden;
     font-size: 0.85rem;
     letter-spacing: 0.1rem;
     border-radius: 0.3rem;
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-    transition: color 0.25s, background-color 0.25s;
     white-space: nowrap;
+    transition: color 0.25s, background-color 0.25s;
     input 
     {
         position: absolute;
@@ -20,54 +17,32 @@
         font-size: 0;
     }
 }
-.asuka_button_normal
-{
-    background-color: rgb(25, 118, 210);
-    color: #ffffff;
-}
-.asuka_button_file
-{
-    background-color: #f38992;
-    color: #ffffff;
-}
-.asuka_button_read
-{
-    color: #ec558c;
-    background-color: #ffffff;
-}
-.asuka_button_danger
-{
-    color: #ffffff;
-    background-color: rgb(241, 86, 86);
-}
-.button_size_big
-{
-    width: 100%;
-    padding: 0.8rem 0;
-}
-.button_size_normal
-{
-    min-width: 3.5rem;
-    min-height: 1.8rem;
-    padding: 0.4rem 0.7rem;
-    font-size: 0.8rem;
-}
-.button_size_small
-{
-    font-size: 0.7rem;
-    padding: 0.35rem 0.7rem;
-}
-.rotate
-{
-    animation: rotate 3s linear infinite;
-}
-@keyframes rotate {
-    from
-    {
-        transform: rotate(0deg);
+.as_button {
+    .button_size_big {
+        width: 100%;
+        padding: 0.8rem 0;
     }
-    to
-    {
-        transform: rotate(360deg);
+    .button_size_normal {
+        min-width: 3.5rem;
+        min-height: 1.8rem;
+        padding: 0.4rem 0.7rem;
+        font-size: 0.8rem;
+    }
+    .button_size_small {
+        font-size: 0.7rem;
+        padding: 0.35rem 0.7rem;
+    }
+    .rotate {
+        animation: rotate 3s linear infinite;
+    }
+    @keyframes rotate {
+        from
+        {
+            transform: rotate(0deg);
+        }
+        to
+        {
+            transform: rotate(360deg);
+        }
     }
 }

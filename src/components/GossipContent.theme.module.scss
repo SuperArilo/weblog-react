@@ -1,0 +1,41 @@
+.light, .gossip_box {
+    background-color: rgba(255, 255, 255, 1);
+    .gossip_box_title {
+        .info_content {
+            .info_about_user {
+                span:first-child {
+                    color: rgba(0, 0, 0, 1);
+                }
+            }
+        }
+    }
+    .gossip_render_content {
+        background-color: rgb(252, 252, 252);
+    }
+    .gossip_button button {
+        background-color: rgb(245, 245, 245);
+        color: #777777;
+    }
+}
+.dark, .gossip_box {
+    background-color: rgba(47, 49, 51, 1);
+    .gossip_box_title {
+        .info_content {
+            .info_about_user {
+                span:first-child {
+                    color: rgba(255, 255, 255, 1);
+                }
+            }
+        }
+    }
+    .gossip_render_content {
+        background-color: rgba(47, 49, 51, 1);
+        * {
+            color: rgba(255, 255, 255, 1);
+        }
+    }
+    .gossip_button button {
+        background-color: rgb(39, 39, 39);
+        color: #fff;
+    }
+}

@@ -1,0 +1,42 @@
+.light_render_content, .render_content {
+    background-color: rgba(244, 244, 240, 1);
+    .header_nav_default, .mobile_header_nav {
+        background-color: rgba(255, 255, 255, 0.6);
+        .left_webside_icon {
+            color: rgb(97, 97, 97);
+        }
+        .nav_menu_list  {
+            .active {
+                background-color: rgba(193, 220, 252, 0.6);
+            }
+            li:hover {
+                background-color: rgba(193, 220, 252, 0.6);
+            }
+        }
+        .nav_menu_list li {
+            color: rgb(87, 87, 87);
+        }
+    }
+}
+.dark_render_content, .render_content {
+    background-color: rgba(23, 29, 32, 1);
+    .header_nav_default, .mobile_header_nav {
+        background-color: rgba(23, 29, 32, 1);
+        .left_webside_icon {
+            color: rgb(212, 212, 212);
+        }
+        .nav_menu_list {
+            .active {
+                background-color: rgba(65, 70, 72 , 0.6);
+                color: rgba(255, 255, 255, 1);
+            }
+            li:hover {
+                background-color: rgba(65, 70, 72 , 0.6);
+                color: rgba(255, 255, 255, 1);
+            }
+        }
+        .nav_menu_list li {
+            color: rgb(212, 212, 212);
+        }
+    }
+}

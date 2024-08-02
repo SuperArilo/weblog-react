@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react'
 //样式
 import style from './GossipContent.module.scss'
 import renderHtml from '../assets/scss/RenderHtml.module.scss'
-
+import ThemeStyle from './GossipContent.theme.module.scss'
 //组件
 import Avatar from './Avatar.jsx'
 import WaterWave from './WaterWave.jsx'
@@ -23,7 +23,7 @@ import Svg from '../components/Svg.jsx'
 import share from '../util/Share.js'
 import { useNavigate } from 'react-router-dom'
 import { gossipCommentList, replyGossipComment, likeGossipComment, deleteGossipComment, deleteGossip } from '../api/Gossip.js'
-export default function GossipContent({ foldStatus = false, targetComment = null, data, userInfo,  reDataGet = () => null, handleLike = () => null, handleFold = () => null, reSetGossipComment = () => null }) {
+export default function GossipContent({ isDark, foldStatus = false, targetComment = null, data, userInfo,  reDataGet = () => null, handleLike = () => null, handleFold = () => null, reSetGossipComment = () => null }) {
     //hook
     const navigate = useNavigate()
     //ref
@@ -66,6 +66,7 @@ export default function GossipContent({ foldStatus = false, targetComment = null
     }, [targetComment])
 
     useEffect(() => {
+
         if(!foldStatus) return
         commentData(requestInstance)
     }, [commentData, requestInstance, foldStatus])
@@ -78,8 +79,8 @@ export default function GossipContent({ foldStatus = false, targetComment = null
         })
     }
     return (
-        <div className={style.gossip_box}>
-            <div className={style.gossip_box_title}>
+        <div className={`${style.gossip_box} ${isDark ? ThemeStyle.dark:ThemeStyle.light}`}>
+            <div className={`${style.gossip_box_title} ${ThemeStyle.gossip_box_title}`}>
                 <div className={style.left_info}>
                     <Avatar
                         width='2.8rem'
@@ -88,12 +89,12 @@ export default function GossipContent({ foldStatus = false, targetComment = null
                         onClick={() => { navigate(`/user/${data.author}`) }}
                         title={data.nickName}
                         alt={data.nickName}/>
-                    <div className={style.info_content}>
-                        <div className={style.info_about_user}>
+                    <div className={`${style.info_content} ${ThemeStyle.info_content}`}>
+                        <div className={`${style.info_about_user} ${ThemeStyle.info_about_user}`}>
                             <span>{data.nickName}</span>
                             <span>{data.createTimeFormat}</span>
                         </div>
-                        <span className={style.info_autograph}>{data.categoryName}</span>
+                        <span className={`${style.info_autograph} ${ThemeStyle.info_autograph}`}>{data.categoryName}</span>
                     </div>
                 </div>
                 <div ref={gossipFunctionMenuRef} className={style.right_function} onClick={() => { setGossipFunctionMenuStatus(true) }}>
@@ -135,14 +136,14 @@ export default function GossipContent({ foldStatus = false, targetComment = null
             </div>
             <div
                 ref={renderContentRef}
-                className={`${style.gossip_render_content} ${renderHtml.render_html}`}
+                className={`${style.gossip_render_content} ${renderHtml.render_html} ${ThemeStyle.gossip_render_content}`}
                 dangerouslySetInnerHTML={{ __html: data.content}}/>
             <div className={style.gossip_state}>
                 <span>{data.likes} 个喜欢</span>
                 <span>|</span>
                 <span>{commentObject.list ? commentObject.total:data.comments} 条评论</span>
             </div>
-            <div className={style.gossip_button}>
+            <div className={`${style.gossip_button} ${ThemeStyle.gossip_button}`}>
                 <button 
                     type='button' 
                     onClick={() => {

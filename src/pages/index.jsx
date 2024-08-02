@@ -2,8 +2,11 @@
 import style from './IndexPage.module.scss'
 import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
+import ThemeStyle from './IndexPage.Theme.module.scss'
 //组件
 import Switch from '@mui/material/Switch'
+import FormGroup from '@mui/material/FormGroup'
+import FormControlLabel from '@mui/material/FormControlLabel'
 import Button from '../components/Button'
 import WaterWave from '../components/WaterWave'
 import GossipContent from '../components/GossipContent'
@@ -106,17 +109,21 @@ export default function IndexPage(props) {
     }, [gossipRequestInstance, gossipData])
 
     return (
-        <div className={ props.isMobile ? style.index_content_mobile:style.index_content }>
+        <div className={`${props.isMobile ? style.index_content_mobile:style.index_content} ${props.isDark ? ThemeStyle.dark_index_content:ThemeStyle.light_index_content}`}>
             <div className={style.index_sider}>
                 <header className={style.sider_header_tips}>
-                    <Switch defaultChecked onChange={(e) => { 
-                        if(e.target.checked) {
-                            sliderRef.current.slickPlay() 
-                        } else {
-                            sliderRef.current.slickPause() 
-                        }
-                    }} />
-                    <span className={style.auto_play_span}>自动播放</span>
+                <FormGroup>
+                    <FormControlLabel
+                        control={
+                            <Switch defaultChecked onChange={(e) => { 
+                            if(e.target.checked) {
+                                sliderRef.current.slickPlay() 
+                            } else {
+                                sliderRef.current.slickPause() 
+                            }
+                        }} /> }
+                        label="自动播放" />
+                </FormGroup>
                 </header>
                 <div className={style.sider_change_content}>
                     <CTransitionFade
@@ -164,14 +171,15 @@ export default function IndexPage(props) {
                     <span className={style.public_sub_content_header}>全部文章</span>
                     <CTransitionFade
                         keyS={articleObject.list.length === 0} 
-                        left={<ArticleSkeleton />}
+                        left={<ArticleSkeleton isDark={props.isDark} />}
                         right={
-                            <ul className={style.article_list}>
+                            <ul className={`${style.article_list} ${ThemeStyle.article_list}`}>
                                     {
                                         articleObject.list.map(item => {
                                             return <Article 
                                                         key={item.id}
                                                         item={item}
+                                                        isDark={props.isDark}
                                                         handleLike={(articleId) => { 
                                                             if(props.userInfo === null) {
                                                                 toast('你需要登录哦 (￣y▽,￣)╭ ')
@@ -209,10 +217,11 @@ export default function IndexPage(props) {
                         keyS={gossipList.length === 0}
                         left={<GossipSkeleton />}
                         right={
-                            <div className={style.gossip_list}>
+                            <div className={`${style.gossip_list} ${ThemeStyle.gossip_list}`}>
                                 {
                                     gossipList.map(item => {
                                         return <GossipContent
+                                                    isDark={props.isDark}
                                                     key={item.id} 
                                                     data={item} 
                                                     userInfo={props.userInfo}
@@ -281,16 +290,16 @@ const Article = (props) => {
     return (
         <li>
             <img src={props.item.articlePicture} title={props.item.articleTitle} alt={props.item.articleTitle} />
-            <div className={style.article_info_item}>
-                <p className={style.article_title}>{props.item.articleTitle}</p>
-                <span className={style.article_time}>{props.item.createTime}</span>
-                <p className={style.article_introduce}>{props.item.articleIntroduction}</p>
-                <div className={style.article_bottom_function}>
+            <div className={`${style.article_info_item} ${ThemeStyle.article_info_item}`}>
+                <p className={`${style.article_title} ${ThemeStyle.article_title}`}>{props.item.articleTitle}</p>
+                <span className={`${style.article_time} ${ThemeStyle.article_time}`}>{props.item.createTime}</span>
+                <p className={`${style.article_introduce} ${ThemeStyle.article_introduce}`}>{props.item.articleIntroduction}</p>
+                <div className={`${style.article_bottom_function} ${ThemeStyle.article_bottom_function}`}>
                     <Button text='开始阅读' clazz='read' onClick={() => { 
                         navigate('detail?threadId=' + props.item.id)
                         $('#react-by-asukamis').children().stop().animate({'scrollTop': 0})
                      }}/>
-                    <div className={style.right_article_data}>
+                    <div className={`${style.right_article_data} ${ThemeStyle.right_article_data}`}>
                         <div>
                             <Svg
                                 name='View'
@@ -328,9 +337,9 @@ const Article = (props) => {
         </li>
     )
 }
-const ArticleSkeleton = () => {
+const ArticleSkeleton = ({ isDark }) => {
     return (
-        <div className={style.article_skeleton}>
+        <div className={`${style.article_skeleton} ${ThemeStyle.article_skeleton}`}>
             <Skeleton variant="rounded" width='100%' height='21rem' />
             <div className={style.article_skeleton_box}>
                 <Skeleton variant="text" sx={{ fontSize: '1rem' }} width='100%' height='3rem' />

@@ -37,10 +37,10 @@ import Tinymce from './components/Editor'
 import { CTransitionFade, CCSSTransition } from './components/Transition'
 //样式
 import './assets/css/emojiBox.css'
-import ThemeLight from './assets/scss/Light.module.scss'
-import ThemeDark from './assets/scss/Dark.module.scss'
+import ThemeStyle from './App.Theme.module.scss'
 import style from './App.module.scss'
 import NoticeSocket from './pages/NoticeSocket'
+import { ThemeProvider, createTheme } from '@mui/material/styles'
 
 import Test from './pages/Test'
 
@@ -60,6 +60,11 @@ export default function App () {
 	const [gossipInstance, setGossipInstance] = useState({
         status: false,
     })
+	const darkTheme = createTheme({
+		palette: {
+		  mode: isDark ? 'dark':'light',
+		},
+	})
 	//function
 	const checkIsMobile = useCallback((value) => {
 		dispatch({ type: 'isMobile/setStatus', payload: value < 1080 })
@@ -86,8 +91,8 @@ export default function App () {
 		}
 	}, [loginSetUserInfo])
 	return (
-		<>
-			<div className={`${style.render_content} ${isDark ? ThemeDark.render_content:ThemeLight.render_content}`}>
+		<ThemeProvider theme={darkTheme}>
+			<div className={`${style.render_content} ${isDark ? ThemeStyle.dark_render_content:ThemeStyle.light_render_content}`}>
 				{
 					isMobileStatus ? 
 					<MobileHeaderNav
@@ -110,9 +115,9 @@ export default function App () {
 						keyS={location.pathname}
 						left={
 							<Routes location={location}>
-								<Route index path='/' element={<IndexPage isMobile={ isMobileStatus } userInfo={userInfo} />} />
+								<Route index path='/' element={<IndexPage isMobile={ isMobileStatus } userInfo={userInfo} isDark={isDark} />} />
 								<Route path='/detail' element={<ArticleDetail userInfo={userInfo} />} />
-								<Route path='/gossip' element={<Gossip userInfo={userInfo}/>} />
+								<Route path='/gossip' element={<Gossip userInfo={userInfo} />} />
 								<Route path='/guestbook' element={<Guestbook />} />
 								<Route path='/user/:viewUid' element={<User />} />
 								<Route path='/user/verify' element={<VerifyEmailPage />} />
@@ -171,7 +176,7 @@ export default function App () {
 			{
 				(localStorage.getItem('token') && userInfo !== null) && <NoticeSocket token={localStorage.getItem('token')} />
 			}
-		</>
+		</ThemeProvider>
 	)
 }
 const PCheaderNav = (props) => {
@@ -288,16 +293,16 @@ const PCheaderNav = (props) => {
 	}, [pushNotice, setNoticeCount])
 
 	return (
-		<nav className={`${style.header_nav} ${style.header_nav_default} ${props.isDark ? ThemeDark.header_nav_default:ThemeLight.header_nav_default}`} ref={navInstance}>
-			<span className={style.left_webside_icon} onClick={() => { navigate('/') }}>
+		<nav className={`${style.header_nav} ${ThemeStyle.header_nav_default}`} ref={navInstance}>
+			<span className={`${style.left_webside_icon} ${ThemeStyle.left_webside_icon}`} onClick={() => { navigate('/') }}>
 				Arilo
 				<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
 			</span>
-			<ul className={style.nav_menu_list}>
+			<ul className={`${style.nav_menu_list} ${ThemeStyle.nav_menu_list}`}>
 				{
 					menuInstance.list.map(item => {
 						return <li
-								className={menuInstance.index === item.id ? style.active:''}
+								className={`${menuInstance.index === item.id ? ThemeStyle.active:''}`}
 								onClick={() => {
 									if(menuInstance.index === item.id) return
 									navigate(item.path)
@@ -459,7 +464,7 @@ const MobileHeaderNav = (props) => {
 	])
 	return (
 		<>
-			<nav className={style.mobile_header_nav}>
+			<nav className={`${style.mobile_header_nav} ${ThemeStyle.mobile_header_nav}`}>
 				<div className={style.left_mobile_bar}>
 					{
 						props.userInfo !== null &&
@@ -473,7 +478,7 @@ const MobileHeaderNav = (props) => {
 						</>
 					}
 				</div>
-				<span className={style.left_webside_icon}>Arilo</span>
+				<span className={`${style.left_webside_icon} ${ThemeStyle.left_webside_icon}`}>Arilo</span>
 				<div className={style.right_mobile_bar} onClick={() => { setDrawerStatus(true) }}>
 					<Svg
 						name='Menu'

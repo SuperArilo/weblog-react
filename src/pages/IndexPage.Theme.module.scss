@@ -1,0 +1,56 @@
+.light_index_content, .index_content {
+    .article_list {
+        li {
+            background-color: rgba(255, 255, 255, 1);
+            .article_info_item {
+                .article_title {
+                    color: rgba(0, 0, 0, 1);
+                }
+                .article_time {
+                    color: rgba(0, 0, 0, 0.6);
+                }
+                .article_introduce {
+                    color: rgba(0, 0, 0, 0.87);
+                }
+                .article_bottom_function {
+                    .right_article_data div {
+                        span {
+                            color: rgb(115, 115, 115);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .article_skeleton {
+        background-color: #ffffff;
+    }
+}
+.dark_index_content, .index_content {
+    .article_list {
+        li {
+            background-color: rgba(47, 49, 51, 1);
+            .article_info_item {
+                .article_title {
+                    color: rgb(241, 241, 241);
+                }
+                .article_time {
+                    color: rgba(241, 241, 241, 0.6);
+                }
+                .article_introduce {
+                    color: rgba(241, 241, 241, 0.87);
+                }
+            }
+            .article_bottom_function {
+                .right_article_data div {
+                    span {
+                        color: rgba(241, 241, 241, 0.87);
+                    }
+                }
+            }
+        }
+    }
+    .article_skeleton {
+        background-color: rgba(37, 37, 37, 1);
+    }
+}

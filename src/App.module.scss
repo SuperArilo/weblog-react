@@ -26,16 +26,16 @@
             font-size: 1.2rem;
             letter-spacing: 0.1rem;
             cursor: pointer;
-            color: rgb(97, 97, 97);
             border-radius: 0.3rem;
             overflow: hidden;
+            transition: color 0.25s;
         }
     }
     .header_nav
     {
         justify-content: space-around;
         user-select: none;
-        transition: background-color 0.25s linear;
+        transition: background-color 0.25s;
         .left_webside_icon
         {
             padding: 0 0.5rem;
@@ -65,7 +65,6 @@
                 cursor: pointer;
                 letter-spacing: 0.08rem;
                 transition: color 0.25s, background-color 0.25s;
-                color: rgb(87, 87, 87);
             }
         }
         .right_some_function .logged_box
@@ -79,17 +78,6 @@
     .header_nav_default
     {
         transition: background-color 0.25s;
-        .nav_menu_list
-        {
-            .active
-            {
-                background-color: rgba(206, 206, 206, 1);
-            }
-            li:hover
-            {
-                background-color: rgba(206, 206, 206, 1);
-            }
-        }
     }
     .header_nav_overflow
     {
@@ -110,7 +98,7 @@
     {
         justify-content: space-between;
         padding: 0 0.8rem;
-        background-color: #fff;
+        transition: background-color 0.25s;
         .right_mobile_bar , .left_mobile_bar
         {
             width: 2.5rem;
@@ -133,19 +121,5 @@
     .router_render_mobile
     {
         padding: 3rem 1rem 0 1rem;
-    }
-}
-.rotate
-{
-    animation: rotate 3s linear infinite;
-}
-@keyframes rotate {
-    from
-    {
-        transform: rotate(0deg);
-    }
-    to
-    {
-        transform: rotate(360deg);
     }
 }
