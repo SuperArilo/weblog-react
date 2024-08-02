@@ -1,0 +1,49 @@
+.light_login_box, .login_box {
+    .top_tips {
+        .left_span {
+            color: #000;
+        }
+    }
+    .input_list {
+        .input_item, .input_password {
+            .input_top_div {
+                .input_top_div {
+                    span:nth-child(1) {
+                        color: #000;
+                    }
+                }
+            }
+            input {
+                background-color: rgba(243, 243, 244, 1);
+            }
+            input:hover, input:focus {
+                background-color: #fff;
+                box-shadow: 0 0 0.3rem rgb(147, 182, 211);
+            }
+        }
+    }
+}
+.dark_login_box, .login_box {
+    .top_tips {
+        .left_span {
+            color: #fff;
+        }
+    }
+    .input_list {
+        .input_item, .input_password {
+            .input_top_div {
+                span:nth-child(1) {
+                    color: #fff;
+                }
+            }
+            input {
+                background-color: rgba(63, 63, 66, 1);
+                color: #fff;
+                caret-color: #fff;
+            }
+            input:hover, input:focus {
+                background-color: rgba(28, 27, 28, 1);
+            }
+        }
+    }
+}

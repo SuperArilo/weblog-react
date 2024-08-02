@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import Button from './components/Button'
 import signStyle from './assets/scss/Sign.module.scss'
+import SignThemeStyle from './assets/scss/Sign.Theme.module.scss'
 //hook
 import { Route, Routes, useLocation, useNavigate, Navigate  } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
@@ -135,6 +136,7 @@ export default function App () {
 				<About />
 				<CreateWindow width={isMobileStatus ? '100%':'24rem'} status={loginBoxStatus} onClose={status => { setTimeout(() => { setLoginBoxStatus(status) }, 500) }}>
 					<LoginBox
+						isDark={isDark}
 						status={loginBoxStatus}
 						openRegisterBox={(e) => {setRegisterBoxStatus(e)}}
 						closeBox={(e) => {setLoginBoxStatus(e)}} />
@@ -650,9 +652,9 @@ const LoginBox = (props) => {
 	}
 
 	return (
-		<div className={`${signStyle.login_box} ${isMobileStatus? signStyle.box_mobile:signStyle.box_pc}`}>
-			<div className={signStyle.top_tips}>
-				<span className={signStyle.left_span}>欢迎回来,</span>
+		<div className={`${signStyle.login_box} ${props.isDark ? SignThemeStyle.dark_login_box:SignThemeStyle.light_login_box} ${isMobileStatus? signStyle.box_mobile:signStyle.box_pc}`}>
+			<div className={`${signStyle.top_tips} ${SignThemeStyle.top_tips}`}>
+				<span className={`${signStyle.left_span} ${SignThemeStyle.left_span}`}>欢迎回来,</span>
 				<button type="button" className={signStyle.right_register} onClick={() => {
 					props.openRegisterBox(true)
 					props.closeBox(false)
@@ -661,9 +663,9 @@ const LoginBox = (props) => {
 				</button>
 			</div>
 			<p className={signStyle.top_tips_line}>请填写以下信息进行登录</p>
-			<form className={signStyle.input_list}>
-				<label className={signStyle.input_item}>
-					<div className={signStyle.input_top_div}>
+			<form className={`${signStyle.input_list} ${SignThemeStyle.input_list}`}>
+				<label className={`${signStyle.input_item} ${SignThemeStyle.input_item}`}>
+					<div className={`${signStyle.input_top_div} ${SignThemeStyle.input_top_div}`}>
 						<span>邮箱</span>
 						<span>*</span>
 					</div>
@@ -681,8 +683,8 @@ const LoginBox = (props) => {
 						<span></span>
 					</div>
 				</label>
-				<label className={signStyle.input_password}>
-					<div className={signStyle.input_top_div}>
+				<label className={`${signStyle.input_password} ${SignThemeStyle.input_password}`}>
+					<div className={`${signStyle.input_top_div} ${SignThemeStyle.input_top_div}`}>
 						<span>密码</span>
 						<span>*</span>
 					</div>
@@ -692,7 +694,8 @@ const LoginBox = (props) => {
 							<Svg
 								style={{
 									width: '1.5rem',
-									height: '1.5rem'
+									height: '1.5rem',
+									color: props.isDark ? '#fff':'#000'
 								}}  
 								name={`${isShowPassword ? 'Password_hide':'Password_show'}`} />
 						</div>

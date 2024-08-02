@@ -1,0 +1,10 @@
+.light_mask, .function_mask {
+    .create_window {
+        background-color: #ffffff;
+    }
+}
+.dark_mask, .function_mask {
+    .create_window {
+        background-color: rgba(50, 50, 50, 1);
+    }
+}
