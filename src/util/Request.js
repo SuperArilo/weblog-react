@@ -19,12 +19,20 @@ service.interceptors.request.use(config => {
 })
 service.interceptors.response.use( response => {
     if(response.config.toast?.isShow) {
-        if(response.data.code === 200) {
-            toast.success(response.data.message, { id: response.config.toastId })
-        } else if(response.data.code === 0) {
-            toast(response.data.message, { id: response.config.toastId })
-        } else {
-            toast.error(response.data.message, { id: response.config.toastId })
+        switch(response.data.code) {
+            case 0:
+                toast(response.data.message, { id: response.config.toastId })
+                break
+            case 200:
+                toast.success(response.data.message, { id: response.config.toastId })
+                break
+            case 401:
+            case 403:
+                toast.error(response.data.message, { id: response.config.toastId })
+                Promise.reject(error.response.data)
+                return
+            default:
+                toast.error(response.data.message, { id: response.config.toastId })
         }
     }
     return Promise.resolve(response.data)
