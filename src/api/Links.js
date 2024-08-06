@@ -1,5 +1,5 @@
 import request from '../util/Request'
-
+import { ConvertToFormData } from '../util/PublicFunction'
 //友邻列表获取
 export const friendList = ({ data, toast }) => {
     return request({
@@ -14,7 +14,7 @@ export const linksApply = ({ data, toast }) => {
     return request({
         url: '/friend/apply',
         method: 'post',
-        data: data,
+        data: ConvertToFormData(data),
         toast: toast
     })
 }
