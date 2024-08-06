@@ -72,17 +72,6 @@ const Tinymce = forwardRef(({ userInfo = null, placeholder = '在这设置占位
             }
         }
     }))
-    useEffect(() => {
-        setConfing(current => ({
-            ...current,
-            skin: isDark ? 'oxide-dark':'oxide',
-            content_css: isDark ? 'dark':'default',
-        }))
-    }, [isDark])
-    useEffect(() => {
-        if(instance == null) return
-        console.log(instance)
-    }, [config])
     return <>
             {
                 userInfo !== null ?

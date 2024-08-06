@@ -327,7 +327,6 @@ export default function User(props) {
                                             toast('需要登录才能继续！')
                                             return
                                         }
-                                        console.log(userProfiles)
                                         let data = new FormData()
                                         data.append('targetUid', viewUid)
                                         targetLikeUser({ data: data, toast: { isShow: true, loadingMessage: '提交请求中...' } }).then(resq => {
