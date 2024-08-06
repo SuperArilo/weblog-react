@@ -1,0 +1,39 @@
+.light_link_page, .link_page {
+    .apply_content {
+        .apply_html, .apply_info {
+            background-color: #fff;
+        }
+    }
+    .friends_content {
+        .friends_list_item_skeleton , .friends_list_item {
+            background-color: #fff;
+        }
+        .friends_list_item .friends_info {
+            .friends_describe {
+                color: #000;
+            }
+        }
+    }
+}
+.dark_link_page, .link_page {
+    .apply_content {
+        .apply_html, .apply_info {
+            background-color: rgb(47, 49, 51);
+        }
+        .apply_html * {
+            color: #fff;
+        }
+    }
+    .friends_content {
+        .friends_list_item_skeleton , .friends_list_item {
+            background-color: rgb(47, 49, 51);
+        }
+        .friends_list_item .friends_info {
+
+            .friends_describe {
+                color: rgba(255, 255, 255, 0.7);
+            }
+        }
+    }
+}
+    

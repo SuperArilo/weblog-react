@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 //样式
 import style from './User.module.scss'
+import Theme from './User.Theme.module.scss'
 //方法
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -32,7 +33,8 @@ export default function User(props) {
     const userInfo = useSelector((state) => state.userInfo.info, shallowEqual)
     const [userProfiles, setUserProfiles] = useState(null)
     const { viewUid } = useParams()
-
+    //theme
+    const isDark = useSelector(state => state.theme.isDark)
     const avatarCutRef = useRef(null)
 
     const [modeInstance, setModeInstance] = useState({
@@ -161,13 +163,13 @@ export default function User(props) {
     //   }, [userInfo])
 
     return (
-        <div className={style.user_info}>
+        <div className={`${style.user_info} ${isDark ? Theme.dark_user_info:Theme.light_user_info}`}>
             <CTransitionFade
                 keyS={userProfiles === null}
                 left={<UserSkeleton />}
                 right={
-                    <div className={style.info_box}>
-                        <div className={style.user_head_box}>
+                    <div className={`${style.info_box} ${Theme.info_box}`}>
+                        <div className={`${style.user_head_box} ${Theme.user_head_box}`}>
                             <div className={style.user_avatar_box}>
                                 {
                                     modeInstance.tempAvatar !== null ?
@@ -229,7 +231,7 @@ export default function User(props) {
                                 }
                                 
                             </div>
-                            <div className={style.public_info_item} eidtorindex='0'>
+                            <div className={`${style.public_info_item} ${Theme.public_info_item}`} eidtorindex='0'>
                                 {
                                     modeInstance.editorIndex === '0' ?
                                     <InstantInput
@@ -252,7 +254,7 @@ export default function User(props) {
                                         }}/>
                                     :
                                     <>
-                                        <p className={style.nick_name}>{userProfiles?.nickName}</p>
+                                        <p className={`${style.nick_name} ${Theme.nick_name}`}>{userProfiles?.nickName}</p>
                                         {
                                             modeInstance.status && <Icon 
                                                                         name='Editor'
@@ -266,7 +268,7 @@ export default function User(props) {
                                 }
                                 
                             </div>
-                            <div className={style.public_info_item} eidtorindex='1'>
+                            <div className={`${style.public_info_item} ${Theme.public_info_item}`} eidtorindex='1'>
                                 {
                                     modeInstance.editorIndex === '1' ?
                                     <InstantInput
@@ -319,7 +321,7 @@ export default function User(props) {
                             {
                                 modeInstance.status === false &&
                                 <div
-                                    className={style.likes_box}
+                                    className={`${style.likes_box} ${Theme.likes_box}`}
                                     onClick={() => {
                                         if(userInfo == null) {
                                             toast('需要登录才能继续！')
@@ -348,15 +350,15 @@ export default function User(props) {
                                 </div>
                             }
                         </div>
-                        <div className={style.function_box}>
-                            <header className={style.select_title}>
+                        <div className={`${style.function_box} ${Theme.function_box}`}>
+                            <header className={`${style.select_title} ${Theme.select_title}`}>
                                 <div ref={menuLineRef} className={style.select_line} style={{ width: 'calc(100% / ' + (modeInstance.status ? editorMenuList.length:infoMenuList.length) + ')' }} type='line' />
                                 {
                                     modeInstance.status ?
                                     editorMenuList.map(item => {
                                         return (
                                             <div
-                                                className={`${style.select_title_item} ${modeInstance.menuIndex === item.id ? style.select_title_item_active:''}`}
+                                                className={`${style.select_title_item} ${Theme.select_title_item} ${modeInstance.menuIndex === item.id ? style.select_title_item_active:''}`}
                                                 index={item.id}
                                                 key={item.id}
                                                 onClick={() => {
@@ -378,7 +380,7 @@ export default function User(props) {
                                     infoMenuList.map(item => {
                                         return (
                                             <div
-                                                className={`${style.select_title_item} ${modeInstance.menuIndex === item.id ? style.select_title_item_active:''}`}
+                                                className={`${style.select_title_item} ${Theme.select_title_item} ${modeInstance.menuIndex === item.id ? Theme.select_title_item_active:''}`}
                                                 index={item.id}
                                                 key={item.id}
                                                 onClick={() => {
@@ -398,7 +400,7 @@ export default function User(props) {
                                     })
                                 }
                             </header>
-                            <div className={style.select_function_box}>
+                            <div className={`${style.select_function_box} ${Theme.select_function_box}`}>
                                 {
                                     modeInstance.status ? 
                                     <RenderEditorFunctionView
@@ -422,11 +424,10 @@ export default function User(props) {
     )
 }
 const UserInfoView = (props) => {
-    
     return (
-        <ul className={style.user_info_view}>
+        <ul className={`${style.user_info_view} ${Theme.user_info_view}`}>
             <li>
-                <div className={style.info_title}>
+                <div className={`${style.info_title} ${Theme.info_title}`}>
                     <Svg
                         name='Ucontact'
                         style={{
@@ -435,7 +436,7 @@ const UserInfoView = (props) => {
                         }} />
                     <span>联系方式</span>
                 </div>
-                <div className={style.info_content} editorindex='3'>
+                <div className={`${style.info_content} ${Theme.info_content}`} editorindex='3'>
                     {
                         props.modeInstance?.editorIndex === '3' ?
                         <InstantInput
@@ -479,7 +480,7 @@ const UserInfoView = (props) => {
                 </div>
             </li>
             <li>
-                <div className={style.info_title}>
+                <div className={`${style.info_title} ${Theme.info_title}`}>
                     <Svg
                         name='Calendar'
                         style={{
@@ -488,12 +489,12 @@ const UserInfoView = (props) => {
                         }} />
                     <span>注册时间</span>
                 </div>
-                <div className={style.info_content}>
+                <div className={`${style.info_content} ${Theme.info_content}`}>
                     <span>{props.userProfiles.registerTime}</span>
                 </div>
             </li>
             <li>
-                <div className={style.info_title}>
+                <div className={`${style.info_title} ${Theme.info_title}`}>
                     <Svg
                         name='Identity'
                         style={{
@@ -502,12 +503,12 @@ const UserInfoView = (props) => {
                         }} />
                     <span>身份标签</span>
                 </div>
-                <div className={style.info_content}>
+                <div className={`${style.info_content} ${Theme.info_content}`}>
                     <span>{props.userProfiles.category}</span>
                 </div>
             </li>
             <li>
-                <div className={style.info_title}>
+                <div className={`${style.info_title} ${Theme.info_title}`}>
                     <Svg
                         name='Age'
                         style={{
@@ -516,7 +517,7 @@ const UserInfoView = (props) => {
                         }} />
                     <span>年龄</span>
                 </div>
-                <div className={style.info_content} editorindex='4'>
+                <div className={`${style.info_content} ${Theme.info_content}`} editorindex='4'>
                     {
                         props.modeInstance?.editorIndex === '4' ?
                         <InstantInput
@@ -560,7 +561,7 @@ const UserInfoView = (props) => {
                 </div>
             </li>
             <li>
-                <div className={style.info_title}>
+                <div className={`${style.info_title} ${Theme.info_title}`}>
                     <Svg
                         name='Sex'
                         style={{
@@ -569,7 +570,7 @@ const UserInfoView = (props) => {
                         }} />
                     <span>性别</span>
                 </div>
-                <div className={style.info_content} editorindex='5'>
+                <div className={`${style.info_content} ${Theme.info_content}`} editorindex='5'>
                     {
                         props.modeInstance?.editorIndex === '5' ?
                         <InstantInput
@@ -615,7 +616,7 @@ const UserInfoView = (props) => {
                 </div>
             </li>
             <li>
-                <div className={style.info_title}>
+                <div className={`${style.info_title} ${Theme.info_title}`}>
                     <Svg
                         name='Location'
                         style={{
@@ -624,7 +625,7 @@ const UserInfoView = (props) => {
                         }} />
                     <span>位置</span>
                 </div>
-                <div className={style.info_content}>
+                <div className={`${style.info_content} ${Theme.info_content}`}>
                     <span>{ props.userProfiles.location === null ? '未知归属地':props.userProfiles.location }</span>
                 </div>
             </li>
@@ -637,9 +638,9 @@ const AccountInfoView = (props) => {
     const [requestStatus, setRequestStatus] = useState(false)
 
     return (
-        <ul className={style.user_info_view}>
+        <ul className={`${style.user_info_view} ${Theme.user_info_view}`}>
             <li>
-                <div className={style.info_title}>
+                <div className={`${style.info_title} ${Theme.info_title}`}>
                     <Svg
                         name='Uid'
                         style={{
@@ -648,12 +649,12 @@ const AccountInfoView = (props) => {
                         }} />
                     <span>UID</span>
                 </div>
-                <div className={style.info_content}>
+                <div className={`${style.info_content} ${Theme.info_content}`}>
                     <span>{props.userProfiles.uid}</span>
                 </div>
             </li>
             <li>
-                <div className={style.info_title}>
+                <div className={`${style.info_title} ${Theme.info_title}`}>
                     <Svg
                         name='Account'
                         style={{
@@ -662,7 +663,7 @@ const AccountInfoView = (props) => {
                         }} />
                     <span>用户名</span>
                 </div>
-                <div className={style.info_content} editorindex='8'>
+                <div className={`${style.info_content} ${Theme.info_content}`} editorindex='8'>
                     {
                         props.modeInstance?.editorIndex === '8' ?
                         <InstantInput
@@ -720,7 +721,7 @@ const AccountInfoView = (props) => {
                 </div>
             </li>
             <li>
-                <div className={style.info_title}>
+                <div className={`${style.info_title} ${Theme.info_title}`}>
                     <Svg
                         name='Password'
                         style={{
@@ -729,7 +730,7 @@ const AccountInfoView = (props) => {
                         }} />
                     <span>密码</span>
                 </div>
-                <div className={style.info_content} editorindex='9'>
+                <div className={`${style.info_content} ${Theme.info_content}`} editorindex='9'>
                     {
                         props.modeInstance?.editorIndex === '9'
                         ?
@@ -883,7 +884,7 @@ const UserLikeView = (props) => {
     }, [requestInstance, dataGet, props.userProfiles.viewerLike])
 
     return (
-        <div className={style.user_like_view}>
+        <div className={`${style.user_like_view} ${Theme.user_like_view}`}>
             <CTransitionFade
                 keyS={dataObject.list === null}
                 left={<UserLikeViewSkeleton />}
@@ -898,8 +899,8 @@ const UserLikeView = (props) => {
                                         dataObject.list?.map(item => {
                                             return (
                                                 <Collapse key={item.id}>
-                                                    <div className={style.like_item}>
-                                                        <div className={style.item_content}>
+                                                    <div className={`${style.like_item} ${Theme.like_item}`}>
+                                                        <div className={`${style.item_content} ${Theme.item_content}`}>
                                                             <Avatar
                                                                 width='3rem'
                                                                 height='3rem'
@@ -909,7 +910,7 @@ const UserLikeView = (props) => {
                                                                 onClick={() => {
                                                                     navigate(`/user/${item.uid}`)
                                                                 }}/>
-                                                            <div className={style.info_box}>
+                                                            <div className={`${style.info_box} ${Theme.info_box}`}>
                                                                 <span>{item.nickName}</span>
                                                                 <span>在 {item.createTime} 的时候赞了{props.userProfiles.uid === props.userInfo?.uid ? '你':'TA'}</span>
                                                             </div>
@@ -929,14 +930,14 @@ const UserLikeView = (props) => {
 
 const UserSkeleton = () => {
     return (
-        <div className={style.user_skeleton}>
-            <div className={style.top_skeleton}>
+        <div className={`${style.user_skeleton} ${Theme.user_skeleton}`}>
+            <div className={`${style.top_skeleton} ${Theme.top_skeleton}`}>
                 <Skeleton variant="circular" width='3.8rem' height='3.8rem' />
                 <Skeleton variant="text" style={{ marginTop: '1rem' }} sx={{ fontSize: '1rem' }} width='6rem' height='2rem' />
                 <Skeleton variant="text" sx={{ fontSize: '0.8rem' }} width='6rem' height='2rem' />
             </div>
-            <div className={style.center_menu}></div>
-            <ul className={style.bottom_list}>
+            <div className={`${style.center_menu} ${Theme.center_menu}`}></div>
+            <ul className={`${style.bottom_list} ${Theme.bottom_list}`}>
                 <li>
                     <Skeleton variant="text" sx={{ fontSize: '0.8rem' }} width='6rem' height='2rem' />
                     <Skeleton variant="text" sx={{ fontSize: '0.8rem' }} width='6rem' height='2rem' />

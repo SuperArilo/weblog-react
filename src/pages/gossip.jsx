@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 //样式
 import style from './Gossip.module.scss'
+import Theme from './Gossip.Theme.module.scss'
 //组件
 import { CTransitionFade, CTransitionGroup } from '../components/Transition'
 import Collapse from '@mui/material/Collapse'
@@ -68,14 +69,14 @@ export default function Gossip(props) {
     }, [requestInstance, gossipDataGet])
 
     return (
-        <div className={`${style.gossip_page}`} style={{ paddingTop: requestInstance.viewUid ? null:'1rem'}}>
+        <div className={`${style.gossip_page} ${isDark ? Theme.dark_gossip_page:Theme.light_gossip_page}`} style={{ paddingTop: requestInstance.viewUid ? null:'1rem'}}>
             <CTransitionFade
                 keyS={gossipObject.instance === null}
                 left={<GossipSkeleton viewUid={requestInstance.viewUid}/>}
                 right={
                     <>
                         {
-                            gossipObject.instance?.list.length === 0 ? <span className={style.gossip_empty}>TA还没有写过碎语</span>:
+                            gossipObject.instance?.list.length === 0 ? <span className={`${style.gossip_empty} ${Theme.gossip_empty}`}>TA还没有写过碎语</span>:
                             <>
                                 {
                                     gossipObject.targetGossip !== null

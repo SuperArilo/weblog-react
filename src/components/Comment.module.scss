@@ -3,43 +3,35 @@
     padding-top: 0.5rem;
     position: relative;
     z-index: 10;
-    .comment_top
-    {
+    .comment_top {
         width: 100%;
         height: 3.2rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        .comment_top_left
-        {
+        .comment_top_left {
             height: inherit;
             display: flex;
             justify-content: flex-start;
             align-items: center;
-            .vistor_info
-            {
+            .vistor_info {
                 height: inherit;
                 display: flex;
                 flex-direction: column;
                 justify-content: space-around;
                 margin-left: 0.5rem;
-                div
-                {
+                div {
                     display: flex;
                     justify-content: flex-start;
                     align-items: center;
-                    span
-                    {
+                    span {
                         font-size: 0.85rem;
-                        color: #4c4e4d;
                         transition: color 0.3s;
                     }
-                    .change_color_style
-                    {
+                    .change_color_style {
                         animation: change_color 1s linear;
                     }
-                    button
-                    {
+                    button {
                         color: #ffffff;
                         font-size: 0.65rem;
                         padding: 0.1rem 0.3rem;
@@ -47,12 +39,10 @@
                         border-radius: 0.25rem;
                         margin-left: 0.5rem;
                     }
-                    .relply_button
-                    {
+                    .relply_button {
                         background-color: #0478be;
                     }
-                    .delete_button
-                    {
+                    .delete_button {
                         background-color: rgb(255, 85, 85);
                     }
                 }
@@ -60,14 +50,12 @@
                 {
                     font-size: 0.66rem;
                     transition: color 0.3s;
-                    color: #4c4e4d;
                     font-weight: 400;
                     letter-spacing: 0.05rem;
                 }
             }
         }
-        .comment_top_right
-        {
+        .comment_top_right {
             height: inherit;
             display: flex;
             flex-direction: column;
@@ -97,15 +85,16 @@
             }
         }
     }
-    .comment_conten_render
-    {
+    .comment_conten_render {
         padding: 0.5rem 1rem;
         min-height: 3rem;
         border-radius: 0.2rem;
-        background-color: #fcfcfc;
+        transition: background-color 0.25s;
+        * {
+            transition: background-color 0.25s, color 0.25s;
+        }
     }
-    .comment_editor
-    {
+    .comment_editor {
         width: 100%;
     }
 }

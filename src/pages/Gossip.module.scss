@@ -1,16 +1,14 @@
 .gossip_page {
     max-width: 768px;
     margin: 0 auto;
-    .gossip_empty
-    {
+    .gossip_empty {
         height: 13rem;
         display: flex;
         justify-content: center;
         align-items: center;
         font-size: 0.85rem;
         letter-spacing: 0.01rem;
-        color: #444;
-        background-color: #fff;
+        transition: background-color 0.25s, color 0.25s;
         border-radius: 0.3rem;
     }
 }

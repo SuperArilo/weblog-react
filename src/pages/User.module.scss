@@ -1,15 +1,12 @@
-.user_info
-{
+.user_info {
     max-width: 760px;
     padding-top: 1rem;
     margin: 0 auto;
-    .info_box
-    {
-        .user_head_box
-        {
+    .info_box {
+        .user_head_box {
             min-height: 12rem;
             padding: 1.5rem 0;
-            background-color: #ffffff;
+            transition: background-color 0.25s;
             border-radius: 0.3rem;
             display: flex;
             flex-direction: column;
@@ -18,36 +15,30 @@
             position: relative;
             overflow: hidden;
             box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.2);
-            .user_avatar_box
-            {
+            .user_avatar_box {
                 display: flex;
                 align-items: center;
                 flex-direction: column;
-                .avatar_box_button
-                {
+                .avatar_box_button {
                     display: flex;
                     margin-top: 1rem;
-                    button
-                    {
+                    button {
                         margin: 0 0.5rem;
                     }
                 }
             }
-            .public_info_item
-            {
+            .public_info_item {
                 display: flex;
                 align-items: center;
-                .nick_name
-                {
+                .nick_name {
                     font-size: 0.95rem;
                     letter-spacing: 0.05rem;
-                    color: #333;
+                    transition: color 0.25s;
                     font-weight: 700;
                     margin: 0;
                 }
-                .autograph
-                {
-                    max-width: 12rem;
+                .autograph {
+                    max-width: 16rem;
                     overflow: hidden;
                     white-space: nowrap;
                     text-overflow: ellipsis;
@@ -57,19 +48,16 @@
                     text-align: center;
                 }
             }
-            .public_info_item:nth-child(2)
-            {
+            .public_info_item:nth-child(2) {
                 margin: 1.5rem 0 0.8rem 0;
             }
-            .public_info_item:nth-child(3)
-            {
+            .public_info_item:nth-child(3) {
                 margin-bottom: 0.8rem;
             }
-            .likes_box
-            {
+            .likes_box {
                 width: 3.5rem;
                 height: 3.5rem;
-                background-color: #eff7fc;
+                transition:  background-color 0.25s;
                 position: absolute;
                 right: 0;
                 bottom: 0;
@@ -97,20 +85,17 @@
                 }
             }
         }
-        .function_box
-        {
+        .function_box {
             margin-top: 1rem;
-            .select_title
-            {
+            .select_title {
                 height: 2.6rem;
-                background-color: #ffffff;
+                transition: background-color 0.25s;
                 border-radius: 0.3rem;
                 overflow: hidden;
                 position: relative;
                 display: flex;
                 box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.2);
-                .select_line
-                {
+                .select_line {
                     height: 2px;
                     background-color: #0478be;
                     position: absolute;
@@ -119,8 +104,7 @@
                     left: 0;
                     transition: 0.5s cubic-bezier(0.25 , 0.8, 0.5,1);
                 }
-                .select_title_item
-                {
+                .select_title_item {
                     flex: 1 0 1px;
                     display: flex;
                     justify-content: center;
@@ -128,84 +112,61 @@
                     transition: 0.5s cubic-bezier(0.25 , 0.8, 0.5,1);
                     position: relative;
                     cursor: pointer;
-                    i
-                    {
-                        font-size: 1.2rem;
-                    }
-                    span
-                    {
+                    span {
                         font-size: 0.8rem;
                         margin-left: 0.5rem;
+                        transition: color 0.25s;
                     }
                 }
-                .select_title_item_active
-                {
-                    color: #0478be;
-                    background-color: #deedf7;
-                }
             }
-            .select_function_box
-            {
+            .select_function_box {
                 margin-top: 1rem;
                 border-radius: 0.3rem;
                 overflow: hidden;
                 box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.2);
-                .user_like_view , .user_info_view
-                {
-                    background-color: #ffffff;
+                .user_like_view , .user_info_view {
                     display: flex;
                     flex-direction: column;
+                    transition: background-color 0.25s;
+                    li {
+                        .info_title, .info_content {
+                            span, svg {
+                                transition: color 0.25s;
+                            }
+                        }
+                    }
                 }
-                .user_info_view
-                {
-                    li
-                    {
+                .user_info_view {
+                    li {
                         list-style: none;
                         min-height: 2.6rem;
                         padding: 0.5rem 1rem;
                         border-bottom: solid 1px rgba(0, 0, 0,0.12);
                         display: flex;
-                        .info_title , .info_content
-                        {
+                        .info_title , .info_content {
                             display: flex;
                             align-items: center;
-                            i
-                            {
-                                font-size: 1.2rem;
-                            }
-                            span
-                            {
+                            span {
                                 font-size: 0.85rem;
                             }
                         }
-                        .info_title
-                        {
-                            span
-                            {
+                        .info_title {
+                            span {
                                 margin-left: 0.8rem;
-                                color: #777;
                             }
                         }
-                        .info_content
-                        {
+                        .info_content {
                             margin-left: 1rem;
                             flex: 1 0 1px;
                             justify-content: flex-end;
-                            i
-                            {
-                                margin-left: 0.5rem;
-                            }
-                            span
-                            {
+                            span {
                                 color: #555;
                             }
-                            .background_change
-                            {
+                            .background_change {
                                 width: 6rem;
                                 position: relative;
                                 height: 100%;
-                                input
-                                {
+                                input {
                                     width: 100%;
                                     height: 100%;
                                     position: absolute;
@@ -214,8 +175,7 @@
                                     font-size: 0;
                                     cursor: pointer;
                                 }
-                                .tips_span
-                                {
+                                .tips_span {
                                     width: 100%;
                                     height: 100%;
                                     z-index: 1;
@@ -232,10 +192,8 @@
                         border-bottom: none;
                     }
                 }
-                .user_like_view
-                {
-                    .info_empty
-                    {
+                .user_like_view {
+                    .info_empty {
                         height: 12rem;
                         display: flex;
                         justify-content: center;
@@ -244,33 +202,31 @@
                         letter-spacing: 0.01rem;
                         color: #555;
                     }
-                    .like_item
-                    {
+                    .like_item {
                         padding: 0.5rem 1rem;
                         height: 4rem;
                         display: flex;
                         justify-content: space-between;
                         align-items: center;
-                        .item_content
-                        {
+                        .item_content {
                             height: 100%;
                             display: flex;
                             align-items: center;
-                            .info_box
-                            {
+                            .info_box {
                                 height: 100%;
                                 margin-left: 1rem;
                                 display: flex;
                                 flex-direction: column;
                                 justify-content: space-around;
                                 font-size: 0.8rem;
-                                span:first-child
-                                {
+                                span {
+                                    transition: color 0.25s;
+                                }
+                                span:first-child {
                                     font-size: 0.81rem;
                                     letter-spacing: 0.01rem;
                                 }
-                                span:last-child
-                                {
+                                span:last-child {
                                     font-size: 0.65rem;
                                     color: #777;
                                     letter-spacing: 0.02rem;
@@ -280,17 +236,16 @@
                         
                     }
                 }
-                
             }
         }
     }
-    .user_skeleton
-    {
-        .top_skeleton
-        {
+    .user_skeleton {
+        .top_skeleton, .center_menu, .bottom_list {
+            transition: background-color 0.25s;
+        }
+        .top_skeleton {
             min-height: 12rem;
             padding: 1.5rem 0;
-            background-color: #ffffff;
             border-radius: 0.3rem;
             transform: rotate(0);
             overflow: hidden;
@@ -299,25 +254,20 @@
             align-items: center;
             box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.2);
         }
-        .center_menu
-        {
+        .center_menu {
             margin: 1rem 0;
             height: 2.6rem;
-            background-color: #ffffff;
             border-radius: 0.3rem;
             overflow: hidden;
             transform: rotate(0);
             box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.2);
         }
-        .bottom_list
-        {
-            background-color: #ffffff;
+        .bottom_list {
             border-radius: 0.3rem;
             overflow: hidden;
             transform: rotate(0);
             box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.2);
-            li
-            {
+            li {
                 padding: 0 1rem;
                 height: 2.6rem;
                 display: flex;
@@ -325,22 +275,18 @@
                 align-items: center;
                 border-bottom: 1px solid rgba(0, 0, 0, 0.12);
             }
-            li:last-child
-            {
+            li:last-child {
                 border-bottom: none;
             }
         }
     }
-    .user_like_skeleton
-    {
+    .user_like_skeleton {
         width: 100%;
-        .skeleton_item
-        {
+        .skeleton_item {
             padding: 0.5rem 1rem;
             height: 4rem;
             display: flex;
-            .info_item
-            {
+            .info_item {
                 height: 100%;
                 margin-left: 1rem;
                 display: flex;

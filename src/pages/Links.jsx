@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 //样式
 import style from './Links.module.scss'
+import Theme from './Links.Theme.module.scss'
 import renderHtml from '../assets/scss/RenderHtml.module.scss'
 //组件
 import Avatar from '../components/Avatar'
@@ -21,8 +22,8 @@ export default function Links(props) {
     const userInfo = useSelector((state) => state.userInfo.info)
 
     const [requestInstance, setRequestInstance] = useState({
-        pageNum: 1,
-        pageSize: 20
+        current: 1,
+        size: 20
     })
     const [dataInstance, setDataInstance] = useState({
         pages: 0,
@@ -38,6 +39,8 @@ export default function Links(props) {
         blogAvatar: ''
     })
     const [applyStatus, setApplyStatus] = useState(false)
+    //theme
+    const isDark = useSelector(state => state.theme.isDark)
 
     const friendListGet = useCallback(instance => {
         friendList(instance).then(resq => {
@@ -58,14 +61,14 @@ export default function Links(props) {
     }, [friendListGet, requestInstance])
 
     return (
-        <div className={style.link_page}>
+        <div className={`${style.link_page} ${isDark ? Theme.dark_link_page:Theme.light_link_page}`}>
             {
                 userInfo !== null &&
                 <>
                     <p className={style.function_title}>申请规则</p>
-                    <div className={style.apply_content}>
-                        <div className={`${style.apply_html} ${renderHtml.render_html}`} dangerouslySetInnerHTML={{ __html: tempContent }} />
-                        <div className={style.apply_info}>
+                    <div className={`${style.apply_content} ${Theme.apply_content}`}>
+                        <div className={`${style.apply_html} ${renderHtml.render_html} ${Theme.apply_html}`} dangerouslySetInnerHTML={{ __html: tempContent }} />
+                        <div className={`${style.apply_info} ${Theme.apply_info}`}>
                             <div className={style.apply_input_list}>
                                 <div className={style.input_item}>
                                     <TextField
@@ -126,7 +129,7 @@ export default function Links(props) {
                 </>
                 
             }
-            <div className={style.friends_content}>
+            <div className={`${style.friends_content} ${Theme.friends_content}`}>
                 <p className={style.function_title}>朋友们 (默认按添加时间排序)</p>
                 <CTransitionFade
                     keyS={dataInstance.list === null}
@@ -135,20 +138,20 @@ export default function Links(props) {
                         <div className={style.friends_list}>
                             {
                                 dataInstance.list?.length === 0 ?
-                                <div className={style.friends_list_item_skeleton}>
-                                    <span className={style.empty_box}>一个朋友都没有 o(TヘTo)</span>
+                                <div className={`${style.friends_list_item_skeleton} ${Theme.friends_list_item_skeleton}`}>
+                                    <span className={`${style.empty_box}`}>一个朋友都没有 o(TヘTo)</span>
                                 </div>
                                 :
                                 dataInstance.list?.map(item => {
                                     return (
-                                        <div className={style.friends_list_item} key={item.id}>
+                                        <div className={`${style.friends_list_item} ${Theme.friends_list_item}`} key={item.id}>
                                             <Avatar 
                                                 width='3.2rem'
                                                 height='3.2rem'
                                                 src={item.friendAvatar}/>
-                                            <div className={style.friends_info}>
-                                                <span className={style.friends_name}>{item.friendName}</span>
-                                                <p className={style.friends_describe}>{item.friendIntroduction}</p>
+                                            <div className={`${style.friends_info} ${Theme.friends_info}`}>
+                                                <span className={`${style.friends_name}`}>{item.friendName}</span>
+                                                <p className={`${style.friends_describe} ${Theme.friends_describe}`}>{item.friendIntroduction}</p>
                                             </div>
                                         </div>
                                     )

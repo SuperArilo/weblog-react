@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react'
 //样式
 import style from './Comment.module.scss'
+import Theme from './Comment.Theme.module.scss'
 import renderHtml from '../assets/scss/RenderHtml.module.scss'
 //组件
 import Avatar from './Avatar'
@@ -14,6 +15,7 @@ import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 
 const Comment = ({
+    isDark,
     foldStatus = false,
     data,
     targetId,
@@ -42,15 +44,15 @@ const Comment = ({
         )
     }
     return (
-        <div className={style.comment_box}>
-            <div className={style.comment_top}>
-                <div className={style.comment_top_left}>
+        <div className={`${style.comment_box} ${isDark ? Theme.dark_comment_box:Theme.light_comment_box}`}>
+            <div className={`${style.comment_top} ${Theme.comment_top}`}>
+                <div className={`${style.comment_top_left} ${Theme.comment_top_left}`}>
                     <Avatar
                         src={data?.replyUser?.replyAvatar}
                         title={data?.replyUser?.replyNickName}
                         alt={data?.replyUser?.replyNickName}
                         onClick={() => { navigate(`/user/${data?.replyUser?.replyUserId}`) }}/>
-                    <div className={style.vistor_info}>
+                    <div className={`${style.vistor_info} ${Theme.vistor_info}`}>
                         <div>
                             <span className={targetId === data.commentId ? style.change_color_style:''}>{data?.replyUser?.replyNickName}</span>
                             { 
@@ -65,7 +67,7 @@ const Comment = ({
                             }
                             { userInfo && data?.replyUser?.replyUserId === userInfo.uid ? <button className={style.delete_button} type="button" onClick={(event) => { popperChange(event) }}>删除</button>:'' }
                         </div>
-                        <span className={style.vistor_info_time}>{data.createTimeFormat}</span>
+                        <span className={`${style.vistor_info_time} ${Theme.vistor_info_time}`}>{data.createTimeFormat}</span>
                     </div>
                 </div>
                 <div className={style.comment_top_right}>
@@ -82,7 +84,7 @@ const Comment = ({
             </div>
             <div 
                 ref={renderContentRef}
-                className={`${style.comment_conten_render} ${renderHtml.render_html}`}
+                className={`${style.comment_conten_render} ${Theme.comment_conten_render} ${renderHtml.render_html}`}
                 dangerouslySetInnerHTML={
                     { 
                         __html: data.byReplyUser ? 

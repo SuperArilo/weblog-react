@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 //样式
 import style from './Notice.module.scss'
+import Theme from './Notice.Theme.module.scss'
 import renderHtml from '../assets/scss/RenderHtml.module.scss'
 //方法
 import $ from 'jquery'
@@ -67,6 +68,8 @@ export default function Notice(props) {
     const [selectNoticeList, setSelectNoticeList] = useState([])
 
     const pushNotice = useSelector((state) => state.pushNotice.instance)
+    //theme
+    const isDark = useSelector(state => state.theme.isDark)
 
     const noticeListGet = useCallback(instance => {
         noticeGet({ data: instance, toast: null }).then(resq => {
@@ -102,9 +105,9 @@ export default function Notice(props) {
     }, [navMenuInstance.selectIndex])
 
     return (
-        <div className={style.notice_box}>
-            <main className={style.notice_container}>
-                <nav ref={menuNavRef} className={style.notice_container_nav}>
+        <div className={`${style.notice_box} ${isDark ? Theme.dark_notice_box:Theme.light_notice_box}`}>
+            <main className={`${style.notice_container} ${Theme.notice_container}`}>
+                <nav ref={menuNavRef} className={`${style.notice_container_nav} ${Theme.notice_container_nav}`}>
                     {
                         navMenuInstance.list.map((item, index, array)=> {
                             return (
@@ -140,7 +143,7 @@ export default function Notice(props) {
                     }
                     <div ref={lineRef} className={style.scroll_line}></div>
                 </nav>
-                <div className={style.notice_function}>
+                <div className={`${style.notice_function} ${Theme.notice_function}`}>
                     <CTransitionFade
                         keyS={noticeInstance.list === null}
                         left={
@@ -160,13 +163,12 @@ export default function Notice(props) {
                                     <span className={style.notice_data_empty}>当前没有任何通知哦</span>
                                     :
                                     <>
-                                        <div className={style.notice_data_list}>
+                                        <div className={`${style.notice_data_list} ${Theme.notice_data_list}`}>
                                             {
                                                 noticeInstance.list?.map((item, index, array) => {
                                                     return (
-                                                        <div className={style.notice_data_list_item} key={item.noticeId}>
-                                                            <div className={style.notice_title}>
-
+                                                        <div className={`${style.notice_data_list_item} ${Theme.notice_data_list_item}`} key={item.noticeId}>
+                                                            <div className={`${style.notice_title} ${Theme.notice_title}`}>
                                                                 <Icon
                                                                     width='1rem'
                                                                     height='1rem'
@@ -190,10 +192,10 @@ export default function Notice(props) {
                                                                     }}>{item.title}</span>
                                                             </div>
                                                             <Collapse in={navMenuInstance.selectItemIndex === item.noticeId} mountOnEnter unmountOnExit>
-                                                                <div className={style.notice_content}>
+                                                                <div className={`${style.notice_content} ${Theme.notice_content}`}>
                                                                     <span className={style.notice_send_time}>时间：{item.createTime}</span>
                                                                     <div
-                                                                        className={`${style.notice_render} ${renderHtml.render_html}`}
+                                                                        className={`${style.notice_render} ${Theme.notice_render} ${renderHtml.render_html}`}
                                                                         dangerouslySetInnerHTML={{ __html: item.content }}/>
                                                                 </div>
                                                             </Collapse>
@@ -202,8 +204,8 @@ export default function Notice(props) {
                                                 })
                                             }
                                         </div>
-                                        <div className={style.bottom_function}>
-                                            <div className={style.select_all}>
+                                        <div className={`${style.bottom_function} ${Theme.bottom_function}`}>
+                                            <div className={`${style.select_all} ${Theme.select_all}`}>
                                                 <Icon
                                                     name={`${selectNoticeList.length === 0 ? 'Un_select':''}${selectNoticeList.length >= 1 && selectNoticeList.length < noticeInstance.list?.length ? 'Selected_other':''}${selectNoticeList.length === noticeInstance.list?.length ? 'Selected':''}`}
                                                     width='1rem'

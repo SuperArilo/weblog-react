@@ -1,0 +1,57 @@
+.light_article_detail, .article_detail {
+    .article_detail_content {
+        background-color: #ffffff;
+        .article_detail_info {
+            .article_detail_top {
+                .article_detail_title {
+                    color: #000;
+                }
+                .article_data {
+                    .data_author .author_info, .article_data_info div span {
+                        color: #000;
+                    }
+                }
+            }
+            .article_render_content {
+                background-color: rgba(255, 255, 255, 1);
+            }
+        }
+        .article_vistor_title {
+            color: rgba(0, 0, 0, 0.87);
+            border-top: solid 1px #eee;
+        }
+        .article_vistor_list {
+            border-top: solid 1px #eee;
+        }
+    }
+}
+.dark_article_detail, .article_detail {
+    .article_detail_content {
+        background-color: rgba(47, 49, 51, 1);
+        .article_detail_info {
+            .article_detail_top {
+                .article_detail_title {
+                    color: #fff;
+                }
+                .article_data {
+                    .data_author .author_info, .article_data_info div span {
+                        color: #fff;
+                    }
+                }
+            }
+            .article_render_content {
+                background-color: rgba(47, 49, 51, 1);
+                * {
+                    color: rgba(255, 255, 255, 1);
+                }
+            }
+        }
+    }
+    .article_vistor_title {
+        color: #fff;
+        border-top: solid 1px rgba(37, 37, 37, 1);
+    }
+    .article_vistor_list {
+        border-top: solid 1px rgba(37, 37, 37, 1);
+    }
+}

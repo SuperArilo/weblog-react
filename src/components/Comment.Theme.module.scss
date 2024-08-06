@@ -1,0 +1,40 @@
+.light_comment_box {
+    .comment_top {
+        .comment_top_left {
+            .vistor_info {
+                div span {
+                    color: #4c4e4d;
+                }
+                .vistor_info_time {
+                    color: #4c4e4d;
+                }
+            }
+        }
+    }
+    .comment_conten_render {
+        background-color: #fcfcfc;
+        * {
+            color: rgba(255, 255, 255, 1);
+        }
+    }
+}
+.dark_comment_box {
+    .comment_top {
+        .comment_top_left {
+            .vistor_info {
+                div span {
+                    color:  #dddd;
+                }
+                .vistor_info_time {
+                    color: #dddd;
+                }
+            }
+        }
+    }
+    .comment_conten_render {
+        background-color: rgba(47, 49, 51, 1);
+        * {
+            color: rgba(255, 255, 255, 1);
+        }
+    }
+}

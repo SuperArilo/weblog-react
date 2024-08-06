@@ -1,4 +1,4 @@
-.light_login_box, .login_box {
+.light_login_box, .light_register_box, .login_box, .register_box {
     .top_tips {
         .left_span {
             color: #000;
@@ -23,7 +23,7 @@
         }
     }
 }
-.dark_login_box, .login_box {
+.dark_login_box, .dark_register_box, .login_box, .register_box {
     .top_tips {
         .left_span {
             color: #fff;

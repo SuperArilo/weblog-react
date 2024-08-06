@@ -1,0 +1,50 @@
+.light_guestbook, .guestbook {
+    .guestbook_comment_list {
+        background-color: #fff;
+        .guestbook_comment_item {
+            .comment_item_top {
+                .user_info div {
+                    span:first-child {
+                        color: #333;
+                    }
+                    span:last-child {
+                        color: #4c4e4d;
+                    }
+                }
+            }
+            .comment_html {
+                background-color: #fcfcfc;
+            }
+        }
+        .empty_box {
+            background-color: #fff;
+        }
+    }
+    .guestbook_skeleton {
+        background-color: #fff;
+    }
+}
+.dark_guestbook, .guestbook {
+    .guestbook_comment_list {
+        background-color: rgb(47, 49, 51);
+        .guestbook_comment_item {
+            .comment_item_top {
+                .user_info div span {
+                    color: #fff;
+                }
+            }
+            .comment_html {
+                background-color: rgb(47, 49, 51);
+                * {
+                    color: rgba(255, 255, 255, 1);
+                }
+            }
+        }
+        .empty_box {
+            background-color: rgb(47, 49, 51);
+        }
+    }
+    .guestbook_skeleton {
+        background-color: rgb(47, 49, 51);
+    }
+}

@@ -1,0 +1,99 @@
+.light_user_info, .user_info {
+    .info_box {
+        .user_head_box {
+            background-color: rgb(255, 255, 255);
+            .public_info_item {
+                .nick_name {
+                    color: #333;
+                }
+            }
+            .likes_box {
+                background-color: #eff7fc;
+            }
+        }
+        .function_box {
+            .select_title {
+                background-color: #fff;
+                .select_title_item span {
+                    color: #000;
+                }
+                .select_title_item_active {
+                    color: #0478be;
+                    background-color: #deedf7;
+                }
+            }
+            .select_function_box {
+                .user_like_view , .user_info_view {
+                    background-color: #fff;
+                    li {
+                        .info_title, .info_content {
+                            span {
+                                color: #777;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .user_skeleton {
+        .top_skeleton, .center_menu, .bottom_list {
+            background-color: #fff;
+        }
+    }
+}
+.dark_user_info, .user_info {
+    .info_box {
+        .user_head_box {
+            background-color: rgb(47, 49, 51);
+            .public_info_item {
+                .nick_name {
+                    color: #fff;
+                }
+            }
+            .likes_box {
+                background-color: rgb(65, 66, 66);
+            }
+        }
+        .function_box {
+            .select_title {
+                background-color: rgb(47, 49, 51);
+                .select_title_item span {
+                    color: #fff;
+                }
+                .select_title_item_active {
+                    color: #0478be;
+                    background-color: rgba(37, 66, 85, 1);
+                }
+            }
+            .select_function_box {
+                .user_like_view , .user_info_view {
+                    background-color: rgb(47, 49, 51);
+                    li {
+                        .info_title, .info_content {
+                            span, svg {
+                                color: #fff;
+                            }
+                        }
+                    }
+                }
+                .user_like_view {
+                    .like_item {
+                        .item_content {
+                            .info_box {
+                                span:first-child {
+                                    color: #fff;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .user_skeleton {
+        .top_skeleton, .center_menu, .bottom_list {
+            background-color: rgb(47, 49, 51);
+        }
+    }
+}

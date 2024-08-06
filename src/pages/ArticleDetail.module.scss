@@ -5,8 +5,8 @@
     margin: 0 auto;
     .article_detail_content
     {
-        background-color: #ffffff;
         border-radius: 10px;
+        transition: background-color 0.25s;
         .article_detail_editor
         {
             padding: 0 1rem;
@@ -14,89 +14,89 @@
         .article_detail_info
         {
             display: block;
-            .article_detail_top
-            {
+            .article_detail_top {
                 display: block;
-                .article_background_image
-                {
+                .article_background_image {
                     width: 100%;
                     max-height: 22rem;
                     border-radius: 10px 10px 0 0;
                     overflow: hidden;
                     object-fit: cover;
                 }
-            }
-            .article_detail_title
-            {
-                margin: 1rem 0;
-                font-size: 1rem;
-                font-weight: 600;
-                text-align: left;
-                word-break: break-all;
-                padding: 0 1rem;
-            }
-            .article_data
-            {
-                height: 4rem;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                .data_author
-                {
-                    height: inherit;
+                .article_detail_title {
+                    margin: 1rem 0;
+                    font-size: 1rem;
+                    font-weight: 600;
+                    text-align: left;
+                    word-break: break-all;
+                    padding: 0 1rem;
+                    transition: color 0.25s;
+                }
+                .article_data {
+                    height: 4rem;
                     display: flex;
-                    padding-left: 1rem;
+                    justify-content: space-between;
                     align-items: center;
-                    .author_info
-                    {
+                    .data_author {
                         height: inherit;
-                        margin-left: 0.5rem;
+                        display: flex;
+                        padding-left: 1rem;
+                        align-items: center;
+                        .author_info {
+                            height: inherit;
+                            margin-left: 0.5rem;
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: space-around;
+                            letter-spacing: 0.02rem;
+                            span {
+                                transition: color 0.25s;
+                            }
+                            span:first-child {
+                                font-size: 0.85rem;
+                            }
+                            span:last-child {
+                                font-size: 0.8rem;
+                            }
+                        }
+                    }
+                    .article_data_info {
+                        height: inherit;
+                        padding-right: 1rem;
                         display: flex;
                         flex-direction: column;
                         justify-content: space-around;
-                        letter-spacing: 0.02rem;
-                        span:first-child
-                        {
-                            font-size: 0.85rem;
+                        div {
+                            padding: 0.2rem 0.3rem;
+                            border-radius: 0.3rem;
+                            overflow: hidden;
+                            display: flex;
+                            align-items: center;
+                            .article_liked {
+                                color: red;
+                            }
+                            svg, span {
+                                color: rgb(115, 115, 115);
+                                transition: color 0.25s;
+                            }
+                            span {
+                                margin-left: 0.3rem;
+                                font-size: 0.8rem;
+                            }
                         }
-                        span:last-child
-                        {
-                            font-size: 0.8rem;
+                        div:last-child {
+                            cursor: pointer;
                         }
                     }
                 }
-                .article_data_info
-                {
-                    height: inherit;
-                    padding-right: 1rem;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: space-around;
-                    div
-                    {
-                        padding: 0.2rem 0.3rem;
-                        border-radius: 0.3rem;
-                        overflow: hidden;
-                        display: flex;
-                        align-items: center;
-                        .article_liked
-                        {
-                            color: red;
-                        }
-                        svg, span
-                        {
-                            color: rgb(115, 115, 115);
-                        }
-                        span
-                        {
-                            margin-left: 0.3rem;
-                            font-size: 0.8rem;
-                        }
-                    }
-                    div:last-child
-                    {
-                        cursor: pointer;
-                    }
+            }
+            .article_render_content {
+                display: block;
+                min-height: 20rem;
+                padding: 1rem;
+                transition: background-color 0.25s;
+                * {
+                    transition: background-color 0.25s, color 0.25s;
                 }
             }
         }
@@ -127,14 +127,7 @@
                 }
             }
         }
-        .article_render_content
-        {
-            display: block;
-            min-height: 20rem;
-            padding: 1rem;
-        }
-        .article_vistor_title
-        {
+        .article_vistor_title {
             display: block;
             height: 4rem;
             margin-top: 1rem;
@@ -142,13 +135,11 @@
             padding: 0 1rem;
             text-align: left;
             line-height: 4rem;
-            color: rgba(0, 0, 0, 0.87);
-            border-top: solid 1px #eee;
+            transition: color 0.25s, border 0.25s;
         }
-        .article_vistor_list
-        {
+        .article_vistor_list {
             padding: 1rem;
-            border-top: solid 1px #eee;
+            transition: border 0.25s;
             .empty_skeleton
             {
                 .skeleton_top

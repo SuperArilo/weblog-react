@@ -1,5 +1,5 @@
 import { useState } from "react"
-import Svg from "../components/Svg"
+import TestEditor from '../components/TestEditor'
 export default function Test() {
-    return 
+    return <TestEditor />
 }

@@ -1,23 +1,26 @@
 import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react'
 //样式
 import style from './InstantInput.module.scss'
+import Theme from './InstantInput.Theme.module.scss'
 //方法
 import $ from 'jquery'
 import toast from 'react-hot-toast'
+import { useSelector } from 'react-redux'
 //组件
 import TextField from '@mui/material/TextField'
 import Icon from './Icon'
 import Select from '@mui/material/Select'
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import FormControl from '@mui/material/FormControl'
 
 const InstantInput = forwardRef(({ label = '未设置', type = 'text', value = '未设置', mode = 'input', width = null, placeholder = '未设置', onErrorMessage, renderObject = [{ id: 0, title: '未设置' }], handleClose = () => null, handleSave = () => null }, ref) => {
 
     const mainRef = useRef(null)
     const iconDivRef = useRef(null)
     const [inputConetnt, setInputContent] = useState(value)
-
+    //theme
+    const isDark = useSelector(state => state.theme.isDark)
 
     useEffect(() => {
         $(iconDivRef.current).css({ 'height': $(mainRef.current).height() })
@@ -27,7 +30,7 @@ const InstantInput = forwardRef(({ label = '未设置', type = 'text', value = '
 
     })
     return (
-        <div className={`${style.instant_input}`}>
+        <div className={`${style.instant_input} ${isDark ? Theme.dark_instant_input:Theme.light_instant_input}`}>
             <div ref={mainRef} className={style.main_content}>
                 {
                     mode === 'input' &&

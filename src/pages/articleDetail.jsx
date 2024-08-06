@@ -2,8 +2,10 @@ import { CTransitionFade, CTransitionGroup } from '../components/Transition'
 //hook
 import React, { useEffect, useState, useRef, useCallback, forwardRef, useImperativeHandle } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 //样式
 import style from './ArticleDetail.module.scss'
+import Theme from './ArticleDetail.Theme.module.scss'
 import renderHtml from '../assets/scss/RenderHtml.module.scss'
 //组件
 import Tinymce from '../components/Editor'
@@ -25,13 +27,15 @@ export default function ArticleDetail(props) {
     const [searchParams, setSearchParams] = useSearchParams()
     const articleId = searchParams.get('threadId')
     const targetCommentId = searchParams.get('commentId')
+    //theme
+    const isDark = useSelector(state => state.theme.isDark)
     //Params
     const [addCommentStatus, setAddCommentStatus] = useState(false)
     const articleListRef = useRef(null)
     const tinymce = useRef(null)
     return (
-        <div className={style.article_detail}>
-            <div className={style.article_detail_content}>
+        <div className={`${style.article_detail} ${isDark ? Theme.dark_article_detail:Theme.light_article_detail}`}>
+            <div className={`${style.article_detail_content} ${Theme.article_detail_content}`}>
                 <ArticleInfoTop articleId={articleId} userInfo={props.userInfo} />
                 <div className={style.article_detail_editor}>
                     <Tinymce
@@ -61,8 +65,9 @@ export default function ArticleDetail(props) {
                             }
                         }}/>
                 </div>
-                <span className={style.article_vistor_title}>评论</span>
+                <span className={`${style.article_vistor_title} ${Theme.article_vistor_title}`}>评论</span>
                 <ArticleVistorList
+                    isDark={isDark}
                     ref={articleListRef}
                     articleId={articleId}
                     targetCommentId={targetCommentId}
@@ -151,7 +156,7 @@ const ArticleVistorList = forwardRef((props, ref) => {
     }))
     return (
         <>
-            <div className={style.article_vistor_list}>
+            <div className={`${style.article_vistor_list} ${Theme.article_vistor_list}`}>
                 {
                     commentObject.list ===  null ? <CommentSkeleton />:
                     <CTransitionFade
@@ -164,6 +169,7 @@ const ArticleVistorList = forwardRef((props, ref) => {
                                         return (
                                             <Collapse key={item.commentId}>
                                                 <Comment
+                                                    isDark={props.isDark}
                                                     userInfo={props.userInfo}
                                                     key={item.commentId}
                                                     foldStatus={selectCommentItem === item.commentId}
@@ -238,12 +244,12 @@ const ArticleContent = (props) => {
     const renderContentRef = useRef(null)
     
     return (
-        <div className={style.article_detail_info}>
-            <div className={style.article_detail_top}>
+        <div className={`${style.article_detail_info} ${Theme.article_detail_info}`}>
+            <div className={`${style.article_detail_top} ${Theme.article_detail_top}`}>
                 <img className={style.article_background_image} src={props.articleInstance.articlePicture} alt={props.articleInstance.nickName}/>
-                <p className={style.article_detail_title}>{props.articleInstance.articleTitle}</p>
-                <div className={style.article_data}>
-                    <div className={style.data_author}>
+                <p className={`${style.article_detail_title} ${Theme.article_detail_title}`}>{props.articleInstance.articleTitle}</p>
+                <div className={`${style.article_data} ${Theme.article_data}`}>
+                    <div className={`${style.data_author} ${Theme.data_author}`}>
                         <Avatar
                             width='3.4rem'
                             height='3.4rem'
@@ -252,12 +258,12 @@ const ArticleContent = (props) => {
                             title={props.articleInstance.nickName}
                             alt={props.articleInstance.nickName}
                             onClick={() => { navigate(`/user/${props.articleInstance.publisher}`) }}/>
-                        <div className={style.author_info}>
+                        <div className={`${style.author_info} ${Theme.author_info}`}>
                             <span>{props.articleInstance.nickName}</span>
                             <span>{props.articleInstance.createTime}</span>
                         </div>
                     </div>
-                    <div className={style.article_data_info}>
+                    <div className={`${style.article_data_info} ${Theme.article_data_info}`}>
                         <div>
                             <Svg
                                 name='View'
@@ -282,7 +288,7 @@ const ArticleContent = (props) => {
                 </div>
             </div>
             <div
-                className={`${style.article_render_content} ${renderHtml.render_html}`}
+                className={`${style.article_render_content} ${Theme.article_render_content} ${renderHtml.render_html}`}
                 ref={renderContentRef}
                 dangerouslySetInnerHTML={{ __html: props.articleInstance.articleContent}} />
             <PreviewImage current={renderContentRef} />

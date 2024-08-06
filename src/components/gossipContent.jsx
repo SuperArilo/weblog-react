@@ -227,6 +227,7 @@ export default function GossipContent({ isDark, foldStatus = false, targetCommen
                                 targetComment !== null
                                 &&
                                 <Comment
+                                    isDark={isDark}
                                     targetId={targetComment.commentId}
                                     userInfo={userInfo}
                                     foldStatus={selectCommentItem === targetComment.commentId}
@@ -282,6 +283,7 @@ export default function GossipContent({ isDark, foldStatus = false, targetCommen
                                                 return (
                                                     <Collapse key={item.commentId}>
                                                         <Comment
+                                                            isDark={isDark}
                                                             userInfo={userInfo} 
                                                             key={item.commentId} 
                                                             data={item}

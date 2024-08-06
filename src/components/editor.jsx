@@ -1,5 +1,6 @@
-import React, { useState, forwardRef, useImperativeHandle } from 'react'
+import React, { useState, forwardRef, useImperativeHandle, useEffect } from 'react'
 import { Editor } from '@tinymce/tinymce-react'
+import { useSelector } from 'react-redux'
 //样式
 import style from './Editor.module.scss'
 //组件
@@ -14,12 +15,13 @@ const Tinymce = forwardRef(({ userInfo = null, placeholder = '在这设置占位
     const [edValue, setedValue] = useState(initialValue)
     const [modelValue, setModelValue] = useState(null)
     const [instance, setInstance] = useState(null)
-
+    //theme
+    const isDark = useSelector(state => state.theme.isDark)
     const [config, setConfing] = useState({
         height: 260,
-        skin: 'oxide',
+        skin: isDark ? 'oxide-dark':'oxide',
         placeholder: placeholder,
-        content_css: 'default',
+        content_css: isDark ? 'dark':'default',
         menubar: false,
         branding: false,
         statusbar: true,
@@ -70,7 +72,17 @@ const Tinymce = forwardRef(({ userInfo = null, placeholder = '在这设置占位
             }
         }
     }))
-
+    useEffect(() => {
+        setConfing(current => ({
+            ...current,
+            skin: isDark ? 'oxide-dark':'oxide',
+            content_css: isDark ? 'dark':'default',
+        }))
+    }, [isDark])
+    useEffect(() => {
+        if(instance == null) return
+        console.log(instance)
+    }, [config])
     return <>
             {
                 userInfo !== null ?
@@ -103,7 +115,6 @@ const Tinymce = forwardRef(({ userInfo = null, placeholder = '在这设置占位
             }
         </>
 })
-export default Tinymce
 const EditorSkeleton = () => {
     return <div className={style.editor_skeleton}>
                 <div className={style.editor_top}>
@@ -120,3 +131,4 @@ const EditorSkeleton = () => {
                 </div>
             </div>
 }
+export default Tinymce

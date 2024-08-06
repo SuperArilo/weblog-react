@@ -12,6 +12,7 @@ import Pagination from '../components/Pagination'
 import Svg from '../components/Icon'
 //样式
 import style from './Guestbook.module.scss'
+import Theme from './Guestbook.Theme.module.scss'
 import renderHtml from '../assets/scss/RenderHtml.module.scss'
 //方法
 import { useSelector } from 'react-redux'
@@ -33,6 +34,8 @@ export default function Guestbook() {
     const tinymceRef = useRef(null)
     const [addGuestbookStatus, setAddGuestbookStatus] = useState(false)
     const userInfo = useSelector((state) => state.userInfo.info)
+    //theme
+	const isDark = useSelector(state => state.theme.isDark)
     //function
     const dataListGet = useCallback((instance) => {
         guestbookList(instance).then(resq => {
@@ -45,7 +48,7 @@ export default function Guestbook() {
         dataListGet(requestInstance)
     }, [requestInstance, dataListGet])
     return (
-        <div className={style.guestbook}>
+        <div className={`${style.guestbook} ${isDark ? Theme.dark_guestbook:Theme.light_guestbook}`}>
             <div className={style.guestbook_editor_content}>
                 <Tinymce
                     userInfo={userInfo}
@@ -75,14 +78,14 @@ export default function Guestbook() {
                     }}/>
             </div>
             
-            <div className={style.guestbook_comment_list}>
+            <div className={`${style.guestbook_comment_list} ${Theme.guestbook_comment_list}`}>
                 <CTransitionFade
                     keyS={dataObject.list === null}
                     left={<GuestbookSkeleton />}
                     right={
                         <>
                             {
-                                dataObject.list?.length === 0 ? <div className={style.empty_box}>当前没有留言，赶快来评论吧 ψ(｀∇´)ψ</div>:
+                                dataObject.list?.length === 0 ? <div className={`${style.empty_box} ${Theme.empty_box}`}>当前没有留言，赶快来评论吧 ψ(｀∇´)ψ</div>:
                                 <CTransitionGroup>
                                     {
                                         dataObject.list?.map(item => {
@@ -129,9 +132,9 @@ const GuestbookCommentItem = (props) => {
     const [deleteStatus, setDeleteStatus] = useState(false)
     return (
         <>
-            <div className={style.guestbook_comment_item}>
-                <header className={style.comment_item_top}>
-                    <div className={style.user_info}>
+            <div className={`${style.guestbook_comment_item} ${Theme.guestbook_comment_item}`}>
+                <header className={`${style.comment_item_top} ${Theme.comment_item_top}`}>
+                    <div className={`${style.user_info} ${Theme.user_info}`}>
                         <Avatar
                             src={props.item.avatar}
                             title={props.item.nickName}
@@ -157,7 +160,7 @@ const GuestbookCommentItem = (props) => {
                 </header>
                 <div
                     ref={renderHtmlRef}
-                    className={`${style.comment_html} ${renderHtml.render_html}`}
+                    className={`${style.comment_html} ${renderHtml.render_html} ${Theme.comment_html}`}
                     dangerouslySetInnerHTML={{ __html: props.item.content }} />
             </div>
             <AsukaPoppor 
@@ -189,7 +192,7 @@ const GuestbookCommentItem = (props) => {
 const GuestbookSkeleton = () => {
     return (
         <div>
-            <div className={style.guestbook_skeleton}>
+            <div className={`${style.guestbook_skeleton} ${Theme.guestbook_skeleton}`}>
                 <div className={style.guestbook_skeleton_top}>
                     <Skeleton variant="circular" width='2.5rem' height='2.5rem' />
                     <div>

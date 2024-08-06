@@ -1,0 +1,12 @@
+.light_gossip_page, .gossip_page {
+    .gossip_empty {
+        background-color: #fff;
+        color: #444;
+    }
+}
+.dark_gossip_page, .gossip_page {
+    .gossip_empty {
+        background-color: rgb(47, 49, 51);
+        color: #fff;
+    }
+}

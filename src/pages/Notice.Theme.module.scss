@@ -1,0 +1,59 @@
+.light_notice_box, .notice_box {
+    .notice_container {
+        .notice_container_nav {
+            background-color: #fff;
+        }
+        .notice_function {
+            background-color: #fff;
+            .notice_data_list .notice_data_list_item {
+                .notice_title {
+                    background-color: #fff;
+                }
+                .notice_content {
+                    background-color: #fafafa;
+                }
+            }
+            .bottom_function {
+                .select_all {
+                    span {
+                        color: #444;
+                    }
+                }
+            }
+        }
+    }
+}
+.dark_notice_box, .notice_box {
+    .notice_container {
+        .notice_container_nav {
+            background-color: #1e1e1e;
+            span {
+                color: rgba(255, 255, 255, 0.6);
+            }
+        }
+        .notice_function {
+            background-color: rgb(47, 49, 51);
+            .notice_data_list .notice_data_list_item {
+                .notice_title {
+                    background-color: #353535;
+                    span, svg {
+                        color: #fff;
+                    }
+                }
+                .notice_content {
+                    background-color: #353535;
+                    .notice_render * {
+                        color: #fff;
+                    }
+                }
+            }
+        }
+        .bottom_function {
+            .select_all {
+                span, svg {
+                    color: #fff;
+                }
+            }
+        }
+    }
+}

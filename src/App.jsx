@@ -43,8 +43,6 @@ import style from './App.module.scss'
 import NoticeSocket from './pages/NoticeSocket'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 
-import Test from './pages/Test'
-
 export default function App () {
 	//hook
 	const location = useLocation()
@@ -111,7 +109,7 @@ export default function App () {
 							setLoginBoxStatus(e)
 						}} />
 				}
-				<div className={`${style.router_render} ${isMobileStatus && style.router_render_mobile}`}>
+				<div className={`${style.router_render} ${isMobileStatus ? style.router_render_mobile:''}`}>
 					<CTransitionFade
 						keyS={location.pathname}
 						left={
@@ -128,7 +126,6 @@ export default function App () {
 								<Route path='/friends' element={<Friends /> } />
 								<Route path='/notfound' element={<NotFound /> } />
 								<Route path='/error' element={<NotFound /> } />
-								<Route path='/test' element={<Test /> } />
 								<Route path='*' element={<Navigate to='/notfound' />} />
 							</Routes>
 						} />
@@ -143,6 +140,7 @@ export default function App () {
 				</CreateWindow>
 				<CreateWindow width={isMobileStatus ? '100%':'24rem'} status={registerBoxStatus} onClose={status => { setTimeout(() => { setRegisterBoxStatus(status) }, 500) }}>
 					<RegisterBox
+						isDark={isDark}
 						status={registerBoxStatus}
 						isMobile={isMobileStatus}
 						openLoginBox={(e) => { setLoginBoxStatus(e) }}
@@ -772,9 +770,9 @@ const RegisterBox = (props) => {
 
 	return(
 		<Slide direction="up" in={props.status} mountOnEnter unmountOnExit>
-			<div className={`${signStyle.register_box} ${props.isMobile ? signStyle.box_mobile:signStyle.box_pc}`}>
-				<div className={signStyle.top_tips}>
-					<span className={signStyle.left_span}>欢迎您,</span>
+			<div className={`${signStyle.register_box} ${props.isDark ? SignThemeStyle.dark_register_box:SignThemeStyle.light_register_box} ${props.isMobile ? signStyle.box_mobile:signStyle.box_pc}`}>
+				<div className={`${signStyle.top_tips} ${SignThemeStyle.top_tips}`}>
+					<span className={`${signStyle.left_span} ${SignThemeStyle.left_span}`}>欢迎您,</span>
 					<button type="button" className={signStyle.right_register} onClick={() => { 
 						props.openLoginBox(true)
 						props.closeBox(false)
@@ -783,9 +781,9 @@ const RegisterBox = (props) => {
 					</button>
 				</div>
 				<p className={signStyle.top_tips_line}>请填写以下信息进行注册</p>
-				<div className={signStyle.input_list}>
-					<label className={signStyle.input_item}>
-						<div className={signStyle.input_top_div}>
+				<div className={`${signStyle.input_list} ${SignThemeStyle.input_list}`}>
+					<label className={`${signStyle.input_item} ${SignThemeStyle.input_item}`}>
+						<div className={`${signStyle.input_top_div} ${SignThemeStyle.input_top_div}`}>
 							<span>邮箱</span>
 							<span>*</span>
 						</div>
@@ -794,8 +792,8 @@ const RegisterBox = (props) => {
 							<span></span>
 						</div>
 					</label>
-					<label className={signStyle.input_item}>
-						<div className={signStyle.input_top_div}>
+					<label className={`${signStyle.input_item} ${SignThemeStyle.input_item}`}>
+						<div className={`${signStyle.input_top_div} ${SignThemeStyle.input_top_div}`}>
 							<span>验证码</span>
 							<span>*</span>
 						</div>
@@ -856,8 +854,8 @@ const RegisterBox = (props) => {
 								</button>
 						</div>
 					</label>
-					<form className={signStyle.input_password}>
-						<div className={signStyle.input_top_div}>
+					<form className={`${signStyle.input_password} ${SignThemeStyle.input_password}`}>
+						<div className={`${signStyle.input_top_div} ${SignThemeStyle.input_top_div}`}>
 							<span>密码</span>
 							<span>*</span>
 						</div>
@@ -885,8 +883,8 @@ const RegisterBox = (props) => {
 							<span></span>
 						</div>
 					</form>
-					<form className={signStyle.input_password}>
-						<div className={signStyle.input_top_div}>
+					<form className={`${signStyle.input_password} ${SignThemeStyle.input_password}`}>
+						<div className={`${signStyle.input_top_div} ${SignThemeStyle.input_top_div}`}>
 							<span>确认</span>
 							<span>*</span>
 						</div>
@@ -913,8 +911,8 @@ const RegisterBox = (props) => {
 							<span></span>
 						</div>
 					</form>
-					<label className={signStyle.input_item}>
-						<div className={signStyle.input_top_div}>
+					<label className={`${signStyle.input_item} ${SignThemeStyle.input_item}`}>
+						<div className={`${signStyle.input_top_div} ${SignThemeStyle.input_top_div}`}>
 							<span>昵称</span>
 							<span>*</span>
 						</div>
