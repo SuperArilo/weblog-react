@@ -147,7 +147,7 @@ export default function App () {
 						closeBox={(e) => {setRegisterBoxStatus(e)}} />
 				</CreateWindow>
 				<CreateWindow width={isMobileStatus ? '100%':'24rem'} status={createGossip} onClose={status => { setTimeout(() => { setCreateGossip(status) }, 500) }}>
-					<p className={signStyle.window_header_p}>发表碎语</p>
+					{/* <p className={signStyle.window_header_p}>发表碎语</p>
 					<Tinymce
 						userInfo={userInfo}
 						placeholder='在这里输入内容哦'
@@ -170,7 +170,7 @@ export default function App () {
 									props.setCreateWindowStatus(false)
 								})
 							}
-						}}/>
+						}}/> */}
 				</CreateWindow>
 			</div>
 			{
@@ -740,7 +740,7 @@ const LoginBox = (props) => {
 			</div>
 			<button type="button" title="登录" className={signStyle.confirm_button + ' ' + (isMobileStatus ? signStyle.confirm_button_mobile:signStyle.confirm_button_pc)} onClick={() => { loginFunction() }}>
 				{ !loginStatus && userInfo === null ? '登录':'' }
-				{ loginStatus && <Svg style={{ width: '1.5rem', height: '1.5rem' }} className={style.rotate} name='Loading' /> }
+				{ loginStatus && <Svg style={{ width: '1.5rem', height: '1.5rem' }} className='rotate' name='Loading' /> }
 				{ (userInfo !== null && !loginStatus) && <Svg style={{ width: '1.5rem', height: '1.5rem' }} name='Success' /> }
 				<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
 			</button>
