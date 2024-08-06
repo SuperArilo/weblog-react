@@ -147,7 +147,7 @@ export default function App () {
 						closeBox={(e) => {setRegisterBoxStatus(e)}} />
 				</CreateWindow>
 				<CreateWindow width={isMobileStatus ? '100%':'24rem'} status={createGossip} onClose={status => { setTimeout(() => { setCreateGossip(status) }, 500) }}>
-					{/* <p className={signStyle.window_header_p}>发表碎语</p>
+					<p className={signStyle.window_header_p}>发表碎语</p>
 					<Tinymce
 						userInfo={userInfo}
 						placeholder='在这里输入内容哦'
@@ -170,7 +170,7 @@ export default function App () {
 									props.setCreateWindowStatus(false)
 								})
 							}
-						}}/> */}
+						}}/>
 				</CreateWindow>
 			</div>
 			{
