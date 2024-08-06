@@ -18,24 +18,23 @@ service.interceptors.request.use(config => {
     return Promise.reject(error)
 })
 service.interceptors.response.use( response => {
-    if(response.config.toast?.isShow) {
-        switch(response.data.code) {
-            case 0:
+    switch(response.data.code) {
+        case 0:
+            if(response.config.toast?.isShow) {
                 toast(response.data.message, { id: response.config.toastId })
-                break
-            case 200:
-                toast.success(response.data.message, { id: response.config.toastId })
-                break
-            case 401:
-            case 403:
-                toast.error(response.data.message, { id: response.config.toastId })
-                Promise.reject(error.response.data)
-                return
-            default:
-                toast.error(response.data.message, { id: response.config.toastId })
-        }
+            }
+            return Promise.resolve(response.data)
+        case 200:
+            if(response.config.toast?.isShow) {
+                toast(response.data.message, { id: response.config.toastId })
+            }
+            return Promise.resolve(response.data)
+        case 401:
+        case -1:
+        case 403:
+            toast.error(response.data.message, { id: response.config.toastId })
+            return Promise.reject(response.data)
     }
-    return Promise.resolve(response.data)
 }, error => {
     if(error.response) {
         toast.error(error.response.data.message, { id: error.response.config?.toastId })
