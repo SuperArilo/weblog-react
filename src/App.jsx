@@ -295,7 +295,7 @@ const PCheaderNav = (props) => {
 	return (
 		<nav className={`${style.header_nav} ${ThemeStyle.header_nav_default}`} ref={navInstance}>
 			<span className={`${style.left_webside_icon} ${ThemeStyle.left_webside_icon}`} onClick={() => { navigate('/') }}>
-				Arilo
+				{ "Ciallo～(∠・ω< )⌒☆" }
 				<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
 			</span>
 			<ul className={`${style.nav_menu_list} ${ThemeStyle.nav_menu_list}`}>
