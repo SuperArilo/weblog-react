@@ -20,6 +20,7 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import ArticleDetail from './pages/ArticleDetail'
 import Gossip from './pages/Gossip'
+import Ciallo from './pages/Ciallo'
 import IndexPage from './pages/Index'
 import $ from 'jquery'
 import Avatar from './components/Avatar'
@@ -124,6 +125,7 @@ export default function App () {
 								<Route path='/notice' element={<Notice />} />
 								<Route path='/links' element={<Links />} />
 								<Route path='/friends' element={<Friends /> } />
+								<Route path='/ciallo' element={<Ciallo />} />
 								<Route path='/notfound' element={<NotFound /> } />
 								<Route path='/error' element={<NotFound /> } />
 								<Route path='*' element={<Navigate to='/notfound' />} />
@@ -192,32 +194,32 @@ const PCheaderNav = (props) => {
 			{
 				id: 0,
 				title: '首页',
-				path: '/',
-				iconClass: 'fa-home'
+				path: '/'
 			},
 			{
 				id: 1,
 				title: '碎语',
-				path: '/gossip',
-				iconClass: 'fa-feather-alt'
+				path: '/gossip'
 			},
 			{
 				id: 2,
 				title: '留言',
-				path: '/guestbook',
-				iconClass: 'fa-comment-alt'
+				path: '/guestbook'
 			},
 			{
 				id: 3,
 				title: '友邻',
-				path: '/links',
-				iconClass: 'fa-user-friends'
+				path: '/links'
 			},
 			{
 				id: 4,
 				title: '圈子',
-				path: '/friends',
-				iconClass: 'fa-paw'
+				path: '/friends'
+			},
+			{
+				id: 5,
+				title: 'Ciallo',
+				path: '/ciallo'
 			}
 		]
 	})
