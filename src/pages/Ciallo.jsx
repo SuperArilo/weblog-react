@@ -34,7 +34,7 @@ export default function Ciallo({ min = 100, max = 600 }) {
         return <CialloItem
                     key={index.current}
                     itemKey={index.current}
-                    imagePath={new URL(bqb.current.length === 0 ? null:bqb.current[RandomBetween(1, bqb.current.length - 1)][0], import.meta.url).href}
+                    imagePath={CialloList.current[ran].imageUrl}
                     resource={CialloList.current[ran].audioUrl}
                     duration={RandomBetween(2000, isMobileStatus ? 10000:20000)}
                     parentInstance={content}
