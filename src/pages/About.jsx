@@ -7,7 +7,7 @@ export default function About(props) {
         <div className={style.about}>
             <ul className={style.info_box}>
                 <li className={style.info_item}>
-                    <span>© 2024 superarilo.icu All Rights Reserved.</span>
+                    <span>© 2024 superarilo.icu</span>
                 </li>
                 <li className={style.info_item}>
                     <span>CDN By: BunnyCDN</span>

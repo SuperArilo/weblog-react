@@ -33,6 +33,7 @@ service.interceptors.response.use( response => {
         case -1:
         case 403:
             toast.error(response.data.message, { id: response.config.toastId })
+            localStorage.removeItem('token')
             return Promise.reject(response.data)
     }
 }, error => {
