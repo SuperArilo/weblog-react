@@ -5,7 +5,7 @@ import { cialloListGet } from '../api/Ciallo'
 import style from '../pages/Ciallo.module.scss'
 import $ from 'jquery'
 
-export default function Ciallo({ min = 100, max = 600 }) {
+export default function Ciallo({ min = 200, max = 600 }) {
     //父元素
     const content = useRef(null)
     //任务Id
@@ -91,9 +91,9 @@ const CialloItem = ({ itemKey, imagePath, parentInstance, title, position, resou
     }
     const returnPostionX = () => {
         const parentHeight = parentInstance.current.clientHeight
-        const newTop = RandomBetween(parentInstance.current.offsetTop, parentHeight)
-        if(newTop >= window.innerHeight - (2 * instance.current.clientHeight)) return { bottom: parentHeight }
-        return { top: instance.current.clientHeight > newTop ? parentInstance.current.offsetTop:newTop }
+        const newTop = RandomBetween(parentInstance.current.offsetTop, parentHeight - instance.current.clientHeight)
+        if(newTop >= window.innerHeight - (2 * parseInt(instance.current.clientHeight))) return { bottom: parentHeight + 10 }
+        return { top: instance.current.clientHeight > newTop ? parentInstance.current.offsetTop + 10:newTop }
     }
 
     const [itemStyle, setItemStyle] = useState({
@@ -119,15 +119,7 @@ const CialloItem = ({ itemKey, imagePath, parentInstance, title, position, resou
         }
     }
     //remove EventListener
-    useEffect(() => {
-        const i = instance.current
-        i.addEventListener('transitionend', handleTransitionEnd)
-        i.addEventListener('animationend', handleAnimationEnd)
-        return () => {
-            i.removeEventListener('transitionend', handleTransitionEnd)
-            i.removeEventListener('animationend', handleAnimationEnd)
-        }
-    }, [])
+    
     useEffect(() => {
         setItemStyle(i => ({
             ...i,
@@ -136,6 +128,15 @@ const CialloItem = ({ itemKey, imagePath, parentInstance, title, position, resou
             ...(position ? { left: window.innerWidth }:{ right: window.innerWidth }),
             transition: `left ${duration}ms linear, right ${duration}ms linear, opacity 0.15s linear`
         }))
+    }, [])
+    useEffect(() => {
+        const i = instance.current
+        i.addEventListener('transitionend', handleTransitionEnd)
+        i.addEventListener('animationend', handleAnimationEnd)
+        return () => {
+            i.removeEventListener('transitionend', handleTransitionEnd)
+            i.removeEventListener('animationend', handleAnimationEnd)
+        }
     }, [])
     return (
         <div
