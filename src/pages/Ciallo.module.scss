@@ -8,11 +8,17 @@
         padding: 0;
         will-change: left, right, opacity;
         position: fixed;
-        overflow: hidden;
         white-space: nowrap;
         user-select: none;
         cursor: pointer;
-        z-index: 1000;
+        z-index: 10;
+        div {
+            display: flex;
+            flex-wrap: nowrap;
+            span {
+                display: block;
+            }
+        }
     }
     .shake {
         animation-name: shake;
@@ -85,7 +91,9 @@
     }
     .zoom {
         animation-name: zoom;
-        animation-duration: 0.85s;
+    }
+    .bounce {
+        animation-name: bounce;
     }
     @keyframes zoom {
         0% {
@@ -132,6 +140,20 @@
         }
         100% {
             transform: translate(0, 0) scale(1);
+        }
+    }
+    @keyframes bounce {
+        0% {
+            transform: translateY(0);
+            color: #AFEEEE;
+        }
+        50% {
+            transform: translateY(-0.5em);
+            color: #FFC1C1;
+        }
+        100% {
+            transform: translateY(0);
+            color: 	#FF8247;
         }
     }
 }

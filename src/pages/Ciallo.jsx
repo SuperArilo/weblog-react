@@ -5,15 +5,13 @@ import { cialloListGet } from '../api/Ciallo'
 import style from '../pages/Ciallo.module.scss'
 import $ from 'jquery'
 
-export default function Ciallo({ min = 200, max = 600 }) {
+export default function Ciallo({ min = 300, max = 1000 }) {
     //父元素
     const content = useRef(null)
     //任务Id
     const taskId = useRef(null)
     //子元素索引
     const index = useRef(0)
-    //表情包列表
-    const bqb = useRef([])
     //请求对象
     const requestInstance = useRef({
         current: 1,
@@ -38,13 +36,14 @@ export default function Ciallo({ min = 200, max = 600 }) {
                     resource={CialloList.current[ran].audioUrl}
                     duration={RandomBetween(2000, isMobileStatus ? 10000:20000)}
                     parentInstance={content}
-                    title={CialloList.current[ran].title} position={RandomBetween(0, 1)}
+                    title={CialloList.current[ran].title}
+                    position={RandomBetween(0, 1)}
                     end={key => {
                         setRenderList(a => {
                             return a.filter(o => o.id !== key)
                         })
                     }} />
-    }, [index.current, bqb.current, content])
+    }, [index.current, content])
 
     const StartTask = () => {
         if(CialloList.current.length == 0) return
@@ -61,15 +60,15 @@ export default function Ciallo({ min = 200, max = 600 }) {
     }
 
     useEffect(() => {
+        $('#react-by-asukamis').children().css({ overflow: 'hidden' })
         cialloListGet({ data: requestInstance.current }).then(resp => {
             CialloList.current = resp.data.list
         }).catch(err => {  })
         TimeoutTask()
-        return () => clearTimeout(taskId.current)
-    }, [])
-    //load bqb
-    useEffect(() => {
-        bqb.current = Object.entries(import.meta.glob('../assets/image/yuzusoft/*.*', { eager: false }))
+        return () => {
+            clearTimeout(taskId.current)
+            $('#react-by-asukamis').children().css({ 'overflow-y': 'scroll' })
+        }
     }, [])
 
     return (
@@ -84,7 +83,8 @@ const CialloItem = ({ itemKey, imagePath, parentInstance, title, position, resou
 
     const instance = useRef(null)
     const imageSize = useRef(RandomBetween(6, 10))
-    const imageOrText = useRef(RandomBetween(0, 10))
+    const imageOrText = useRef(RandomBetween(0, 1))
+    const speed = parseFloat((parentInstance.current.clientWidth / duration).toFixed(3))
     const returnRGB = () => {
         const rgb = RandomRGB()
         return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`
@@ -98,7 +98,7 @@ const CialloItem = ({ itemKey, imagePath, parentInstance, title, position, resou
 
     const [itemStyle, setItemStyle] = useState({
         opacity: 0,
-        ...(position ? { left: 0 }:{ right: 0 }),
+        left: position ? 0:parentInstance.current.clientWidth,
         fontSize: `${RandomBetween(1, 2.5)}rem`,
         color: returnRGB()
     })
@@ -108,27 +108,22 @@ const CialloItem = ({ itemKey, imagePath, parentInstance, title, position, resou
         end(itemKey)
     }
     const handleAnimationEnd = event => {
-        const a = $(event.target).children()[0].localName
-        switch(a) {
-            case 'span':
-                $(instance.current).removeClass(style.shake)
-                break
-            case 'img':
-                $(instance.current).removeClass(style.zoom)
-                break
+        if(event.target.localName == 'img') {
+            $(event.target).attr('class', '')
+        } else {
+            $(event.target).attr('style', '')
         }
     }
-    //remove EventListener
-    
     useEffect(() => {
         setItemStyle(i => ({
             ...i,
             ...(returnPostionX()),
             opacity: 1,
-            ...(position ? { left: window.innerWidth }:{ right: window.innerWidth }),
-            transition: `left ${duration}ms linear, right ${duration}ms linear, opacity 0.15s linear`
+            ...(position ? { left: parentInstance.current.clientWidth }:{ left: -(instance.current.clientWidth) }),
+            transition: `left ${duration}ms linear, opacity 0.25s linear`
         }))
     }, [])
+    //remove EventListener
     useEffect(() => {
         const i = instance.current
         i.addEventListener('transitionend', handleTransitionEnd)
@@ -141,17 +136,23 @@ const CialloItem = ({ itemKey, imagePath, parentInstance, title, position, resou
     return (
         <div
             ref={instance}
-            onClick={e => {
+            onClick={() => {
                 const ac = new AudioContext()
                 fetch(resource).then(response => response.arrayBuffer()).then(arrayBuffer => ac.decodeAudioData(arrayBuffer))
                 .then(audioBuffer => {
-                    switch(e.target.localName) {
-                        case 'span':
-                            $(instance.current).addClass(style.shake)
-                            break
-                        case 'img':
-                            $(instance.current).addClass(style.zoom)
-                            break
+                    const a = $(instance.current).children()
+                    const t = RandomBetween(0, 1)
+                    if(a[0].localName === 'div') {
+                        a.children().each((i, e) => {
+                            setTimeout(() => {
+                                $(e).css({
+                                    'animation-name': t ? style.zoom:style.bounce,
+                                    'animation-duration': `250ms`
+                                })
+                            }, 20 * i)
+                        })
+                    } else if(a[0].localName === 'img') {
+                        $(a).addClass(style.shake)
                     }
                     const source = ac.createBufferSource()
                     source.buffer = audioBuffer
@@ -159,24 +160,29 @@ const CialloItem = ({ itemKey, imagePath, parentInstance, title, position, resou
                     source.start(0)
                 })
             }}
-            onMouseOver={e => {
+            onMouseOver={() => {
                 setItemStyle(i => ({
                     ...i,
                     transition: null,
-                    ...(position ? { left: instance.current.offsetLeft }:{ right: window.innerWidth - instance.current.offsetLeft - instance.current.clientWidth }),
+                    left: instance.current.offsetLeft
                 }))
             }}
             onMouseLeave={() => {
                 let distance = 0
+                //distance 剩余距离
                 if(position) {
-                    distance = window.innerWidth - (instance.current.offsetWidth + instance.current.clientWidth)
-                } else {
                     distance = window.innerWidth - instance.current.offsetLeft
+                } else {
+                    if(instance.current.offsetLeft > 0) {
+                        distance = instance.current.offsetLeft + instance.current.clientWidth
+                    } else {
+                        distance = instance.current.clientWidth - Math.abs(instance.current.offsetLeft)
+                    }
                 }
                 setItemStyle(i => ({
                     ...i,
-                    ...(position ? { left: window.innerWidth + distance }:{ right: window.innerWidth + distance }),
-                    transition: `left ${duration}ms linear, right ${duration}ms linear, opacity 0.25s linear`
+                    ...(position ? { left: parentInstance.current.clientWidth }:{ left: -(instance.current.clientWidth) }),
+                    transition: `left ${(distance / speed).toFixed(0)}ms linear, opacity 0.25s linear`
                 }))
             }}
             style={{
@@ -184,8 +190,12 @@ const CialloItem = ({ itemKey, imagePath, parentInstance, title, position, resou
             }}
             className={`${style.ciallo_item}`}>
             {
-                imageOrText.current <= 8 ?
-                <span>{ title }</span>
+                imageOrText.current ?
+                <div>
+                    {
+                        Array.from(title).map((o, i) => <span key={i}>{ o }</span>)
+                    }
+                </div>
                 :
                 <img src={imagePath} style={{ width: `${imageSize.current}rem`, minWidth: `${imageSize.current}rem` }} />
             }
