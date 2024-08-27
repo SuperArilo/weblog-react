@@ -82,8 +82,8 @@ export default function Ciallo({ min = 300, max = 1000 }) {
 const CialloItem = ({ itemKey, imagePath, parentInstance, title, position, resource, duration = 10000, end = () => null }) => {
 
     const instance = useRef(null)
-    const imageSize = useRef(RandomBetween(6, 10))
-    const imageOrText = useRef(RandomBetween(0, 1))
+    const imageSize = useRef(RandomBetween(8, 14))
+    const imageOrText = useRef(RandomBetween(0, 5))
     const speed = parseFloat((parentInstance.current.clientWidth / duration).toFixed(3))
     const returnRGB = () => {
         const rgb = RandomRGB()
@@ -190,7 +190,7 @@ const CialloItem = ({ itemKey, imagePath, parentInstance, title, position, resou
             }}
             className={`${style.ciallo_item}`}>
             {
-                imageOrText.current ?
+                imageOrText.current <= 4 ?
                 <div>
                     {
                         Array.from(title).map((o, i) => <span key={i}>{ o }</span>)
