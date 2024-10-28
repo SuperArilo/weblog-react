@@ -37,5 +37,12 @@ export default defineConfig({
             drop_console: process.env.NODE_ENV === 'production',
             drop_debugger: process.env.NODE_ENV === 'production'
         }
+    },
+    css: {
+        preprocessorOptions: {
+            scss: {
+                api: 'modern-compiler', // or 'modern'
+            }
+        }
     }
 })
