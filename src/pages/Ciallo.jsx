@@ -38,11 +38,7 @@ export default function Ciallo({ min = 300, max = 1000 }) {
                     parentInstance={content}
                     title={CialloList.current[ran].title}
                     position={RandomBetween(0, 1)}
-                    end={key => {
-                        setRenderList(a => {
-                            return a.filter(o => o.id !== key)
-                        })
-                    }} />
+                    end={key => setRenderList(a => a.filter(o => o.id !== key))} />
     }, [index.current, content])
 
     const StartTask = () => {
@@ -63,8 +59,8 @@ export default function Ciallo({ min = 300, max = 1000 }) {
         $('#react-by-asukamis').children().css({ overflow: 'hidden' })
         cialloListGet({ data: requestInstance.current }).then(resp => {
             CialloList.current = resp.data.list
+            TimeoutTask()
         }).catch(err => {  })
-        TimeoutTask()
         return () => {
             clearTimeout(taskId.current)
             $('#react-by-asukamis').children().css({ 'overflow-y': 'scroll' })
