@@ -1,8 +1,9 @@
 import axios from 'axios'
 import toast from 'react-hot-toast'
 axios.defaults.withCredentials = true
+export const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:8080/api/v1":`${window.location.protocol}//${window.location.host}/api/v1`
 const service = axios.create({
-    baseURL: `${window.location.protocol}//${window.location.hostname}/api`,
+    baseURL: BASE_URL,
     timeout: 60000
 })
 service.interceptors.request.use(config => {
@@ -11,7 +12,6 @@ service.interceptors.request.use(config => {
     } 
     if(localStorage.getItem('token') !== null){
         config.headers.token = localStorage.getItem('token')
-        return config
     }
     return config
 }, error => {
@@ -20,15 +20,17 @@ service.interceptors.request.use(config => {
 service.interceptors.response.use( response => {
     switch(response.data.code) {
         case 0:
+        case 400:
             if(response.config.toast?.isShow) {
-                toast(response.data.message, { id: response.config.toastId })
+                toast.error(response.data.message, { id: response.config.toastId })
             }
             return Promise.resolve(response.data)
         case 200:
             if(response.config.toast?.isShow) {
-                toast(response.data.message, { id: response.config.toastId })
+                toast.success(response.data.message, { id: response.config.toastId })
             }
             return Promise.resolve(response.data)
+        
         case 401:
         case -1:
         case 403:

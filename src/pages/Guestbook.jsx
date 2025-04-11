@@ -49,7 +49,7 @@ export default function Guestbook() {
     }, [requestInstance, dataListGet])
     return (
         <div className={`${style.guestbook} ${isDark ? Theme.dark_guestbook:Theme.light_guestbook}`}>
-            <div className={style.guestbook_editor_content}>
+            <div className={`${style.guestbook_editor_content} ${Theme.guestbook_editor_content}`}>
                 <Tinymce
                     userInfo={userInfo}
                     ref={tinymceRef}

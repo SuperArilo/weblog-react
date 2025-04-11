@@ -135,7 +135,7 @@ export default function Gossip(props) {
                                             })
                                         }}/>
                                 }
-                                <CTransitionGroup>
+                                <CTransitionGroup component='div' style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                                     {
                                         gossipObject.instance?.list.map(item => {
                                             return (

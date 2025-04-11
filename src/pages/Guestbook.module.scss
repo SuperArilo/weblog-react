@@ -6,6 +6,7 @@
         box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.2);
         overflow: hidden;
         border-radius: 0.3rem;
+        transition: background-color 0.25s;
     }
     .guestbook_comment_list {
         margin-top: 1rem;

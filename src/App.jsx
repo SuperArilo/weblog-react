@@ -36,6 +36,7 @@ import CreateWindow from './components/CreateWindow'
 import Notice from './pages/Notice'
 import Icon from './components/Icon'
 import Tinymce from './components/Editor'
+import { BASE_URL } from './util/Request'
 import { CTransitionFade, CCSSTransition } from './components/Transition'
 //样式
 import './assets/css/emojiBox.css'
@@ -92,7 +93,7 @@ export default function App () {
 	}, [loginSetUserInfo])
 	return (
 		<ThemeProvider theme={darkTheme}>
-			<div className={`${style.render_content} ${isDark ? ThemeStyle.dark_render_content:ThemeStyle.light_render_content}`}>
+			<div id='render-content' className={`${style.render_content} ${isDark ? ThemeStyle.dark_render_content:ThemeStyle.light_render_content}`}>
 				{
 					isMobileStatus ? 
 					<MobileHeaderNav
@@ -119,16 +120,18 @@ export default function App () {
 								<Route path='/detail' element={<ArticleDetail userInfo={userInfo} />} />
 								<Route path='/gossip' element={<Gossip userInfo={userInfo} />} />
 								<Route path='/guestbook' element={<Guestbook />} />
-								<Route path='/user/:viewUid' element={<User />} />
-								<Route path='/user/verify' element={<VerifyEmailPage />} />
-								<Route path='/user/find-password' element={<FindPassword />} />
+								<Route path="/user">
+									<Route path=":viewUid" element={<User />} />
+									<Route path="verify" element={<VerifyEmailPage />} />
+									<Route path="find-password" element={<FindPassword />} />
+								</Route>
 								<Route path='/notice' element={<Notice />} />
 								<Route path='/links' element={<Links />} />
 								<Route path='/friends' element={<Friends /> } />
 								<Route path='/ciallo' element={<Ciallo />} />
 								<Route path='/notfound' element={<NotFound /> } />
 								<Route path='/error' element={<NotFound /> } />
-								<Route path='*' element={<Navigate to='/notfound' />} />
+								<Route path='*' element={<Navigate to='/notfound' replace />} future={{ v7_relativeSplatPath: true }} />
 							</Routes>
 						} />
 				</div>
@@ -275,11 +278,11 @@ const PCheaderNav = (props) => {
 	}, [location.pathname, menuInstance.list])
 
 	useEffect(() => {
-		$('#react-by-asukamis').off().on('scroll', e => {
+		$('#render-content').off().on('scroll', e => {
 			if($(e.target).scrollTop() >= $(navInstance.current).height()) {
-				$(navInstance.current).removeClass('header-nav-default').addClass('header-nav-overflow')
+				$(navInstance.current).removeClass(ThemeStyle['header_nav_default']).addClass(ThemeStyle['header_nav_overflow'])
 			} else {
-				$(navInstance.current).removeClass('header-nav-overflow').addClass('header-nav-default')
+				$(navInstance.current).removeClass(ThemeStyle['header_nav_overflow']).addClass(ThemeStyle['header_nav_default'])
 			}
 		})
 	}, [])
@@ -295,9 +298,9 @@ const PCheaderNav = (props) => {
 	}, [pushNotice, setNoticeCount])
 
 	return (
-		<nav className={`${style.header_nav} ${ThemeStyle.header_nav_default}`} ref={navInstance}>
+		<nav className={`${style.header_nav} ${ThemeStyle['header_nav_default']}`} ref={navInstance}>
 			<span className={`${style.left_webside_icon} ${ThemeStyle.left_webside_icon}`} onClick={() => { navigate('/') }}>
-				{ "Ciallo～(∠・ω< )⌒☆" }
+				{ "TTY" }
 				<WaterWave color="rgba(0, 0, 0, 0.7)" duration={ 1 } />
 			</span>
 			<ul className={`${style.nav_menu_list} ${ThemeStyle.nav_menu_list}`}>
@@ -308,7 +311,7 @@ const PCheaderNav = (props) => {
 								onClick={() => {
 									if(menuInstance.index === item.id) return
 									navigate(item.path)
-									$('#react-by-asukamis').stop().animate({'scrollTop': 0})
+									$('#render-content').stop().animate({'scrollTop': 0})
 								}}
 								key={item.id}>
 									{item.title}
@@ -480,7 +483,7 @@ const MobileHeaderNav = (props) => {
 						</>
 					}
 				</div>
-				<span className={`${style.left_webside_icon} ${ThemeStyle.left_webside_icon}`}>Arilo</span>
+				<span className={`${style.left_webside_icon} ${ThemeStyle.left_webside_icon}`}>TTY</span>
 				<div className={style.right_mobile_bar} onClick={() => { setDrawerStatus(true) }}>
 					<Svg
 						name='Menu'
@@ -711,7 +714,7 @@ const LoginBox = (props) => {
 						emailMatchRule.test(requestInstance.email) && 
 						<>
 							<img
-								src={`${window.location.protocol}//${window.location.hostname}/api/captcha/image?type=login&random=${random}`}
+								src={`${BASE_URL}/captcha/image?type=login&random=${random}`}
 								title='点击刷新'
 								alt='verify code'
 								onClick={() => {

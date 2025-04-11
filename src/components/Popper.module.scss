@@ -10,9 +10,13 @@
         margin-bottom: 1rem;
         margin-top: 0;
     }
+    div {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 0.5rem;
+    }
     div button
     {
-        margin-right: 0.5rem;
         font-size: 0.6rem;
     }
 }

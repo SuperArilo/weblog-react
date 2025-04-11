@@ -122,18 +122,25 @@ export default function User(props) {
         blogUserProfilesModify({ data: modeInstance.instance, toast: { isShow: true, loadingMessage: '修改中...' } }).then(resq => {
             if(resq.code === 200) {
                 queryProfiles(viewUid)
+                setModeInstance(current => ({
+                    ...current,
+                    loadingStatus: false,
+                    editorIndex: null,
+                    instance: null,
+                    tempAvatar: null
+                }))
+            } else {
+                setModeInstance(current => ({
+                    ...current,
+                    loadingStatus: false,
+                    instance: null
+                }))
             }
-            setModeInstance(current => ({
-                ...current,
-                loadingStatus: false,
-                editorIndex: null,
-                instance: null,
-                tempAvatar: null
-            }))
         }).catch(err => {
             setModeInstance(current => ({
                 ...current,
-                loadingStatus: false
+                loadingStatus: false,
+                instance: null
             }))
         })
     }, [modeInstance.instance, queryProfiles, viewUid])

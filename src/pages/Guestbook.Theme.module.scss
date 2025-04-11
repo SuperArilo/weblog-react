@@ -1,4 +1,7 @@
 .light_guestbook, .guestbook {
+    .guestbook_editor_content {
+        background-color: #fff;
+    }
     .guestbook_comment_list {
         background-color: #fff;
         .guestbook_comment_item {
@@ -25,6 +28,9 @@
     }
 }
 .dark_guestbook, .guestbook {
+    .guestbook_editor_content {
+        background-color: #2F3133;
+    }
     .guestbook_comment_list {
         background-color: rgb(47, 49, 51);
         .guestbook_comment_item {

@@ -22,9 +22,9 @@ export function CTransitionFade({ keyS, timeout = 300, left, right }) {
         </SwitchTransition>
     )
 }
-export function CTransitionGroup({ children }) {
+export function CTransitionGroup({ children, component = "div", style }) {
     return (
-        <TransitionGroup>
+        <TransitionGroup style={style} component={component}>
             {children}
         </TransitionGroup>
     )
