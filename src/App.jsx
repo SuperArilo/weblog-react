@@ -466,6 +466,12 @@ const MobileHeaderNav = (props) => {
 			title: '圈子',
 			path: '/friends',
 			svgSrc: 'Friend'
+		},
+		{
+			id: 5,
+			title: 'Ciallo',
+			path: '/ciallo',
+			svgSrc: 'ciallo'
 		}
 	])
 	return (
