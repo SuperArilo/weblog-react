@@ -114,6 +114,7 @@ export default function App () {
 				<div className={`${style.router_render} ${isMobileStatus ? style.router_render_mobile:''}`}>
 					<CTransitionFade
 						keyS={location.pathname}
+						leftStyle={{ height: '100%' }}
 						left={
 							<Routes location={location}>
 								<Route index path='/' element={<IndexPage isMobile={ isMobileStatus } userInfo={userInfo} isDark={isDark} />} />

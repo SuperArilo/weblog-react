@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import { SwitchTransition, CSSTransition, TransitionGroup } from 'react-transition-group'
 import './Transition.scss'
 
-export function CTransitionFade({ keyS, timeout = 300, left, right }) {
+export function CTransitionFade({ keyS, timeout = 300, left, right, leftStyle, rightStyle }) {
     const leftRef = useRef(null)
     const rightRef = useRef(null)
     return (
@@ -10,11 +10,11 @@ export function CTransitionFade({ keyS, timeout = 300, left, right }) {
             <CSSTransition key={keyS} classNames='change' timeout={timeout} nodeRef={keyS ? leftRef:rightRef} mountOnEnter={true} unmountOnExit={true}>
                 {
                     keyS ?
-                    <div ref={leftRef}>
+                    <div ref={leftRef} style={leftStyle}>
                         {left}
                     </div>
                     :
-                    <div ref={rightRef}>
+                    <div ref={rightRef} style={rightStyle}>
                         {right}
                     </div>
                 }
