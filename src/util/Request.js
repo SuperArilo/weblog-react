@@ -1,7 +1,7 @@
 import axios from 'axios'
 import toast from 'react-hot-toast'
 axios.defaults.withCredentials = true
-export const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:8080/api/v1":`${window.location.protocol}//${window.location.host}/api/v1`
+export const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost/api/v1":`${window.location.protocol}//${window.location.host}/api/v1`
 const service = axios.create({
     baseURL: BASE_URL,
     timeout: 60000
