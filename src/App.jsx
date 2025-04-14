@@ -22,6 +22,7 @@ import ArticleDetail from './pages/ArticleDetail'
 import Gossip from './pages/Gossip'
 import Ciallo from './pages/Ciallo'
 import IndexPage from './pages/Index'
+import MinecraftMap from './pages/MinecraftMap'
 import $ from 'jquery'
 import Avatar from './components/Avatar'
 import About from './pages/About'
@@ -130,6 +131,7 @@ export default function App () {
 								<Route path='/links' element={<Links />} />
 								<Route path='/friends' element={<Friends /> } />
 								<Route path='/ciallo' element={<Ciallo />} />
+								<Route path='/map' element={<MinecraftMap />} />
 								<Route path='/notfound' element={<NotFound /> } />
 								<Route path='/error' element={<NotFound /> } />
 								<Route path='*' element={<Navigate to='/notfound' replace />} future={{ v7_relativeSplatPath: true }} />
@@ -224,6 +226,11 @@ const PCheaderNav = (props) => {
 				id: 5,
 				title: 'Ciallo',
 				path: '/ciallo'
+			},
+			{
+				id: 6,
+				title: 'Minecraft',
+				path: '/map'
 			}
 		]
 	})
@@ -472,6 +479,12 @@ const MobileHeaderNav = (props) => {
 			title: 'Ciallo',
 			path: '/ciallo',
 			svgSrc: 'ciallo'
+		},
+		{
+			id: 6,
+			title: 'Minecraft',
+			path: '/map',
+			svgSrc: 'map'
 		}
 	])
 	return (
