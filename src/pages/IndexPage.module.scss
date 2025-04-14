@@ -185,9 +185,9 @@
             .article_list, .gossip_list {
                 display: flex;
                 flex-direction: column;
+                gap: 1rem;
             }
             .article_list {
-                gap: 1rem;
                 li {
                     border-radius: 0.5rem;
                     overflow: hidden;

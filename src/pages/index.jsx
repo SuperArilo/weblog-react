@@ -216,8 +216,9 @@ export default function IndexPage(props) {
                     <CTransitionFade
                         keyS={gossipList.length === 0}
                         left={<GossipSkeleton />}
+                        rightStyle={{ }}
                         right={
-                            <div className={`${style.gossip_list} ${ThemeStyle.gossip_list}`}>
+                            <div className={`${style.gossip_list}`}>
                                 {
                                     gossipList.map(item => {
                                         return <GossipContent
