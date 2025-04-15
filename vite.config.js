@@ -24,6 +24,9 @@ export default defineConfig({
         minify: "terser",
         rollupOptions: {
             output: {
+                entryFileNames: 'js/[name].js',
+                chunkFileNames: 'js/[name].js',
+                assetFileNames: 'staticFiles/[name][extname]',
                 manualChunks: id => {
                     if (id.includes('node_modules')) {
                         return 'vendor'
