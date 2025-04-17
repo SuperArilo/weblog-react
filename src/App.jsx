@@ -37,7 +37,7 @@ import CreateWindow from './components/CreateWindow'
 import Notice from './pages/Notice'
 import Icon from './components/Icon'
 import Tinymce from './components/Editor'
-import { BASE_URL } from './util/Request'
+import { FULL_BASE_URL } from './util/Request'
 import { CTransitionFade, CCSSTransition } from './components/Transition'
 //样式
 import './assets/css/emojiBox.css'
@@ -734,7 +734,7 @@ const LoginBox = (props) => {
 						emailMatchRule.test(requestInstance.email) && 
 						<>
 							<img
-								src={`${BASE_URL}/captcha/image?type=login&random=${random}`}
+								src={`${FULL_BASE_URL}/captcha/image?type=login&random=${random}`}
 								title='点击刷新'
 								alt='verify code'
 								onClick={() => {
