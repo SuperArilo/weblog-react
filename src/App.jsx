@@ -181,9 +181,9 @@ export default function App () {
 						}}/>
 				</CreateWindow>
 			</div>
-			{
+			{/* {
 				(localStorage.getItem('token') && userInfo !== null) && <NoticeSocket token={localStorage.getItem('token')} />
-			}
+			} */}
 		</ThemeProvider>
 	)
 }
