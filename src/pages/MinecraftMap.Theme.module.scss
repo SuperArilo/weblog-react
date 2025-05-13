@@ -1,0 +1,38 @@
+.light_map_page, .map_page {
+    .map_content .online_talk_box .instance_box {
+        background-color: rgba(240, 240, 240, 1);
+        .history_list li .user_content {
+            span {
+                color: rgba(0, 0, 0, 0.8);
+            }
+            .time {
+                color: rgba(0, 0, 0, 0.4);
+            }
+            .talk_content {
+                background-color: #fff;
+                color: rgba(0, 0, 0, 0.8);
+            }
+        }
+    }
+
+}
+.dark_map_page, .map_page {
+    .map_content .online_talk_box .instance_box {
+        background-color: #2F3133;
+        .history_list li .user_content {
+            span, .time {
+                color: #cecece;
+            }
+            .talk_content {
+                background-color: #58595a;
+                color: #fff;
+            }
+        }
+        .input_content {
+            background-color: #6e6e6e;
+            textarea {
+                color: #fff;
+            }
+        }
+    }
+}

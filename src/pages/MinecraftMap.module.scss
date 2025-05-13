@@ -1,21 +1,230 @@
 .map_page {
-    max-width: 916px;
     height: 100%;
     margin: 0 auto;
     padding-top: 1rem;
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    .map_title {
-        font-size: 1rem;
-        color: rgb(1, 98, 163);
-        letter-spacing: 0.02rem;
+    .map_title_function {
+        display: flex;
+        justify-content: space-between;
+        .map_title {
+            font-size: 1rem;
+            color: rgb(1, 98, 163);
+            letter-spacing: 0.02rem;
+        }
     }
-    iframe {
+    .map_content {
         width: 100%;
         height: 100%;
-        border: none;
-        border-radius: 0.5rem;
         overflow: hidden;
+        position: relative;
+        .online_talk_box {
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            border-radius: 0.1rem;
+            overflow: hidden;
+            z-index: 20;
+            .instance_box {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+                transition: background-color 0.25s;
+                .history_list {
+                    padding: 1rem 0;
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1rem;
+                    overflow-y: scroll;
+                    li {
+                        width: 100%;
+                        padding: 0 1rem;
+                        list-style: none;
+                        display: flex;
+                        flex-wrap: nowrap;
+                        gap: 1rem;
+                        .user_content {
+                            display: flex;
+                            flex-direction: column;
+                            gap: 0.2rem;
+                            max-width: 70%;
+                            min-height: 2.5rem;
+                            span {
+                                transition: color 0.25s;
+                            }
+                            .user_info {
+                                width: 100%;
+                                display: flex;
+                                align-items: center;
+                                flex-wrap: nowrap;
+                                gap: 0.5rem;
+                                span {
+                                    white-space: nowrap;
+                                    font-size: 0.8rem;
+                                }
+                                .user_name {
+                                    display: block;
+                                }
+                                .come_from {
+                                    color: rgb(165, 91, 38);
+                                }
+                            }
+                            .time {
+                                font-size: 0.65rem;
+                            }
+                            .talk_content {
+                                font-size: 0.75rem;
+                                min-height: 1.6rem;
+                                padding: 0.35rem 0.6rem;
+                                border-radius: 0.3rem;
+                                white-space: wrap;
+                                word-break: break-all;
+                                transition: background-color 0.25s, color 0.25s;
+                            }
+                        }
+                        
+                    }
+                    .type_Minecraft, .type_WEB_OTHER {
+                        flex-direction: row;
+                        .user_content {
+                            align-items: flex-start;
+                            .user_info {
+                                justify-content: flex-start;
+                            }
+                        }
+                    }
+                    .type_WEB {
+                        flex-direction: row-reverse;
+                        .user_content {
+                            align-items: flex-end;
+                            .user_info {
+                                justify-content: flex-end;
+                            }
+                        }
+                    }
+                }
+                .input_content {
+                    height: 8rem;
+                    background-color: #fff;
+                    display: flex;
+                    flex-direction: column;
+                    transition: background-color 0.25s;
+                    textarea {
+                        border: none;
+                        resize: none;
+                        outline: none;
+                        flex: 1;
+                        padding: 0.5rem;
+                        background-color: transparent;
+                        font-family: Microsoft Yahei;
+                        border-bottom: solid 0.1rem rgba(0, 0, 0, 0.1);
+                    }
+                    .button_function {
+                        height: 3rem;
+                        padding: 0 1rem;
+                        display: flex;
+                        align-items: center;
+                        justify-content: flex-end;
+                    }
+                }
+            }
+            
+        }
+        iframe {
+            width: inherit;
+            height: inherit;
+            border: none;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            position: relative;
+            z-index: 10;
+        }
+    }
+    
+}
+@media screen and (min-width: 3840px) {
+    .map_page {
+        max-width: 1152px;
+        .map_content {
+            .online_talk_box {
+                width: 50%;
+            }
+        }
+    }
+}
+@media screen and (max-width: 3839px) and (min-width: 2561px)
+{
+    .map_page {
+        max-width: 1152px;
+        .map_content {
+            .online_talk_box {
+                width: 50%;
+            }
+        }
+    }
+}
+@media screen and (max-width: 2560px) and (min-width: 1921px)
+{
+    .map_page {
+        max-width: 960px;
+        .map_content {
+            .online_talk_box {
+                width: 50%;
+            }
+        }
+    }
+}
+@media screen and (max-width: 1920px)
+{
+    .map_page {
+        max-width: 768px;
+        .map_content {
+            .online_talk_box {
+                width: 50%;
+            }
+        }
+    }
+}
+@media screen and (min-width:1400px)
+{
+    .map_page {
+        .map_content {
+            .online_talk_box {
+                width: 50%;
+            }
+        }
+    }
+}
+@media screen and (max-width:1400px) and (min-width:1200px)
+{
+    .map_page {
+        .map_content {
+            .online_talk_box {
+                width: 50%;
+            }
+        }
+    }
+}
+@media screen and (max-width:1200px) and (min-width:936px)
+{
+    .map_page {
+        .map_content {
+            .online_talk_box {
+                width: 100%;
+            }
+        }
+    }
+}
+@media screen and (max-width:935px)
+{
+    .map_page {
+        .map_content {
+            .online_talk_box {
+                width: 100%;
+            }
+        }
     }
 }
