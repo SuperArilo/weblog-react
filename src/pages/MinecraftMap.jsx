@@ -102,7 +102,7 @@ export default function MinecraftMap() {
                                                         }
                                                         
                                                     </div>
-                                                    <span className={`${style['time']} ${theme['time']}`}>{item.time}</span>
+                                                    <span className={`${style['time']} ${theme['time']}`}>{formatDateTime(new Date(item.time))}</span>
                                                     <div className={`${style['talk_content']} ${theme['talk_content']}`}>
                                                         {item.message}
                                                     </div>
